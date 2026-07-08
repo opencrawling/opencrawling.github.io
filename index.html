@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrawling | Enterprise Ingestion & Security Framework for AI & Search</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="OpenCrawling is a high-performance, open-source enterprise data integration and ingestion platform modeled after Apache ManifoldCF. Powered by Java 25 & Spring Boot 4.">
+  <meta name="keywords" content="opencrawling, manifoldcf, enterprise ingestion, rag, vector search, acl synchronization, spring boot, java 25, virtual threads, pgvector, ollama">
+  <meta name="author" content="OpenCrawling GitHub Organization">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.github.io/">
+  <meta property="og:title" content="OpenCrawling | Enterprise Ingestion & Security Framework">
+  <meta property="og:description" content="High-Performance Enterprise Data Ingestion, Federation & Security Framework for AI and Search. Modelled after Apache ManifoldCF.">
+  <meta property="og:image" content="assets/logo.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.github.io/">
+  <meta property="twitter:title" content="OpenCrawling | Enterprise Ingestion & Security Framework">
+  <meta property="twitter:description" content="High-Performance Enterprise Data Ingestion, Federation & Security Framework for AI and Search.">
+  <meta property="twitter:image" content="assets/logo.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand" id="nav-brand">
+        <img src="assets/logo.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#simulator">Simulator</a></li>
+          <li><a href="#getting-started">Quick Start</a></li>
+          <li><a href="#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="badge-container">
+          <span class="animated-badge">Enterprise Data Ingestion Platform</span>
+        </div>
+        <h1 class="hero-title">
+          Securely connecting <br>
+          <span class="gradient-text">siloed content</span> to AI pipelines.
+        </h1>
+        <p class="hero-subtitle">
+          OpenCrawling is a high-performance framework modeled after Apache ManifoldCF. Powered by <strong>Java 25</strong> and <strong>Spring Boot 4</strong>, it bridges enterprise repositories to vector search and LLM orchestrators while preserving document permissions (ACLs).
+        </p>
+        <div class="hero-actions">
+          <a href="#getting-started" class="btn btn-primary">Get Started</a>
+          <a href="#simulator" class="btn btn-secondary">Try Live Simulator</a>
+        </div>
+      </div>
+      
+      <div class="hero-visual">
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="terminal-title">bash - docker-setup</span>
+          </div>
+          <div class="terminal-body">
+            <p class="line comment"># Spin up PostgreSQL + pgvector, Redis, Ollama, Kafka</p>
+            <p class="line"><span class="cmd">git clone</span> https://github.com/OpenCrawling/opencrawling.git</p>
+            <p class="line"><span class="cmd">cd</span> opencrawling</p>
+            <p class="line"><span class="cmd">docker compose</span> up -d</p>
+            <p class="line output">Creating network "opencrawling_default" ... Created</p>
+            <p class="line output">Creating container opencrawling-postgres  ... Running</p>
+            <p class="line output">Creating container opencrawling-redis     ... Running</p>
+            <p class="line output">Creating container opencrawling-kafka     ... Running</p>
+            <p class="line output">Creating container opencrawling-ollama    ... Running</p>
+            <p class="line success">✔ All services started successfully on local ports.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Metrics / Stats Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <span class="stat-num">Java 25</span>
+        <span class="stat-desc">Virtual Threads & Structured Concurrency</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">100%</span>
+        <span class="stat-desc">ACL Security & Permission Mapping</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">Event-Driven</span>
+        <span class="stat-desc">Apache Kafka Document Decoupling</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="section-header">
+      <h2 class="section-title">Designed for Enterprise Security & Scale</h2>
+      <p class="section-subtitle">Going far beyond simple scraping, OpenCrawling bridges data stores and vector indexes securely.</p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h3>Enterprise Security First</h3>
+        <p>Built-in authority translation and Access Control List (ACL) mapping. Search engines only return documents that users are explicitly authorized to view.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3>High Performance & Concurrency</h3>
+        <p>Leverages Java 25 Virtual Threads and Spring Boot. Processes thousands of streams with minimal memory overhead, preventing source system bottlenecks.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <h3>AI & RAG Ready Ingestion</h3>
+        <p>Built-in semantic chunking, document cleanups, metadata enrichment, and vector embedding generation (using Ollama, OpenAI, or HuggingFace) on the fly.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+        <h3>Pluggable SPI Architecture</h3>
+        <p>Simple interfaces for writing custom connectors. Define a new Repository Source, Transformation filter, or Database Output connector in just a few lines of Java.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Architecture Section -->
+  <section id="architecture" class="architecture-section">
+    <div class="section-header">
+      <h2 class="section-title">Ingestion Architecture</h2>
+      <p class="section-subtitle">Decoupled, event-driven orchestration leveraging the Claim Check Pattern with Kafka and PostgreSQL.</p>
+    </div>
+    
+    <div class="architecture-container">
+      <div class="arch-visual">
+        <!-- SVG diagram with glowing paths & interactive points -->
+        <svg id="arch-svg" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background grids and nodes -->
+          <defs>
+            <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7C3AED" />
+              <stop offset="100%" stop-color="#C084FC" />
+            </linearGradient>
+            <linearGradient id="secondary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#06B6D4" />
+              <stop offset="100%" stop-color="#22D3EE" />
+            </linearGradient>
+            <linearGradient id="infra-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#475569" />
+              <stop offset="100%" stop-color="#64748B" />
+            </linearGradient>
+            <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <!-- Connecting Lines -->
+          <path class="flow-line line-active" d="M130,225 L240,225" />
+          <path class="flow-line line-active" d="M380,225 L450,225" />
+          <path class="flow-line line-active" d="M570,225 L680,225" />
+          
+          <path class="flow-line line-dashed" d="M310,170 L310,120" />
+          <path class="flow-line line-dashed" d="M510,170 L510,120" />
+          <path class="flow-line line-dashed" d="M510,280 L510,330" />
+          <path class="flow-line line-dashed" d="M720,280 L720,330" />
+
+          <!-- Dynamic Ingestion Particle -->
+          <circle id="anim-particle-1" r="5" fill="#06B6D4" filter="url(#glow-effect)" />
+          <circle id="anim-particle-2" r="5" fill="#7C3AED" filter="url(#glow-effect)" />
+
+          <!-- Node 1: Sources (SharePoint, S3, Web) -->
+          <g class="node-group" data-node="sources">
+            <rect x="20" y="150" width="110" height="150" rx="10" class="node-bg" />
+            <text x="75" y="180" class="node-title">Sources</text>
+            <text x="75" y="215" class="node-sub">SharePoint</text>
+            <text x="75" y="240" class="node-sub">S3 / Buckets</text>
+            <text x="75" y="265" class="node-sub">Web / API</text>
+          </g>
+
+          <!-- Node 2: Core Engine -->
+          <g class="node-group" data-node="core">
+            <rect x="240" y="170" width="140" height="110" rx="10" class="node-bg accent" />
+            <text x="310" y="200" class="node-title accent-text">Ingestion Core</text>
+            <text x="310" y="225" class="node-desc">Job Orchestrator</text>
+            <text x="310" y="245" class="node-desc">Virtual Threads</text>
+            <text x="310" y="262" class="node-desc">ACL Resolver</text>
+          </g>
+
+          <!-- Node 3: Apache Kafka -->
+          <g class="node-group" data-node="kafka">
+            <rect x="450" y="170" width="120" height="110" rx="10" class="node-bg cyan" />
+            <text x="510" y="200" class="node-title cyan-text">Apache Kafka</text>
+            <text x="510" y="225" class="node-desc">Document Queue</text>
+            <text x="510" y="245" class="node-desc">Claim Check</text>
+            <text x="510" y="262" class="node-desc">Decoupled Processing</text>
+          </g>
+
+          <!-- Node 4: Vector Store / Output -->
+          <g class="node-group" data-node="outputs">
+            <rect x="680" y="170" width="110" height="110" rx="10" class="node-bg" />
+            <text x="735" y="200" class="node-title">Outputs</text>
+            <text x="735" y="225" class="node-sub">pgvector</text>
+            <text x="735" y="248" class="node-sub">Elasticsearch</text>
+            <text x="735" y="270" class="node-sub">Qdrant</text>
+          </g>
+
+          <!-- Node 5: Admin UI (Top Left) -->
+          <g class="node-group" data-node="ui">
+            <rect x="245" y="50" width="130" height="70" rx="8" class="node-bg border-only" />
+            <text x="310" y="80" class="node-title-small">Admin React UI</text>
+            <text x="310" y="100" class="node-desc">oc-admin-ui</text>
+          </g>
+
+          <!-- Node 6: Embedding (Top Right) -->
+          <g class="node-group" data-node="ollama">
+            <rect x="445" y="50" width="130" height="70" rx="8" class="node-bg border-only" />
+            <text x="510" y="80" class="node-title-small">Ollama Embedding</text>
+            <text x="510" y="100" class="node-desc">Local AI Models</text>
+          </g>
+
+          <!-- Node 7: PostgreSQL & Redis (Bottom Center) -->
+          <g class="node-group" data-node="db">
+            <rect x="445" y="330" width="130" height="80" rx="8" class="node-bg border-only" />
+            <text x="510" y="360" class="node-title-small">PostgreSQL / Redis</text>
+            <text x="510" y="380" class="node-desc">Job Status Cache</text>
+            <text x="510" y="395" class="node-desc">Metadata State</text>
+          </g>
+
+          <!-- Node 8: Authority (Bottom Right) -->
+          <g class="node-group" data-node="security">
+            <rect x="670" y="330" width="120" height="80" rx="8" class="node-bg border-only" />
+            <text x="730" y="360" class="node-title-small">Authority Service</text>
+            <text x="730" y="380" class="node-desc">Access Filters</text>
+            <text x="730" y="395" class="node-desc">ACL Mapping</text>
+          </g>
+        </svg>
+      </div>
+      
+      <div class="arch-info-card glass" id="arch-detail">
+        <h3 id="arch-detail-title">System Architecture</h3>
+        <p id="arch-detail-desc">Hover over or tap any node in the architecture diagram to view how OpenCrawling orchestrates the high-speed data flow and security controls.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Ingestion Simulator Section -->
+  <section id="simulator" class="simulator-section">
+    <div class="section-header">
+      <h2 class="section-title">Live Ingestion Simulator</h2>
+      <p class="section-subtitle">Simulate real-time ingestion, security mapping, and embedding generation locally in your browser.</p>
+    </div>
+
+    <div class="simulator-container glass">
+      <div class="sim-controls">
+        <div class="sim-group">
+          <label for="sim-source">1. Select Content Source</label>
+          <select id="sim-source">
+            <option value="sharepoint">SharePoint Server (Native ACLs)</option>
+            <option value="s3">Amazon S3 Bucket (No ACLs)</option>
+            <option value="database">PostgreSQL CRM (Row-Level Security)</option>
+          </select>
+        </div>
+        
+        <div class="sim-group">
+          <label for="sim-destination">2. Select Vector Database</label>
+          <select id="sim-destination">
+            <option value="pgvector">PostgreSQL + pgvector</option>
+            <option value="elasticsearch">Elasticsearch 8 (KNN)</option>
+            <option value="qdrant">Qdrant Cloud</option>
+          </select>
+        </div>
+
+        <button id="start-sim-btn" class="btn btn-primary btn-full">Run Ingestion Job</button>
+      </div>
+
+      <div class="sim-display">
+        <div class="sim-status-bar">
+          <span class="status-indicator" id="sim-status-dot"></span>
+          <span id="sim-status-text">Ready to run</span>
+        </div>
+        
+        <!-- Live Animation Pipeline Area -->
+        <div class="sim-pipeline" id="sim-pipeline">
+          <div class="pipeline-station" id="station-src">
+            <span class="station-icon">📂</span>
+            <span class="station-label">Source</span>
+          </div>
+          
+          <div class="pipeline-connector-line">
+            <div class="pipeline-pulse" id="pulse-1"></div>
+          </div>
+
+          <div class="pipeline-station" id="station-core">
+            <span class="station-icon">⚙️</span>
+            <span class="station-label">Core Engine</span>
+          </div>
+
+          <div class="pipeline-connector-line">
+            <div class="pipeline-pulse" id="pulse-2"></div>
+          </div>
+
+          <div class="pipeline-station" id="station-vector">
+            <span class="station-icon">🧬</span>
+            <span class="station-label">Vector Store</span>
+          </div>
+        </div>
+
+        <!-- Terminal Logs Area -->
+        <div class="sim-terminal">
+          <div class="sim-terminal-header">
+            <span>Job Console Output</span>
+            <button id="clear-sim-logs" class="clear-logs-btn">Clear</button>
+          </div>
+          <div class="sim-terminal-body" id="sim-logs">
+            <p class="log-info">Select a source and click "Run Ingestion Job" to start simulation...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start / Getting Started -->
+  <section id="getting-started" class="getting-started-section">
+    <div class="section-header">
+      <h2 class="section-title">Getting Started in 2 Minutes</h2>
+      <p class="section-subtitle">Follow these quick steps to get OpenCrawling up and running locally.</p>
+    </div>
+
+    <div class="tabs-container glass">
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="docker">Docker Compose</button>
+        <button class="tab-btn" data-tab="maven">Maven Dependency</button>
+        <button class="tab-btn" data-tab="connector">Custom Connector</button>
+      </div>
+
+      <div class="tabs-content">
+        <!-- Docker Tab -->
+        <div class="tab-pane active" id="tab-docker">
+          <div class="code-wrapper">
+            <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
+            <pre><code class="language-yaml"># Run from root of cloned repository to boot up all infrastructure containers
+docker compose up -d
+
+# Verify services are running
+docker ps
+
+# Services started:
+# - PostgreSQL: localhost:5432 (pgvector ready)
+# - Redis: localhost:6379 (session cache)
+# - Apache Kafka: localhost:9092 (messaging topic)
+# - Ollama: localhost:11434 (embedding engine)</code></pre>
+          </div>
+        </div>
+
+        <!-- Maven Tab -->
+        <div class="tab-pane" id="tab-maven">
+          <div class="code-wrapper">
+            <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
+            <pre><code class="language-xml">&lt;!-- Add core connector API to your spring boot application --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
+    &lt;artifactId&gt;oc-core&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Include FileSystem Repository Connector if required --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
+    &lt;artifactId&gt;oc-filesystem-repository-connector&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- Connector Tab -->
+        <div class="tab-pane" id="tab-connector">
+          <div class="code-wrapper">
+            <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
+            <pre><code class="language-java">// Implement RepositoryConnector interface to create custom sources
+public class MyCustomRepositoryConnector implements RepositoryConnector {
+
+    @Override
+    public void connect(Map&lt;String, String&gt; configParams) throws RepositoryConnectionException {
+        // Establish authentication with target repository
+    }
+
+    @Override
+    public void scanDocuments(DocumentProcessor processor, JobContext context) {
+        // Scan documents incrementally and dispatch to processor
+        for (Document doc : fetchNewDocuments()) {
+            processor.processDocument(
+                doc.getId(),
+                doc.getContentStream(),
+                doc.getMetadata(),
+                doc.getAcl() // Synchronize Access Control Lists!
+            );
+        }
+    }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community & Repositories -->
+  <section id="community" class="community-section">
+    <div class="section-header">
+      <h2 class="section-title">Connect & Contribute</h2>
+      <p class="section-subtitle">We are an open-source organization building the future of secure AI ingestion pipelines.</p>
+    </div>
+
+    <div class="community-grid">
+      <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="community-card glass">
+        <div class="community-icon">📂</div>
+        <h3>Framework Core</h3>
+        <p>Browse the OpenCrawling core engine source code, Java SPIs, connectors, and admin react UI.</p>
+        <span class="card-link">View Repo &rarr;</span>
+      </a>
+
+      <a href="https://github.com/OpenCrawling" target="_blank" rel="noopener noreferrer" class="community-card glass">
+        <div class="community-icon">🌐</div>
+        <h3>GitHub Org</h3>
+        <p>Explore all repositories, check out the organizational standards, templates, and profiles.</p>
+        <span class="card-link">View Organization &rarr;</span>
+      </a>
+
+      <a href="https://github.com/OpenCrawling/opencrawling/issues" target="_blank" rel="noopener noreferrer" class="community-card glass">
+        <div class="community-icon">💬</div>
+        <h3>Discussions & Issues</h3>
+        <p>Help shape the roadmap, report bugs, request new repository/output connectors, or ask questions.</p>
+        <span class="card-link">Get Involved &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>

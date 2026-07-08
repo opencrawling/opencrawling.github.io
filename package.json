@@ -1,0 +1,15 @@
+{
+  "name": "opencrawling.github.io",
+  "version": "1.0.0",
+  "description": "The brand new website of the OpenCrawling GitHub organization",
+  "scripts": {
+    "start": "npx -y http-server ./ -p 8080 -o",
+    "dev": "npx -y http-server ./ -p 8080 -o"
+  },
+  "keywords": [
+    "opencrawling",
+    "github-pages"
+  ],
+  "author": "OpenCrawling Organization",
+  "license": "Apache-2.0"
+}
