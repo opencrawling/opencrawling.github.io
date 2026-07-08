@@ -37,7 +37,7 @@ python3 -m http.server 8080
 
 ```text
 ├── assets/
-│   └── logo.png          # OpenCrawling Brand Logo
+│   └── logo-without-text-200px.png  # OpenCrawling Brand Logo
 ├── css/
 │   └── styles.css        # Core stylesheet using modern CSS variables & @layer
 ├── js/
