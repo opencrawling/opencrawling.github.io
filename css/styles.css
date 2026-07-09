@@ -1167,13 +1167,13 @@
   }
   
   .standard-container {
-    max-width: var(--container-width);
+    max-width: 960px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
-    gap: 4rem;
+    gap: 3rem;
     align-items: center;
-    padding: 3rem;
+    padding: 2.5rem;
     border-radius: 16px;
     border: 1px solid var(--card-border);
     background: rgba(15, 23, 42, 0.35);
@@ -1510,6 +1510,12 @@
   
   .simulator-container {
     grid-template-columns: 1fr;
+  }
+  
+  .standard-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2rem;
   }
 }
 
