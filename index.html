@@ -54,6 +54,7 @@
         <ul>
           <li><a href="#features">Features</a></li>
           <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#standard">Open Standard</a></li>
           <li><a href="#simulator">Simulator</a></li>
           <li><a href="#getting-started">Quick Start</a></li>
           <li><a href="#community">Community</a></li>
@@ -547,6 +548,80 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     </div>
   </section>
 
+  <!-- Open Ingestion Standard (OIS) Section -->
+  <section id="standard" class="standard-section">
+    <div class="section-header">
+      <h2 class="section-title">Open Ingestion Standard (OIS)</h2>
+      <p class="section-subtitle">Defining a vendor-neutral, cross-platform specification for secure enterprise data exchange and pipeline configuration.</p>
+    </div>
+
+    <div class="standard-container glass">
+      <div class="standard-text-content">
+        <h3>The Ingestion Manifesto</h3>
+        <p>Enterprise data environments suffer from proprietary lock-ins, brittle coupled pipelines, and critical security group omissions. The <strong>Open Ingestion Standard (OIS)</strong> is a community-driven specification to standardize data exchange and configurations across all vendors.</p>
+        
+        <ul class="standard-pillars">
+          <li>
+            <div class="pillar-marker">🔒</div>
+            <div>
+              <h4>Zero-Trust Security Preserving</h4>
+              <p>Ensures document ACLs, user SIDs, and OAuth groups are preserved during scanning, chunking, and indexing.</p>
+            </div>
+          </li>
+          <li>
+            <div class="pillar-marker">🔌</div>
+            <div>
+              <h4>Vendor-Neutral Interoperability</h4>
+              <p>Standardizes document exchange payloads and configuration files to allow seamless migration between different vendors.</p>
+            </div>
+          </li>
+          <li>
+            <div class="pillar-marker">⚙️</div>
+            <div>
+              <h4>Event-Driven Queue Decoupling</h4>
+              <p>Promotes asynchronous worker scaling (Scanner, Embedder, Writer) utilizing the Claim Check Pattern.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="standard-actions">
+          <a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read the Manifesto</a>
+          <a href="https://github.com/OpenCrawling/open-ingestion-standard/tree/main/schemas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Explore JSON Schemas</a>
+        </div>
+      </div>
+
+      <div class="standard-visual-content">
+        <div class="schema-card">
+          <div class="schema-card-header">
+            <span class="schema-type">JSON Schema</span>
+            <span class="schema-file">document.schema.json</span>
+          </div>
+          <pre><code class="language-json">{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OIS Document Payload",
+  "type": "OBJECT",
+  "required": ["id", "source", "content", "security"],
+  "properties": {
+    "id": { "type": "STRING" },
+    "source": {
+      "type": "OBJECT",
+      "required": ["type", "instance"]
+    },
+    "content": {
+      "type": "OBJECT",
+      "required": ["mimeType"]
+    },
+    "security": {
+      "type": "OBJECT",
+      "required": ["inheritanceEnabled", "permissions"]
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Community & Repositories -->
   <section id="community" class="community-section">
     <div class="section-header">
@@ -562,11 +637,11 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
         <span class="card-link">View Repo &rarr;</span>
       </a>
 
-      <a href="https://github.com/OpenCrawling" target="_blank" rel="noopener noreferrer" class="community-card glass">
-        <div class="community-icon">🌐</div>
-        <h3>GitHub Org</h3>
-        <p>Explore all repositories, check out the organizational standards, templates, and profiles.</p>
-        <span class="card-link">View Organization &rarr;</span>
+      <a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer" class="community-card glass">
+        <div class="community-icon">📜</div>
+        <h3>Open Standard</h3>
+        <p>Read the Manifesto, review the JSON schemas, and contribute to the OIS cross-vendor specification.</p>
+        <span class="card-link">View Spec &rarr;</span>
       </a>
 
       <a href="https://github.com/OpenCrawling/opencrawling/issues" target="_blank" rel="noopener noreferrer" class="community-card glass">
