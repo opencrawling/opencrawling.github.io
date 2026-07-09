@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcing the Open Ingestion Standard (OIS) Specification Roadmap - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Read the official roadmap for the Open Ingestion Standard (OIS). Explore our phases for schema stabilization, CLI validators, SDKs, and open governance.">
+  <meta name="keywords" content="open ingestion standard, ois, roadmap, specification, json schema, sdk, cli validator, cncf, open source">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.github.io/blog/announcing-the-ois-specification-roadmap.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.github.io/blog/announcing-the-ois-specification-roadmap.html">
+  <meta property="og:title" content="Announcing the Open Ingestion Standard (OIS) Specification Roadmap">
+  <meta property="og:description" content="Explore the official OIS roadmap. Learn how we are standardizing secure, decoupled data ingestion for LLM and RAG search systems across the industry.">
+  <meta property="og:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.github.io/blog/announcing-the-ois-specification-roadmap.html">
+  <meta property="twitter:title" content="Announcing the Open Ingestion Standard (OIS) Specification Roadmap">
+  <meta property="twitter:description" content="Explore the official OIS roadmap. Learn how we are standardizing secure, decoupled data ingestion for LLM and RAG search systems across the industry.">
+  <meta property="twitter:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Announcing the Open Ingestion Standard (OIS) Specification Roadmap",
+    "description": "Read the official roadmap for the Open Ingestion Standard (OIS). Explore our phases for schema stabilization, CLI validators, SDKs, and open governance.",
+    "datePublished": "2026-07-09",
+    "author": {
+      "@type": "Organization",
+      "name": "OpenCrawling Core Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.github.io/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://opencrawling.github.io/blog/announcing-the-ois-specification-roadmap.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <!-- Mermaid.js for Timeline -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#8B5CF6',
+          primaryTextColor: '#F1F5F9',
+          lineColor: '#06B6D4',
+          nodeBorder: '#8B5CF6',
+          mainBkg: '#0F172A',
+          clusterBkg: '#07090E'
+        }
+      });
+    });
+  </script>
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+    
+    /* Mermaid diagram overrides */
+    .mermaid {
+      background: rgba(7, 9, 14, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem 1rem;
+      margin: 2.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 2rem;
+      }
+      .blog-post-wrapper {
+        margin-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Blog Post Wrapper -->
+  <main class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Articles</a>
+    
+    <article>
+      <header class="post-header">
+        <h1 class="post-title">Announcing the Open Ingestion Standard (OIS) Specification Roadmap</h1>
+        <div class="post-meta">
+          <span class="blog-badge">Specification</span>
+          <span class="post-date">July 9, 2026</span>
+          <span class="post-read-time">4 min read</span>
+        </div>
+      </header>
+      
+      <div class="post-content">
+        <p>A few weeks ago, we published the core manifesto for the **Open Ingestion Standard (OIS)**. Our target was clear: provide a secure, decoupled, and vendor-neutral blueprint to ingest enterprise data into RAG and LLM systems.</p>
+        
+        <p>Today, we are taking a major step forward by publishing our official <strong>Specification Roadmap</strong>. The goal is to evolve OIS from a set of design schemas used by our reference implementation, OpenCrawling, into a fully standardized, community-governed specification.</p>
+
+        <div class="mermaid">
+timeline
+    title OIS Specification Roadmap
+    Phase 1 : Schema Stabilization (OIS 1.0) : RFC Process Initialization : Registry Publishing
+    Phase 2 : Multi-language SDKs (Python, TS, Go) : CLI Validation Tools : Conformance Test Suite
+    Phase 3 : LangChain & LlamaIndex Loaders : Apache ManifoldCF Compatibility : Open Governance Model
+        </div>
+
+        <p>Here is an in-depth breakdown of the three phases outlined in the newly released OIS Roadmap:</p>
+
+        <h2>Phase 1: Schema Stabilization (OIS 1.0)</h2>
+        <p>Before standardizing developer tooling, we must guarantee that our core JSON validation schemas are stable, production-ready, and future-proof. During this phase, the steering team will focus on:</p>
+        <ul>
+          <li><strong>OIS 1.0.0-RC1 Release:</strong> Finalizing the validation constraints of <code>document.schema.json</code> and <code>job.schema.json</code>.</li>
+          <li><strong>Setting up the RFC (Request for Comments) Process:</strong> Opening GitHub issue boards for structural amendments. Our first planned proposal is <strong>RFC-001 (Security Identity Mapping)</strong>, which tackles how to standardize Active Directory Windows SIDs, OAuth scopes, and Okta group claims inside JSON arrays.</li>
+          <li><strong>Registry Publishing:</strong> Serving version-controlled JSON schema files at fixed, public URLs so that IDEs and CI/CD testing pipelines can automatically validate payloads against them.</li>
+        </ul>
+
+        <h2>Phase 2: Multi-Language SDKs & Validation Tooling</h2>
+        <p>An open standard is only as good as its developer experience. To lower the barrier to entry, Phase 2 centers on building CLI utilities and helper libraries in major programming ecosystems:</p>
+        <ul>
+          <li><strong><code>ois-validator</code> CLI:</strong> A lightweight, cross-platform CLI tool that runs in any CI pipeline or local shell. Developers can validate document streams and job configs with a single command (e.g. <code>ois validate my-document.json</code>).</li>
+          <li><strong>Lightweight Client SDKs:</strong>
+            <ul>
+              <li><strong>Python:</strong> For AI developers building custom ingest scripts.</li>
+              <li><strong>TypeScript:</strong> For web developers and Node.js ingestion microservices.</li>
+              <li><strong>Go:</strong> For high-performance, low-footprint connector agents.</li>
+            </ul>
+          </li>
+          <li><strong>Conformance Test Suite:</strong> A standard testing framework containing mock payloads, complex edge-case ACL trees, and job configurations to certify that external crawlers are OIS-compliant.</li>
+        </ul>
+
+        <h2>Phase 3: Broad Framework Integration & Open Governance</h2>
+        <p>The final phase drives mainstream adoption, aligns OIS with popular developer orchestrators, and shifts the specification into a vendor-neutral governance model:</p>
+        <ul>
+          <li><strong>AI Orchestrator Loaders:</strong> Contributing loaders to <strong>LangChain</strong>, <strong>LlamaIndex</strong>, and <strong>Haystack</strong>. This will allow those platforms to parse OIS document files out-of-the-box, retaining security permissions implicitly.</li>
+          <li><strong>Connector Bridging:</strong> Partnering with established open-source projects (like Apache ManifoldCF) to write translators, letting legacy systems export crawled data directly into OIS-compliant JSON formats.</li>
+          <li><strong>Transition to Open Governance:</strong> Transitioning steering control of the specification to an established neutral body (such as the <strong>CNCF</strong> or the <strong>Linux Foundation</strong>) to guarantee that no single company dominates the standard's direction.</li>
+        </ul>
+
+        <h2>Get Involved!</h2>
+        <p>The OIS Roadmap is fully public and open-source. We are looking for security architects, software engineers, and database maintainers to review our schemas and join the discussion.</p>
+        <p>Read the official roadmap details in the <a href="https://github.com/opencrawling/open-ingestion-standard/blob/master/ROADMAP.md" target="_blank" rel="noopener noreferrer">open-ingestion-standard repository</a>, open an RFC issue, or share your thoughts on GitHub! 💬</p>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
