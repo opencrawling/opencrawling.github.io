@@ -307,6 +307,86 @@
     </div>
   </section>
 
+  <!-- Admin Console Showcase Section -->
+  <section id="dashboard" class="dashboard-section">
+    <div class="section-header">
+      <h2 class="section-title">Unified Administration Console</h2>
+      <p class="section-subtitle">Manage repository connectors, monitor Kafka topics, and track ingestion jobs from a sleek, real-time dashboard.</p>
+    </div>
+
+    <div class="dashboard-container">
+      <div class="browser-mockup glass">
+        <div class="browser-header">
+          <div class="browser-dots">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+          </div>
+          <div class="browser-address">
+            <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>localhost:5173/dashboard</span>
+          </div>
+        </div>
+        
+        <div class="slider-wrapper">
+          <div class="slides-container" id="screenshot-slider">
+            <div class="slide active">
+              <img src="assets/screenshots/ui-dashboard.png" alt="OpenCrawling Admin Dashboard Telemetry" loading="lazy" />
+              <div class="slide-caption">
+                <h3>Real-Time Ingestion Telemetry</h3>
+                <p>Track crawling health, active workers, Kafka queue load, and document-indexing throughput at a glance.</p>
+              </div>
+            </div>
+            <div class="slide">
+              <img src="assets/screenshots/ui-pipeline-job-management.png" alt="OpenCrawling Ingestion Job Pipeline" loading="lazy" />
+              <div class="slide-caption">
+                <h3>Pipeline & Job Scheduling</h3>
+                <p>Schedule, execute, pause, and configure crawling operations. Review historical runs, document success rates, and errors.</p>
+              </div>
+            </div>
+            <div class="slide">
+              <img src="assets/screenshots/ui-connector-configuration.png" alt="OpenCrawling Repository Connector Configuration" loading="lazy" />
+              <div class="slide-caption">
+                <h3>Connector Registry Configuration</h3>
+                <p>Set up SharePoint credentials, S3 bucket access policies, database queries, and custom connector metadata properties.</p>
+              </div>
+            </div>
+            <div class="slide">
+              <img src="assets/screenshots/ui-ingestion-and-embedding-settings.png" alt="OpenCrawling Embedding Settings" loading="lazy" />
+              <div class="slide-caption">
+                <h3>AI & Vector Embedding Mappings</h3>
+                <p>Select RAG embedding models (local Ollama, OpenAI), set custom token text-splitter boundaries, and map schema attributes.</p>
+              </div>
+            </div>
+            <div class="slide">
+              <img src="assets/screenshots/ui-real-time-activity-logs.png" alt="OpenCrawling Real-Time Activity Logs" loading="lazy" />
+              <div class="slide-caption">
+                <h3>Live System Activity & Audit Logs</h3>
+                <p>Stream real-time JVM telemetry, Kafka partition consumer offsets, active threads, and document security ACL mapping logs.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Slider Navigation -->
+          <button class="slider-arrow prev" id="slider-prev-btn" aria-label="Previous Slide">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="slider-arrow next" id="slider-next-btn" aria-label="Next Slide">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="slider-dots" id="slider-dots-container">
+          <span class="slider-dot active" data-index="0"></span>
+          <span class="slider-dot" data-index="1"></span>
+          <span class="slider-dot" data-index="2"></span>
+          <span class="slider-dot" data-index="3"></span>
+          <span class="slider-dot" data-index="4"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Live Ingestion Simulator Section -->
   <section id="simulator" class="simulator-section">
     <div class="section-header">

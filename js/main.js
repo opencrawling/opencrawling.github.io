@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize all interactive components
   initThemeToggle();
   initArchHover();
+  initSlider();
   initSimulator();
   initTabs();
   initCodeCopy();
@@ -419,4 +420,86 @@ function initSvgAnimation() {
   }
 
   requestAnimationFrame(step);
+}
+
+/* ==========================================
+   7. Screenshot Slider / Carousel
+   ========================================== */
+function initSlider() {
+  const slider = document.getElementById('screenshot-slider');
+  const prevBtn = document.getElementById('slider-prev-btn');
+  const nextBtn = document.getElementById('slider-next-btn');
+  const dotsContainer = document.getElementById('slider-dots-container');
+  
+  if (!slider || !prevBtn || !nextBtn || !dotsContainer) return;
+  
+  const slides = slider.querySelectorAll('.slide');
+  const dots = dotsContainer.querySelectorAll('.slider-dot');
+  const slideCount = slides.length;
+  let currentIndex = 0;
+  let autoPlayTimer = null;
+  
+  function updateSlider() {
+    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+    
+    slides.forEach((slide, idx) => {
+      if (idx === currentIndex) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+    
+    dots.forEach((dot, idx) => {
+      if (idx === currentIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+  
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slideCount;
+    updateSlider();
+  }
+  
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+    updateSlider();
+  }
+  
+  function selectSlide(index) {
+    currentIndex = index;
+    updateSlider();
+  }
+  
+  nextBtn.addEventListener('click', () => {
+    nextSlide();
+    resetAutoPlay();
+  });
+  
+  prevBtn.addEventListener('click', () => {
+    prevSlide();
+    resetAutoPlay();
+  });
+  
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      const index = parseInt(e.target.getAttribute('data-index'), 10);
+      selectSlide(index);
+      resetAutoPlay();
+    });
+  });
+  
+  function startAutoPlay() {
+    autoPlayTimer = setInterval(nextSlide, 5000);
+  }
+  
+  function resetAutoPlay() {
+    clearInterval(autoPlayTimer);
+    startAutoPlay();
+  }
+  
+  startAutoPlay();
 }
