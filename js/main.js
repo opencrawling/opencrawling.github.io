@@ -57,23 +57,23 @@ const ARCH_DETAILS = {
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
-    desc: "The heartbeat of the platform, implemented with Java 25. Leverages Virtual Threads and Structured Concurrency to orchestrate crawls, parse and extract text using Apache Tika, schedule jobs, process rate-limiting, and resolve document permissions (ACLs) on the fly."
+    desc: "The scanning and chunking coordinator. Leverages Java 25 virtual threads to run repository connectors, extract text with Apache Tika, split documents into semantic chunks (using TokenTextSplitter), and publish Chunk Messages to the 'opencrawling-chunks' Kafka topic."
   },
   kafka: {
-    title: "Apache Kafka Ingestion Queue",
-    desc: "Implements a high-throughput, event-driven architecture using the Claim Check Pattern. Instead of sending bulky binary documents, the Core publishes a light reference payload to Kafka, decoupling scanning from transformation pipelines."
+    title: "Apache Kafka Message Broker",
+    desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Vector Search Outputs",
-    desc: "Connects to vector databases and search engines (PostgreSQL/pgvector, Elasticsearch, Qdrant, Milvus). Sends sanitized, segmented, and embedded document chunks alongside translated ACL security filters."
+    title: "Vector Search Outputs & Writer",
+    desc: "Saves precomputed vector embeddings and chunks directly to the database. The Vector Store Writer consumes embedded chunk messages and uses PrecomputedEmbeddingModel to bypass downstream model execution, writing directly to PgVectorStore."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
     desc: "A premium admin interface (oc-admin-ui) for administrators. Provides live telemetry on job queues, connector scheduling, Kafka consumer offsets, document-level audit logs, and status reports."
   },
   ollama: {
-    title: "Ollama Embedding Generation",
-    desc: "On-the-fly text segmentation and vector embedding generation using local LLM models (e.g., nomic-embed-text) in Ollama, or third-party cloud APIs (OpenAI, HuggingFace, Cohere) before indexing."
+    title: "Embedding Consumer (Ollama)",
+    desc: "Handles vector generation asynchronously. The local Ollama server receives text chunks from the Embedding Consumer, computes the high-dimensional vectors, and returns them to be published to the 'opencrawling-embedded' Kafka topic."
   },
   db: {
     title: "PostgreSQL & Redis Cache Stack",
@@ -148,8 +148,8 @@ const SIMULATOR_DATA = {
     ],
     logs: {
       scan: "Incremental scan triggered. Querying SharePoint Graph API. Checking SIDs and folder permission inheritance...",
-      core: "Core Engine spawned Virtual Threads. Text extracted. Resolving SharePoint ACL User SIDs...",
-      vector: "Semantic chunking done. Connecting to Ollama embedding API. Writing vectors and ACL metadata SIDs..."
+      core: "Ingestion Core: Extracted text with Apache Tika. Split into semantic chunks. Publishing DocumentChunkMessages to Kafka topic 'opencrawling-chunks'...",
+      vector: "Embedding Consumer: Generated vectors via Ollama. Vector Store Writer: Writing precomputed vectors to pgvector..."
     }
   },
   s3: {
@@ -159,8 +159,8 @@ const SIMULATOR_DATA = {
     ],
     logs: {
       scan: "Scanning Amazon S3 bucket 'opencrawling-public-docs'. S3 Bucket policy detected: Public Read permission...",
-      core: "Core Ingestion resolved Claim Check pattern. File stored in local tmp directory. No explicit ACLs found, inheriting Public defaults...",
-      vector: "Generating text tokens. Commencing high-dimensional indexing. Storing object reference..."
+      core: "Ingestion Core: Streamed object, extracted text (Tika). Split into tokens. Publishing chunk payloads to Kafka 'opencrawling-chunks'...",
+      vector: "Embedding Consumer: Fetched vectors from Ollama. Vector Store Writer: Writing precomputed vectors to pgvector database..."
     }
   },
   database: {
@@ -170,8 +170,8 @@ const SIMULATOR_DATA = {
     ],
     logs: {
       scan: "Running JDBC cursor statement on PostgreSQL tables. Checking Row-Level Security (RLS) constraints...",
-      core: "Core translated Database schema. Extracting Row permissions & role mapping...",
-      vector: "Creating relational embeddings. Pushing multi-dimensional fields to vector output..."
+      core: "Ingestion Core: Parsed DB columns, mapped columns to document structure. Chunking rows. Publishing to Kafka 'opencrawling-chunks'...",
+      vector: "Embedding Consumer: Mapped Ollama relational embeddings. Vector Store Writer: Storing precomputed vector rows..."
     }
   }
 };
@@ -357,32 +357,26 @@ function initCodeCopy() {
 function initSvgAnimation() {
   const p1 = document.getElementById('anim-particle-1');
   const p2 = document.getElementById('anim-particle-2');
-  if (!p1 || !p2) return;
+  const p3 = document.getElementById('anim-particle-3');
+  if (!p1 || !p2 || !p3) return;
 
-  // Let's programmatically animate the SVG particles along the flow lines.
-  // Line 1: 130 to 240 (x axis), y is 225
-  // Line 2: 380 to 450 (x axis), y is 225
-  // Line 3: 570 to 680 (x axis), y is 225
-  
-  let animFrame;
   let startTime = null;
   
   function step(timestamp) {
     if (!startTime) startTime = timestamp;
-    const progress = (timestamp - startTime) % 3000 / 3000; // 3 seconds loop
+    const progress = ((timestamp - startTime) % 3000) / 3000; // 3 seconds loop
     
-    // Particle 1 (Violet) runs from Sources to Core (130 -> 240) then Core to Kafka (380 -> 450)
-    // We will divide the time into segments
-    if (progress < 0.4) {
-      const segProgress = progress / 0.4;
+    // Particle 1 (Violet) - Ingestion & Chunking Flow
+    if (progress < 0.2) {
+      const segProgress = progress / 0.2;
       const x = 130 + (240 - 130) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 225);
       p1.setAttribute('opacity', 1);
-    } else if (progress >= 0.4 && progress < 0.5) {
-      p1.setAttribute('opacity', 0); // inside Core
-    } else if (progress >= 0.5 && progress < 0.9) {
-      const segProgress = (progress - 0.5) / 0.4;
+    } else if (progress >= 0.2 && progress < 0.3) {
+      p1.setAttribute('opacity', 0); // inside Core (Tika extraction & splitting)
+    } else if (progress >= 0.3 && progress < 0.5) {
+      const segProgress = (progress - 0.3) / 0.2;
       const x = 380 + (450 - 380) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 225);
@@ -391,10 +385,28 @@ function initSvgAnimation() {
       p1.setAttribute('opacity', 0);
     }
 
-    // Particle 2 (Cyan) runs from Kafka to Outputs (570 -> 680)
-    const p2Progress = (progress + 0.5) % 1.0; // Offset by 50%
-    if (p2Progress < 0.5) {
-      const segProgress = p2Progress / 0.5;
+    // Particle 3 (Amber) - Asynchronous Ollama Embedding Consumer Loop
+    if (progress >= 0.5 && progress < 0.65) {
+      const segProgress = (progress - 0.5) / 0.15;
+      const y = 170 - (170 - 120) * segProgress;
+      p3.setAttribute('cx', 510);
+      p3.setAttribute('cy', y);
+      p3.setAttribute('opacity', 1);
+    } else if (progress >= 0.65 && progress < 0.75) {
+      p3.setAttribute('opacity', 0); // generating vectors in Ollama
+    } else if (progress >= 0.75 && progress < 0.9) {
+      const segProgress = (progress - 0.75) / 0.15;
+      const y = 120 + (170 - 120) * segProgress;
+      p3.setAttribute('cx', 510);
+      p3.setAttribute('cy', y);
+      p3.setAttribute('opacity', 1);
+    } else {
+      p3.setAttribute('opacity', 0);
+    }
+
+    // Particle 2 (Cyan) - Vector Store Writer Flow
+    if (progress >= 0.9 && progress < 1.0) {
+      const segProgress = (progress - 0.9) / 0.1;
       const x = 570 + (680 - 570) * segProgress;
       p2.setAttribute('cx', x);
       p2.setAttribute('cy', 225);
@@ -403,8 +415,8 @@ function initSvgAnimation() {
       p2.setAttribute('opacity', 0);
     }
 
-    animFrame = requestAnimationFrame(step);
+    requestAnimationFrame(step);
   }
 
-  animFrame = requestAnimationFrame(step);
+  requestAnimationFrame(step);
 }
