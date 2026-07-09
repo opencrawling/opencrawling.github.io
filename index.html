@@ -552,70 +552,38 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
   <section id="standard" class="standard-section">
     <div class="section-header">
       <h2 class="section-title">Open Ingestion Standard (OIS)</h2>
-      <p class="section-subtitle">Defining a vendor-neutral, cross-platform specification for secure enterprise data exchange and pipeline configuration.</p>
+      <p class="section-subtitle">A cross-platform specification for secure enterprise data exchange and configuration.</p>
     </div>
 
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data environments suffer from proprietary lock-ins, brittle coupled pipelines, and critical security group omissions. The <strong>Open Ingestion Standard (OIS)</strong> is a community-driven specification to standardize data exchange and configurations across all vendors.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads and configurations to enable seamless interoperability between vendors.</p>
         
-        <ul class="standard-pillars">
-          <li>
-            <div class="pillar-marker">🔒</div>
-            <div>
-              <h4>Zero-Trust Security Preserving</h4>
-              <p>Ensures document ACLs, user SIDs, and OAuth groups are preserved during scanning, chunking, and indexing.</p>
-            </div>
-          </li>
-          <li>
-            <div class="pillar-marker">🔌</div>
-            <div>
-              <h4>Vendor-Neutral Interoperability</h4>
-              <p>Standardizes document exchange payloads and configuration files to allow seamless migration between different vendors.</p>
-            </div>
-          </li>
-          <li>
-            <div class="pillar-marker">⚙️</div>
-            <div>
-              <h4>Event-Driven Queue Decoupling</h4>
-              <p>Promotes asynchronous worker scaling (Scanner, Embedder, Writer) utilizing the Claim Check Pattern.</p>
-            </div>
-          </li>
-        </ul>
+        <div class="standard-badges">
+          <span class="std-badge">🔒 Zero-Trust Security</span>
+          <span class="std-badge">🔌 Vendor-Neutral</span>
+          <span class="std-badge">⚙️ Event-Decoupled</span>
+        </div>
 
         <div class="standard-actions">
-          <a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read the Manifesto</a>
-          <a href="https://github.com/OpenCrawling/open-ingestion-standard/tree/main/schemas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Explore JSON Schemas</a>
+          <a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read Manifesto</a>
+          <a href="https://github.com/OpenCrawling/open-ingestion-standard/tree/main/schemas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Explore Schemas</a>
         </div>
       </div>
 
       <div class="standard-visual-content">
         <div class="schema-card">
           <div class="schema-card-header">
-            <span class="schema-type">JSON Schema</span>
-            <span class="schema-file">document.schema.json</span>
+            <span class="schema-type">JSON Payload</span>
+            <span class="schema-file">sample-document.json</span>
           </div>
           <pre><code class="language-json">{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "OIS Document Payload",
-  "type": "OBJECT",
-  "required": ["id", "source", "content", "security"],
-  "properties": {
-    "id": { "type": "STRING" },
-    "source": {
-      "type": "OBJECT",
-      "required": ["type", "instance"]
-    },
-    "content": {
-      "type": "OBJECT",
-      "required": ["mimeType"]
-    },
-    "security": {
-      "type": "OBJECT",
-      "required": ["inheritanceEnabled", "permissions"]
-    }
-  }
+  "id": "doc-554032-sp",
+  "source": { "type": "sharepoint", "instance": "..." },
+  "content": { "mimeType": "application/pdf", "text": "..." },
+  "metadata": { "title": "Fiscal Strategy", "author": "..." },
+  "security": { "inheritanceEnabled": true, "permissions": [] }
 }</code></pre>
         </div>
       </div>
