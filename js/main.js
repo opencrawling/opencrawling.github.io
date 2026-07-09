@@ -57,7 +57,7 @@ const ARCH_DETAILS = {
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
-    desc: "The heartbeat of the platform, implemented with Java 25. Leverages Virtual Threads and Structured Concurrency to orchestrate crawls efficiently, schedule jobs, process rate-limiting, and resolve document permissions (ACLs) on the fly."
+    desc: "The heartbeat of the platform, implemented with Java 25. Leverages Virtual Threads and Structured Concurrency to orchestrate crawls, parse and extract text using Apache Tika, schedule jobs, process rate-limiting, and resolve document permissions (ACLs) on the fly."
   },
   kafka: {
     title: "Apache Kafka Ingestion Queue",
