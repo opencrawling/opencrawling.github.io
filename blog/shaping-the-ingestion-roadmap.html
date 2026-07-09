@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shaping the Ingestion Roadmap: Which Connectors Do You Need? - OpenCrawling</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .roadmap-list {
+      list-style-type: none;
+      padding-left: 0 !important;
+      margin: 2rem 0;
+    }
+
+    .roadmap-item {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .roadmap-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .roadmap-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+    }
+
+    .status-completed {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-discussion {
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--cyan-color);
+    }
+
+    .status-planned {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--accent-color);
+    }
+
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 2rem;
+      }
+      .blog-post-wrapper {
+        margin-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Blog Post Wrapper -->
+  <main class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Articles</a>
+    
+    <article>
+      <header class="post-header">
+        <h1 class="post-title">Shaping the Ingestion Roadmap: Which Connectors Do You Need?</h1>
+        <div class="post-meta">
+          <span class="blog-badge">Roadmap</span>
+          <span class="post-date">July 9, 2026</span>
+          <span class="post-read-time">4 min read</span>
+        </div>
+      </header>
+      
+      <div class="post-content">
+        <p>A data ingestion and security mapping framework is only as powerful as the ecosystem of repositories it can reach. For OpenCrawling to successfully bridge siloed enterprise content to modern RAG architectures, we need a robust set of pluggable connectors.</p>
+        
+        <p>Today, we have established our core bootstrap architecture and launched our first reference connectors: the local <strong>Filesystem Repository Connector</strong> and the <strong>pgvector Output Connector</strong>. Now, we are looking to the community to prioritize what comes next.</p>
+        
+        <p>We've opened a dedicated <strong>GitHub Roadmap Discussion</strong> to gather your votes and detailed requirements. Here is a breakdown of the connectors currently under review:</p>
+
+        <h2>📥 1. Repository Connectors (Sources)</h2>
+        <p>Enterprise data is scattered across legacy systems, cloud buckets, and relational stores. We are considering the following source connectors for our next development cycle:</p>
+
+        <ul class="roadmap-list">
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Microsoft SharePoint (Online & On-Premises)</strong>
+              <span class="roadmap-status status-discussion">Under Discussion</span>
+            </div>
+            <p>Crucial for enterprise search, but presents complex Access Control List (ACL) inheritance structures. The connector must map Active Directory SIDs dynamically to maintain document permissions.</p>
+          </li>
+          
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Amazon S3 & MinIO</strong>
+              <span class="roadmap-status status-planned">Planned</span>
+            </div>
+            <p>Object storage crawlers that poll buckets for changes, handle metadata extraction from S3 user headers, and route objects via Kafka claim checks.</p>
+          </li>
+
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Atlassian Confluence (Cloud & Server)</strong>
+              <span class="roadmap-status status-discussion">Under Discussion</span>
+            </div>
+            <p>Crawls space hierarchies, pulls page contents, and maps space/page restrictions to ensure zero-trust search query boundaries.</p>
+          </li>
+
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Google Drive / Workspace</strong>
+              <span class="roadmap-status status-planned">Planned</span>
+            </div>
+            <p>Crawls shared drives, pulls Google Docs/Sheets texts, and translates Google OAuth permissions to local search permission matrices.</p>
+          </li>
+        </ul>
+
+        <h2>📤 2. Vector Store Output Connectors</h2>
+        <p>Once data is crawled, text-extracted, and embedded, it must be indexed. While <strong>pgvector</strong> is our launch database, we want to integrate native outputs for specialized high-scale vector stores:</p>
+
+        <ul class="roadmap-list">
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Qdrant Output Connector</strong>
+              <span class="roadmap-status status-planned">Planned</span>
+            </div>
+            <p>High-performance vector engine supporting hardware-accelerated search and payload pre-filtering. Perfect for enterprise RAG requiring sub-millisecond lookups.</p>
+          </li>
+
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Elasticsearch / OpenSearch Output</strong>
+              <span class="roadmap-status status-discussion">Under Discussion</span>
+            </div>
+            <p>Bridges hybrid search (combining sparse BM25 text queries with dense vector search) while leveraging native document-level security query filters.</p>
+          </li>
+
+          <li class="roadmap-item">
+            <div class="roadmap-item-header">
+              <strong>Milvus Output Connector</strong>
+              <span class="roadmap-status status-planned">Planned</span>
+            </div>
+            <p>Distributed vector database built for massive billion-scale vector workloads.</p>
+          </li>
+        </ul>
+
+        <h2>🛡️ How Security Dictates the Roadmap</h2>
+        <p>At OpenCrawling, a connector is not just a text extractor. It must extract <strong>security permissions (ACLs)</strong> as first-class metadata. For example, when building the SharePoint connector, we cannot simply extract PDF texts; we must also fetch Active Directory User SIDs, Group SIDs, and inheritance states.</p>
+        <p>This is why we need your feedback. If you use a repository like Confluence or Google Drive, how do you manage security mappings inside your organization? Sharing your architecture in our discussion helps us design robust schemas that solve real-world problems.</p>
+
+        <h2>💬 Join the Roadmap Discussion!</h2>
+        <p>Your input directly influences what our core team works on next. We want to know:</p>
+        <ol>
+          <li>Which repository contains the bulk of your enterprise knowledge?</li>
+          <li>What vector database is powering your search applications?</li>
+          <li>Are you willing to test early release connector builds?</li>
+        </ol>
+        
+        <p>👉 <strong><a href="https://github.com/opencrawling/opencrawling/discussions" target="_blank" rel="noopener noreferrer">Jump over to our GitHub Discussions Roadmap Thread</a></strong>, cast your votes, and let us know your requirements!</p>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
