@@ -1333,6 +1333,88 @@
     gap: 0.5rem;
   }
   
+  /* Blog Section */
+  .blog-section {
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  
+  .blog-grid {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .blog-card {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--card-bg);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .blog-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent-color), var(--cyan-color));
+  }
+  
+  .blog-card:hover {
+    border-color: var(--card-hover-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl), 0 10px 30px rgba(139, 92, 246, 0.05);
+  }
+  
+  .blog-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  
+  .blog-badge {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+  
+  .blog-card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  
+  .blog-card-title a:hover {
+    color: var(--accent-color);
+  }
+  
+  .blog-excerpt {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+  
+  .blog-card-footer {
+    margin-top: 0.5rem;
+  }
+  
   /* Footer */
   .site-footer {
     background-color: var(--footer-bg);
@@ -1534,6 +1616,14 @@
   
   .community-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .blog-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .blog-card-title {
+    font-size: 1.4rem;
   }
   
   .footer-container {

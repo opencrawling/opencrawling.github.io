@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcing the Open Ingestion Standard (OIS) & OpenCrawling</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <!-- Mermaid.js for Architecture Diagram -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#8B5CF6',
+          primaryTextColor: '#F1F5F9',
+          lineColor: '#06B6D4',
+          nodeBorder: '#8B5CF6',
+          mainBkg: '#0F172A',
+          clusterBkg: '#07090E'
+        }
+      });
+    });
+  </script>
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+    
+    .post-content blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(139, 92, 246, 0.05);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+    
+    /* Mermaid diagram overrides */
+    .mermaid {
+      background: rgba(7, 9, 14, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem 1rem;
+      margin: 2.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 2rem;
+      }
+      .blog-post-wrapper {
+        margin-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Blog Post Wrapper -->
+  <main class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Articles</a>
+    
+    <article>
+      <header class="post-header">
+        <h1 class="post-title">Announcing the Open Ingestion Standard (OIS) & OpenCrawling</h1>
+        <div class="post-meta">
+          <span class="blog-badge">Announcement</span>
+          <span class="post-date">July 9, 2026</span>
+          <span class="post-read-time">5 min read</span>
+        </div>
+      </header>
+      
+      <div class="post-content">
+        <p>In the race to build production-grade Retrieval-Augmented Generation (RAG) and enterprise AI applications, one fundamental piece of infrastructure is often treated as an afterthought: <strong>data ingestion</strong>.</p>
+        
+        <p>Moving files from enterprise repositories—like SharePoint, Amazon S3, databases, and local file shares—into vector databases is a complex, high-risk process. In most corporate environments, data pipelines are:</p>
+        <ol>
+          <li><strong>Security-Blind:</strong> They extract text but ignore source permissions (Access Control Lists), leading to critical security leaks where AI models serve sensitive documents to unauthorized users.</li>
+          <li><strong>Monolithic & Coupled:</strong> Large file uploads clog message brokers and search APIs, causing timeouts and system-wide bottlenecks.</li>
+          <li><strong>Proprietary & Locked-in:</strong> Ingestion configurations are tied to specific search vendors, making it incredibly difficult to migrate or scale.</li>
+        </ol>
+        
+        <p>To solve these challenges, we are proud to introduce the <strong>Open Ingestion Standard (OIS)</strong> alongside its modern JVM reference implementation, <strong>OpenCrawling</strong>.</p>
+
+        <h2>1. Introducing the Open Ingestion Standard (OIS)</h2>
+        <p>The Open Ingestion Standard (OIS) is an open specification, community manifesto, and schema standard for secure, decoupled, and vendor-neutral data ingestion pipelines.</p>
+        <p>At its core, OIS establishes four foundational pillars:</p>
+        
+        <h3>The Four Pillars of OIS</h3>
+        <ul>
+          <li><strong>Zero-Trust Ingestion (Security First):</strong> Document security permissions (User/Group SIDs) are treated as first-class metadata. AI search queries must respect these permissions at query time to ensure users only see content they are authorized to access.</li>
+          <li><strong>Vendor-Neutral Interoperability:</strong> Payload schemas (JSON) and job configurations (YAML/JSON) are platform-agnostic, preventing vendor lock-in.</li>
+          <li><strong>Event-Driven Decoupling:</strong> Pipelines are split into independent, horizontally scalable stages connected by asynchronous queues.</li>
+          <li><strong>Claim Check Pattern:</strong> To protect the message broker, bulky binary payloads are kept off primary queues. Instead, queue messages carry lightweight reference claims, pulling binary content only when needed.</li>
+        </ul>
+
+        <h2>2. Meet OpenCrawling: The Reference Implementation</h2>
+        <p>To prove the power of OIS, we built OpenCrawling. OpenCrawling is an enterprise data integration platform modeled after Apache ManifoldCF, but rebuilt for the modern era.</p>
+        
+        <h3>The Modern Tech Stack</h3>
+        <ul>
+          <li><strong>Java 25 (Preview Features):</strong> Employs Virtual Threads and Structured Concurrency to manage millions of concurrent crawl tasks efficiently with minimal overhead.</li>
+          <li><strong>Spring Boot & Spring AI:</strong> Drives the backend framework and handles AI integration.</li>
+          <li><strong>Apache Kafka:</strong> KRaft-mode message broker orchestrating decoupled event stages.</li>
+          <li><strong>pgvector:</strong> For storing high-dimensional embeddings natively inside PostgreSQL.</li>
+          <li><strong>Ollama:</strong> For local, secure embedding generation (using models like <code>mxbai-embed-large</code>).</li>
+          <li><strong>React, Vite, & Tailwind CSS:</strong> A sleek, real-time admin panel for scheduling and telemetry.</li>
+        </ul>
+
+        <h2>3. Architecture in Action: How it Works</h2>
+        <p>OpenCrawling implements the OIS manifesto through a highly decoupled, multi-stage pipeline:</p>
+
+        <div class="mermaid">
+graph TD
+    subgraph Repository Crawlers
+        Crawl[Filesystem/S3/SharePoint Crawler]
+    end
+
+    subgraph Kafka Messaging Broker [Apache Kafka Broker]
+        T1[(Topic: opencrawling-ingestion)]
+        T2[(Topic: opencrawling-chunks)]
+        T3[(Topic: opencrawling-embedded)]
+    end
+
+    subgraph Workers [Horizontal JVM Consumer Workers]
+        Ing_Cons[Ingestion Consumer]
+        Embed_Cons[Embedding Consumer]
+        Write_Cons[Vector Store Writer]
+    end
+
+    subgraph External Infrastructure
+        Storage[(Shared Storage / Filesystem)]
+        Ollama[Ollama Embedding AI]
+        PG[(PostgreSQL + pgvector)]
+    end
+
+    Crawl -->|1. Store Raw File| Storage
+    Crawl -->|2. Send IngestionMessage| T1
+    T1 -->|3. Consume Claim Check| Ing_Cons
+    Ing_Cons -->|4. Resolve URI & Read| Storage
+    Ing_Cons -->|5. Extract Text & Chunk| T2
+    T2 -->|6. Consume Chunks| Embed_Cons
+    Embed_Cons -->|7. Generate Vectors| Ollama
+    Embed_Cons -->|8. Send EmbeddedMessage| T3
+    T3 -->|9. Consume & Index| Write_Cons
+    Write_Cons -->|10. Write| PG
+        </div>
+
+        <h3>The Claim Check Code</h3>
+        <p>Instead of passing megabytes of binary PDFs or Word documents directly over Kafka, OpenCrawling publishes a lightweight payload containing a URI reference (the claim check).</p>
+        
+        <p>Here is the Java representation of the Kafka payload:</p>
+        <pre><code class="language-java">public record IngestionMessage(
+    String documentId,
+    String uri,
+    Map&lt;String, List&lt;String&gt;&gt; metadata,
+    String acl,
+    String lastModified
+) {}</code></pre>
+
+        <p>When the IngestionConsumer picks up this message, it resolves the storage pointer asynchronously, parses the content using Apache Tika, and passes it to a token text-splitter:</p>
+        <pre><code class="language-java">@KafkaListener(topics = KafkaConfig.TOPIC_NAME)
+public void consume(IngestionMessage message) {
+    URI fileUri = new URI(message.uri());
+    
+    // Resolve the binary payload via Claim Check
+    try (InputStream contentStream = Files.newInputStream(Paths.get(fileUri))) {
+        String text = tika.parseToString(contentStream);
+        
+        // Map ACLs & Metadata to the Spring AI Document
+        Map&lt;String, Object&gt; metadata = new HashMap&lt;&gt;(message.metadata());
+        metadata.put("acl", message.acl());
+        
+        Document aiDoc = new Document(message.documentId(), text, metadata);
+        
+        // Chunk and publish to the next topic stage
+        List&lt;Document&gt; chunks = textSplitter.apply(List.of(aiDoc));
+        for (Document chunk : chunks) {
+            kafkaTemplate.send(KafkaConfig.CHUNKS_TOPIC_NAME, chunk.getId(), chunkMsg);
+        }
+    }
+}</code></pre>
+
+        <p>This decoupled flow ensures that heavy text parsing, embedding API calls, and database writes never block each other, allowing you to scale each step independently.</p>
+
+        <h2>4. Preserving Security at Scale</h2>
+        <p>Security is where standard ingestion pipelines fail. If a user queries your RAG application, how do you prevent the LLM from synthesizing an answer based on a file they don't have access to?</p>
+        
+        <p>By following the OIS Zero-Trust Ingestion pillar, OpenCrawling:</p>
+        <ol>
+          <li>Connects to the repository and extracts the Access Control List (ACL) security metadata (like Active Directory Windows SIDs or OAuth Groups).</li>
+          <li>Carries these permissions as structured metadata fields inside the document payload throughout the entire Kafka ingestion pipeline.</li>
+          <li>Indexes them into pgvector along with the embeddings.</li>
+          <li>Allows application queries to perform pre-filtering against these SIDs, guaranteeing that search queries only retrieve documents matching the user's active permissions.</li>
+        </ol>
+
+        <h2>Join the Movement</h2>
+        <p>We believe secure data ingestion should be open, standardized, and built on modern technology.</p>
+        <p>Here is how you can get involved today:</p>
+        <ul>
+          <li><strong>Star & Explore the Code:</strong> Check out <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener noreferrer">OpenCrawling on GitHub</a> and run the local stack with Docker.</li>
+          <li><strong>Read & Contribute to the Standard:</strong> Check out the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer">Open Ingestion Standard Specification</a> and review our JSON schemas.</li>
+          <li><strong>Join the Discussion:</strong> Help shape our roadmap! What should we build next—SharePoint, S3, Qdrant, or Confluence?</li>
+        </ul>
+        <p>Let's build a secure, vendor-neutral future for AI data routing together! 🌐</p>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
