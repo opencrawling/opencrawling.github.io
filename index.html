@@ -540,17 +540,18 @@
         <div class="tab-pane active" id="tab-docker">
           <div class="code-wrapper">
             <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
-            <pre><code class="language-yaml"># Run from root of cloned repository to boot up all infrastructure containers
+            <pre><code class="language-bash"># 1. Start backing infrastructure (Postgres, Redis, Kafka, Ollama)
 docker compose up -d
 
-# Verify services are running
-docker ps
+# 2. Build OpenCrawling application images (Backend & Frontend)
+docker compose -f docker-compose-apps.yml build
 
-# Services started:
-# - PostgreSQL: localhost:5432 (pgvector ready)
-# - Redis: localhost:6379 (session cache)
-# - Apache Kafka: localhost:9092 (messaging topic)
-# - Ollama: localhost:11434 (embedding engine)</code></pre>
+# 3. Start OpenCrawling services
+docker compose -f docker-compose-apps.yml up -d
+
+# Access points:
+# - Backend API + Integrated UI: http://localhost:8080
+# - Standalone Admin Interface: http://localhost:3000</code></pre>
           </div>
         </div>
 
