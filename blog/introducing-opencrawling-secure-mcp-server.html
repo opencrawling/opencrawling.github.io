@@ -295,12 +295,12 @@ graph TD
         PG[(PostgreSQL + pgvector)]
     end
 
-    LLM -->|"1. secureVectorSearch(query, principal, roles)"| MCP
+    LLM -->|1. secureVectorSearch - query, principal, roles| MCP
     MCP -->|2. Check/Map Access Token| Auth
     MCP -->|3. Build Filter Expression| VecStore
-    VecStore -->|4. SQL Query with WHERE acl IN (...)| PG
+    VecStore -->|4. SQL Query with WHERE acl IN list| PG
     PG -->|5. Authorized Vector Chunks| VecStore
-    VecStore -->|6. Chunks (Only Permitted Content)| MCP
+    VecStore -->|6. Chunks - Only Permitted Content| MCP
     MCP -->|7. Secure Context JSON| LLM
         </div>
 
