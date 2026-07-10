@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
+  <meta name="keywords" content="model context protocol, mcp server, spring ai, opencrawling, enterprise rag, access control list, acl mapping, vector database security">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html">
+  <meta property="og:title" content="Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server">
+  <meta property="og:description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
+  <meta property="og:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html">
+  <meta property="twitter:title" content="Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server">
+  <meta property="twitter:description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
+  <meta property="twitter:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server",
+    "description": "Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.",
+    "datePublished": "2026-07-10",
+    "author": {
+      "@type": "Organization",
+      "name": "OpenCrawling Core Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.github.io/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <!-- Mermaid.js for Architecture Diagram -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#8B5CF6',
+          primaryTextColor: '#F1F5F9',
+          lineColor: '#06B6D4',
+          nodeBorder: '#8B5CF6',
+          mainBkg: '#0F172A',
+          clusterBkg: '#07090E'
+        }
+      });
+    });
+  </script>
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+    
+    .post-content blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(139, 92, 246, 0.05);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+    
+    /* Mermaid diagram overrides */
+    .mermaid {
+      background: rgba(7, 9, 14, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem 1rem;
+      margin: 2.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 2rem;
+      }
+      .blog-post-wrapper {
+        margin-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Blog Post Wrapper -->
+  <main class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Articles</a>
+    
+    <article>
+      <header class="post-header">
+        <h1 class="post-title">Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server</h1>
+        <div class="post-meta">
+          <span class="blog-badge">Technology</span>
+          <span class="post-date">July 10, 2026</span>
+          <span class="post-read-time">6 min read</span>
+        </div>
+      </header>
+      
+      <div class="post-content">
+        <p>In the world of Generative AI, Large Language Models (LLMs) are transitioning from simple conversation partners to active, goal-oriented <strong>AI Agents</strong>. These agents need access to enterprise data stores—such as SharePoint sites, AWS S3 buckets, and local databases—to solve problems. However, giving AI models access to unstructured data creates a massive headache: <strong>how do you enforce enterprise document security boundaries?</strong></p>
+        
+        <p>If an employee asks an AI agent a question, the agent should only retrieve and synthesize information from files that the specific employee is authorized to see. Without query-time security checks, your AI system is highly susceptible to critical data leaks. Under typical RAG (Retrieval-Augmented Generation) architectures, prompt injection or broad search queries can lead to LLMs surfacing payroll details, partner agreements, or architectural blueprints to unauthorized users.</p>
+        
+        <p>To solve this challenge, the OpenCrawling core team is excited to announce the release of the **OpenCrawling Secure MCP Server** module, implemented via Spring AI and the **Model Context Protocol (MCP)**.</p>
+
+        <h2>1. What is the Model Context Protocol (MCP)?</h2>
+        <p>Developed to standardize how LLMs connect to external data sources and tools, the **Model Context Protocol (MCP)** is an open-source standard designed by Anthropic and supported across the developer ecosystem. It establishes a protocol boundary between AI models (MCP Clients) and data resources (MCP Servers).</p>
+        <p>Rather than writing custom, fragile API integrations for every AI client or plugin framework, MCP allows servers to expose unified resources, prompts, and tools that any MCP-compliant LLM or IDE (like Claude Desktop, Cursor, or Antigravity) can call dynamically.</p>
+        <p>By exposing ingestion data through an MCP server, OpenCrawling provides a clean, secure channel for AI agents to query enterprise knowledge stores.</p>
+
+        <h2>2. Architecture: Zero-Trust Context Retrieval</h2>
+        <p>The OpenCrawling MCP implementation enforces <strong>Zero-Trust context retrieval</strong>. When an AI client requests context from the MCP Server, the query is not simply passed to the vector store. Instead, the server acts as an active security filter, validating the caller's identity (user principal and roles) and modifying the vector database query on the fly.</p>
+
+        <div class="mermaid">
+graph TD
+    subgraph AI Client Context
+        LLM[LLM Agent / Client]
+    end
+
+    subgraph OpenCrawling Runtime
+        MCP[McpVectorServer]
+        Auth[Authority Service]
+        VecStore[PgVectorStore]
+    end
+
+    subgraph Security Boundary
+        PG[(PostgreSQL + pgvector)]
+    end
+
+    LLM -->|"1. secureVectorSearch(query, principal, roles)"| MCP
+    MCP -->|2. Check/Map Access Token| Auth
+    MCP -->|3. Build Filter Expression| VecStore
+    VecStore -->|4. SQL Query with WHERE acl IN (...)| PG
+    PG -->|5. Authorized Vector Chunks| VecStore
+    VecStore -->|6. Chunks (Only Permitted Content)| MCP
+    MCP -->|7. Secure Context JSON| LLM
+        </div>
+
+        <h2>3. Inside the Code: Server-Side ACL Filtering</h2>
+        <p>At the heart of the MCP implementation is the <code>McpVectorServer</code> component, built using <code>Spring AI 2.0</code>. The server exposes three core MCP tools using the standard <code>@McpTool</code> annotation:</p>
+        
+        <ul>
+          <li><strong><code>secureVectorSearch</code>:</strong> Performs similarity searches on vectorized enterprise documents, filtering results based on the caller's principal and roles.</li>
+          <li><strong><code>getDocumentContent</code>:</strong> Fetches the full text and metadata of a specific file, ensuring the caller has access permissions.</li>
+          <li><strong><code>listAccessibleSources</code>:</strong> Lists all indexed documents that are accessible to the caller.</li>
+        </ul>
+
+        <p>Here is a snippet of how the server builds the security filters dynamically using the <code>FilterExpressionBuilder</code>:</p>
+
+        <pre><code class="language-java">@McpTool(description = "Perform a secure similarity search on vectorized enterprise knowledge documents.")
+public List<DocumentSearchResult> secureVectorSearch(
+        @McpToolParam(description = "The query to search for", required = true) String query,
+        @McpToolParam(description = "The user principal identity", required = true) String userPrincipal,
+        @McpToolParam(description = "Roles/groups the caller belongs to", required = false) String userRoles
+) {
+    FilterExpressionBuilder b = new FilterExpressionBuilder();
+    
+    // 1. Always allow public documents
+    var securityExpression = b.eq("acl", "public");
+
+    // 2. Allow documents matching the user principal
+    if (userPrincipal != null && !userPrincipal.trim().isBlank()) {
+        securityExpression = b.or(securityExpression, b.eq("acl", userPrincipal.trim()));
+    }
+
+    // 3. Allow documents matching the user's active LDAP/OAuth groups
+    if (userRoles != null && !userRoles.trim().isBlank()) {
+        List<String> rolesList = Arrays.stream(userRoles.split(","))
+                .map(String::trim)
+                .toList();
+        securityExpression = b.or(securityExpression, b.in("acl", rolesList));
+    }
+
+    // 4. Submit secure search request to pgvector
+    SearchRequest searchRequest = SearchRequest.builder()
+            .query(query)
+            .filterExpression(securityExpression.build())
+            .topK(5)
+            .build();
+
+    return vectorStore.similaritySearch(searchRequest).stream()
+            .map(doc -> new DocumentSearchResult(...))
+            .toList();
+}</code></pre>
+
+        <p>Because this logic is executed entirely on the server side within the secure boundary of the Spring Boot runtime, the LLM client can never bypass the filter or gain access to raw database items that are unauthorized.</p>
+
+        <h2>4. Configuring the MCP Server in Your Project</h2>
+        <p>To enable the MCP server in your OpenCrawling runtime instance, you just need to include the <code>spring-ai-starter-mcp-server-webmvc</code> dependency in your Maven configuration:</p>
+
+        <pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.ai&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-ai-starter-mcp-server-webmvc&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+        <p>Then, define the server name in your <code>application.yml</code>:</p>
+        <pre><code class="language-yaml">spring:
+  ai:
+    mcp:
+      server:
+        name: "opencrawling-secure-vector-mcp"
+        transport: webmvc</code></pre>
+
+        <p>Once you run the bootstrap runtime via <code>mvn spring-boot:run</code>, the MCP endpoints are exposed over HTTP/SSE, ready to be configured inside your Claude Desktop or custom AI agent configurations!</p>
+
+        <h2>5. Why This Matters for the Future of Enterprise AI</h2>
+        <p>As organizations move past basic chat applications and deploy fully autonomous AI agents that schedule meetings, write code, and query databases, context security must be absolute. The OpenCrawling Secure MCP Server acts as an intelligent security guard: it ensures that while AI models are given the freedom to query database repositories, they are only given access to information the user is legally permitted to see.</p>
+
+        <h2>Join the Discussion</h2>
+        <p>We are actively developing repository connectors and security mappings. We'd love to hear your feedback:</p>
+        <ul>
+          <li><strong>Check the Code:</strong> Clone the <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener noreferrer">OpenCrawling framework repository</a> and run the docker setup.</li>
+          <li><strong>Read the Specs:</strong> Read details about how we map Active Directory SIDs in the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer">Open Ingestion Standard repository</a>.</li>
+        </ul>
+        <p>Let's make enterprise AI secure, standard-driven, and open! 🛡️</p>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
