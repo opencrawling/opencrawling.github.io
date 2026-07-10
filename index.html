@@ -467,20 +467,38 @@
         <div class="sim-pipeline" id="sim-pipeline">
           <div class="pipeline-station" id="station-src">
             <span class="station-icon">📂</span>
-            <span class="station-label">Source</span>
+            <span class="station-label">Crawler</span>
           </div>
           
           <div class="pipeline-connector-line">
             <div class="pipeline-pulse" id="pulse-1"></div>
           </div>
 
-          <div class="pipeline-station" id="station-core">
-            <span class="station-icon">⚙️</span>
-            <span class="station-label">Core Engine</span>
+          <div class="pipeline-station" id="station-kafka">
+            <span class="station-icon">🚇</span>
+            <span class="station-label">Kafka Broker</span>
           </div>
 
           <div class="pipeline-connector-line">
             <div class="pipeline-pulse" id="pulse-2"></div>
+          </div>
+
+          <div class="pipeline-station" id="station-tika">
+            <span class="station-icon">⚙️</span>
+            <span class="station-label">Ingestion (Tika)</span>
+          </div>
+
+          <div class="pipeline-connector-line">
+            <div class="pipeline-pulse" id="pulse-3"></div>
+          </div>
+
+          <div class="pipeline-station" id="station-ollama">
+            <span class="station-icon">🧠</span>
+            <span class="station-label">Embedding (Ollama)</span>
+          </div>
+
+          <div class="pipeline-connector-line">
+            <div class="pipeline-pulse" id="pulse-4"></div>
           </div>
 
           <div class="pipeline-station" id="station-vector">

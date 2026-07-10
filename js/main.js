@@ -152,9 +152,11 @@ const SIMULATOR_DATA = {
       { name: "partner_agreement_draft.pdf", size: "1.1 MB", acls: ["Legal-Team:ReadWrite"] }
     ],
     logs: {
-      scan: "Incremental scan triggered. Querying SharePoint Graph API. Checking SIDs and folder permission inheritance...",
-      core: "Ingestion Core: Extracted text with Apache Tika. Split into semantic chunks. Publishing DocumentChunkMessages to Kafka topic 'opencrawling-chunks'...",
-      vector: "Embedding Consumer: Generated vectors via Ollama. Vector Store Writer: Writing precomputed vectors to pgvector..."
+      scan: "SharePoint Crawler triggered. Requesting graph deltas, resolving folder permission SIDs...",
+      claimCheck: "Crawler published IngestionMessage to Kafka 'opencrawling-ingestion' containing claim check URI reference.",
+      tika: "IngestionConsumer fetched reference. Read Excel/Word binary from storage, parsed text via Apache Tika, split into token chunks, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed chunks. Dispatched batches to local Ollama server (mxbai-embed-large). Generated 1024-dimension vectors, published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer consumed embedded chunks. Stored vectors, metadata attributes, and ACL tokens into pgvector."
     }
   },
   s3: {
@@ -163,9 +165,11 @@ const SIMULATOR_DATA = {
       { name: "api_specifications_v2.json", size: "45 KB", acls: ["Everyone:Read"] }
     ],
     logs: {
-      scan: "Scanning Amazon S3 bucket 'opencrawling-public-docs'. S3 Bucket policy detected: Public Read permission...",
-      core: "Ingestion Core: Streamed object, extracted text (Tika). Split into tokens. Publishing chunk payloads to Kafka 'opencrawling-chunks'...",
-      vector: "Embedding Consumer: Fetched vectors from Ollama. Vector Store Writer: Writing precomputed vectors to pgvector database..."
+      scan: "S3 Bucket Connector triggered. Listing objects in bucket 'opencrawling-public-docs'...",
+      claimCheck: "Crawler generated storage claim check URI and sent IngestionMessage to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer read object stream. Extracted text, generated semantic chunks, sent ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer requested embeddings from Ollama for S3 content chunks, published vector tokens to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer saved vectors and public ACLs to Elasticsearch KNN indices."
     }
   },
   database: {
@@ -174,9 +178,11 @@ const SIMULATOR_DATA = {
       { name: "pending_invoice_ledger (Row-ID: 55430)", size: "12 KB", acls: ["Accounting-Dept:ReadWrite"] }
     ],
     logs: {
-      scan: "Running JDBC cursor statement on PostgreSQL tables. Checking Row-Level Security (RLS) constraints...",
-      core: "Ingestion Core: Parsed DB columns, mapped columns to document structure. Chunking rows. Publishing to Kafka 'opencrawling-chunks'...",
-      vector: "Embedding Consumer: Mapped Ollama relational embeddings. Vector Store Writer: Storing precomputed vector rows..."
+      scan: "Database JDBC Connector triggered. Scanning PostgreSQL CRM tables, verifying Row-Level Security parameters...",
+      claimCheck: "Crawler published row metadata and primary key references as claim checks to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer mapped relational column contents, chunked record texts, sent ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer called local Ollama server, generated record embeddings, sent to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer saved embeddings, record primary keys, and regional ACL SIDs to Qdrant Cloud."
     }
   }
 };
@@ -192,12 +198,17 @@ function initSimulator() {
   
   // Pipeline stations & pulses
   const stationSrc = document.getElementById('station-src');
-  const stationCore = document.getElementById('station-core');
+  const stationKafka = document.getElementById('station-kafka');
+  const stationTika = document.getElementById('station-tika');
+  const stationOllama = document.getElementById('station-ollama');
   const stationVector = document.getElementById('station-vector');
+  
   const pulse1 = document.getElementById('pulse-1');
   const pulse2 = document.getElementById('pulse-2');
+  const pulse3 = document.getElementById('pulse-3');
+  const pulse4 = document.getElementById('pulse-4');
 
-  if (!startBtn || !logsContainer) return;
+  if (!startBtn || !logsContainer || !stationSrc || !stationKafka || !stationTika || !stationOllama || !stationVector) return;
 
   let isSimulating = false;
 
@@ -220,52 +231,72 @@ function initSimulator() {
     
     // Clear logs and print start message
     logsContainer.innerHTML = "";
-    addLog(`[INFO] Starting ingestion job for Source: [${sourceKey.toUpperCase()}] to Destination: [${destName}]`, "info");
+    addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
     await sleep(800);
 
-    // Step 1: Source Scan
+    // Step 1: Crawler Scan
     stationSrc.classList.add('active');
-    addLog(`[PROCESS] ${simData.logs.scan}`, "process");
+    addLog(`[PROCESS] Crawler: ${simData.logs.scan}`, "process");
     await sleep(1000);
 
     for (const file of simData.files) {
-      addLog(`[INFO] Found document: '${file.name}' [Size: ${file.size}]`, "info");
-      addLog(`[SECURITY] Extracted ACLs: [${file.acls.join(', ')}]`, "warn");
+      addLog(`[INFO] Crawler: Found document '${file.name}' (${file.size})`, "info");
+      addLog(`[SECURITY] Crawler: Extracted Access Control SIDs: [${file.acls.join(', ')}]`, "warn");
+      await sleep(600);
       
-      // Step 2: Pulse Flow 1
+      // Step 2: Pulse 1 - Crawler to Kafka
       pulse1.classList.add('active');
       await sleep(1000);
       pulse1.classList.remove('active');
 
-      // Step 3: Core Processing
-      stationCore.classList.add('active');
-      addLog(`[PROCESS] oc-core: Processing file: '${file.name}'`, "process");
-      addLog(`[INFO] ${simData.logs.core}`, "info");
-      await sleep(1200);
+      // Step 3: Kafka Ingestion Topic
+      stationKafka.classList.add('active');
+      addLog(`[KAFKA] ${simData.logs.claimCheck}`, "info");
+      await sleep(1000);
 
-      // Step 4: Pulse Flow 2
+      // Step 4: Pulse 2 - Kafka to Ingestion (Tika)
       pulse2.classList.add('active');
       await sleep(1000);
       pulse2.classList.remove('active');
 
-      // Step 5: Vector Store Output
+      // Step 5: Ingestion / Tika Extractor
+      stationTika.classList.add('active');
+      addLog(`[PROCESS] Ingestion Worker: ${simData.logs.tika}`, "process");
+      await sleep(1200);
+
+      // Step 6: Pulse 3 - Ingestion to Ollama worker
+      pulse3.classList.add('active');
+      await sleep(1000);
+      pulse3.classList.remove('active');
+
+      // Step 7: Embedding / Ollama worker
+      stationOllama.classList.add('active');
+      addLog(`[PROCESS] Embedding Worker: ${simData.logs.ollama}`, "process");
+      await sleep(1200);
+
+      // Step 8: Pulse 4 - Embedding to Vector Store Writer
+      pulse4.classList.add('active');
+      await sleep(1000);
+      pulse4.classList.remove('active');
+
+      // Step 9: Vector Store Output
       stationVector.classList.add('active');
-      addLog(`[PROCESS] Output connector: Writing to ${destName}`, "process");
-      addLog(`[INFO] ${simData.logs.vector}`, "info");
-      addLog(`[SUCCESS] Stored document '${file.name}' into vector space successfully.`, "success");
-      await sleep(800);
+      addLog(`[PROCESS] Vector Writer: ${simData.logs.vector}`, "process");
+      addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into vector store successfully.`, "success");
+      await sleep(1000);
       
-      // Deactivate intermediate stations for next document
-      stationSrc.classList.remove('active');
-      stationCore.classList.remove('active');
+      // Reset pipeline state for next document, leaving Crawler active
+      stationKafka.classList.remove('active');
+      stationTika.classList.remove('active');
+      stationOllama.classList.remove('active');
       stationVector.classList.remove('active');
-      await sleep(400);
+      await sleep(500);
     }
 
     // Finished Ingestion
     statusDot.className = "status-indicator success";
     statusText.textContent = "Job Complete";
-    addLog(`[SUCCESS] Ingestion Job finished. 100% documents processed without errors. Vector index is up to date.`, "success");
+    addLog(`[SUCCESS] Ingestion Job finished. All document events processed. Decoupled pipeline is idle.`, "success");
     
     // Reset buttons
     startBtn.disabled = false;
@@ -291,10 +322,14 @@ function initSimulator() {
 
   function resetPipeline() {
     stationSrc.classList.remove('active');
-    stationCore.classList.remove('active');
+    stationKafka.classList.remove('active');
+    stationTika.classList.remove('active');
+    stationOllama.classList.remove('active');
     stationVector.classList.remove('active');
     pulse1.classList.remove('active');
     pulse2.classList.remove('active');
+    pulse3.classList.remove('active');
+    pulse4.classList.remove('active');
   }
 
   function sleep(ms) {
