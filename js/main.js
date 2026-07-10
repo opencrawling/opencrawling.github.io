@@ -208,11 +208,31 @@ function initSimulator() {
   const pulse3 = document.getElementById('pulse-3');
   const pulse4 = document.getElementById('pulse-4');
 
-  if (!startBtn || !logsContainer || !stationSrc || !stationKafka || !stationTika || !stationOllama || !stationVector) return;
+  console.log("initSimulator: Initializing simulator components...");
+  const elementsExist = !!startBtn && !!logsContainer && !!stationSrc && !!stationKafka && !!stationTika && !!stationOllama && !!stationVector && !!pulse1 && !!pulse2 && !!pulse3 && !!pulse4;
+  console.log("initSimulator: Elements check:", {
+    startBtn: !!startBtn,
+    logsContainer: !!logsContainer,
+    stationSrc: !!stationSrc,
+    stationKafka: !!stationKafka,
+    stationTika: !!stationTika,
+    stationOllama: !!stationOllama,
+    stationVector: !!stationVector,
+    pulse1: !!pulse1,
+    pulse2: !!pulse2,
+    pulse3: !!pulse3,
+    pulse4: !!pulse4
+  });
+
+  if (!elementsExist) {
+    console.warn("initSimulator: Simulator elements not found on this page. Returning early.");
+    return;
+  }
 
   let isSimulating = false;
 
   startBtn.addEventListener('click', async () => {
+    console.log("initSimulator: startBtn clicked. isSimulating:", isSimulating);
     if (isSimulating) return;
     isSimulating = true;
     
