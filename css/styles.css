@@ -525,6 +525,10 @@
     border-color: var(--card-hover-border);
     box-shadow: var(--shadow-lg), 0 0 20px var(--accent-glow);
   }
+
+  .feature-card.full-width {
+    grid-column: span 2;
+  }
   
   .feature-card:hover::before {
     opacity: 1;
@@ -1608,6 +1612,10 @@
   
   .features-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .feature-card.full-width {
+    grid-column: span 1;
   }
   
   .stats-container {

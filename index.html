@@ -205,6 +205,16 @@
         <h3>Pluggable SPI Architecture</h3>
         <p>Simple interfaces for writing custom connectors. Define a new Repository Source, Transformation filter, or Database Output connector in just a few lines of Java.</p>
       </div>
+
+      <div class="feature-card full-width">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3>Secure Model Context Protocol (MCP) Server</h3>
+        <p>Exposes security-filtered similarity search and document retrieval tools directly to LLMs and AI agent frameworks using the <strong>Model Context Protocol (MCP)</strong>. Enforces user authentication policies (principals and roles) and ACL checks on the server-side to prevent prompt injection and unauthorized data leakage.</p>
+      </div>
     </div>
   </section>
 
@@ -248,6 +258,7 @@
           <path class="flow-line line-active" d="M510,170 L510,120" />
           <path class="flow-line line-dashed" d="M510,280 L510,330" />
           <path class="flow-line line-dashed" d="M720,280 L720,330" />
+          <path class="flow-line line-active" d="M740,170 L740,120" />
 
           <!-- Dynamic Ingestion Particles -->
           <circle id="anim-particle-1" r="5" fill="#7C3AED" filter="url(#glow-effect)" />
@@ -318,6 +329,13 @@
             <text x="730" y="360" class="node-title-small">Authority Service</text>
             <text x="730" y="380" class="node-desc">Access Filters</text>
             <text x="730" y="395" class="node-desc">ACL Mapping</text>
+          </g>
+
+          <!-- Node 9: Secure MCP Server (Top Right) -->
+          <g class="node-group" data-node="mcp">
+            <rect x="680" y="50" width="120" height="70" rx="8" class="node-bg border-only" />
+            <text x="740" y="80" class="node-title-small">Secure MCP Server</text>
+            <text x="740" y="100" class="node-desc">Model Context Protocol</text>
           </g>
         </svg>
       </div>

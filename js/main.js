@@ -83,6 +83,10 @@ const ARCH_DETAILS = {
   security: {
     title: "Authority Service & Token Mapping",
     desc: "Built-in security translator. Maps user search identities (Active Directory SIDs, OAuth groups) to document ACLs. Ensures that subsequent RAG or search queries return only the files a user has permission to see."
+  },
+  mcp: {
+    title: "Secure MCP Server (Spring AI)",
+    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
   }
 };
 
