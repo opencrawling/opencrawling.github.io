@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server</title>
+  <title>Secure Enterprise AI: Introducing the OpenCrawling&reg; Secure MCP Server</title>
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
@@ -14,14 +14,14 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html">
-  <meta property="og:title" content="Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server">
+  <meta property="og:title" content="Secure Enterprise AI: Introducing the OpenCrawling&reg; Secure MCP Server">
   <meta property="og:description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
   <meta property="og:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://opencrawling.github.io/blog/introducing-opencrawling-secure-mcp-server.html">
-  <meta property="twitter:title" content="Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server">
+  <meta property="twitter:title" content="Secure Enterprise AI: Introducing the OpenCrawling&reg; Secure MCP Server">
   <meta property="twitter:description" content="Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.">
   <meta property="twitter:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
 
@@ -33,7 +33,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server",
+    "headline": "Secure Enterprise AI: Introducing the OpenCrawling&reg; Secure MCP Server",
     "description": "Learn how OpenCrawling leverages the Model Context Protocol (MCP) and Spring AI to expose secure, enterprise-grade, ACL-filtered knowledge retrieval directly to LLM agents.",
     "datePublished": "2026-07-10",
     "author": {
@@ -256,7 +256,7 @@
     
     <article>
       <header class="post-header">
-        <h1 class="post-title">Secure Enterprise AI: Introducing the OpenCrawling Secure MCP Server</h1>
+        <h1 class="post-title">Secure Enterprise AI: Introducing the OpenCrawling&reg; Secure MCP Server</h1>
         <div class="post-meta">
           <span class="blog-badge">Technology</span>
           <span class="post-date">July 10, 2026</span>
@@ -269,10 +269,10 @@
         
         <p>If an employee asks an AI agent a question, the agent should only retrieve and synthesize information from files that the specific employee is authorized to see. Without query-time security checks, your AI system is highly susceptible to critical data leaks. Under typical RAG (Retrieval-Augmented Generation) architectures, prompt injection or broad search queries can lead to LLMs surfacing payroll details, partner agreements, or architectural blueprints to unauthorized users.</p>
         
-        <p>To solve this challenge, the OpenCrawling core team is excited to announce the release of the **OpenCrawling Secure MCP Server** module, implemented via Spring AI and the **Model Context Protocol (MCP)**.</p>
+        <p>To solve this challenge, the OpenCrawling core team is excited to announce the release of the <strong>OpenCrawling&reg; Secure MCP Server</strong> module, implemented via Spring AI and the <strong>Model Context Protocol (MCP)</strong>.</p>
 
         <h2>1. What is the Model Context Protocol (MCP)?</h2>
-        <p>Developed to standardize how LLMs connect to external data sources and tools, the **Model Context Protocol (MCP)** is an open-source standard designed by Anthropic and supported across the developer ecosystem. It establishes a protocol boundary between AI models (MCP Clients) and data resources (MCP Servers).</p>
+        <p>Developed to standardize how LLMs connect to external data sources and tools, the <strong>Model Context Protocol (MCP)</strong> is an open-source standard designed by Anthropic and supported across the developer ecosystem. It establishes a protocol boundary between AI models (MCP Clients) and data resources (MCP Servers).</p>
         <p>Rather than writing custom, fragile API integrations for every AI client or plugin framework, MCP allows servers to expose unified resources, prompts, and tools that any MCP-compliant LLM or IDE (like Claude Desktop, Cursor, or Antigravity) can call dynamically.</p>
         <p>By exposing ingestion data through an MCP server, OpenCrawling provides a clean, secure channel for AI agents to query enterprise knowledge stores.</p>
 
@@ -373,7 +373,7 @@ public List<DocumentSearchResult> secureVectorSearch(
         <p>Once you run the bootstrap runtime via <code>mvn spring-boot:run</code>, the MCP endpoints are exposed over HTTP/SSE, ready to be configured inside your Claude Desktop or custom AI agent configurations!</p>
 
         <h2>5. Why This Matters for the Future of Enterprise AI</h2>
-        <p>As organizations move past basic chat applications and deploy fully autonomous AI agents that schedule meetings, write code, and query databases, context security must be absolute. The OpenCrawling Secure MCP Server acts as an intelligent security guard: it ensures that while AI models are given the freedom to query database repositories, they are only given access to information the user is legally permitted to see.</p>
+        <p>As organizations move past basic chat applications and deploy fully autonomous AI agents that schedule meetings, write code, and query databases, context security must be absolute. The OpenCrawling&reg; Secure MCP Server acts as an intelligent security guard: it ensures that while AI models are given the freedom to query database repositories, they are only given access to information the user is legally permitted to see.</p>
 
         <h2>Join the Discussion</h2>
         <p>We are actively developing repository connectors and security mappings. We'd love to hear your feedback:</p>
