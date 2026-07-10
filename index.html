@@ -540,18 +540,21 @@
         <div class="tab-pane active" id="tab-docker">
           <div class="code-wrapper">
             <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
-            <pre><code class="language-bash"># 1. Start backing infrastructure (Postgres, Redis, Kafka, Ollama)
+            <pre><code class="language-bash"># Option 1: Standard Multi-Tier Stack (Backend + Standalone Frontend)
+# 1. Start backing services (Postgres, Redis, Kafka, Ollama)
 docker compose up -d
-
-# 2. Build OpenCrawling application images (Backend & Frontend)
+# 2. Build and run the applications
 docker compose -f docker-compose-apps.yml build
-
-# 3. Start OpenCrawling services
 docker compose -f docker-compose-apps.yml up -d
 
+# Option 2: Decoupled Microservices Pipeline (Fully Distributed Workers)
+# 1. Build and boot each decoupled service (Crawler, Tika Ingest, Embedding, Writer, MCP)
+docker compose -f docker-compose-decoupled.yml build
+docker compose -f docker-compose-decoupled.yml up -d
+
 # Access points:
-# - Backend API + Integrated UI: http://localhost:8080
-# - Standalone Admin Interface: http://localhost:3000</code></pre>
+# - Standalone Administration Console: http://localhost:3000
+# - Secure MCP Server / REST Backend:  http://localhost:8080</code></pre>
           </div>
         </div>
 
