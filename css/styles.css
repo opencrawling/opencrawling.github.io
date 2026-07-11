@@ -1605,6 +1605,75 @@
   }
 }
 
+/* ==========================================
+   Embedding Scale-Out Architecture Additions
+   ========================================== */
+
+/* SVG: Amber-tinted node for oc-embedding-service */
+.node-bg.embed-accent {
+  fill: rgba(245, 158, 11, 0.06);
+  stroke: #F59E0B;
+  stroke-width: 2;
+}
+
+.node-group:hover .node-bg.embed-accent {
+  fill: rgba(245, 158, 11, 0.14);
+  filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.4));
+}
+
+.node-title.embed-text {
+  fill: #FCD34D;
+}
+
+/* Simulator: station badge showing replica count */
+.embed-station {
+  position: relative;
+}
+
+.station-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg, #F59E0B, #FCD34D);
+  color: #1a1a2e;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Simulator: amber glow for the embed service station when active */
+.pipeline-station.embed-station.active .station-icon {
+  border-color: #F59E0B;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
+}
+
+/* Blog: featured/new article card */
+.featured-blog-card {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  background: rgba(245, 158, 11, 0.04) !important;
+  position: relative;
+}
+
+.featured-blog-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.blog-badge.badge-new {
+  background: linear-gradient(135deg, #F59E0B, #FCD34D);
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .main-nav {
     display: none; /* simple mobile fallback, hiding links */

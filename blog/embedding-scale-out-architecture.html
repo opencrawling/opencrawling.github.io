@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling</title>
+  <meta name="description" content="Learn how the new oc-embedding-service microservice decouples AI vector generation from the ingestion pipeline, enabling horizontal Kafka-based scaling and multi-model support.">
+  <meta name="keywords" content="opencrawling, embedding scale-out, kafka consumer group, ollama, openai embeddings, spring boot microservice, vector database, pgvector, oc-embedding-service">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.github.io/blog/embedding-scale-out-architecture.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.github.io/blog/embedding-scale-out-architecture.html">
+  <meta property="og:title" content="Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling">
+  <meta property="og:description" content="Learn how the new oc-embedding-service microservice decouples AI vector generation, enabling instant horizontal scaling with Kafka consumer group partitioning.">
+  <meta property="og:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.github.io/blog/embedding-scale-out-architecture.html">
+  <meta property="twitter:title" content="Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling">
+  <meta property="twitter:description" content="Learn how the new oc-embedding-service microservice decouples AI vector generation, enabling instant horizontal scaling with Kafka consumer group partitioning.">
+  <meta property="twitter:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling",
+    "description": "Learn how the new oc-embedding-service microservice decouples AI vector generation from the ingestion pipeline, enabling horizontal Kafka-based scaling and multi-model support.",
+    "datePublished": "2026-07-12",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.github.io/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.github.io/blog/embedding-scale-out-architecture.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #F59E0B, #FCD34D); color: #1a1a2e; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #F59E0B; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #F59E0B; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #C084FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C084FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(6,182,212,0.05); border-color: #06B6D4; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #F59E0B; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #F59E0B; color: #FCD34D; background: rgba(245,158,11,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: var(--accent-color); }
+    .article-cta { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #FCD34D; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../#features">Features</a></li>
+          <li><a href="../#architecture">Architecture</a></li>
+          <li><a href="../#standard">Open Standard</a></li>
+          <li><a href="../#simulator">Simulator</a></li>
+          <li><a href="../#getting-started">Quick Start</a></li>
+          <li><a href="../#blog">Blog</a></li>
+          <li><a href="../#community">Community</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="blog-article-wrapper">
+      <div class="back-link-wrapper">
+        <a href="../#blog" class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to Blog
+        </a>
+      </div>
+
+      <header class="blog-hero">
+        <div class="blog-meta">
+          <span class="blog-category-badge">Architecture</span>
+          <span class="blog-meta-date">July 12, 2026</span>
+          <span class="blog-meta-read">7 min read</span>
+        </div>
+        <h1 class="blog-article-title">Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling</h1>
+        <p class="blog-article-lead">
+          The latest release of OpenCrawling introduces <strong>oc-embedding-service</strong> &mdash; a stateless, horizontally scalable microservice that separates vector embedding generation from the ingestion runtime. By leveraging Apache Kafka consumer group partitioning and a pluggable <code>EmbeddingModelFactory</code>, you can now scale your AI vectorization throughput independently from crawling and ingestion without any pipeline changes.
+        </p>
+      </header>
+
+      <hr class="blog-divider">
+
+      <article class="blog-article-body">
+
+        <h2><span class="section-num">1. </span>The Bottleneck: Why Embedding Was the Chokepoint</h2>
+        <p>
+          In the original monolithic OpenCrawling runtime (<code>oc-runtime</code>), the entire pipeline — crawling, text extraction, chunking, embedding, and vector writing — ran inside a single Spring Boot application. While this simplified deployment and local development, it introduced a critical scalability constraint: <strong>embedding generation</strong>.
+        </p>
+        <p>
+          Generating high-dimensional embedding vectors (e.g., 1024-dim with <code>mxbai-embed-large</code> or 768-dim with <code>nomic-embed-text</code>) is computationally expensive. Each document chunk requires a forward pass through a deep learning model. In a monolithic deployment, a single slow embedding step blocks the entire Kafka consumer thread, causing backpressure that saturates the chunk topic partition lag and degrades end-to-end throughput.
+        </p>
+
+        <div class="callout-box info">
+          <span class="callout-icon">&#128161;</span>
+          <p><strong>Key Insight:</strong> In a well-architected RAG ingestion system, the embedding step is almost always the <em>primary bottleneck</em>. All other pipeline stages (crawling, Tika extraction, token splitting) are I/O-bound. Embedding is the only CPU/GPU-bound step. It must be isolated and scaled independently.</p>
+        </div>
+
+        <h2><span class="section-num">2. </span>The Solution: oc-embedding-service</h2>
+        <p>
+          The new <strong><code>oc-embedding-service</code></strong> module is a standalone Spring Boot application that contains only the embedding logic, decoupled from the ingestion runtime. It participates in the pipeline purely through Kafka topics, following the Claim Check Pattern:
+        </p>
+
+        <div class="arch-flow-diagram">
+          <div class="flow-title">Decoupled Embedding Pipeline</div>
+          <div class="flow-nodes">
+            <span class="flow-node">IngestionConsumer<br><small>oc-runtime</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">opencrawling-chunks<br><small>Kafka Topic</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node highlight">EmbeddingConsumer<br><small>oc-embedding-service &times;N</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">opencrawling-embedded<br><small>Kafka Topic</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">VectorStoreWriterConsumer<br><small>oc-runtime</small></span>
+          </div>
+        </div>
+
+        <p>
+          The <code>EmbeddingConsumer</code> listens to the <code>opencrawling-chunks</code> topic, reads each <code>DocumentChunkMessage</code>, delegates to the <code>EmbeddingModelFactory</code> to route the text to the appropriate model engine (Ollama, OpenAI, or HuggingFace), and publishes the resulting <code>DocumentEmbeddedMessage</code> containing the pre-computed float vector to the <code>opencrawling-embedded</code> topic.
+        </p>
+
+        <h2><span class="section-num">3. </span>Inside the Code: EmbeddingModelFactory</h2>
+        <p>
+          The heart of the new service is the <code>EmbeddingModelFactory</code>. Instead of hardcoding a single embedding model, this factory reads the Transformation Connector engine configuration from the message metadata and dynamically selects the appropriate embedding provider:
+        </p>
+
+        <pre><code>@Component
+public class EmbeddingModelFactory {
+
+    private final OllamaEmbeddingModel ollamaModel;
+    private final OpenAiEmbeddingModel openAiModel;
+
+    public EmbeddingModel resolve(String engineType) {
+        return switch (engineType.toLowerCase()) {
+            case "openai"  -&gt; openAiModel;
+            case "ollama"  -&gt; ollamaModel;
+            default        -&gt; ollamaModel; // safe fallback
+        };
+    }
+}</code></pre>
+
+        <h2><span class="section-num">4. </span>Horizontal Scaling with Docker Compose</h2>
+        <p>
+          Because <code>oc-embedding-service</code> is fully stateless, it can be scaled out to any number of replicas using a single Docker Compose command. Kafka automatically rebalances partitions across the consumer group:
+        </p>
+
+        <pre><code># Scale the embedding service to 3 replicas
+docker compose -f docker-compose-apps.yml scale oc-embedding-service=3
+
+# Verify the consumer group rebalance
+docker exec -it opencrawling-kafka kafka-consumer-groups.sh \
+  --bootstrap-server localhost:9092 \
+  --describe --group opencrawling-embedding-group</code></pre>
+
+        <div class="callout-box tip">
+          <span class="callout-icon">&#9889;</span>
+          <p><strong>Performance Tip:</strong> For maximum GPU utilization, configure each <code>oc-embedding-service</code> replica to point to a different Ollama instance via the <code>spring.ai.ollama.base-url</code> property. Use an NGINX upstream block to load-balance across multiple GPU-enabled Ollama nodes.</p>
+        </div>
+
+        <h2><span class="section-num">5. </span>Running Locally in Development Mode</h2>
+        <p>
+          For local development, run the embedding service in a separate terminal alongside the main runtime:
+        </p>
+
+        <pre><code># Terminal 1: Start the main ingestion runtime
+mvn spring-boot:run -pl oc-runtime -Dspring-boot.run.profiles=dev
+
+# Terminal 2: Start the embedding microservice
+mvn spring-boot:run -pl oc-embedding-service
+
+# Terminal 3: Start the Admin React UI
+cd oc-admin-ui &amp;&amp; npm run dev</code></pre>
+
+        <h2><span class="section-num">6. </span>Fully Decoupled Docker Deployment</h2>
+        <p>
+          For production-grade deployments, the <code>docker-compose-decoupled.yml</code> file spins up <strong>five separate containerized services</strong>, each communicating exclusively through Kafka topics:
+        </p>
+        <ol>
+          <li><strong>oc-crawler</strong> &mdash; Repository Connector &amp; Claim Check Publisher</li>
+          <li><strong>oc-ingestion-consumer</strong> &mdash; Apache Tika Extractor &amp; Token Chunker</li>
+          <li><strong>oc-embedding-service</strong> &mdash; Embedding Generator (horizontally scalable)</li>
+          <li><strong>oc-writer-consumer</strong> &mdash; Vector Store Writer (pgvector/Elasticsearch/Qdrant)</li>
+          <li><strong>oc-mcp-server</strong> &mdash; Secure MCP Server for AI Agents</li>
+        </ol>
+
+        <pre><code># Build all decoupled service images
+docker compose -f docker-compose-decoupled.yml build
+
+# Start the entire pipeline
+docker compose -f docker-compose-decoupled.yml up -d
+
+# Run the automated end-to-end integration test
+./scripts/test-docker-decoupled.sh</code></pre>
+
+        <div class="callout-box warning">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <p><strong>Shared Storage Requirement:</strong> When running multiple <code>oc-embedding-service</code> or <code>oc-ingestion-consumer</code> replicas in a distributed setup, ensure all nodes have access to the same shared filesystem (NFS, S3/MinIO) used by the crawler. The Claim Check pattern references the file by URI.</p>
+        </div>
+
+        <h2><span class="section-num">7. </span>Kafka Topic Partition Configuration</h2>
+        <p>
+          Configure your Kafka topics with a partition count matching your maximum desired replica count. To support up to 8 embedding replicas:
+        </p>
+
+        <pre><code># opencrawling-chunks and opencrawling-embedded topics
+partitions: 8
+replication-factor: 1</code></pre>
+
+        <p>
+          Kafka guarantees that each partition is consumed by at most one consumer within the same consumer group (<code>opencrawling-embedding-group</code>). With 8 partitions and 3 replicas, Kafka will assign approximately 2&ndash;3 partitions per replica automatically.
+        </p>
+
+        <h2><span class="section-num">8. </span>Ollama Multi-Model Support</h2>
+        <p>
+          The release adds automatic configuration of multiple Ollama embedding models routed to separate pgvector tables by dimension:
+        </p>
+        <ul>
+          <li><strong>mxbai-embed-large</strong> (1024-dim) &rarr; <code>vector_store_1024</code></li>
+          <li><strong>nomic-embed-text</strong> (768-dim) &rarr; <code>vector_store_768</code></li>
+          <li><strong>all-minilm</strong> (384-dim) &rarr; <code>vector_store_384</code></li>
+        </ul>
+
+        <pre><code>docker exec -it ollama ollama pull mxbai-embed-large
+docker exec -it ollama ollama pull nomic-embed-text
+docker exec -it ollama ollama pull all-minilm</code></pre>
+
+        <h2><span class="section-num">9. </span>What&rsquo;s Next</h2>
+        <ul>
+          <li><strong>HuggingFace Inference Endpoint Support</strong> &mdash; Route chunks to cloud-hosted HuggingFace models without local GPU infrastructure.</li>
+          <li><strong>Adaptive Batching</strong> &mdash; Group multiple chunks into embedding batch requests, reducing API call overhead.</li>
+          <li><strong>Prometheus Metrics &amp; Kubernetes HPA</strong> &mdash; Expose consumer lag metrics enabling Kubernetes to auto-scale embedding replicas based on Kafka partition lag.</li>
+          <li><strong>Dynamic Model Routing</strong> &mdash; Per-connector model configuration, allowing different document types to be vectorized with different models simultaneously.</li>
+        </ul>
+
+        <div class="article-cta">
+          <h3>&#128640; Ready to Scale Your Embeddings?</h3>
+          <p>Clone the repository, pull an Ollama model, and run <code>docker compose scale oc-embedding-service=3</code> to experience instant horizontal throughput.</p>
+          <div class="cta-buttons">
+            <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View on GitHub</a>
+            <a href="../#simulator" class="btn btn-secondary">Try Live Simulator</a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

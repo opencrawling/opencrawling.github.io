@@ -145,15 +145,19 @@
     <div class="stats-container">
       <div class="stat-card">
         <span class="stat-num">Java 25</span>
-        <span class="stat-desc">Virtual Threads & Structured Concurrency</span>
+        <span class="stat-desc">Virtual Threads &amp; Structured Concurrency</span>
       </div>
       <div class="stat-card">
         <span class="stat-num">100%</span>
-        <span class="stat-desc">ACL Security & Permission Mapping</span>
+        <span class="stat-desc">ACL Security &amp; Permission Mapping</span>
       </div>
       <div class="stat-card">
         <span class="stat-num">Event-Driven</span>
         <span class="stat-desc">Apache Kafka Document Decoupling</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">Scale-Out</span>
+        <span class="stat-desc">Decoupled Embedding Microservice</span>
       </div>
     </div>
   </section>
@@ -193,7 +197,7 @@
           </svg>
         </div>
         <h3>AI & RAG Ready Ingestion</h3>
-        <p>Configure different embedding profiles (Ollama, OpenAI) per-job on the fly. Chunks are automatically generated, vectorized, and routed to dimension-specific Vector Store tables (384, 768, 1024-dim) in pgvector.</p>
+        <p>Advanced RAG support with flexible chunking and embedding logic. Configure multiple embedding strategies (Ollama, OpenAI, HuggingFace) across diverse vector index backends.</p>
       </div>
 
       <div class="feature-card">
@@ -204,6 +208,16 @@
         </div>
         <h3>Pluggable SPI Architecture</h3>
         <p>Simple interfaces for writing custom connectors. Define a new Repository Source, Transformation filter, or Database Output connector in just a few lines of Java.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+        </div>
+        <h3>Embedding Scale-Out</h3>
+        <p>The <strong>oc-embedding-service</strong> is a fully decoupled, stateless microservice that consumes chunks from Kafka. Run <code>docker compose scale oc-embedding-service=N</code> for instant horizontal scaling of your AI vectorization throughput.</p>
       </div>
 
       <div class="feature-card full-width">
@@ -222,14 +236,13 @@
   <section id="architecture" class="architecture-section">
     <div class="section-header">
       <h2 class="section-title">Ingestion Architecture</h2>
-      <p class="section-subtitle">Decoupled, event-driven orchestration leveraging the Claim Check Pattern with Kafka and PostgreSQL.</p>
+      <p class="section-subtitle">Decoupled, event-driven orchestration with a horizontally scalable <strong>Embedding Microservice</strong> leveraging Kafka and the Claim Check Pattern.</p>
     </div>
     
     <div class="architecture-container">
       <div class="arch-visual">
         <!-- SVG diagram with glowing paths & interactive points -->
-        <svg id="arch-svg" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Background grids and nodes -->
+        <svg id="arch-svg" viewBox="0 0 900 500" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#7C3AED" />
@@ -239,104 +252,120 @@
               <stop offset="0%" stop-color="#06B6D4" />
               <stop offset="100%" stop-color="#22D3EE" />
             </linearGradient>
-            <linearGradient id="infra-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#475569" />
-              <stop offset="100%" stop-color="#64748B" />
+            <linearGradient id="embed-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F59E0B" />
+              <stop offset="100%" stop-color="#FCD34D" />
             </linearGradient>
             <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feGaussianBlur stdDeviation="6" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
-          <!-- Connecting Lines -->
-          <path class="flow-line line-active" d="M130,225 L240,225" />
-          <path class="flow-line line-active" d="M380,225 L450,225" />
-          <path class="flow-line line-active" d="M570,225 L680,225" />
-          
-          <path class="flow-line line-dashed" d="M310,170 L310,120" />
-          <path class="flow-line line-active" d="M510,170 L510,120" />
-          <path class="flow-line line-dashed" d="M510,280 L510,330" />
-          <path class="flow-line line-dashed" d="M720,280 L720,330" />
-          <path class="flow-line line-active" d="M740,170 L740,120" />
+          <!-- Main horizontal flow lines -->
+          <path class="flow-line line-active" d="M130,230 L220,230" />
+          <path class="flow-line line-active" d="M370,230 L430,230" />
+          <path class="flow-line line-active" d="M560,230 L640,230" />
+
+          <!-- Kafka to Embedding Service (up) -->
+          <path class="flow-line line-active" d="M490,190 L490,130" />
+          <!-- Embedding Service back to Kafka (down) -->
+          <path class="flow-line line-active" d="M540,130 L540,190" />
+
+          <!-- Admin UI to Core (dashed) -->
+          <path class="flow-line line-dashed" d="M295,185 L295,140" />
+
+          <!-- Vector Writer to MCP (up, dashed) -->
+          <path class="flow-line line-dashed" d="M810,190 L810,140" />
+
+          <!-- DB below Kafka (dashed) -->
+          <path class="flow-line line-dashed" d="M495,270 L495,320" />
+
+          <!-- Security below Vector Writer (dashed) -->
+          <path class="flow-line line-dashed" d="M760,270 L760,320" />
 
           <!-- Dynamic Ingestion Particles -->
           <circle id="anim-particle-1" r="5" fill="#7C3AED" filter="url(#glow-effect)" />
           <circle id="anim-particle-2" r="5" fill="#06B6D4" filter="url(#glow-effect)" />
           <circle id="anim-particle-3" r="5" fill="#F59E0B" filter="url(#glow-effect)" />
 
-          <!-- Node 1: Sources (SharePoint, S3, Web) -->
+          <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="20" y="150" width="110" height="150" rx="10" class="node-bg" />
-            <text x="75" y="180" class="node-title">Sources</text>
-            <text x="75" y="215" class="node-sub">SharePoint</text>
-            <text x="75" y="240" class="node-sub">S3 / Buckets</text>
-            <text x="75" y="265" class="node-sub">Web / API</text>
+            <rect x="10" y="155" width="120" height="150" rx="10" class="node-bg" />
+            <text x="70" y="185" class="node-title">Sources</text>
+            <text x="70" y="215" class="node-sub">SharePoint</text>
+            <text x="70" y="237" class="node-sub">S3 / Buckets</text>
+            <text x="70" y="259" class="node-sub">Web / API</text>
           </g>
 
-          <!-- Node 2: Core Engine -->
+          <!-- Node 2: Ingestion Core -->
           <g class="node-group" data-node="core">
-            <rect x="240" y="170" width="140" height="110" rx="10" class="node-bg accent" />
-            <text x="310" y="200" class="node-title accent-text">Ingestion Core</text>
-            <text x="310" y="225" class="node-desc">Tika Extractor</text>
-            <text x="310" y="245" class="node-desc">Token Splitter</text>
-            <text x="310" y="262" class="node-desc">Publish Chunks</text>
+            <rect x="220" y="185" width="150" height="90" rx="10" class="node-bg accent" />
+            <text x="295" y="212" class="node-title accent-text">Ingestion Core</text>
+            <text x="295" y="233" class="node-desc">Tika Extractor</text>
+            <text x="295" y="250" class="node-desc">Token Splitter</text>
+            <text x="295" y="265" class="node-desc">Publish Chunks</text>
           </g>
 
           <!-- Node 3: Apache Kafka -->
           <g class="node-group" data-node="kafka">
-            <rect x="450" y="170" width="120" height="110" rx="10" class="node-bg cyan" />
-            <text x="510" y="200" class="node-title cyan-text">Apache Kafka</text>
-            <text x="510" y="225" class="node-desc">Ingestion Topic</text>
-            <text x="510" y="245" class="node-desc">Chunks Topic</text>
-            <text x="510" y="262" class="node-desc">Embedded Topic</text>
+            <rect x="430" y="185" width="130" height="90" rx="10" class="node-bg cyan" />
+            <text x="495" y="212" class="node-title cyan-text">Apache Kafka</text>
+            <text x="495" y="233" class="node-desc">Ingestion Topic</text>
+            <text x="495" y="250" class="node-desc">Chunks Topic</text>
+            <text x="495" y="265" class="node-desc">Embedded Topic</text>
           </g>
 
-          <!-- Node 4: Vector Store / Output -->
+          <!-- Node 4: Vector Writer / Outputs -->
           <g class="node-group" data-node="outputs">
-            <rect x="680" y="170" width="120" height="110" rx="10" class="node-bg" />
-            <text x="740" y="200" class="node-title">Vector Writer</text>
-            <text x="740" y="225" class="node-sub">pgvector (direct)</text>
-            <text x="740" y="248" class="node-sub">Elasticsearch</text>
-            <text x="740" y="270" class="node-sub">Qdrant Store</text>
+            <rect x="640" y="185" width="130" height="90" rx="10" class="node-bg" />
+            <text x="705" y="212" class="node-title">Vector Writer</text>
+            <text x="705" y="233" class="node-sub">pgvector (direct)</text>
+            <text x="705" y="253" class="node-sub">Elasticsearch</text>
+            <text x="705" y="270" class="node-sub">Qdrant Store</text>
           </g>
 
-          <!-- Node 5: Admin UI (Top Left) -->
+          <!-- Node 5: Admin React UI (Top Center-Left) -->
           <g class="node-group" data-node="ui">
-            <rect x="245" y="50" width="130" height="70" rx="8" class="node-bg border-only" />
-            <text x="310" y="80" class="node-title-small">Admin React UI</text>
-            <text x="310" y="100" class="node-desc">oc-admin-ui</text>
+            <rect x="228" y="65" width="134" height="70" rx="8" class="node-bg border-only" />
+            <text x="295" y="95" class="node-title-small">Admin React UI</text>
+            <text x="295" y="115" class="node-desc">oc-admin-ui</text>
           </g>
 
-          <!-- Node 6: Embedding (Top Right) -->
-          <g class="node-group" data-node="ollama">
-            <rect x="445" y="50" width="130" height="70" rx="8" class="node-bg border-only" />
-            <text x="510" y="80" class="node-title-small">Embedding Consumer</text>
-            <text x="510" y="100" class="node-desc">Ollama Local AI Models</text>
+          <!-- Node 6: oc-embedding-service (Top Center — NEW DECOUPLED SERVICE) -->
+          <g class="node-group" data-node="embedding">
+            <rect x="428" y="50" width="164" height="80" rx="8" class="node-bg embed-accent" />
+            <text x="510" y="75" class="node-title embed-text">oc-embedding-service</text>
+            <text x="510" y="95" class="node-desc">EmbeddingConsumer</text>
+            <text x="510" y="111" class="node-desc">EmbeddingModelFactory</text>
           </g>
 
-          <!-- Node 7: PostgreSQL & Redis (Bottom Center) -->
-          <g class="node-group" data-node="db">
-            <rect x="445" y="330" width="130" height="80" rx="8" class="node-bg border-only" />
-            <text x="510" y="360" class="node-title-small">PostgreSQL / Redis</text>
-            <text x="510" y="380" class="node-desc">Job Status Cache</text>
-            <text x="510" y="395" class="node-desc">Metadata State</text>
-          </g>
-
-          <!-- Node 8: Authority (Bottom Right) -->
-          <g class="node-group" data-node="security">
-            <rect x="670" y="330" width="120" height="80" rx="8" class="node-bg border-only" />
-            <text x="730" y="360" class="node-title-small">Authority Service</text>
-            <text x="730" y="380" class="node-desc">Access Filters</text>
-            <text x="730" y="395" class="node-desc">ACL Mapping</text>
-          </g>
-
-          <!-- Node 9: Secure MCP Server (Top Right) -->
+          <!-- Node 7: Secure MCP Server (Top Right) -->
           <g class="node-group" data-node="mcp">
-            <rect x="680" y="50" width="120" height="70" rx="8" class="node-bg border-only" />
-            <text x="740" y="80" class="node-title-small">Secure MCP Server</text>
-            <text x="740" y="100" class="node-desc">Model Context Protocol</text>
+            <rect x="762" y="65" width="128" height="70" rx="8" class="node-bg border-only" />
+            <text x="826" y="93" class="node-title-small">Secure MCP Server</text>
+            <text x="826" y="113" class="node-desc">Model Context Protocol</text>
           </g>
+
+          <!-- Node 8: PostgreSQL / Redis (Bottom Center) -->
+          <g class="node-group" data-node="db">
+            <rect x="432" y="320" width="130" height="80" rx="8" class="node-bg border-only" />
+            <text x="497" y="350" class="node-title-small">PostgreSQL / Redis</text>
+            <text x="497" y="370" class="node-desc">Job Status Cache</text>
+            <text x="497" y="385" class="node-desc">Metadata State</text>
+          </g>
+
+          <!-- Node 9: Authority Service (Bottom Right) -->
+          <g class="node-group" data-node="security">
+            <rect x="710" y="320" width="120" height="80" rx="8" class="node-bg border-only" />
+            <text x="770" y="350" class="node-title-small">Authority Service</text>
+            <text x="770" y="370" class="node-desc">Access Filters</text>
+            <text x="770" y="385" class="node-desc">ACL Mapping</text>
+          </g>
+
+          <!-- Scale-out badge on embedding service -->
+          <rect x="548" y="54" width="38" height="18" rx="9" fill="#F59E0B" opacity="0.9"/>
+          <text x="567" y="67" text-anchor="middle" fill="#1a1a2e" font-size="9" font-weight="700">×N</text>
         </svg>
       </div>
       
@@ -431,7 +460,7 @@
   <section id="simulator" class="simulator-section">
     <div class="section-header">
       <h2 class="section-title">Live Ingestion Simulator</h2>
-      <p class="section-subtitle">Simulate real-time ingestion, security mapping, and embedding generation locally in your browser.</p>
+      <p class="section-subtitle">Simulate real-time ingestion, security mapping, and the new <strong>decoupled embedding scale-out</strong> pipeline locally in your browser.</p>
     </div>
 
     <div class="simulator-container glass">
@@ -451,6 +480,15 @@
             <option value="pgvector">PostgreSQL + pgvector</option>
             <option value="elasticsearch">Elasticsearch 8 (KNN)</option>
             <option value="qdrant">Qdrant Cloud</option>
+          </select>
+        </div>
+
+        <div class="sim-group">
+          <label for="sim-embed-scale">3. Embedding Service Replicas</label>
+          <select id="sim-embed-scale">
+            <option value="1">1 instance (default)</option>
+            <option value="2">2 instances (scale ×2)</option>
+            <option value="3">3 instances (scale ×3)</option>
           </select>
         </div>
 
@@ -492,9 +530,10 @@
             <div class="pipeline-pulse" id="pulse-3"></div>
           </div>
 
-          <div class="pipeline-station" id="station-ollama">
-            <span class="station-icon">🧠</span>
-            <span class="station-label">Embedding (Ollama)</span>
+          <div class="pipeline-station embed-station" id="station-embed-svc">
+            <span class="station-icon">🔱</span>
+            <span class="station-label">oc-embedding-service</span>
+            <span class="station-badge" id="embed-scale-badge">×1</span>
           </div>
 
           <div class="pipeline-connector-line">
@@ -503,7 +542,7 @@
 
           <div class="pipeline-station" id="station-vector">
             <span class="station-icon">🧬</span>
-            <span class="station-label">Vector Store</span>
+            <span class="station-label">Vector Writer</span>
           </div>
         </div>
 
@@ -659,6 +698,21 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     </div>
 
     <div class="blog-grid">
+      <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new">New</span>
+          <span class="blog-date">July 12, 2026</span>
+          <span class="blog-read-time">7 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/embedding-scale-out-architecture.html">Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling</a></h3>
+        <p class="blog-excerpt">
+          Discover how the new <strong>oc-embedding-service</strong> microservice separates embedding generation into a dedicated, horizontally scalable unit. Learn how Kafka consumer group partitioning, the EmbeddingModelFactory, and Docker Compose scaling unlock GPU-level throughput without changing the rest of your pipeline.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/embedding-scale-out-architecture.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
       <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge">Technology</span>

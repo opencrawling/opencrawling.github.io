@@ -73,8 +73,12 @@ const ARCH_DETAILS = {
     desc: "A premium admin interface (oc-admin-ui) for administrators. Provides live telemetry on job queues, connector scheduling, Kafka consumer offsets, document-level audit logs, and status reports."
   },
   ollama: {
-    title: "Embedding Consumer (Ollama)",
-    desc: "Handles vector generation asynchronously. The local Ollama server receives text chunks from the Embedding Consumer, computes the high-dimensional vectors, and returns them to be published to the 'opencrawling-embedded' Kafka topic."
+    title: "Embedding Consumer (Legacy - now part of oc-embedding-service)",
+    desc: "Handles vector generation asynchronously via the local Ollama server."
+  },
+  embedding: {
+    title: "oc-embedding-service (Decoupled Embedding Microservice)",
+    desc: "A new stateless, horizontally scalable microservice that consumes chunk messages from the Kafka 'opencrawling-chunks' topic. The EmbeddingModelFactory dynamically routes chunks to the configured model engine (Ollama, OpenAI, HuggingFace) and publishes the resulting high-dimensional vectors to the 'opencrawling-embedded' topic. Scale out instantly with: docker compose scale oc-embedding-service=N."
   },
   db: {
     title: "PostgreSQL & Redis Cache Stack",
@@ -200,8 +204,10 @@ function initSimulator() {
   const stationSrc = document.getElementById('station-src');
   const stationKafka = document.getElementById('station-kafka');
   const stationTika = document.getElementById('station-tika');
-  const stationOllama = document.getElementById('station-ollama');
+  const stationEmbedSvc = document.getElementById('station-embed-svc');
   const stationVector = document.getElementById('station-vector');
+  const embedScaleBadge = document.getElementById('embed-scale-badge');
+  const embedScaleSelect = document.getElementById('sim-embed-scale');
   
   const pulse1 = document.getElementById('pulse-1');
   const pulse2 = document.getElementById('pulse-2');
@@ -209,14 +215,14 @@ function initSimulator() {
   const pulse4 = document.getElementById('pulse-4');
 
   console.log("initSimulator: Initializing simulator components...");
-  const elementsExist = !!startBtn && !!logsContainer && !!stationSrc && !!stationKafka && !!stationTika && !!stationOllama && !!stationVector && !!pulse1 && !!pulse2 && !!pulse3 && !!pulse4;
+  const elementsExist = !!startBtn && !!logsContainer && !!stationSrc && !!stationKafka && !!stationTika && !!stationEmbedSvc && !!stationVector && !!pulse1 && !!pulse2 && !!pulse3 && !!pulse4;
   console.log("initSimulator: Elements check:", {
     startBtn: !!startBtn,
     logsContainer: !!logsContainer,
     stationSrc: !!stationSrc,
     stationKafka: !!stationKafka,
     stationTika: !!stationTika,
-    stationOllama: !!stationOllama,
+    stationEmbedSvc: !!stationEmbedSvc,
     stationVector: !!stationVector,
     pulse1: !!pulse1,
     pulse2: !!pulse2,
@@ -242,6 +248,10 @@ function initSimulator() {
     const sourceKey = sourceSelect.value;
     const destName = destSelect.options[destSelect.selectedIndex].text;
     const simData = SIMULATOR_DATA[sourceKey];
+    const embedReplicas = embedScaleSelect ? parseInt(embedScaleSelect.value, 10) : 1;
+
+    // Update embed scale badge
+    if (embedScaleBadge) embedScaleBadge.textContent = `\u00d7${embedReplicas}`;
 
     // Update Status to In Progress
     statusDot.className = "status-indicator active";
@@ -252,6 +262,9 @@ function initSimulator() {
     // Clear logs and print start message
     logsContainer.innerHTML = "";
     addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
+    if (embedReplicas > 1) {
+      addLog(`[INFO] oc-embedding-service scaled to ${embedReplicas} replicas. Kafka will distribute partitions automatically.`, "info");
+    }
     await sleep(800);
 
     // Step 1: Crawler Scan
@@ -289,9 +302,9 @@ function initSimulator() {
       await sleep(1000);
       pulse3.classList.remove('active');
 
-      // Step 7: Embedding / Ollama worker
-      stationOllama.classList.add('active');
-      addLog(`[PROCESS] Embedding Worker: ${simData.logs.ollama}`, "process");
+      // Step 7: Embedding Service worker
+      stationEmbedSvc.classList.add('active');
+      addLog(`[PROCESS] oc-embedding-service (replica): ${simData.logs.ollama}`, "process");
       await sleep(1200);
 
       // Step 8: Pulse 4 - Embedding to Vector Store Writer
@@ -308,7 +321,7 @@ function initSimulator() {
       // Reset pipeline state for next document, leaving Crawler active
       stationKafka.classList.remove('active');
       stationTika.classList.remove('active');
-      stationOllama.classList.remove('active');
+      stationEmbedSvc.classList.remove('active');
       stationVector.classList.remove('active');
       await sleep(500);
     }
@@ -344,7 +357,7 @@ function initSimulator() {
     stationSrc.classList.remove('active');
     stationKafka.classList.remove('active');
     stationTika.classList.remove('active');
-    stationOllama.classList.remove('active');
+    stationEmbedSvc.classList.remove('active');
     stationVector.classList.remove('active');
     pulse1.classList.remove('active');
     pulse2.classList.remove('active');
@@ -424,52 +437,52 @@ function initSvgAnimation() {
   
   function step(timestamp) {
     if (!startTime) startTime = timestamp;
-    const progress = ((timestamp - startTime) % 3000) / 3000; // 3 seconds loop
+    const progress = ((timestamp - startTime) % 3600) / 3600; // 3.6 seconds loop
     
-    // Particle 1 (Violet) - Ingestion & Chunking Flow
-    if (progress < 0.2) {
-      const segProgress = progress / 0.2;
-      const x = 130 + (240 - 130) * segProgress;
+    // Particle 1 (Violet) - Sources → Ingestion Core → Kafka
+    if (progress < 0.18) {
+      const segProgress = progress / 0.18;
+      const x = 130 + (220 - 130) * segProgress;
       p1.setAttribute('cx', x);
-      p1.setAttribute('cy', 225);
+      p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
-    } else if (progress >= 0.2 && progress < 0.3) {
+    } else if (progress >= 0.18 && progress < 0.28) {
       p1.setAttribute('opacity', 0); // inside Core (Tika extraction & splitting)
-    } else if (progress >= 0.3 && progress < 0.5) {
-      const segProgress = (progress - 0.3) / 0.2;
-      const x = 380 + (450 - 380) * segProgress;
+    } else if (progress >= 0.28 && progress < 0.46) {
+      const segProgress = (progress - 0.28) / 0.18;
+      const x = 370 + (430 - 370) * segProgress;
       p1.setAttribute('cx', x);
-      p1.setAttribute('cy', 225);
+      p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
     } else {
       p1.setAttribute('opacity', 0);
     }
 
-    // Particle 3 (Amber) - Asynchronous Ollama Embedding Consumer Loop
-    if (progress >= 0.5 && progress < 0.65) {
-      const segProgress = (progress - 0.5) / 0.15;
-      const y = 170 - (170 - 120) * segProgress;
-      p3.setAttribute('cx', 510);
+    // Particle 3 (Amber) - Kafka → oc-embedding-service (up) → back to Kafka (down)
+    if (progress >= 0.48 && progress < 0.63) {
+      const segProgress = (progress - 0.48) / 0.15;
+      const y = 190 - (190 - 90) * segProgress;
+      p3.setAttribute('cx', 490);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
-    } else if (progress >= 0.65 && progress < 0.75) {
-      p3.setAttribute('opacity', 0); // generating vectors in Ollama
-    } else if (progress >= 0.75 && progress < 0.9) {
-      const segProgress = (progress - 0.75) / 0.15;
-      const y = 120 + (170 - 120) * segProgress;
-      p3.setAttribute('cx', 510);
+    } else if (progress >= 0.63 && progress < 0.73) {
+      p3.setAttribute('opacity', 0); // computing vectors in oc-embedding-service
+    } else if (progress >= 0.73 && progress < 0.88) {
+      const segProgress = (progress - 0.73) / 0.15;
+      const y = 90 + (190 - 90) * segProgress;
+      p3.setAttribute('cx', 540);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
     } else {
       p3.setAttribute('opacity', 0);
     }
 
-    // Particle 2 (Cyan) - Vector Store Writer Flow
-    if (progress >= 0.9 && progress < 1.0) {
-      const segProgress = (progress - 0.9) / 0.1;
-      const x = 570 + (680 - 570) * segProgress;
+    // Particle 2 (Cyan) - Kafka → Vector Writer
+    if (progress >= 0.88 && progress < 1.0) {
+      const segProgress = (progress - 0.88) / 0.12;
+      const x = 560 + (640 - 560) * segProgress;
       p2.setAttribute('cx', x);
-      p2.setAttribute('cy', 225);
+      p2.setAttribute('cy', 230);
       p2.setAttribute('opacity', 1);
     } else {
       p2.setAttribute('opacity', 0);
