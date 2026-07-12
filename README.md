@@ -47,6 +47,10 @@ python3 -m http.server 8080
 └── README.md             # Project documentation
 ```
 
+## 📬 Contact
+
+If you have questions about the website, documentation, or the organization, feel free to email [info@opencrawling.org](mailto:info@opencrawling.org).
+
 ## 📄 License
 
 This website and the OpenCrawling project are distributed under the [Apache License 2.0](https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE).
