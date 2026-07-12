@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Get in touch with the OpenCrawling core team. Submit inquiries, security disclosures, standard feedback, or feature proposals.">
+  <meta name="keywords" content="contact opencrawling, contact open ingestion standard, info@opencrawling.org, enterprise ingestion support">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.github.io/contact.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.github.io/contact.html">
+  <meta property="og:title" content="Contact Us - OpenCrawling">
+  <meta property="og:description" content="Reach out to the OpenCrawling and Open Ingestion Standard (OIS) maintainers.">
+  <meta property="og:image" content="https://opencrawling.github.io/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* Contact Page Layout & Aesthetics */
+    .contact-wrapper {
+      max-width: var(--container-width);
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .contact-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 968px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Contact Details Sidebar */
+    .contact-info-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .info-card {
+      padding: 2.5rem;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+
+    .info-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 10px;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-content h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-color);
+    }
+
+    .info-content p, .info-content a {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .info-content a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .info-content a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    /* Contact Form Styles */
+    .contact-form-panel {
+      border-radius: 16px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (max-width: 576px) {
+      .contact-form-panel {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.75rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+      transition: color 0.2s ease;
+    }
+
+    .form-control {
+      width: 100%;
+      min-height: 48px;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 10px rgba(124, 58, 237, 0.15);
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.25rem;
+      padding-right: 2.5rem;
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    /* Submit Button styling */
+    .submit-btn {
+      width: 100%;
+      min-height: 50px;
+      background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 1s ease-in-out infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success / Error States */
+    .status-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+      border-radius: 16px;
+    }
+
+    .status-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .status-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .status-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+    }
+
+    .status-desc {
+      color: var(--text-muted);
+      max-width: 400px;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .status-btn {
+      padding: 0.75rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-color);
+      font-family: var(--font-display);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .status-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .config-note {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #FCD34D;
+      text-align: left;
+      line-height: 1.4;
+      display: none;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#architecture">Architecture</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#simulator">Simulator</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="index.html#blog">Blog</a></li>
+          <li><a href="index.html#community">Community</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="contact-wrapper">
+    <div class="contact-header">
+      <h1 class="gradient-text" style="font-size: 3rem; font-weight: 800; font-family: var(--font-display); margin-bottom: 1rem;">Get in Touch</h1>
+      <p class="section-subtitle" style="margin: 0 auto; max-width: 600px;">Have questions about OpenCrawling, the Open Ingestion Standard, or integration capabilities? Send us a message.</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Info Panel -->
+      <aside class="contact-info-panel">
+        <div class="info-card glass">
+          <h3 style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--text-color);">Official Inquiries</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">We welcome feedback, contribution pitches, standard reviews, and security notifications.</p>
+          
+          <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 0.5rem 0;">
+          
+          <div class="info-item">
+            <div class="info-icon">✉️</div>
+            <div class="info-content">
+              <h4>Direct Email</h4>
+              <a href="mailto:info@opencrawling.org">info@opencrawling.org</a>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">🤝</div>
+            <div class="info-content">
+              <h4>Community & Discussions</h4>
+              <p>For support and roadmap QA, participate in our <a href="https://github.com/OpenCrawling/opencrawling/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a>.</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">🛡️</div>
+            <div class="info-content">
+              <h4>Security Disclosures</h4>
+              <p>Please report vulnerabilities following our official security rules in <a href="https://github.com/OpenCrawling/opencrawling/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">SECURITY.md</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card glass" style="padding: 2rem;">
+          <h4 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-color); margin-bottom: 0.5rem;">Response Times</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0;">As an open-source team, we monitor inquiries regularly. General inquiries receive responses within 24 to 48 business hours.</p>
+        </div>
+      </aside>
+
+      <!-- Form Panel -->
+      <section class="contact-form-panel glass" aria-labelledby="form-title">
+        <h2 id="form-title" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-color);">Send a Message</h2>
+        
+        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+          <!-- Web3Forms Config -->
+          <!-- NOTE: Replace the value below with your Web3Forms Access Key to receive live emails -->
+          <input type="hidden" name="access_key" id="access-key" value="YOUR_ACCESS_KEY_HERE">
+          <input type="hidden" name="subject" value="New Contact Form Submission - OpenCrawling">
+          <input type="hidden" name="from_name" value="OpenCrawling Website Form">
+          
+          <!-- Spam Honeypot (visually hidden) -->
+          <input type="checkbox" name="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off">
+
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" class="form-control" autocomplete="name" required placeholder="Jane Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" autocomplete="email" required placeholder="jane@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="inquiry-type">Inquiry Type</label>
+            <select id="inquiry-type" name="inquiry_type" class="form-control" required>
+              <option value="" disabled selected>Select an option...</option>
+              <option value="General Inquiries">General Inquiry</option>
+              <option value="Standard Specification">Open Ingestion Standard</option>
+              <option value="Partnership & Integration">Partnership & Integration</option>
+              <option value="Security Disclosures">Security Disclosure</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" class="form-control" required minlength="10" placeholder="Describe your request in detail..."></textarea>
+          </div>
+
+          <button type="submit" id="submit-button" class="submit-btn">
+            <span class="spinner" id="btn-spinner"></span>
+            <span id="btn-text">Submit Message</span>
+          </button>
+        </form>
+
+        <!-- Status overlays -->
+        <div class="status-overlay" id="status-overlay">
+          <div class="status-icon" id="status-icon">🚀</div>
+          <h3 class="status-title" id="status-title">Message Sent!</h3>
+          <p class="status-desc" id="status-desc">Thank you for reaching out. We will read your message and follow up shortly.</p>
+          <button class="status-btn" id="status-close-btn">Send Another Message</button>
+          
+          <div class="config-note" id="config-note">
+            <strong>Developer Setup Note:</strong><br>
+            This submission was simulated locally because the default access key <code>YOUR_ACCESS_KEY_HERE</code> is configured.<br><br>
+            To receive live emails, replace the <code>access_key</code> input value in <code>contact.html</code> with a free key from <a href="https://web3forms.com" target="_blank" style="color: #38BDF8; text-decoration: underline;">web3forms.com</a>.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Contact Script (theme management and custom submission handling) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Theme Toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      applyTheme(initialTheme);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+        });
+      }
+
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          html.classList.remove('light');
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
+        } else {
+          html.classList.remove('dark');
+          html.classList.add('light');
+          html.style.colorScheme = 'light';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      // 2. Form Submission Handling with validation
+      const form = document.getElementById('contact-form');
+      const submitBtn = document.getElementById('submit-button');
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const statusOverlay = document.getElementById('status-overlay');
+      const statusIcon = document.getElementById('status-icon');
+      const statusTitle = document.getElementById('status-title');
+      const statusDesc = document.getElementById('status-desc');
+      const statusCloseBtn = document.getElementById('status-close-btn');
+      const configNote = document.getElementById('config-note');
+      const accessKeyInput = document.getElementById('access-key');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Basic HTML5 validation trigger
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        // Disable button & show spinner
+        submitBtn.disabled = true;
+        btnText.textContent = "Sending...";
+        btnSpinner.style.display = "inline-block";
+
+        const formData = new FormData(form);
+        const accessKey = accessKeyInput.value.trim();
+
+        // Check if access key is configured
+        if (accessKey === 'YOUR_ACCESS_KEY_HERE' || accessKey === '') {
+          // Simulate submit success (Developer Demo Mode)
+          setTimeout(() => {
+            btnSpinner.style.display = "none";
+            btnText.textContent = "Submit Message";
+            submitBtn.disabled = false;
+            
+            // Set simulated success state
+            statusIcon.textContent = "✨";
+            statusTitle.textContent = "Message Simulated!";
+            statusDesc.textContent = "Because you are running in demonstration mode with the default access key, the form submission was simulated locally in your browser.";
+            configNote.style.display = "block";
+            statusOverlay.classList.add('active');
+          }, 1500);
+        } else {
+          // Real Submit via Web3Forms API
+          try {
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: formData
+            });
+            const result = await response.json();
+            
+            btnSpinner.style.display = "none";
+            btnText.textContent = "Submit Message";
+            submitBtn.disabled = false;
+
+            if (response.ok && result.success) {
+              statusIcon.textContent = "🚀";
+              statusTitle.textContent = "Message Sent!";
+              statusDesc.textContent = "Thank you for reaching out to us. We have received your message and will follow up shortly.";
+              configNote.style.display = "none";
+              form.reset();
+            } else {
+              statusIcon.textContent = "⚠️";
+              statusTitle.textContent = "Submission Failed";
+              statusDesc.textContent = result.message || "Something went wrong while sending your message. Please email us directly at info@opencrawling.org.";
+              configNote.style.display = "none";
+            }
+            statusOverlay.classList.add('active');
+          } catch (error) {
+            console.error('Error submitting form:', error);
+            btnSpinner.style.display = "none";
+            btnText.textContent = "Submit Message";
+            submitBtn.disabled = false;
+            
+            statusIcon.textContent = "⚠️";
+            statusTitle.textContent = "Submission Error";
+            statusDesc.textContent = "Could not establish a connection to the mail server. Please check your network connection or email us at info@opencrawling.org.";
+            configNote.style.display = "none";
+            statusOverlay.classList.add('active');
+          }
+        }
+      });
+
+      // Close overlay to send another message
+      statusCloseBtn.addEventListener('click', () => {
+        statusOverlay.classList.remove('active');
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>
