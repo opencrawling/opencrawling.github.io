@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initCodeCopy();
   initSvgAnimation();
+  initMobileMenu();
 });
 
 /* ==========================================
@@ -574,4 +575,50 @@ function initSlider() {
   }
   
   startAutoPlay();
+}
+
+/* ==========================================
+   Mobile Menu Management
+   ========================================== */
+function initMobileMenu() {
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const header = document.querySelector('.site-header');
+  const navLinks = document.querySelectorAll('.main-nav a');
+  
+  if (!toggleBtn || !header) return;
+  
+  toggleBtn.addEventListener('click', () => {
+    const isOpen = header.classList.contains('mobile-menu-open');
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  
+  // Close menu when a link is clicked (important for anchor links on same page)
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+  
+  // Close menu on resize if we scale past mobile breakpoint
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && header.classList.contains('mobile-menu-open')) {
+      closeMenu();
+    }
+  });
+
+  function openMenu() {
+    header.classList.add('mobile-menu-open');
+    document.body.classList.add('mobile-menu-active');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    header.classList.remove('mobile-menu-open');
+    document.body.classList.remove('mobile-menu-active');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+  }
 }

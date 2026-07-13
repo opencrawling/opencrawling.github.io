@@ -293,6 +293,64 @@
     border-color: var(--accent-color);
   }
   
+  /* Mobile Menu Toggle Button */
+  .mobile-menu-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 110;
+  }
+  
+  .mobile-menu-toggle:hover {
+    border-color: var(--accent-color);
+  }
+  
+  .mobile-menu-toggle span {
+    display: block;
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  
+  .mobile-menu-toggle span:nth-child(1) {
+    transform: translateY(-5px);
+  }
+  
+  .mobile-menu-toggle span:nth-child(2) {
+    opacity: 1;
+  }
+  
+  .mobile-menu-toggle span:nth-child(3) {
+    transform: translateY(5px);
+  }
+  
+  .site-header.mobile-menu-open .mobile-menu-toggle span:nth-child(1) {
+    transform: rotate(45deg);
+    background-color: var(--accent-color);
+  }
+  
+  .site-header.mobile-menu-open .mobile-menu-toggle span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  
+  .site-header.mobile-menu-open .mobile-menu-toggle span:nth-child(3) {
+    transform: rotate(-45deg);
+    background-color: var(--accent-color);
+  }
+  
   .sun-icon {
     display: none;
     width: 20px;
@@ -1714,8 +1772,70 @@
 }
 
 @media (max-width: 768px) {
+  body.mobile-menu-active {
+    overflow: hidden;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
   .main-nav {
-    display: none; /* simple mobile fallback, hiding links */
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    background-color: var(--header-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid var(--card-border);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+    z-index: 99;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  .site-header.mobile-menu-open .main-nav {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .main-nav li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .main-nav a {
+    font-size: 1.25rem;
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .main-nav a:hover {
+    background-color: rgba(139, 92, 246, 0.08);
+    color: var(--accent-color);
+  }
+
+  .main-nav a::after {
+    display: none; /* Hide hover underline effect on mobile */
   }
   
   .features-grid {
