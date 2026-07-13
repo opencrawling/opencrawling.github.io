@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecosystem Comparison: OpenCrawling vs. alternatives</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="An in-depth architectural comparison of OpenCrawling with LangChain, LlamaIndex, Unstructured.io, Apache Nutch, Airbyte, Fivetran, Apache NiFi, Glean, and Elastic.">
+  <meta name="keywords" content="opencrawling, langchain, llamaindex, unstructured.io, apache nutch, airbyte, fivetran, apache nifi, glean, elastic, comparison, vector database, RAG, ACL mapping">
+  <meta name="author" content="OpenCrawling GitHub Organization">
+  <link rel="canonical" href="https://opencrawling.github.io/comparison.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.github.io/comparison.html">
+  <meta property="og:title" content="OpenCrawling Ingestion Comparison Matrix">
+  <meta property="og:description" content="Compare secure document ingestion pipelines: OpenCrawling vs. LangChain, LlamaIndex, Unstructured, Airbyte, Fivetran, NiFi, Glean, and Elastic.">
+  <meta property="og:image" content="assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Page Specific Premium Styling -->
+  <style>
+    .comparison-wrapper {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 3rem) 2rem 6rem 2rem;
+    }
+
+    .comparison-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .comparison-header h1 {
+      font-size: clamp(2.2rem, 1.2rem + 4vw, 3.8rem);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .comparison-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    /* Tabs for Category Switcher */
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .category-tab-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .category-tab-btn:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--text-color);
+    }
+
+    .category-tab-btn.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: #FFFFFF;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* Glassmorphic Table Styles */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 5rem;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      min-width: 900px;
+    }
+
+    .comparison-table th, 
+    .comparison-table td {
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .comparison-table th {
+      background: rgba(9, 13, 22, 0.7);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: -0.01em;
+      font-size: 1rem;
+    }
+
+    .comparison-table th:first-child {
+      border-top-left-radius: 16px;
+    }
+
+    .comparison-table th:last-child {
+      border-top-right-radius: 16px;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tr:hover td {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .feature-name {
+      font-weight: 600;
+      color: var(--text-color);
+      background: rgba(255, 255, 255, 0.01);
+      width: 18%;
+    }
+
+    .highlight-col {
+      background: rgba(139, 92, 246, 0.04);
+      border-left: 1px solid rgba(139, 92, 246, 0.15);
+      border-right: 1px solid rgba(139, 92, 246, 0.15);
+      width: 25%;
+    }
+
+    .comparison-table tr:hover .highlight-col {
+      background: rgba(139, 92, 246, 0.07);
+    }
+
+    .check-icon {
+      color: var(--success-color);
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+
+    .cross-icon {
+      color: #EF4444;
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+
+    .warning-icon {
+      color: #F59E0B;
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+
+    /* Grid Section Styles */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .detail-card {
+      padding: 2.2rem 1.8rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .detail-card h2 {
+      font-size: 1.4rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-card .category-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .detail-card li {
+      font-size: 0.85rem;
+      color: var(--text-color);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .detail-card li::before {
+      content: "•";
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+
+    .detail-card.opencrawling-card {
+      border-color: rgba(139, 92, 246, 0.35);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent 80%), rgba(15, 23, 42, 0.55);
+    }
+
+    .detail-card.opencrawling-card h2 {
+      background: linear-gradient(135deg, var(--text-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .detail-card.opencrawling-card .category-label {
+      color: var(--cyan-color);
+    }
+
+    /* Interactive Matcher Quiz */
+    .matcher-section {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.03), rgba(139, 92, 246, 0.03));
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .matcher-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .matcher-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text-color), var(--cyan-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .matcher-desc {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem auto;
+      font-size: 1.05rem;
+    }
+
+    .quiz-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto 2.5rem auto;
+      text-align: left;
+    }
+
+    .quiz-card {
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .quiz-card:hover {
+      border-color: rgba(6, 182, 212, 0.25);
+    }
+
+    .quiz-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+
+    .quiz-option:hover {
+      color: var(--text-color);
+    }
+
+    .quiz-option input[type="radio"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--card-border);
+      border-radius: 50%;
+      outline: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .quiz-option input[type="radio"]:checked {
+      border-color: var(--cyan-color);
+      background: var(--cyan-color);
+      box-shadow: 0 0 6px var(--cyan-glow);
+    }
+
+    .quiz-option input[type="radio"]:checked::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background-color: #07090E;
+      border-radius: 50%;
+    }
+
+    .quiz-option input[type="radio"]:checked + span {
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .quiz-result-box {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px dashed rgba(139, 92, 246, 0.25);
+      background: rgba(139, 92, 246, 0.02);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .quiz-result-box.active {
+      display: block;
+      transform: translateY(0);
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .badge-oc { background: rgba(139, 92, 246, 0.15); color: #C084FC; border: 1px solid rgba(139, 92, 246, 0.3); }
+    .badge-st { background: rgba(6, 182, 212, 0.15); color: #22D3EE; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .badge-mcf { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .result-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-color);
+    }
+
+    .result-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .quiz-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#architecture">Architecture</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#simulator">Simulator</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="index.html#blog">Blog</a></li>
+          <li><a href="comparison.html" class="active">Compare</a></li>
+          <li><a href="index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="comparison-wrapper">
+    <div class="comparison-header">
+      <h1 class="gradient-text">Ecosystem Comparison</h1>
+      <p class="comparison-subtitle">OpenCrawling sits at the intersection of enterprise security and AI ingestion. See how it compares to orchestrators, crawlers, parsers, and data integration platforms.</p>
+    </div>
+
+    <!-- Category Tabs Switcher -->
+    <div class="category-tabs" id="tab-switcher">
+      <button class="category-tab-btn active" data-category="all">Show All</button>
+      <button class="category-tab-btn" data-category="rag">RAG & AI Frameworks</button>
+      <button class="category-tab-btn" data-category="parsers">Parsers & Web Crawlers</button>
+      <button class="category-tab-btn" data-category="etl">ETL & Data Flows</button>
+      <button class="category-tab-btn" data-category="search">Enterprise Search/RAG Platforms</button>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table class="comparison-table" id="comparison-matrix-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight-col">🚀 OpenCrawling</th>
+            <th class="cat-col-rag">🦜 LangChain / LlamaIndex</th>
+            <th class="cat-col-parsers">🧩 Unstructured / Nutch</th>
+            <th class="cat-col-etl">🌊 Airbyte / NiFi / Fivetran</th>
+            <th class="cat-col-search">🔍 Glean / Elastic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature-name">Primary Role</td>
+            <td class="highlight-col"><strong>Secure Ingestion Middleware</strong></td>
+            <td>Application Orchestration & Logic</td>
+            <td>Data Extraction / Web Scraping</td>
+            <td>General ETL & System Sync</td>
+            <td>End-to-End Enterprise Search</td>
+          </tr>
+          <tr>
+            <td class="feature-name">ACL / Document Security</td>
+            <td class="highlight-col"><span class="check-icon">✓</span> <strong>Native ACL Translation</strong><br><small>AD, SharePoint SIDs mapped to DB rows</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No Security Sync</strong><br><small>Developer must implement filtering</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No Security Sync</strong><br><small>Extracts raw content only</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No Document Security</strong><br><small>Moves tables, no permission mapping</small></td>
+            <td><span class="check-icon">✓</span> <strong>Built-in Security</strong><br><small>Integrates with identity management</small></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Data Types</td>
+            <td class="highlight-col">Unstructured Files & Repositories</td>
+            <td>Any (Simple document readers)</td>
+            <td>Highly Complex Unstructured Formats</td>
+            <td>Mainly Structured & SaaS APIs</td>
+            <td>Federated APIs & Unstructured Docs</td>
+          </tr>
+          <tr>
+            <td class="feature-name">Semantic Chunking & Embedding</td>
+            <td class="highlight-col"><span class="check-icon">✓</span> <strong>Decoupled Service</strong><br><small>Orchestrates splitters & model factories</small></td>
+            <td><span class="check-icon">✓</span> <strong>Local / In-memory</strong><br><small>Excellent library utilities</small></td>
+            <td><span class="warning-icon">!</span> <strong>Simple Chunking</strong><br><small>Document-level chunking hooks</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No AI Native Features</strong><br><small>Relies on downstream APIs</small></td>
+            <td><span class="check-icon">✓</span> <strong>End-to-End Vector Indexing</strong><br><small>Embedded semantic search models</small></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Scaling Mechanism</td>
+            <td class="highlight-col"><span class="check-icon">✓</span> Kafka Event Streams & Java Virtual Threads</td>
+            <td><span class="cross-icon">✗</span> In-Memory Threading / Script Execution</td>
+            <td>MapReduce (Nutch) / Serverless Container</td>
+            <td>Distributed Nodes / Cloud Engines</td>
+            <td>Elastic Cluster Scaling / SaaS Cloud</td>
+          </tr>
+          <tr>
+            <td class="feature-name">License & Model</td>
+            <td class="highlight-col"><strong>Apache 2.0 (Open Source)</strong></td>
+            <td>MIT / BSD (Open Source)</td>
+            <td>Apache 2.0 (Nutch) / Commercial (Unstructured)</td>
+            <td>Elastic License (Airbyte) / Proprietary SaaS</td>
+            <td>Proprietary SaaS (Glean) / Elastic License</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Detailed Framework Breakdowns -->
+    <div class="details-grid" id="details-cards-container">
+      
+      <!-- OpenCrawling -->
+      <article class="detail-card opencrawling-card glass" data-cat="all">
+        <span class="category-label">Secure Ingestion Middleware</span>
+        <h2>🚀 OpenCrawling</h2>
+        <p>A modern, high-performance open standard engine designed to securely bridge enterprise repositories with AI pipelines.</p>
+        <ul>
+          <li><strong>Virtual Thread Parallelism</strong>: Built on Java 25 virtual threads for extremely low-footprint scales.</li>
+          <li><strong>Document-Level ACLs</strong>: Retains and translates file access permissions directly into pgvector row security filters.</li>
+          <li><strong>Event-Driven Ingestion</strong>: Leverages Apache Kafka to scale crawler, parsing, and embedding tasks independently.</li>
+        </ul>
+      </article>
+
+      <!-- LangChain / LlamaIndex -->
+      <article class="detail-card glass" data-cat="rag">
+        <span class="category-label">RAG & AI Frameworks</span>
+        <h2>🦜 LangChain / LlamaIndex</h2>
+        <p>Popular Python/JS SDKs for building application-level LLM orchestration, agent workflows, and data integrations.</p>
+        <ul>
+          <li><strong>Orchestration Layers</strong>: Unmatched library support for prompt templates, chains, memory, and LLM providers.</li>
+          <li><strong>Prototyping Focus</strong>: Perfect for app logic, but lacks industrial-scale crawling infrastructure (e.g., rate-limiting, failure recovery).</li>
+          <li><strong>No Native Permission Sync</strong>: Does not translate or synchronize enterprise repository ACLs to database targets.</li>
+        </ul>
+      </article>
+
+      <!-- Unstructured.io -->
+      <article class="detail-card glass" data-cat="parsers">
+        <span class="category-label">Parsers & Web Crawlers</span>
+        <h2>🧩 Unstructured.io</h2>
+        <p>Specialized file preprocessing libraries and APIs for partitioning and parsing complex layout PDFs, slides, and files.</p>
+        <ul>
+          <li><strong>Layout Detection</strong>: Deep learning models to detect tables, headers, and text chunks from raw images/documents.</li>
+          <li><strong>Pre-processing Focus</strong>: Focuses strictly on cleaning and normalizing text elements, not crawling enterprise networks.</li>
+          <li><strong>No Security Mappings</strong>: Pure parsing tool; does not connect to LDAP or map active document permission models.</li>
+        </ul>
+      </article>
+
+      <!-- Apache Nutch -->
+      <article class="detail-card glass" data-cat="parsers">
+        <span class="category-label">Parsers & Web Crawlers</span>
+        <h2>🕸️ Apache Nutch</h2>
+        <p>A highly mature, production-tested open-source web crawler designed for web-scale scraping and search engines.</p>
+        <ul>
+          <li><strong>Web-Scale Crawling</strong>: Excellent handles for massive, public web crawls using distributed Hadoop clusters.</li>
+          <li><strong>Legacy Infrastructure</strong>: Very complex setup relying on MapReduce, making it heavy for modern container clouds.</li>
+          <li><strong>No Intranet Security</strong>: Tailored for public web content; lacks connectors for secure repositories like SharePoint.</li>
+        </ul>
+      </article>
+
+      <!-- Airbyte / Fivetran -->
+      <article class="detail-card glass" data-cat="etl">
+        <span class="category-label">ETL & Data Flows</span>
+        <h2>🌊 Airbyte / Fivetran</h2>
+        <p>Leader platforms in modern structured ETL, connecting databases, SaaS tools, and cloud storage to data warehouses.</p>
+        <ul>
+          <li><strong>SaaS API Connectors</strong>: Thousands of pre-built integrations for structured data (Salesforce, Stripe, MySQL).</li>
+          <li><strong>Data Warehouse Focus</strong>: Built to replicate tabular databases, not to parse raw binary documents for semantic search.</li>
+          <li><strong>No ACL Mapping</strong>: Replicates database schemas directly without translating repository-level file permissions.</li>
+        </ul>
+      </article>
+
+      <!-- Apache NiFi -->
+      <article class="detail-card glass" data-cat="etl">
+        <span class="category-label">ETL & Data Flows</span>
+        <h2>⚡ Apache NiFi</h2>
+        <p>A powerful, visual drag-and-drop data routing and distribution system built to orchestrate complex corporate data flows.</p>
+        <ul>
+          <li><strong>Visual Pipeline Editor</strong>: Interactive dashboard for managing data ingestion, schema routing, and delivery.</li>
+          <li><strong>Heavy Infrastructure</strong>: Runs as a large clustered Java environment, which is highly resource-intensive.</li>
+          <li><strong>No AI Specialization</strong>: Requires custom scripted processors to achieve semantic chunking and RAG ACL synchronization.</li>
+        </ul>
+      </article>
+
+      <!-- Glean -->
+      <article class="detail-card glass" data-cat="search">
+        <span class="category-label">Enterprise Search Platforms</span>
+        <h2>🧠 Glean</h2>
+        <p>A premium, closed-source SaaS workspace search assistant that federates answers across all company tools.</p>
+        <ul>
+          <li><strong>Out-of-the-Box RAG</strong>: Exceptional pre-built product interface that integrates search, chat, and agents.</li>
+          <li><strong>Closed Ecosystem</strong>: Fully managed SaaS solution with no local self-hosted open-source model. High vendor lock-in.</li>
+          <li><strong>Pre-integrated Security</strong>: Fully synchronizes permissions across SaaS accounts, but lacks customization for local private DBs.</li>
+        </ul>
+      </article>
+
+      <!-- Elastic -->
+      <article class="detail-card glass" data-cat="search">
+        <span class="category-label">Enterprise Search Platforms</span>
+        <h2>🔍 Elastic</h2>
+        <p>The standard search and analytics database engine, equipped with vector capabilities and lexical indexing.</p>
+        <ul>
+          <li><strong>Storage & Indexing</strong>: Outstanding database engine for keyword search, hybrid retrieval, and pgvector-style indexing.</li>
+          <li><strong>Not an Ingest Engine</strong>: Lacks the capability to actively schedule crawls, scan local drives, or parse raw SharePoint ACL files.</li>
+          <li><strong>Synergetic Match</strong>: OpenCrawling is designed to sit in front of Elastic, handling the secure ingest and feeding documents safely into it.</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- Interactive Matcher Quiz -->
+    <section class="matcher-section glass" aria-labelledby="matcher-title">
+      <h2 id="matcher-title" class="matcher-title">Smart Architecture Matcher</h2>
+      <p class="matcher-desc">Select your stack requirements and the matcher engine will recommend the best-fit technology for your pipeline.</p>
+      
+      <div class="quiz-container">
+        <!-- Question 1 -->
+        <div class="quiz-card">
+          <h4>1. Where are you storing the data?</h4>
+          <label class="quiz-option">
+            <input type="radio" name="q-target" value="ai" checked>
+            <span>Vector Database / Vector Index</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-target" value="search">
+            <span>Traditional Search Engine (Solr, ES)</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-target" value="lake">
+            <span>Warehouse / Data Lake / DB Replication</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-target" value="saas">
+            <span>None (Want a ready-to-use SaaS App)</span>
+          </label>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="quiz-card">
+          <h4>2. What is your primary data format?</h4>
+          <label class="quiz-option">
+            <input type="radio" name="q-data" value="docs" checked>
+            <span>Intranet PDFs, Office docs, Emails</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-data" value="web">
+            <span>Public Web Pages / Web Scraping</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-data" value="tables">
+            <span>Structured Database Tables / SaaS API logs</span>
+          </label>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="quiz-card">
+          <h4>3. What are your security requirements?</h4>
+          <label class="quiz-option">
+            <input type="radio" name="q-security" value="acl" checked>
+            <span>Must sync complex file ACLs (SharePoint, AD)</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-security" value="none">
+            <span>Public data / No permission checking</span>
+          </label>
+        </div>
+      </div>
+
+      <button id="calculate-fit-btn" class="btn btn-primary" style="padding: 0.75rem 2.5rem; font-size: 1rem;">Find Recommendation</button>
+
+      <!-- Quiz Result -->
+      <div class="quiz-result-box" id="quiz-result">
+        <span class="result-badge" id="result-badge">OpenCrawling</span>
+        <h3 class="result-title" id="result-title">OpenCrawling is your perfect match!</h3>
+        <p class="result-text" id="result-text">Based on your focus on Vector Databases, Unstructured Documents, and security ACL preservation, OpenCrawling provides the modern, Spring Boot 4-powered ingestion pipeline built specifically for your needs.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Page Logic (Theme Toggle, Mobile Menu, and Matcher Engine) -->
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Re-use Theme Toggle state locally to ensure it is fast
+      const html = document.documentElement;
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        html.classList.add('dark');
+        html.style.colorScheme = 'dark';
+      } else {
+        html.classList.remove('dark');
+        html.style.colorScheme = 'light';
+      }
+
+      // Tab switcher logic
+      const tabBtns = document.querySelectorAll('.category-tab-btn');
+      const detailsCards = document.querySelectorAll('.detail-card');
+      const tableHeaders = document.querySelectorAll('#comparison-matrix-table th');
+      const tableRows = document.querySelectorAll('#comparison-matrix-table tbody tr');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Toggle active class on buttons
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const category = btn.getAttribute('data-category');
+
+          // Filter Details Cards
+          detailsCards.forEach(card => {
+            if (category === 'all') {
+              card.style.display = 'flex';
+            } else {
+              const cardCat = card.getAttribute('data-cat');
+              if (cardCat === category || cardCat === 'all') {
+                card.style.display = 'flex';
+              } else {
+                card.style.display = 'none';
+              }
+            }
+          });
+
+          // Highlight/Filter table columns
+          if (category === 'all') {
+            // Restore visibility of columns
+            tableHeaders.forEach(th => th.style.opacity = '1');
+            tableRows.forEach(tr => {
+              Array.from(tr.cells).forEach(cell => cell.style.opacity = '1');
+            });
+          } else {
+            // Dim other columns
+            const colIndexMap = {
+              'rag': 2,
+              'parsers': 3,
+              'etl': 4,
+              'search': 5
+            };
+            const targetColIndex = colIndexMap[category];
+            
+            tableHeaders.forEach((th, index) => {
+              if (index === 0 || index === 1 || index === targetColIndex) {
+                th.style.opacity = '1';
+              } else {
+                th.style.opacity = '0.25';
+              }
+            });
+
+            tableRows.forEach(tr => {
+              Array.from(tr.cells).forEach((cell, index) => {
+                if (index === 0 || index === 1 || index === targetColIndex) {
+                  cell.style.opacity = '1';
+                } else {
+                  cell.style.opacity = '0.25';
+                }
+              });
+            });
+          }
+        });
+      });
+
+      // Quiz Matching Engine Logic
+      const calcBtn = document.getElementById('calculate-fit-btn');
+      const resultBox = document.getElementById('quiz-result');
+      const resBadge = document.getElementById('result-badge');
+      const resTitle = document.getElementById('result-title');
+      const resText = document.getElementById('result-text');
+
+      if (calcBtn && resultBox) {
+        calcBtn.addEventListener('click', () => {
+          const target = document.querySelector('input[name="q-target"]:checked').value;
+          const data = document.querySelector('input[name="q-data"]:checked').value;
+          const security = document.querySelector('input[name="q-security"]:checked').value;
+
+          let match = "opencrawling"; // Default
+          
+          if (target === "saas") {
+            match = "glean";
+          } else if (target === "lake" || data === "tables") {
+            match = "seatunnel"; // General ETL / SeaTunnel
+          } else if (target === "search" && security === "acl") {
+            match = "manifoldcf"; // ManifoldCF legacy Enterprise Search
+          } else if (data === "web" && security === "none") {
+            match = "nutch";
+          } else if (target === "ai" && security === "none") {
+            match = "llamaindex";
+          }
+
+          // Render Results
+          resultBox.classList.remove('active');
+          
+          // Small timeout to trigger CSS slide-in animation
+          setTimeout(() => {
+            if (match === "opencrawling") {
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "OpenCrawling Recommended";
+              resTitle.textContent = "🚀 OpenCrawling is your perfect match!";
+              resText.textContent = "Your project targets Vector Databases / AI pipelines with unstructured documents and requires strong ACL security mappings. OpenCrawling is specifically architected for this, utilizing Java 25 virtual threads, Apache Tika, Kafka, and Spring Boot 4 to deliver secure, event-driven embeddings directly to vector indices.";
+            } else if (match === "llamaindex") {
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "LangChain / LlamaIndex Recommended";
+              resTitle.textContent = "🦜 LangChain / LlamaIndex is your fit!";
+              resText.textContent = "If you are prototyping an AI assistant using public, un-siloed data without security permission constraints, LlamaIndex or LangChain's in-memory document loaders provide the easiest Python/JS libraries to get started quickly. For enterprise-scale production scaling, pair them with OpenCrawling.";
+            } else if (match === "glean") {
+              resBadge.className = "result-badge badge-mcf";
+              resBadge.textContent = "Glean SaaS Recommended";
+              resTitle.textContent = "🧠 Glean is your match!";
+              resText.textContent = "If you want a fully managed, turn-key SaaS application that federates search across all corporate workspaces (Slack, Google Drive, Jira) out-of-the-box and don't need a self-hosted open-source framework, Glean is the premier enterprise search platform. For a self-hosted, self-managed alternative, pair OpenCrawling with Elastic.";
+            } else if (match === "seatunnel") {
+              resBadge.className = "result-badge badge-st";
+              resBadge.textContent = "Airbyte / SeaTunnel Recommended";
+              resTitle.textContent = "🌀 Airbyte or Apache SeaTunnel fits!";
+              resText.textContent = "For replicating structured databases, database tables, or SaaS log APIs into data warehouses or lakes (without needing document-level security translation or semantic text splitting), general ETL tools like Airbyte (for SaaS) or Apache SeaTunnel (for Big Data) are the standard choices.";
+            } else if (match === "nutch") {
+              resBadge.className = "result-badge badge-st";
+              resBadge.textContent = "Apache Nutch Recommended";
+              resTitle.textContent = "🕸️ Apache Nutch is your match!";
+              resText.textContent = "If your primary goal is indexing or scraping the public web on a massive scale (millions of public URLs) into a search engine, and you do not need enterprise document connectors or security permission synchronization, Apache Nutch remains the most robust distributed crawling engine.";
+            } else {
+              resBadge.className = "result-badge badge-mcf";
+              resBadge.textContent = "Apache ManifoldCF Recommended";
+              resTitle.textContent = "📂 Apache ManifoldCF fits!";
+              resText.textContent = "For classic keyword search platforms (like Apache Solr or Elasticsearch) that require syncing legacy enterprise document systems (such as SharePoint, Documentum, or FileNet) alongside complete, complex Active Directory group security mappings, Apache ManifoldCF remains the standard legacy choice.";
+            }
+            resultBox.classList.add('active');
+            
+            // Scroll result box into view smoothly
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 150);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
