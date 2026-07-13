@@ -12,6 +12,7 @@
   
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
   
   img, svg {
@@ -1242,6 +1243,10 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+
+  .standard-text-content {
+    min-width: 0;
+  }
   
   .standard-text-content h3 {
     font-size: 1.8rem;
@@ -1296,11 +1301,13 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    min-width: 0;
   }
   
   .schema-card {
     width: 100%;
     max-width: 440px;
+    min-width: 0;
     background: #090D16;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
@@ -1334,6 +1341,7 @@
     padding: 1.25rem;
     background: transparent;
     overflow-x: auto;
+    max-width: 100%;
   }
   
   .schema-card code {
@@ -1772,10 +1780,6 @@
 }
 
 @media (max-width: 768px) {
-  html.mobile-menu-active {
-    scrollbar-gutter: stable;
-  }
-
   body.mobile-menu-active {
     overflow: hidden;
   }
