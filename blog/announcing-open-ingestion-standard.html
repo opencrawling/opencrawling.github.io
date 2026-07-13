@@ -289,7 +289,7 @@
         <h3>The Four Pillars of OIS</h3>
         <ul>
           <li><strong>Zero-Trust Ingestion (Security First):</strong> Document security permissions (User/Group SIDs) are treated as first-class metadata. AI search queries must respect these permissions at query time to ensure users only see content they are authorized to access.</li>
-          <li><strong>Vendor-Neutral Interoperability:</strong> Payload schemas (JSON) and job configurations (YAML/JSON) are platform-agnostic, preventing vendor lock-in.</li>
+          <li><strong>Vendor-Neutral Interoperability:</strong> Payload schemas (JSON) and job configurations (YAML/JSON) are platform-agnostic, preventing vendor lock-in. OIS now natively standardizes properties from <strong>CMIS</strong> (Content Management Interoperability Services) compliant repositories and ingests <strong>BPMN</strong> (Business Process Model and Notation) XML workflow definitions directly.</li>
           <li><strong>Event-Driven Decoupling:</strong> Pipelines are split into independent, horizontally scalable stages connected by asynchronous queues.</li>
           <li><strong>Claim Check Pattern:</strong> To protect the message broker, bulky binary payloads are kept off primary queues. Instead, queue messages carry lightweight reference claims, pulling binary content only when needed.</li>
         </ul>

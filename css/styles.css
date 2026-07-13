@@ -1318,15 +1318,40 @@
   }
   
   .schema-card-header {
-    height: 38px;
+    min-height: 38px;
     background: rgba(15, 23, 42, 0.6);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    padding: 0.5rem 1rem;
     font-family: var(--font-mono);
     font-size: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .schema-tab-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: all 0.2s ease;
+  }
+  
+  .schema-tab-btn:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    color: var(--text-color);
+  }
+  
+  .schema-tab-btn.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #FFFFFF;
   }
   
   .schema-type {

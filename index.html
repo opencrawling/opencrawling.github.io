@@ -664,10 +664,11 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads and configurations to enable seamless interoperability between vendors.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, and workflow processes—now featuring native integration with the <strong>CMIS</strong> standard for enterprise document retrieval and the <strong>BPMN</strong> format for business process workflows—to enable seamless interoperability.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
+          <span class="std-badge">🗂️ CMIS & BPMN Ready</span>
           <span class="std-badge">🔌 Vendor-Neutral</span>
           <span class="std-badge">⚙️ Event-Decoupled</span>
         </div>
@@ -681,10 +682,14 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
       <div class="standard-visual-content">
         <div class="schema-card">
           <div class="schema-card-header">
-            <span class="schema-type">JSON Payload</span>
-            <span class="schema-file">sample-document.json</span>
+            <div style="display: flex; gap: 0.35rem;">
+              <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="cmis">CMIS</button>
+              <button class="schema-tab-btn" data-schema="bpmn">BPMN</button>
+            </div>
+            <span class="schema-file" id="schema-filename">sample-document.json</span>
           </div>
-          <pre><code class="language-json">{
+          <pre><code class="language-json" id="schema-code-block">{
   "id": "doc-554032-sp",
   "source": { "type": "sharepoint", "instance": "..." },
   "content": { "mimeType": "application/pdf", "text": "..." },
@@ -835,5 +840,77 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
+  
+  <!-- OIS Schema Switcher Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const schemaTabs = document.querySelectorAll('.schema-tab-btn');
+      const schemaCode = document.getElementById('schema-code-block');
+      const schemaFile = document.getElementById('schema-filename');
+      
+      const schemas = {
+        standard: {
+          file: 'sample-document.json',
+          code: `{
+  "id": "doc-554032-sp",
+  "source": { "type": "sharepoint", "instance": "..." },
+  "content": { "mimeType": "application/pdf", "text": "..." },
+  "metadata": { "title": "Fiscal Strategy", "author": "..." },
+  "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        cmis: {
+          file: 'cmis-property-mapping.json',
+          code: `{
+  "id": "cmis-doc-9032",
+  "source": { "type": "cmis-repository", "binding": "atompub" },
+  "cmis": {
+    "objectId": "9032-abcd-1234",
+    "objectTypeId": "cmis:document",
+    "properties": {
+      "cmis:name": "Q3_Report.docx",
+      "cmis:createdBy": "admin",
+      "cmis:creationDate": "2026-07-13T12:00:00Z"
+    }
+  },
+  "security": { "permissions": [{ "principal": "accounting-group", "access": "read" }] }
+}`
+        },
+        bpmn: {
+          file: 'bpmn-workflow-definition.json',
+          code: `{
+  "id": "process-hire-01",
+  "source": { "type": "bpmn-workflow", "engine": "Camunda" },
+  "bpmn": {
+    "processId": "hiring_workflow",
+    "tasks": [
+      { "id": "task_resume_review", "name": "Review Resume", "type": "userTask" },
+      { "id": "task_background_check", "name": "Background Check", "type": "serviceTask" }
+    ],
+    "flows": [
+      { "from": "task_resume_review", "to": "task_background_check" }
+    ]
+  }
+}`
+        }
+      };
+
+      if (schemaTabs.length && schemaCode && schemaFile) {
+        schemaTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            schemaTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const schemaKey = tab.getAttribute('data-schema');
+            const data = schemas[schemaKey];
+            if (data) {
+              schemaFile.textContent = data.file;
+              schemaCode.textContent = data.code;
+            }
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>
