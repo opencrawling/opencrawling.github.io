@@ -1,26 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://opencrawling.github.io/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <loc>https://opencrawling.org/</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://opencrawling.github.io/blog/announcing-open-ingestion-standard.html</loc>
-    <lastmod>2026-07-09</lastmod>
+    <loc>https://opencrawling.org/comparison.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/contact.html</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://opencrawling.github.io/blog/shaping-the-ingestion-roadmap.html</loc>
-    <lastmod>2026-07-09</lastmod>
+    <loc>https://opencrawling.org/blog/announcing-open-ingestion-standard.html</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://opencrawling.github.io/blog/announcing-the-ois-specification-roadmap.html</loc>
-    <lastmod>2026-07-09</lastmod>
+    <loc>https://opencrawling.org/blog/shaping-the-ingestion-roadmap.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/blog/announcing-the-ois-specification-roadmap.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/blog/embedding-scale-out-architecture.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/blog/introducing-opencrawling-secure-mcp-server.html</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
