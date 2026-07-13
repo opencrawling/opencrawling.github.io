@@ -613,12 +613,14 @@ function initMobileMenu() {
   function openMenu() {
     header.classList.add('mobile-menu-open');
     document.body.classList.add('mobile-menu-active');
+    document.documentElement.classList.add('mobile-menu-active');
     toggleBtn.setAttribute('aria-expanded', 'true');
   }
 
   function closeMenu() {
     header.classList.remove('mobile-menu-open');
     document.body.classList.remove('mobile-menu-active');
+    document.documentElement.classList.remove('mobile-menu-active');
     toggleBtn.setAttribute('aria-expanded', 'false');
   }
 }

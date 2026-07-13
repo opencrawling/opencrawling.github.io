@@ -1772,6 +1772,10 @@
 }
 
 @media (max-width: 768px) {
+  html.mobile-menu-active {
+    scrollbar-gutter: stable;
+  }
+
   body.mobile-menu-active {
     overflow: hidden;
   }
@@ -1784,7 +1788,7 @@
     position: fixed;
     top: var(--header-height);
     left: 0;
-    width: 100%;
+    right: 0;
     height: calc(100vh - var(--header-height));
     background-color: var(--header-bg);
     backdrop-filter: blur(24px);
