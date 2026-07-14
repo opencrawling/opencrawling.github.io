@@ -591,7 +591,9 @@ docker compose -f docker-compose-apps.yml build
 docker compose -f docker-compose-apps.yml up -d
 
 # Option 2: Decoupled Microservices Pipeline (Fully Distributed Workers)
-# 1. Build and boot each decoupled service (Crawler, Tika Ingest, Embedding, Writer, MCP)
+# 1. Run immediately using pre-built images (no compilation needed)
+docker compose -f docker-compose-decoupled-dist.yml up -d
+# 2. (Alternative) Or build from local source and run:
 docker compose -f docker-compose-decoupled.yml build
 docker compose -f docker-compose-decoupled.yml up -d
 
