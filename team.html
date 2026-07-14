@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet the Team - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Meet the OpenCrawling core team and contributors. The architects and developers building the zero-trust open standard for enterprise AI data ingestion.">
+  <meta name="keywords" content="opencrawling team, opencrawling core contributors, Piergiorgio Lucidi, Michael Cizmar, enterprise search architects, open ingestion standard steering">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/team.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.org/team.html">
+  <meta property="og:title" content="Meet the Team - OpenCrawling">
+  <meta property="og:description" content="Meet the pioneers driving the Open Ingestion Standard (OIS) and the OpenCrawling secure ingestion framework.">
+  <meta property="og:image" content="assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* Team Page Layout & Aesthetics */
+    .team-wrapper {
+      max-width: var(--container-width);
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+      margin-bottom: 5rem;
+    }
+
+    @media (max-width: 968px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+    }
+
+    /* Premium Cyber Contributor Cards */
+    .team-card {
+      position: relative;
+      padding: 3rem 2.5rem 2.5rem 2.5rem;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent-color), var(--cyan-color));
+      opacity: 0.8;
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.15);
+      border-color: var(--card-hover-border);
+    }
+
+    /* Cyber Avatar Construction */
+    .avatar-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent-color), var(--cyan-color), transparent 60%, var(--accent-color));
+      animation: spin-glow 8s linear infinite;
+      opacity: 0.7;
+      z-index: 1;
+    }
+
+    .avatar-ring-static {
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 2;
+    }
+
+    .avatar-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(7, 9, 14, 0.95));
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .avatar-initials {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.75));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .team-card:hover .avatar-ring {
+      animation-duration: 4s;
+      opacity: 1;
+    }
+
+    @keyframes spin-glow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Name and Role */
+    .member-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+
+    .member-role {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Custom Inner-Card Tabs */
+    .card-tabs {
+      display: flex;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.5rem;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.25s ease;
+      color: var(--text-muted);
+    }
+
+    .tab-btn.active {
+      background: rgba(124, 58, 237, 0.15);
+      color: var(--text-color);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+    }
+
+    .tab-content {
+      width: 100%;
+      min-height: 180px;
+    }
+
+    .tab-pane {
+      display: none;
+      width: 100%;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Pane 1: Bio text */
+    .bio-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* Pane 2: Skills list */
+    .skills-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .skill-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .skill-name {
+      color: var(--text-color);
+    }
+
+    .skill-value {
+      color: var(--cyan-color);
+      font-family: var(--font-mono);
+    }
+
+    .skill-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--accent-color), var(--cyan-color));
+      border-radius: 3px;
+      width: 0; /* Animated via JS or simple class */
+      transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+    }
+
+    /* Pane 3: Focus Areas list */
+    .focus-pane ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .focus-pane li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .focus-icon {
+      color: var(--cyan-color);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Social icons layout */
+    .member-socials {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: var(--accent-color);
+      color: var(--text-color);
+      transform: translateY(-2px);
+    }
+
+    /* "Join Us" Call to Action with Path Calculator */
+    .join-container {
+      max-width: 850px;
+      margin: 0 auto;
+      border-radius: 16px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .join-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .join-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .join-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .join-text h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .join-text p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .join-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+
+    .benefit-check {
+      color: var(--success-color);
+      font-weight: bold;
+    }
+
+    /* Calculator Widget Form & Output */
+    .path-widget {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .widget-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .widget-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .widget-field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .widget-select {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+      padding-right: 2rem;
+    }
+
+    .widget-select:focus {
+      border-color: var(--accent-color);
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .widget-btn {
+      background: linear-gradient(135deg, var(--accent-color), var(--cyan-color));
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .widget-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+    }
+
+    /* Interactive Output Terminal */
+    .widget-output {
+      display: none;
+      background: rgba(7, 9, 14, 0.9);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-color);
+      line-height: 1.5;
+      position: relative;
+      animation: expandTerminal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes expandTerminal {
+      from { transform: scaleY(0.9); opacity: 0; }
+      to { transform: scaleY(1); opacity: 1; }
+    }
+
+    .terminal-header-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .t-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .t-red { background: #EF4444; }
+    .t-yellow { background: #F59E0B; }
+    .t-green { background: #10B981; }
+
+    .terminal-code {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .t-prompt {
+      color: var(--cyan-color);
+    }
+
+    .t-cmd {
+      color: var(--text-color);
+    }
+
+    .t-success {
+      color: var(--success-color);
+    }
+
+    .t-warn {
+      color: #FCD34D;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#architecture">Architecture</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#simulator">Simulator</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="index.html#blog">Blog</a></li>
+          <li><a href="comparison.html">Compare</a></li>
+          <li><a href="team.html" class="active">Team</a></li>
+          <li><a href="index.html#community">Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="team-wrapper">
+    <!-- Header Title -->
+    <header class="team-header">
+      <div class="badge-container" style="display: flex; justify-content: center; margin-bottom: 1rem;">
+        <span class="animated-badge">Open-Source Contributors</span>
+      </div>
+      <h1 style="font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem;">
+        Meet the <span class="gradient-text">Core Architects</span>
+      </h1>
+      <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
+        The steering team behind the Open Ingestion Standard (OIS) and OpenCrawling, building high-throughput, secure connectors bridging content to AI vector store architectures.
+      </p>
+    </header>
+
+    <!-- Team Cards Grid -->
+    <section class="team-grid" aria-label="Core Team Members">
+      
+      <!-- Contributor 1: Piergiorgio Lucidi -->
+      <article class="team-card glass">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring"></div>
+          <div class="avatar-ring-static"></div>
+          <div class="avatar-inner">
+            <span class="avatar-initials">PL</span>
+          </div>
+        </div>
+        
+        <h2 class="member-name">Piergiorgio Lucidi</h2>
+        <p class="member-role">Founder &amp; Lead Architect</p>
+        
+        <!-- Card Tabs -->
+        <div class="card-tabs" data-member="pl">
+          <button class="tab-btn active" data-tab="bio">About</button>
+          <button class="tab-btn" data-tab="skills">Expertise</button>
+          <button class="tab-btn" data-tab="focus">Focus Areas</button>
+        </div>
+        
+        <!-- Card Tab Content -->
+        <div class="tab-content" id="pl-content">
+          <!-- Bio -->
+          <div class="tab-pane active" id="pl-bio">
+            <p class="bio-text">
+              Piergiorgio is an Enterprise Integration Architect, Open Source advocate, and speaker. Having built large-scale content management and security engines for major European institutions, he founded OpenCrawling to solve the complex challenge of mapping enterprise security access controls (ACLs) to AI vector models.
+            </p>
+          </div>
+          <!-- Skills -->
+          <div class="tab-pane skills-pane" id="pl-skills">
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Enterprise Security &amp; ACL Mapping</span>
+                <span class="skill-value">95%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 95%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Java 25 &amp; Spring Boot Core</span>
+                <span class="skill-value">90%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 90%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Enterprise Integration Patterns</span>
+                <span class="skill-value">85%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Focus Areas -->
+          <div class="tab-pane focus-pane" id="pl-focus">
+            <ul>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>OIS Core Specification schema design &amp; stabilization.</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Java 25 Virtual Threads execution pool coordinator.</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Principal security mapper &amp; Authority Translation service interfaces.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="member-socials">
+          <a href="https://github.com/piergiorgiolucidi" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Piergiorgio Lucidi GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" width="20" height="20"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/piergiorgiolucidi" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Piergiorgio Lucidi LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Contributor 2: Michael Cizmar -->
+      <article class="team-card glass">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring"></div>
+          <div class="avatar-ring-static"></div>
+          <div class="avatar-inner">
+            <span class="avatar-initials">MC</span>
+          </div>
+        </div>
+        
+        <h2 class="member-name">Michael Cizmar</h2>
+        <p class="member-role">Lead Architect</p>
+        
+        <!-- Card Tabs -->
+        <div class="card-tabs" data-member="mc">
+          <button class="tab-btn active" data-tab="bio">About</button>
+          <button class="tab-btn" data-tab="skills">Expertise</button>
+          <button class="tab-btn" data-tab="focus">Focus Areas</button>
+        </div>
+        
+        <!-- Card Tab Content -->
+        <div class="tab-content" id="mc-content">
+          <!-- Bio -->
+          <div class="tab-pane active" id="mc-bio">
+            <p class="bio-text">
+              Michael is a senior systems architect specializing in high-volume, event-driven pipelines, big data infrastructures, and information retrieval architectures. Over his career, he has optimized enterprise search capabilities for corporations and spearheaded decentralized Kafka-based microservice clustering.
+            </p>
+          </div>
+          <!-- Skills -->
+          <div class="tab-pane skills-pane" id="mc-skills">
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Event-Driven Pipelines (Kafka, Redis)</span>
+                <span class="skill-value">95%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 95%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Information Retrieval &amp; Search Indexes</span>
+                <span class="skill-value">90%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 90%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Decoupled AI Vector Store Services</span>
+                <span class="skill-value">85%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Focus Areas -->
+          <div class="tab-pane focus-pane" id="mc-focus">
+            <ul>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Decoupled Kafka consumer groups &amp; parallel chunk vectorization.</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Vector Store Output writers (PgVector, Qdrant, Elasticsearch).</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Model Context Protocol (MCP) server similarity retrieval core tools.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="member-socials">
+          <a href="https://github.com/mcizmar" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Michael Cizmar GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" width="20" height="20"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/michaelcizmar" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Michael Cizmar LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Interactive Section: Contribution Path Calculator -->
+    <section class="join-container glass" aria-labelledby="join-title">
+      <div class="join-grid">
+        <div class="join-text">
+          <h2 id="join-title" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; margin-bottom: 1.25rem;">
+            Shape the Ingestion Standard
+          </h2>
+          <p>
+            OpenCrawling is built on open standards, collaborative transparency, and Zero-Trust integration principles. We welcome developers, technical writers, security analysts, and integration architects.
+          </p>
+          <div class="join-benefits">
+            <div class="benefit-item">
+              <span class="benefit-check">✓</span>
+              <span>Contribute to OIS (Open Ingestion Standard) Specification</span>
+            </div>
+            <div class="benefit-item">
+              <span class="benefit-check">✓</span>
+              <span>Implement custom Repository Connectors &amp; DB Writers</span>
+            </div>
+            <div class="benefit-item">
+              <span class="benefit-check">✓</span>
+              <span>Enhance the Secure Model Context Protocol (MCP) Server</span>
+            </div>
+          </div>
+          <div style="margin-top: 2rem;">
+            <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Interactive Path Finder Widget -->
+        <div class="path-widget">
+          <div>
+            <h3 class="widget-title">⚡ Contribution Path Finder</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">Select your primary skill set and focus to discover where to start contributing in the ecosystem.</p>
+          </div>
+
+          <div class="widget-field">
+            <label for="user-language">Language / Technology</label>
+            <select id="user-language" class="widget-select">
+              <option value="java">Java 25 / Spring Boot</option>
+              <option value="typescript">React / Vite / TypeScript</option>
+              <option value="python">Python / Jupyter Notebooks</option>
+              <option value="standards">Markdown / OpenAPI / Standard Schema</option>
+            </select>
+          </div>
+
+          <div class="widget-field">
+            <label for="user-focus">Ecosystem Area</label>
+            <select id="user-focus" class="widget-select">
+              <option value="security">Security / ACL Authority Mappers</option>
+              <option value="connectors">Connector Connectors (SharePoint, S3, etc.)</option>
+              <option value="mcp">AI Agents &amp; Model Context Protocol (MCP)</option>
+              <option value="frontend">Admin UI &amp; Visual Telemetry Dashboards</option>
+              <option value="docs">Specification Documents &amp; User Guides</option>
+            </select>
+          </div>
+
+          <button id="find-path-btn" class="widget-btn">
+            <span>Analyze Ecosystem Path</span>
+            <span>&rarr;</span>
+          </button>
+
+          <!-- Simulated Console Output -->
+          <div id="path-output" class="widget-output">
+            <div class="terminal-header-row">
+              <div class="terminal-dots">
+                <span class="t-dot t-red"></span>
+                <span class="t-dot t-yellow"></span>
+                <span class="t-dot t-green"></span>
+              </div>
+              <span>opencrawling-analyzer.sh</span>
+            </div>
+            <pre class="terminal-code" id="terminal-code-block"></pre>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Theme Toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      applyTheme(initialTheme);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+        });
+      }
+
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          html.classList.remove('light');
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
+        } else {
+          html.classList.remove('dark');
+          html.classList.add('light');
+          html.style.colorScheme = 'light';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      // 2. Mobile Menu Toggle
+      const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
+      const header = document.querySelector('.site-header');
+      if (mobileToggleBtn && header) {
+        mobileToggleBtn.addEventListener('click', () => {
+          const isOpen = header.classList.contains('mobile-menu-open');
+          if (isOpen) {
+            header.classList.remove('mobile-menu-open');
+            document.body.classList.remove('mobile-menu-active');
+            document.documentElement.classList.remove('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'false');
+          } else {
+            header.classList.add('mobile-menu-open');
+            document.body.classList.add('mobile-menu-active');
+            document.documentElement.classList.add('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      }
+
+      // 3. Inner Card Tabs switching
+      const tabContainers = document.querySelectorAll('.card-tabs');
+      tabContainers.forEach(container => {
+        const member = container.getAttribute('data-member');
+        const buttons = container.querySelectorAll('.tab-btn');
+        
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            // Remove active from sibling buttons
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Switch content panes
+            const tabName = btn.getAttribute('data-tab');
+            const targetPaneId = `${member}-${tabName}`;
+            
+            // Find all panes for this member
+            const contentContainer = document.getElementById(`${member}-content`);
+            const panes = contentContainer.querySelectorAll('.tab-pane');
+            panes.forEach(pane => {
+              pane.classList.remove('active');
+            });
+            
+            const targetPane = document.getElementById(targetPaneId);
+            if (targetPane) {
+              targetPane.classList.add('active');
+            }
+          });
+        });
+      });
+
+      // 4. Interactive Path Finder Logic
+      const findPathBtn = document.getElementById('find-path-btn');
+      const pathOutput = document.getElementById('path-output');
+      const codeBlock = document.getElementById('terminal-code-block');
+
+      const recommendations = {
+        'java-security': {
+          repo: 'opencrawling/opencrawling',
+          cmd: './gradlew :oc-core:test --tests "org.opencrawling.security.*"',
+          text: 'Security & Access Control (ACL) Translation services are modeled using the Spring Security SecurityFilterChain. You should explore the `AuthorityService` interface and implement new translation schemes mapping custom SIDs to vector store filters.'
+        },
+        'java-connectors': {
+          repo: 'opencrawling/opencrawling',
+          cmd: 'git checkout -b feature/new-connector',
+          text: 'Repository Connector Interfaces are modeled using the `RepositoryConnector` Java SPI. You can build a new data crawler by extending this class, handling incremental scans using claim checks, and mapping folder attributes into standard metadata.'
+        },
+        'java-mcp': {
+          repo: 'opencrawling/opencrawling',
+          cmd: 'mvn spring-boot:run -pl oc-mcp-server',
+          text: 'The Secure MCP Server uses Spring AI to publish tools. Help us enhance secure tool schemas, add OAuth2 pass-through mapping, or build unit tests validating server-side ACL assertions.'
+        },
+        'java-frontend': {
+          repo: 'opencrawling/opencrawling',
+          cmd: 'cd oc-admin-ui && npm run dev',
+          text: 'The Java backend integrates with a React administrative control panel via REST endpoints. Check out the backend dashboard routes or explore how SSE logs are streamed from virtual threads.'
+        },
+        'java-docs': {
+          repo: 'opencrawling/opencrawling',
+          cmd: 'git checkout main -- docs/',
+          text: 'Read the developer guide for setting up Java 25. Help document spring configuration properties, Docker profile mappings, or developer environment setup instructions.'
+        },
+        'typescript-security': {
+          repo: 'opencrawling/oc-admin-ui',
+          cmd: 'npm run test:security',
+          text: 'Verify CORS security headers, token storage in session storage, or implement RBAC components hidden/shown in the React UI based on OAuth roles.'
+        },
+        'typescript-connectors': {
+          repo: 'opencrawling/oc-admin-ui',
+          cmd: 'npm run generate:connector-views',
+          text: 'Create user interfaces for configuring and testing repository connectors. Help build dynamic configuration forms rendered from JSON schema definitions of the connector SPI.'
+        },
+        'typescript-mcp': {
+          repo: 'opencrawling/opencrawling',
+          cmd: 'cd mcp-inspector && npm run dev',
+          text: 'Create React visual diagnostic tools or dashboards mapping MCP server tool registrations, validating connection status, or debugging prompt templates.'
+        },
+        'typescript-frontend': {
+          repo: 'opencrawling/oc-admin-ui',
+          cmd: 'npm run dev',
+          text: 'Build modern visual dashboards tracking real-time ingestion throughput, event queues, Apache Kafka consumer group lag, and error rates using Recharts and TailwindCSS.'
+        },
+        'typescript-docs': {
+          repo: 'opencrawling/opencrawling.github.io',
+          cmd: 'npm run docs:serve',
+          text: 'Improve this website! Add interactive components, optimize CSS grid layouts, or write responsive components in pure CSS.'
+        },
+        'python-security': {
+          repo: 'opencrawling/opencrawling-python-sdk',
+          cmd: 'pip install -e .[test]',
+          text: 'Help build Python client adapters interfacing with the OpenCrawling Secure MCP Server. Verify security payload serialization and token propagation.'
+        },
+        'python-connectors': {
+          repo: 'opencrawling/opencrawling-python-sdk',
+          cmd: 'pytest tests/test_connectors.py',
+          text: 'Develop Python helper scripts to read data and test connectors, or build local integration models to mock folder listings.'
+        },
+        'python-mcp': {
+          repo: 'opencrawling/opencrawling-python-sdk',
+          cmd: 'python -m mcp_client.test',
+          text: 'Write Jupyter Notebook tutorials showing how LLM Agents in LangChain/LlamaIndex can bind to the OpenCrawling Secure MCP Server for zero-trust RAG operations.'
+        },
+        'python-frontend': {
+          repo: 'opencrawling/opencrawling-python-sdk',
+          cmd: 'streamlit run dashboard.py',
+          text: 'Create Streamlit or Gradio telemetry dashboards displaying vector distribution, cluster similarity maps, or testing security filter overlaps.'
+        },
+        'python-docs': {
+          repo: 'opencrawling/opencrawling-python-sdk',
+          cmd: 'sphinx-build -b html docs/source docs/build',
+          text: 'Help document Python SDK API models, write docstrings, or document tutorials explaining ACL-filtered retrieval.'
+        },
+        'standards-security': {
+          repo: 'opencrawling/open-ingestion-standard',
+          cmd: 'ajv validate -s schemas/ois-security.json',
+          text: 'Review the JSON Schema definitions for OIS document ACL mapping. Propose improvements to support complex group inheritances or cross-domain group translations.'
+        },
+        'standards-connectors': {
+          repo: 'opencrawling/open-ingestion-standard',
+          cmd: 'ajv validate -s schemas/ois-source.json',
+          text: 'Propose adjustments to the repository source models in the standard to support edge configurations, virtual schemas, or CMIS metadata standard structures.'
+        },
+        'standards-mcp': {
+          repo: 'opencrawling/open-ingestion-standard',
+          cmd: 'git diff schemas/ois-mcp.json',
+          text: 'Propose tool output standardizations, security context payload schemas, or error payload schemas to make standard responses cross-compatible.'
+        },
+        'standards-frontend': {
+          repo: 'opencrawling/open-ingestion-standard',
+          cmd: 'npm run generate:diagrams',
+          text: 'Maintain visualization diagrams of standard schemas, compile markdown explanations of standard attributes, or improve documentation rendering.'
+        },
+        'standards-docs': {
+          repo: 'opencrawling/open-ingestion-standard',
+          cmd: 'git commit -m "docs: clarify OIS authority mapping rules"',
+          text: 'Join standard steering discussions! Propose updates to the Open Ingestion Standard (OIS) manifesto, write case studies, or refine standard terminologies.'
+        }
+      };
+
+      findPathBtn.addEventListener('click', () => {
+        const lang = document.getElementById('user-language').value;
+        const focus = document.getElementById('user-focus').value;
+        const key = `${lang}-${focus}`;
+        const data = recommendations[key] || recommendations['java-security'];
+
+        // Format terminal output
+        const outputText = `<span class="t-prompt">visitor@opencrawling:~$</span> <span class="t-cmd">./opencrawling-analyzer.sh --tech="${lang}" --focus="${focus}"</span>
+<span class="t-warn">Analyzing active standard repositories...</span>
+<span class="t-success">✔ Match found: Repository [${data.repo}]</span>
+
+<b>RECOMMENDED PATH:</b>
+${data.text}
+
+<b>QUICKSTART COMMANDS:</b>
+<span class="t-prompt">visitor@opencrawling:~$</span> <span class="t-cmd">git clone https://github.com/${data.repo}.git</span>
+<span class="t-prompt">visitor@opencrawling:~$</span> <span class="t-cmd">cd ${data.repo.split('/')[1]}</span>
+<span class="t-prompt">visitor@opencrawling:~$</span> <span class="t-cmd">${data.cmd}</span>`;
+
+        codeBlock.innerHTML = outputText;
+        pathOutput.style.display = 'block';
+      });
+
+    });
+  </script>
+</body>
+</html>
