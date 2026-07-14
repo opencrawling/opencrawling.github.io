@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcoming Michael Cizmar as Lead Architect - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="OpenCrawling welcomes enterprise search and big data architecture veteran Michael Cizmar as Lead Architect to drive decentralized scale-out ingestion.">
+  <meta name="keywords" content="opencrawling, Michael Cizmar, lead architect, enterprise search, information retrieval, kafka, vector database, RAG pipeline">
+  <meta name="author" content="Piergiorgio Lucidi">
+  <link rel="canonical" href="https://opencrawling.org/blog/welcoming-michael-cizmar-as-lead-architect.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/welcoming-michael-cizmar-as-lead-architect.html">
+  <meta property="og:title" content="Welcoming Michael Cizmar as Lead Architect - OpenCrawling">
+  <meta property="og:description" content="Enterprise search architect Michael Cizmar joins the OpenCrawling core team to drive scale-out ingestion, Kafka message broker decoupling, and vector store writers.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Welcoming Michael Cizmar as Lead Architect",
+    "description": "Enterprise search architect Michael Cizmar joins the OpenCrawling core team to drive scale-out ingestion, Kafka message broker decoupling, and vector store writers.",
+    "datePublished": "2026-07-14",
+    "author": {
+      "@type": "Person",
+      "name": "Piergiorgio Lucidi"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.org/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "id": "https://opencrawling.org/blog/welcoming-michael-cizmar-as-lead-architect.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+    
+    .post-content blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(139, 92, 246, 0.05);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+
+    .announcement-box {
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      background: rgba(124, 58, 237, 0.05);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .announcement-icon {
+      font-size: 2.5rem;
+      flex-shrink: 0;
+    }
+
+    .announcement-text h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-color);
+    }
+
+    .announcement-text p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../team.html">Team</a></li>
+          <li><a href="../index.html#community">Community</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <article class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Blog</a>
+    
+    <header class="post-header">
+      <h1 class="post-title">Scale-Out Ingestion: Welcoming Michael Cizmar as Lead Architect</h1>
+      <div class="post-meta">
+        <span>By <strong>Piergiorgio Lucidi</strong></span>
+        <span>July 14, 2026</span>
+        <span>4 min read</span>
+      </div>
+    </header>
+
+    <div class="post-content">
+      <p>
+        The OpenCrawling initiative has grown significantly since its launch. What began as a zero-trust security mapping framework bridging legacy document repositories to vector search architectures has evolved into an active ecosystem. Today, we are taking a massive leap forward.
+      </p>
+      <p>
+        I am thrilled to announce that enterprise search veteran and big data systems architect <strong>Michael Cizmar</strong> has officially joined the OpenCrawling core steering team as <strong>Lead Architect</strong>.
+      </p>
+
+      <div class="announcement-box">
+        <div class="announcement-icon">🤝</div>
+        <div class="announcement-text">
+          <h4>Ecosystem Expansion</h4>
+          <p>Michael joins to lead horizontal scaling architectures, Apache Kafka event orchestration, and multi-tenant vector writer connectors.</p>
+        </div>
+      </div>
+
+      <h2>Bridging Big Data &amp; AI Vector Ingestion</h2>
+      <p>
+        Modern Enterprise AI and Retrieval-Augmented Generation (RAG) require processing millions of files while respecting strict Row-Level Security (RLS) and document Access Control Lists (ACLs). Doing this in a single monolithic service is a recipe for system bottlenecks. 
+      </p>
+      <p>
+        Michael’s background is uniquely suited to address this scaling crisis. Over the past two decades, he has designed and optimized massive information retrieval and indexing clusters for Fortune 500 companies. His expertise in building robust, decoupled microservice systems will guide OpenCrawling’s transition from a single reference engine to a fully distributed, enterprise-grade ingestion standard.
+      </p>
+
+      <blockquote>
+        <p>"Preserving permissions at the document level during vectorization is the single most pressing challenge in Enterprise RAG. If you bypass ACL checks, you leak data. OpenCrawling is the first open-source project to solve this at the architecture layer. I'm excited to collaborate with Piergiorgio to scale this engine out globally."</p>
+        <cite style="display: block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted); font-style: normal;">— Michael Cizmar, Lead Architect</cite>
+      </blockquote>
+
+      <h2>What Michael is Architecting Next</h2>
+      <p>
+        Michael has already begun contributions to our technical roadmap. In the coming weeks, his focus will center on three core areas:
+      </p>
+      <ul>
+        <li>
+          <strong>Distributed Embedding Clustering</strong>: Standardizing the new <code>oc-embedding-service</code> Kafka consumer group mappings, enabling users to spin up multiple parallel worker pods to process high-volume text embeddings.
+        </li>
+        <li>
+          <strong>Multi-Tenant Vector Stores</strong>: Hardening security mappers for downstream database outputs (pgvector, Elasticsearch, Qdrant) so that metadata mappings are isolated securely.
+        </li>
+        <li>
+          <strong>CMIS &amp; Enterprise Connectors</strong>: Steering standard definitions inside the <strong>Open Ingestion Standard (OIS)</strong> to streamline connector integration with enterprise platforms like Alfresco and SharePoint.
+        </li>
+      </ul>
+
+      <h2>A Note from Piergiorgio Lucidi</h2>
+      <p>
+        <em>"Having worked on enterprise search systems for most of my career, I know that scaling ingestion pipelines requires a deep understanding of thread pools, event queues, and indexing limits. Michael's architectural insights will accelerate our core engine features, allowing users to deploy OpenCrawling at scale without compromising security or throughput. I am honored to welcome him to the steering team."</em>
+      </p>
+
+      <h2>Join Us in Welcoming Michael!</h2>
+      <p>
+        We are building a collaborative, open ecosystem. You can check out Michael's updates on our new <a href="../team.html">Team Page</a>, connect with him directly on <a href="https://github.com/michaelcizmar" target="_blank" rel="noopener noreferrer">GitHub</a>, or say hello in our newly launched <a href="https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw" target="_blank" rel="noopener noreferrer">Slack Community Server</a>!
+      </p>
+    </div>
+  </article>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme Toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      applyTheme(initialTheme);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+        });
+      }
+
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          html.classList.remove('light');
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
+        } else {
+          html.classList.remove('dark');
+          html.classList.add('light');
+          html.style.colorScheme = 'light';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      // Mobile Menu Toggle
+      const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
+      const header = document.querySelector('.site-header');
+      if (mobileToggleBtn && header) {
+        mobileToggleBtn.addEventListener('click', () => {
+          const isOpen = header.classList.contains('mobile-menu-open');
+          if (isOpen) {
+            header.classList.remove('mobile-menu-open');
+            document.body.classList.remove('mobile-menu-active');
+            document.documentElement.classList.remove('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'false');
+          } else {
+            header.classList.add('mobile-menu-open');
+            document.body.classList.add('mobile-menu-active');
+            document.documentElement.classList.add('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

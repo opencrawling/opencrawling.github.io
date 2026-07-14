@@ -25,6 +25,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://opencrawling.org/blog/welcoming-michael-cizmar-as-lead-architect.html</loc>
+    <lastmod>2026-07-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://opencrawling.org/blog/announcing-open-ingestion-standard.html</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
