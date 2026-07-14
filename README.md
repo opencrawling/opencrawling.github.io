@@ -47,9 +47,11 @@ python3 -m http.server 8080
 └── README.md             # Project documentation
 ```
 
-## 📬 Contact
+## 📬 Contact & Community
 
-If you have questions about the website, documentation, or the organization, feel free to email [info@opencrawling.org](mailto:info@opencrawling.org).
+Join our [Slack Community](https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw) to connect with the team, collaborate, and ask questions!
+
+For general inquiries, documentation support, or partner discussions, you can reach us at [info@opencrawling.org](mailto:info@opencrawling.org).
 
 ## 📄 License
 
