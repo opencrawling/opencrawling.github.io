@@ -295,11 +295,13 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="155" width="120" height="150" rx="10" class="node-bg" />
-            <text x="70" y="185" class="node-title">Sources</text>
-            <text x="70" y="215" class="node-sub">SharePoint</text>
-            <text x="70" y="237" class="node-sub">S3 / Buckets</text>
-            <text x="70" y="259" class="node-sub">Web / API</text>
+            <rect x="10" y="145" width="120" height="165" rx="10" class="node-bg" />
+            <text x="70" y="175" class="node-title">Sources</text>
+            <text x="70" y="205" class="node-sub">SharePoint</text>
+            <text x="70" y="225" class="node-sub">S3 / Buckets</text>
+            <text x="70" y="245" class="node-sub">Web / API</text>
+            <text x="70" y="265" class="node-sub">Iceberg 🧊</text>
+            <text x="70" y="283" class="node-sub">Alfresco</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -475,6 +477,7 @@
             <option value="sharepoint">SharePoint Server (Native ACLs)</option>
             <option value="s3">Amazon S3 Bucket (No ACLs)</option>
             <option value="database">PostgreSQL CRM (Row-Level Security)</option>
+            <option value="iceberg">Apache Iceberg (Data Lakehouse)</option>
           </select>
         </div>
         
@@ -712,6 +715,36 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new">New</span>
+          <span class="blog-date">July 16, 2026</span>
+          <span class="blog-read-time">5 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="https://github.com/OpenCrawling/opencrawling/tree/main/oc-iceberg-repository-connector" target="_blank" rel="noopener noreferrer">New Connector: Apache Iceberg Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          OpenCrawling now supports <strong>Apache Iceberg</strong> data lakes as a first-class ingestion source. The new <code>oc-iceberg-repository-connector</code> module scans Iceberg table catalogs (REST, Hive, Hadoop, AWS Glue) and streams structured records directly into the RAG pipeline — making your data lakehouse AI-ready in minutes.
+        </p>
+        <div class="blog-card-footer">
+          <a href="https://github.com/OpenCrawling/opencrawling/tree/main/oc-iceberg-repository-connector" target="_blank" rel="noopener noreferrer" class="card-link">View Module &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new">New</span>
+          <span class="blog-date">July 16, 2026</span>
+          <span class="blog-read-time">6 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-alfresco-repository-connector.html">Introducing the Alfresco Repository Connector for OpenCrawling</a></h3>
+        <p class="blog-excerpt">
+          The new <strong>oc-alfresco-repository-connector</strong> bridges Alfresco Content Services to your AI pipeline via the Alfresco REST API v1. Discover how Java 25 Structured Task Scope enables parallel folder traversal, and how the Claim Check Pattern decouples remote content downloads from the Kafka publish step.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-alfresco-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge">Team</span>
           <span class="blog-date">July 16, 2026</span>
           <span class="blog-read-time">3 min read</span>
         </div>

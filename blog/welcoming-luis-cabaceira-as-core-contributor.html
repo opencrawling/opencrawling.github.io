@@ -7,7 +7,7 @@
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="OpenCrawling welcomes Enterprise Content Management (ECM) integration expert Luis Cabaceira as a Core Contributor to drive repository connector development.">
-  <meta name="keywords" content="opencrawling, Luis Cabaceira, core contributor, ECM, Enterprise Content Management, Alfresco, SharePoint, CMIS, repository connector, RAG pipeline, enterprise search">
+  <meta name="keywords" content="opencrawling, Luis Cabaceira, core contributor, ECM, Enterprise Content Management, Alfresco, SharePoint, CMIS, repository connector, Vespa output connector, oc-vespa-output-connector, RAG pipeline, enterprise search, vector store">
   <meta name="author" content="Piergiorgio Lucidi">
   <link rel="canonical" href="https://opencrawling.org/blog/welcoming-luis-cabaceira-as-core-contributor.html">
 
@@ -281,7 +281,7 @@
       </p>
       <ul>
         <li>
-          <strong>New Repository Connectors</strong>: Developing ready-to-use connectors for major ECM suites—including Alfresco Content Services, Microsoft SharePoint, IBM FileNet, and OpenText.
+          <strong>New Repository Connectors</strong>: Developing ready-to-use connectors for major ECM suites&mdash;including Alfresco Content Services, Microsoft SharePoint, IBM FileNet, and OpenText.
         </li>
         <li>
           <strong>OIS CMIS Mappings</strong>: Hardening metadata translation schemas to map standard CMIS properties and folder-level ACL rules directly to OIS document envelopes.
@@ -289,11 +289,31 @@
         <li>
           <strong>Extensible Connector SDK</strong>: Streamlining the Java API interfaces inside <code>oc-core</code> to allow third-party developers to rapidly package and register custom repository connectors.
         </li>
+        <li>
+          <strong>Vespa Output Connector</strong>: Designing and implementing <code>oc-vespa-output-connector</code>, a native Spring AI output connector that writes vectorized document chunks directly to <a href="https://vespa.ai" target="_blank" rel="noopener noreferrer">Vespa</a>&mdash;Yahoo&rsquo;s open-source, production-grade vector and structured search engine.
+        </li>
       </ul>
+
+      <h2>Coming Next: The Vespa Output Connector</h2>
+      <p>
+        Alongside his repository connector work, Luis is spearheading an exciting addition to the OpenCrawling output connector suite: the <strong>oc-vespa-output-connector</strong>. This module will allow the pipeline to write vectorized document chunks directly to <a href="https://vespa.ai" target="_blank" rel="noopener noreferrer">Vespa</a>, Yahoo&rsquo;s battle-tested open-source search and recommendation engine, which combines ANN-based vector search with structured filtering, ranking expressions, and real-time updates in a single platform.
+      </p>
+
+      <div class="announcement-box">
+        <div class="announcement-icon">&#128640;</div>
+        <div class="announcement-text">
+          <h4>oc-vespa-output-connector &mdash; In Development</h4>
+          <p>Luis is actively working on the Vespa output connector, which will join <code>oc-pgvector-output-connector</code> and the Elasticsearch connector as a first-class output target for the OpenCrawling ingestion pipeline. Follow the progress on <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer">GitHub</a> or join the discussion in our <a href="https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw" target="_blank" rel="noopener noreferrer">Slack community</a>.</p>
+        </div>
+      </div>
+
+      <p>
+        The Vespa connector will implement the standard <code>OutputConnector</code> interface from <code>oc-core</code>, and will support both the <strong>direct output mode</strong> (single-JVM, no Kafka) and the <strong>decoupled Kafka pipeline</strong>, consuming from the <code>opencrawling-embedded</code> topic and writing to a Vespa application schema. Vespa&rsquo;s unique combination of lexical, semantic, and structured query operators makes it an exceptionally powerful target for enterprise RAG systems that need ranked results beyond pure cosine similarity.
+      </p>
 
       <h2>A Note from Piergiorgio Lucidi</h2>
       <p>
-        <em>"A security mapping framework is only as good as the systems it can securely connect to. Luis's deep expertise in Enterprise Content Management (ECM) platforms and information logistics is exactly what we need. To build a world-class ingestion pipeline, we must be able to securely connect to where the data lives. Luis's skills will accelerate our connector roadmap, unlocking massive legacy repositories for modern AI."</em>
+        <em>&ldquo;A security mapping framework is only as good as the systems it can securely connect to. Luis&rsquo;s deep expertise in Enterprise Content Management (ECM) platforms and information logistics is exactly what we need. To build a world-class ingestion pipeline, we must be able to securely connect to where the data lives&mdash;and deliver results to where the AI needs them. Luis&rsquo;s skills will accelerate our connector roadmap, both unlocking massive legacy repositories and expanding our vector store ecosystem with production-grade targets like Vespa.&rdquo;</em>
       </p>
 
       <h2>Join Us in Welcoming Luis!</h2>

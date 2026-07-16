@@ -189,6 +189,20 @@ const SIMULATOR_DATA = {
       ollama: "EmbeddingConsumer called local Ollama server, generated record embeddings, sent to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer saved embeddings, record primary keys, and regional ACL SIDs to Qdrant Cloud."
     }
+  },
+  iceberg: {
+    files: [
+      { name: "analytics.events / record-sha256:a3f7c1 (Parquet)", size: "2.1 KB", acls: ["public"] },
+      { name: "analytics.events / record-sha256:b8d2e4 (Parquet)", size: "1.8 KB", acls: ["public"] },
+      { name: "analytics.events / record-sha256:c0f9a5 (Parquet)", size: "3.2 KB", acls: ["public"] }
+    ],
+    logs: {
+      scan: "IcebergRepositoryConnector triggered. Connecting to REST Catalog at http://iceberg-rest:8181, warehouse: s3://warehouse/. Loading table 'analytics.events'...",
+      claimCheck: "Scan complete. Planned 3 Parquet file scan tasks via Structured Task Scope. Serialized Iceberg records to JSON RepositoryDocuments. Published IngestionMessages to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer received Iceberg JSON documents. Text extracted from JSON content, chunked into token segments, ChunkMessages published to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Iceberg record chunks. Dispatched to Ollama (mxbai-embed-large) for 1024-dimension embedding. Published embedded vectors to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted Iceberg embeddings with iceberg:// URI metadata to pgvector (vector_store_1024)."
+    }
   }
 };
 
