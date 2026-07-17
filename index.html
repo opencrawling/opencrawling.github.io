@@ -297,10 +297,8 @@
           <g class="node-group" data-node="sources">
             <rect x="10" y="145" width="120" height="165" rx="10" class="node-bg" />
             <text x="70" y="175" class="node-title">Sources</text>
-            <text x="70" y="205" class="node-sub">SharePoint</text>
-            <text x="70" y="225" class="node-sub">S3 / Buckets</text>
-            <text x="70" y="245" class="node-sub">Web / API</text>
-            <text x="70" y="265" class="node-sub">Iceberg 🧊</text>
+            <text x="70" y="205" class="node-sub">File System</text>
+            <text x="70" y="265" class="node-sub">Apache Iceberg🧊</text>
             <text x="70" y="283" class="node-sub">Alfresco</text>
           </g>
 
@@ -473,9 +471,8 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
-            <option value="sharepoint">SharePoint Server (Native ACLs)</option>
-            <option value="s3">Amazon S3 Bucket (No ACLs)</option>
-            <option value="database">PostgreSQL CRM (Row-Level Security)</option>
+            <option value="database">File System</option>
+            <option value="alfresco">Alfresco Content Services</option>
             <option value="iceberg">Apache Iceberg (Data Lakehouse)</option>
           </select>
         </div>
