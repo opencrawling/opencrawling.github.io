@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrawling® Secure MCP Server - Zero-Trust Context Retrieval for AI Agents</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and the Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval with ACL filtering for enterprise AI agents.">
+  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, Vector Store Security, OpenCrawling">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/mcp.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.org/mcp.html">
+  <meta property="og:title" content="OpenCrawling® Secure MCP Server - Zero-Trust Context Retrieval">
+  <meta property="og:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP).">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/mcp.html">
+  <meta property="twitter:title" content="OpenCrawling® Secure MCP Server - Zero-Trust Context Retrieval">
+  <meta property="twitter:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP).">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Mermaid.js for Architecture Diagram -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#8B5CF6',
+          primaryTextColor: '#F1F5F9',
+          lineColor: '#06B6D4',
+          nodeBorder: '#8B5CF6',
+          mainBkg: '#0F172A',
+          clusterBkg: '#07090E'
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .mcp-wrapper {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 3rem) 2rem 6rem 2rem;
+    }
+
+    .mcp-hero {
+      text-align: center;
+      margin-bottom: 5rem;
+      position: relative;
+    }
+
+    .mcp-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--accent-color);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .mcp-hero h1 {
+      font-size: clamp(2.5rem, 1.5rem + 4vw, 4.2rem);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-color) 20%, var(--accent-color) 70%, var(--cyan-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .mcp-hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 820px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.7;
+    }
+
+    .mcp-hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-color), #6D28D9);
+      color: #FFFFFF;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px var(--accent-glow);
+      color: #FFFFFF;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-color);
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--accent-color);
+    }
+
+    /* Feature Grid */
+    .mcp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+
+    .mcp-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.2rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .mcp-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mcp-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .mcp-card h3 {
+      font-size: 1.35rem;
+      font-family: var(--font-heading);
+      margin-bottom: 0.8rem;
+      color: var(--text-color);
+    }
+
+    .mcp-card p {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Architecture Diagram Section */
+    .mcp-section {
+      margin-bottom: 5rem;
+    }
+
+    .mcp-section-title {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+      text-align: center;
+    }
+
+    .mcp-section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    .mermaid-box {
+      background: rgba(7, 9, 14, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem 1rem;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tool Reference Cards */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+
+    .tool-spec-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1rem;
+    }
+
+    .tool-name-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .tool-name {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--cyan-color);
+    }
+
+    .tool-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--cyan-color);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      text-transform: uppercase;
+    }
+
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+    }
+
+    .params-table th, .params-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .params-table th {
+      color: var(--text-color);
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .params-table td {
+      color: var(--text-muted);
+    }
+
+    .param-name {
+      font-family: var(--font-mono);
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+
+    .req-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .req-yes {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+    }
+
+    .req-no {
+      background: rgba(156, 163, 175, 0.15);
+      color: #9CA3AF;
+    }
+
+    /* Client Setup Tabs */
+    .setup-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .setup-tabs {
+      display: flex;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .setup-tab-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .setup-tab-btn:hover {
+      color: var(--text-color);
+    }
+
+    .setup-tab-btn.active {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.4);
+      color: var(--accent-color);
+    }
+
+    .setup-content {
+      display: none;
+    }
+
+    .setup-content.active {
+      display: block;
+    }
+
+    .code-block-wrapper {
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .code-block-wrapper pre {
+      background: rgba(7, 9, 14, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #E2E8F0;
+    }
+
+    .copy-code-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-code-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text-color);
+    }
+
+    @media (max-width: 768px) {
+      .mcp-wrapper {
+        padding-top: calc(var(--header-height) + 1.5rem);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="mcp.html" class="active">MCP Server</a></li>
+          <li><a href="index.html#blog">Blog</a></li>
+          <li><a href="comparison.html">Compare</a></li>
+          <li><a href="team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="mcp-wrapper">
+
+    <!-- Hero Section -->
+    <section class="mcp-hero">
+      <div class="mcp-hero-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Zero-Trust Context Retrieval
+      </div>
+      <h1>Secure Model Context Protocol (MCP) Server</h1>
+      <p>Give AI models and agents direct access to enterprise knowledge databases while enforcing strict, server-side Access Control Lists (ACLs). Prevent prompt injection leaks and unauthorized document retrieval.</p>
+      
+      <div class="mcp-hero-actions">
+        <a href="https://github.com/OpenCrawling/opencrawling/wiki/Model-Context-Protocol" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          View Full Wiki Documentation
+        </a>
+        <a href="#mcp-architecture" class="btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          Explore Architecture
+        </a>
+      </div>
+    </section>
+
+    <!-- Key Capabilities Grid -->
+    <div class="mcp-grid">
+      <div class="mcp-card">
+        <div class="mcp-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Server-Side Security Filtering</h3>
+        <p>Dynamic pre-filtering inside database queries (PostgreSQL/pgvector) guarantees LLMs never receive raw data matching unauthorized ACLs, eliminating context boundary bypasses.</p>
+      </div>
+
+      <div class="mcp-card">
+        <div class="mcp-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+        </div>
+        <h3>Identity & Role Propagation</h3>
+        <p>Accepts user principal identities (email, username) and LDAP/Active Directory group roles at query time. Seamlessly maps caller tokens to repository Security SIDs.</p>
+      </div>
+
+      <div class="mcp-card">
+        <div class="mcp-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Spring AI 2.0 Native</h3>
+        <p>Built directly into the <code>oc-runtime</code> module using Spring AI standard `@McpTool` annotations and WebMVC/SSE transport protocols for seamless Java ecosystem integration.</p>
+      </div>
+    </div>
+
+    <!-- Architecture Section -->
+    <section id="mcp-architecture" class="mcp-section">
+      <h2 class="mcp-section-title">Zero-Trust Retrieval Pipeline</h2>
+      <p class="mcp-section-subtitle">How OpenCrawling intercepts AI client requests to enforce document permissions before vector store search execution.</p>
+
+      <div class="mermaid-box">
+        <div class="mermaid">
+graph TD
+    subgraph AI Client Layer
+        LLM[LLM Agent / MCP Client]
+    end
+
+    subgraph OpenCrawling Runtime
+        MCP[McpVectorServer]
+        Auth[Authority Service]
+        VecStore[PgVectorStore / Milvus]
+    end
+
+    subgraph Storage Boundary
+        DB[(Vector Store Database)]
+    end
+
+    LLM -->|1. secureVectorSearch query, principal, roles| MCP
+    MCP -->|2. Resolve identity & active tokens| Auth
+    MCP -->|3. Build dynamic security FilterExpression| VecStore
+    VecStore -->|4. SQL query with WHERE acl IN user_rights| DB
+    DB -->|5. Permitted vector chunk candidates| VecStore
+    VecStore -->|6. Filtered results with metadata| MCP
+    MCP -->|7. Sanitized JSON context response| LLM
+        </div>
+      </div>
+    </section>
+
+    <!-- MCP Tools Specification Reference -->
+    <section class="mcp-section">
+      <h2 class="mcp-section-title">Exposed MCP Tools Specification</h2>
+      <p class="mcp-section-subtitle">The standard tools made dynamically available to connected LLMs and AI agent frameworks.</p>
+
+      <div class="tools-grid">
+
+        <!-- Tool 1: secureVectorSearch -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">secureVectorSearch</span>
+              <span class="tool-badge">Core Search Tool</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Performs semantic vector similarity search on indexed enterprise documents, pre-filtering results on the server using the caller's identity and group permissions.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">query</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Natural language search phrase or keywords.</td>
+              </tr>
+              <tr>
+                <td class="param-name">userPrincipal</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>User email or principal identity performing the query.</td>
+              </tr>
+              <tr>
+                <td class="param-name">userRoles</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Comma-separated roles/groups (e.g. <code>finance,engineering</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">maxResults</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Maximum top-K results to return (default: 5).</td>
+              </tr>
+              <tr>
+                <td class="param-name">minScore</td>
+                <td>Double</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Minimum vector similarity threshold (0.0 - 1.0).</td>
+              </tr>
+              <tr>
+                <td class="param-name">dimensions</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Target vector dimension store (384, 768, or 1024).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 2: getDocumentContent -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">getDocumentContent</span>
+              <span class="tool-badge">Document Retrieval</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Retrieves complete document content and metadata for a specific URI, verifying caller authorization prior to payload retrieval.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">documentUri</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Target document URI (e.g. <code>file:///data/reports/q3.pdf</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">userPrincipal</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>User principal identity verifying access rights.</td>
+              </tr>
+              <tr>
+                <td class="param-name">userRoles</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Comma-separated group memberships of caller.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 3: listAccessibleSources -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">listAccessibleSources</span>
+              <span class="tool-badge">Discovery</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Returns a list of all indexed documents and knowledge sources accessible to the specified user identity.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">userPrincipal</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>User principal identity for ACL enumeration.</td>
+              </tr>
+              <tr>
+                <td class="param-name">userRoles</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Comma-separated group memberships.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Setup & Integration Examples -->
+    <section class="mcp-section">
+      <h2 class="mcp-section-title">Client Integration Setup</h2>
+      <p class="mcp-section-subtitle">Configure your preferred AI environment to talk directly to the OpenCrawling Secure MCP Server.</p>
+
+      <div class="setup-box">
+        <div class="setup-tabs">
+          <button class="setup-tab-btn active" onclick="switchSetupTab('claude')">Claude Desktop</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('docker')">Docker Compose</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('spring')">Spring AI Client</button>
+        </div>
+
+        <!-- Claude Desktop Config -->
+        <div id="tab-claude" class="setup-content active">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Add the server entry to your local <code>claude_desktop_config.json</code>:</p>
+          <div class="code-block-wrapper">
+            <pre><code>{
+  "mcpServers": {
+    "opencrawling-secure-vector-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/client-cli",
+        "sse",
+        "http://localhost:8080/mcp/sse"
+      ]
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Docker Setup -->
+        <div id="tab-docker" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Run the dedicated MCP microservice using docker container build:</p>
+          <div class="code-block-wrapper">
+            <pre><code>docker build -f docker/Dockerfile.mcp-server -t opencrawling-mcp-server .
+docker run -p 8080:8080 \
+  -e OPENCRAWLING_MCP_SERVER_ENABLED=true \
+  -e SPRING_AI_MCP_SERVER_ANNOTATION_SCANNER_ENABLED=true \
+  opencrawling-mcp-server</code></pre>
+          </div>
+        </div>
+
+        <!-- Spring AI Client -->
+        <div id="tab-spring" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Application settings for embedding the server directly into your Spring Boot runtime:</p>
+          <div class="code-block-wrapper">
+            <pre><code>spring:
+  ai:
+    mcp:
+      server:
+        name: "opencrawling-secure-vector-mcp"
+        version: "1.0.0"
+        transport: STREAMABLE_HTTP
+        annotation-scanner:
+          enabled: true</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling®</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI.</p>
+        <p>OpenCrawling® is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script>
+    function switchSetupTab(tabId) {
+      document.querySelectorAll('.setup-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.setup-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
