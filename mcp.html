@@ -704,8 +704,14 @@ graph TD
       <div class="setup-box">
         <div class="setup-tabs">
           <button class="setup-tab-btn active" onclick="switchSetupTab('claude')">Claude Desktop</button>
-          <button class="setup-tab-btn" onclick="switchSetupTab('docker')">Docker Compose</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('cursor')">Cursor IDE</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('windsurf')">Windsurf IDE</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('continue')">Continue.dev</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('antigravity')">Antigravity / agy</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('python')">Python MCP SDK</button>
           <button class="setup-tab-btn" onclick="switchSetupTab('spring')">Spring AI Client</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('curl')">cURL / HTTP</button>
+          <button class="setup-tab-btn" onclick="switchSetupTab('docker')">Docker Container</button>
         </div>
 
         <!-- Claude Desktop Config -->
@@ -728,6 +734,163 @@ graph TD
           </div>
         </div>
 
+        <!-- Cursor IDE Config -->
+        <div id="tab-cursor" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Add entry in workspace or global <code>~/.cursor/mcp.json</code>:</p>
+          <div class="code-block-wrapper">
+            <pre><code>{
+  "mcpServers": {
+    "opencrawling-secure-vector-mcp": {
+      "url": "http://localhost:8080/mcp/sse"
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Windsurf IDE Config -->
+        <div id="tab-windsurf" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Add entry to <code>~/.codeium/windsurf/mcp_config.json</code>:</p>
+          <div class="code-block-wrapper">
+            <pre><code>{
+  "mcpServers": {
+    "opencrawling-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/client-cli",
+        "sse",
+        "http://localhost:8080/mcp/sse"
+      ]
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Continue.dev Config -->
+        <div id="tab-continue" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Add SSE server provider in <code>~/.continue/config.json</code>:</p>
+          <div class="code-block-wrapper">
+            <pre><code>{
+  "experimental": {
+    "modelContextProtocolServers": [
+      {
+        "transport": {
+          "type": "sse",
+          "url": "http://localhost:8080/mcp/sse"
+        }
+      }
+    ]
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Antigravity / agy CLI Config -->
+        <div id="tab-antigravity" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Register via <code>agy CLI</code> or <code>~/.gemini/antigravity-cli/mcp.json</code>:</p>
+          <div class="code-block-wrapper">
+            <pre><code># Command line setup:
+agy mcp add opencrawling-mcp http://localhost:8080/mcp/sse --transport sse
+
+# Configuration JSON:
+{
+  "mcpServers": {
+    "opencrawling-mcp": {
+      "transport": "sse",
+      "url": "http://localhost:8080/mcp/sse"
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Python MCP SDK -->
+        <div id="tab-python" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Query the MCP server asynchronously using the Python <code>mcp</code> library:</p>
+          <div class="code-block-wrapper">
+            <pre><code>import asyncio
+from mcp import ClientSession
+from mcp.client.sse import sse_client
+
+async def main():
+    async with sse_client("http://localhost:8080/mcp/sse") as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            
+            result = await session.call_tool(
+                "secureVectorSearch",
+                arguments={
+                    "query": "Q3 Financial Growth Strategy",
+                    "userPrincipal": "alice@company.com",
+                    "userRoles": "finance,executives",
+                    "maxResults": 5
+                }
+            )
+            print(result.content)
+
+asyncio.run(main())</code></pre>
+          </div>
+        </div>
+
+        <!-- Spring AI Client -->
+        <div id="tab-spring" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Consumer settings & Service injection in Spring Boot Java microservices:</p>
+          <div class="code-block-wrapper">
+            <pre><code># application.yml:
+spring:
+  ai:
+    mcp:
+      client:
+        enabled: true
+        name: opencrawling-client
+        sse:
+          opencrawling-server:
+            base-url: http://localhost:8080
+            sse-endpoint: /mcp/sse
+
+// Java Service Code:
+@Autowired
+private McpClient mcpClient;
+
+public String searchKnowledge(String userEmail, String query) {
+    var response = mcpClient.callTool("secureVectorSearch", Map.of(
+        "query", query,
+        "userPrincipal", userEmail,
+        "userRoles", "engineering"
+    ));
+    return response.content().toString();
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- cURL / HTTP -->
+        <div id="tab-curl" class="setup-content">
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Direct manual SSE listening and JSON-RPC execution via cURL:</p>
+          <div class="code-block-wrapper">
+            <pre><code># 1. Listen to SSE Stream:
+curl -N -H "Accept: text/event-stream" http://localhost:8080/mcp/sse
+
+# 2. Call Tool via JSON-RPC POST (use sessionId from SSE output):
+curl -X POST "http://localhost:8080/mcp/message?sessionId=YOUR_SESSION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "secureVectorSearch",
+      "arguments": {
+        "query": "Kubernetes cluster security",
+        "userPrincipal": "devops@company.com",
+        "userRoles": "engineering"
+      }
+    }
+  }'</code></pre>
+          </div>
+        </div>
+
         <!-- Docker Setup -->
         <div id="tab-docker" class="setup-content">
           <p style="color: var(--text-muted); font-size: 0.95rem;">Run the dedicated MCP microservice using docker container build:</p>
@@ -737,22 +900,6 @@ docker run -p 8080:8080 \
   -e OPENCRAWLING_MCP_SERVER_ENABLED=true \
   -e SPRING_AI_MCP_SERVER_ANNOTATION_SCANNER_ENABLED=true \
   opencrawling-mcp-server</code></pre>
-          </div>
-        </div>
-
-        <!-- Spring AI Client -->
-        <div id="tab-spring" class="setup-content">
-          <p style="color: var(--text-muted); font-size: 0.95rem;">Application settings for embedding the server directly into your Spring Boot runtime:</p>
-          <div class="code-block-wrapper">
-            <pre><code>spring:
-  ai:
-    mcp:
-      server:
-        name: "opencrawling-secure-vector-mcp"
-        version: "1.0.0"
-        transport: STREAMABLE_HTTP
-        annotation-scanner:
-          enabled: true</code></pre>
           </div>
         </div>
       </div>
