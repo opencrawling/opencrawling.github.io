@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</title>
-  <meta name="description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
-  <meta name="keywords" content="apache ozone, claim check pattern, opencrawling, object storage, s3 gateway, kafka ingestion, spring boot 4, java 25, enterprise rag, vector database, ozone claim check store">
+  <title>New Connector: Apache Iceberg Repository Connector for OpenCrawling</title>
+  <meta name="description" content="Discover how the new oc-iceberg-repository-connector module connects Apache Iceberg data lakes to your AI pipeline. Learn how Java 25 Virtual Threads and Structured Task Scope scan Parquet table files concurrently to make data lakehouses AI-ready.">
+  <meta name="keywords" content="opencrawling, apache iceberg, iceberg connector, data lakehouse, parquet, rest catalog, hive catalog, aws glue, java 25, virtual threads, structured task scope, rag, vector database, pgvector">
   <meta name="author" content="OpenCrawling Core Team">
-  <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-iceberg-repository-connector.html">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
-  <meta property="og:title" content="Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling">
-  <meta property="og:description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-iceberg-repository-connector.html">
+  <meta property="og:title" content="New Connector: Apache Iceberg Repository Connector for OpenCrawling">
+  <meta property="og:description" content="Discover how the new oc-iceberg-repository-connector module connects Apache Iceberg data lakes to your AI pipeline using Java 25 Virtual Threads and Structured Task Scope.">
   <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
-  <meta property="twitter:title" content="Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling">
-  <meta property="twitter:description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-iceberg-repository-connector.html">
+  <meta property="twitter:title" content="New Connector: Apache Iceberg Repository Connector for OpenCrawling">
+  <meta property="twitter:description" content="Discover how the new oc-iceberg-repository-connector module connects Apache Iceberg data lakes to your AI pipeline using Java 25 Virtual Threads and Structured Task Scope.">
   <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling",
-    "description": "Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.",
-    "datePublished": "2026-07-21",
+    "headline": "New Connector: Apache Iceberg Repository Connector for OpenCrawling",
+    "description": "Discover how the new oc-iceberg-repository-connector module connects Apache Iceberg data lakes to your AI pipeline using Java 25 Virtual Threads and Structured Task Scope.",
+    "datePublished": "2026-07-16",
     "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
     "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html" }
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-iceberg-repository-connector.html" }
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,13 +132,13 @@
 
       <header class="blog-hero">
         <div class="blog-meta">
-          <span class="blog-category-badge">Storage</span>
-          <span class="blog-meta-date">July 21, 2026</span>
-          <span class="blog-meta-read">6 min read</span>
+          <span class="blog-category-badge">Connector</span>
+          <span class="blog-meta-date">July 16, 2026</span>
+          <span class="blog-meta-read">5 min read</span>
         </div>
-        <h1 class="blog-article-title">Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</h1>
+        <h1 class="blog-article-title">New Connector: Apache Iceberg Repository Connector for OpenCrawling</h1>
         <p class="blog-article-lead">
-          OpenCrawling now offers full, native support for <strong>Apache Ozone</strong> (v2.2.0+) as a distributed Claim Check store provider. Discover how combining the <strong>Claim Check Pattern</strong> with Apache Ozone's S3 Gateway eliminates messaging queue bottlenecks, enables multi-gigabyte document processing, and unlocks enterprise-grade scaling for big data AI ingestion pipelines.
+          OpenCrawling now supports <strong>Apache Iceberg</strong> data lakes as a first-class ingestion source. The new <strong>oc-iceberg-repository-connector</strong> module scans Iceberg table catalogs (REST, Hive, Hadoop, AWS Glue) and streams structured records directly into the RAG pipeline using <strong>Java 25 Virtual Threads</strong> and <strong>Structured Task Scope</strong> &mdash; making your data lakehouse AI-ready in minutes.
         </p>
       </header>
 
@@ -146,156 +146,117 @@
 
       <article class="blog-article-body">
 
-        <h2><span class="section-num">1. </span>The Binary Payload Bottleneck in AI Ingestion</h2>
+        <h2><span class="section-num">1. </span>Bridging Enterprise Data Lakehouses to AI</h2>
         <p>
-          In large-scale enterprise deployments, crawling millions of files (PDFs, office documents, scanned records, media assets) can produce hundreds of gigabytes of raw binary content. Streaming these raw payloads directly through message brokers like <strong>Apache Kafka</strong> introduces severe operational bottlenecks:
+          Apache Iceberg has emerged as the open table format standard for modern data lakehouses, enabling ACID transactions, time travel, and schema evolution over massive petabyte-scale Parquet datasets stored in S3 or HDFS.
         </p>
-        <ul>
-          <li><strong>Topic Partition Congestion:</strong> Multi-megabyte message payloads hit Kafka's <code>max.message.bytes</code> thresholds and inflate JVM garbage collection pauses.</li>
-          <li><strong>Memory Pressure:</strong> Downstream consumers experience high memory spikes during message buffering.</li>
-          <li><strong>Consumer Degradation:</strong> Slow payload transfers disrupt consumer group rebalancing timeouts.</li>
-        </ul>
         <p>
-          OpenCrawling solves this challenge using the <strong>Claim Check Pattern</strong>. Instead of sending raw document bytes across message queues, the crawler uploads the raw binary payload to a centralized object store, generating a lightweight URI claim check reference (e.g. <code>s3://claims/doc-uuid.pdf</code> or <code>ofs://s3v/claims/doc-uuid.pdf</code>). This URI circulates through Kafka while consumers retrieve the binary payload only when ready for text extraction or vectorization.
+          However, bridging table data into Retrieval-Augmented Generation (RAG) and vector search pipelines has historically required custom Spark or Flink jobs. With the <strong>oc-iceberg-repository-connector</strong>, OpenCrawling connects directly to your Iceberg catalogs, scans Parquet data files concurrently, and converts records into standard <code>RepositoryDocument</code> streams with zero intermediate data copies.
         </p>
 
         <div class="callout-box info">
           <span class="callout-icon">&#128161;</span>
-          <p><strong>Claim Check Benefits:</strong> Keeps Kafka topics lightweight and lightning fast while preserving exact binary stream integrity for downstream parsing with Apache Tika.</p>
+          <p><strong>Supported Catalogs:</strong> Full native support for <strong>REST Catalog</strong>, <strong>Hive Metastore Catalog</strong>, <strong>Hadoop Catalog</strong>, <strong>AWS Glue Catalog</strong>, and <strong>In-Memory Catalogs</strong>.</p>
         </div>
 
-        <h2><span class="section-num">2. </span>Why Apache Ozone? Big Data Object Storage for AI</h2>
+        <h2><span class="section-num">2. </span>Architecture &amp; Concurrent Scanning</h2>
         <p>
-          <strong>Apache Ozone</strong> is a highly scalable, redundant, and distributed object store optimized for Big Data and cloud-native analytics workloads. Designed to scale to billions of objects, Ozone provides seamless integration with Hadoop ecosystems and AWS S3 SDKs via its high-performance S3 Gateway (<code>s3g</code>).
-        </p>
-        <p>
-          By bringing Apache Ozone into OpenCrawling as a first-class <code>Claim Check Store</code> provider alongside local filesystem and standard S3 storage, enterprise teams can manage petabyte-scale data lakes without relying on proprietary cloud lock-in.
+          The connector implements the standard <code>RepositoryConnector</code> interface. During a scan, it plans <code>FileScanTask</code>s over the target table schema and forks task execution across Java 25 <strong>Virtual Threads</strong> managed by <code>StructuredTaskScope</code>:
         </p>
 
         <div class="arch-flow-diagram">
-          <div class="flow-title">Apache Ozone Claim Check Pipeline Architecture</div>
+          <div class="flow-title">Apache Iceberg Ingestion Flow</div>
           <div class="flow-nodes">
-            <span class="flow-node highlight">OpenCrawling Connector<br><small>Java 25 Crawler</small></span>
+            <span class="flow-node highlight">Iceberg Catalog<br><small>REST / Hive / Glue</small></span>
             <span class="flow-arrow">&rarr;</span>
-            <span class="flow-node highlight">OzoneClaimCheckStore<br><small>AWS S3 SDK v2</small></span>
-            <span class="flow-arrow">&rarr;</span>
-            <span class="flow-node">Apache Ozone S3 Gateway<br><small>s3g (Port 9878)</small></span>
+            <span class="flow-node highlight">IcebergRepositoryConnector<br><small>Java 25 Virtual Threads</small></span>
             <span class="flow-arrow">&rarr;</span>
             <span class="flow-node accent">Kafka Topic<br><small>opencrawling-ingestion</small></span>
             <span class="flow-arrow">&rarr;</span>
-            <span class="flow-node">IngestionConsumer<br><small>Apache Tika</small></span>
+            <span class="flow-node">IngestionConsumer<br><small>Token Chunker</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">EmbeddingConsumer<br><small>Ollama / OpenAI</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">PGVector<br><small>vector_store_1024</small></span>
           </div>
         </div>
 
-        <h2><span class="section-num">3. </span>Supported URIs &amp; Protocol Handling</h2>
+        <h2><span class="section-num">3. </span>Configuration &amp; Constructor Parameters</h2>
         <p>
-          The <code>OzoneClaimCheckStore</code> implementation natively resolves and parses all standard Apache Ozone storage URI schemes:
-        </p>
-        <ul>
-          <li><strong>S3 Protocol URIs:</strong> <code>s3://claims/doc-123.pdf</code></li>
-          <li><strong>Ozone File System (OFS) URIs:</strong> <code>ofs://s3v/claims/doc-123.pdf</code></li>
-          <li><strong>HTTP/S Gateway URIs:</strong> <code>http://s3g:9878/s3v/claims/doc-123.pdf</code></li>
-        </ul>
-
-        <h2><span class="section-num">4. </span>Configuration &amp; Spring Boot Properties</h2>
-        <p>
-          Activating Apache Ozone in your OpenCrawling runtime instance is completely seamless via Spring Boot configuration properties (<code>application.yml</code>) or environment variables:
+          The <code>IcebergRepositoryConnector</code> can be configured via Java properties or Spring environment settings:
         </p>
 
-        <pre><code>spring:
-  opencrawling:
-    claim-check:
-      store: ozone                       # Options: "local", "ozone", or "s3"
-      cleanup-on-consume: true           # Delete object from Ozone after ingestion
-      ozone:
-        s3-endpoint: http://localhost:9878
-        volume: s3v                      # Target Ozone Volume name
-        bucket: claims                   # Target Ozone Bucket name
-        access-key: ozone
-        secret-key: ozone-secret
-        path-style-access: true          # Required for Ozone S3 Gateway
-        region: us-east-1
-        auto-create-bucket: true         # Automatically create volume/bucket if missing</code></pre>
+        <pre><code>// Example Java initialization connecting to a REST Catalog
+IcebergRepositoryConnector connector = new IcebergRepositoryConnector(
+    "rest",                             // catalogType: rest, hive, hadoop, glue, in-memory
+    "http://iceberg-rest:8181",         // catalogUri
+    "s3://warehouse-bucket/iceberg",    // warehouse location
+    "id"                                // idColumn (optional primary key column)
+);</code></pre>
 
-        <h3>Environment Variables Matrix</h3>
+        <h3>Catalog Support Matrix</h3>
         <table class="config-table">
           <thead>
             <tr>
-              <th>Environment Variable</th>
+              <th>Catalog Type</th>
+              <th>Catalog URI Example</th>
               <th>Description</th>
-              <th>Default Value</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_STORE</code></td>
-              <td>Active Claim Check Store backend provider</td>
-              <td><code>local</code></td>
+              <td><code>rest</code></td>
+              <td><code>http://iceberg-rest:8181</code></td>
+              <td>Apache Iceberg REST Catalog server endpoint</td>
             </tr>
             <tr>
-              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_S3_ENDPOINT</code></td>
-              <td>Apache Ozone S3 Gateway Endpoint URL</td>
-              <td><code>http://s3g:9878</code></td>
+              <td><code>hive</code></td>
+              <td><code>thrift://hive-metastore:9083</code></td>
+              <td>Apache Hive Metastore Catalog connector</td>
             </tr>
             <tr>
-              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_VOLUME</code></td>
-              <td>Target Apache Ozone Volume name</td>
-              <td><code>s3v</code></td>
+              <td><code>hadoop</code></td>
+              <td><code>hdfs://namenode:8020/warehouse</code></td>
+              <td>HDFS / File-system based Hadoop catalog</td>
             </tr>
             <tr>
-              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_BUCKET</code></td>
-              <td>Target Apache Ozone Bucket name</td>
-              <td><code>claims</code></td>
+              <td><code>glue</code></td>
+              <td><code>aws:glue:us-east-1</code></td>
+              <td>AWS Glue Data Catalog integration</td>
             </tr>
             <tr>
-              <td><code>OZONE_ACCESS_KEY_ID</code></td>
-              <td>Ozone S3 Gateway Access Key</td>
-              <td><code>ozone</code></td>
-            </tr>
-            <tr>
-              <td><code>OZONE_SECRET_ACCESS_KEY</code></td>
-              <td>Ozone S3 Gateway Secret Access Key</td>
-              <td><code>ozone-secret</code></td>
+              <td><code>in-memory</code></td>
+              <td><code>N/A</code></td>
+              <td>Local test catalog for mock unit testing</td>
             </tr>
           </tbody>
         </table>
 
-        <h2><span class="section-num">5. </span>Verifying Stored Content in Apache Ozone</h2>
+        <h2><span class="section-num">4. </span>Document Identifiers &amp; URI Scheme</h2>
         <p>
-          Developers and operations teams can verify raw payloads stored in Apache Ozone using standard S3 toolchains or native Ozone CLIs:
+          Each table record is serialized into a <code>RepositoryDocument</code> carrying a uniform URI identifier format:
         </p>
-
-        <h3>A. Verification via HTTP <code>curl</code></h3>
-        <pre><code># Fetch raw payload directly from S3 Gateway
-curl -s http://localhost:9878/claims/data_ozone-claim-check-test.txt</code></pre>
-
-        <h3>B. Verification via AWS CLI</h3>
-        <pre><code># List objects in claims bucket
-AWS_ACCESS_KEY_ID=ozone AWS_SECRET_ACCESS_KEY=ozone-secret \
-aws --endpoint-url=http://localhost:9878 s3 ls s3://claims/
-
-# Read object contents
-AWS_ACCESS_KEY_ID=ozone AWS_SECRET_ACCESS_KEY=ozone-secret \
-aws --endpoint-url=http://localhost:9878 s3 cp s3://claims/data_ozone-claim-check-test.txt -</code></pre>
-
-        <h3>C. Verification via Native Apache Ozone CLI</h3>
-        <pre><code># List keys in volume s3v / bucket claims
-docker exec -it ozone-om ozone sh key list /s3v/claims
-
-# Inspect key metadata inside Ozone Manager container
-docker exec -it ozone-om ozone sh key info /s3v/claims/data_ozone-claim-check-test.txt</code></pre>
+        <pre><code>iceberg://&lt;table-identifier&gt;/&lt;document-id&gt;</code></pre>
+        <p>
+          Document IDs are deterministically resolved in the following priority order:
+        </p>
+        <ol>
+          <li>Explicit primary key column value passed via <code>idColumn</code>.</li>
+          <li>Composite keys constructed from Iceberg schema <code>identifierFieldNames()</code>.</li>
+          <li>SHA-256 fingerprint hash generated automatically from record JSON payload bytes.</li>
+        </ol>
 
         <div class="callout-box success">
           <span class="callout-icon">&#10004;</span>
-          <p><strong>Automated Test Script:</strong> An end-to-end integration test script is available in the repository root: <code>./scripts/test-ozone-decoupled.sh</code>. It spins up a full 4-node Apache Ozone cluster, verifies document ingestion, Kafka decoupling, vector generation, and automated teardown.</p>
+          <p><strong>Source Code:</strong> Check out the source code module on GitHub under <code>oc-iceberg-repository-connector</code>.</p>
         </div>
 
         <div class="article-cta">
-          <h3>Ready to Scale Your Ingestion Pipeline?</h3>
-          <p>Explore the full source code, run the Ozone Docker stack, and check out our detailed technical documentation on GitHub.</p>
+          <h3>Ready to Connect Your Data Lakehouse?</h3>
+          <p>Explore the source code, configure your Iceberg catalog endpoint, and start streaming structured records directly to vector databases.</p>
           <div class="cta-buttons">
-            <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View GitHub Repository</a>
-            <a href="https://github.com/OpenCrawling/opencrawling.wiki/blob/main/Apache-Ozone-Claim-Check-Store.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Read Wiki Documentation</a>
+            <a href="https://github.com/OpenCrawling/opencrawling/tree/main/oc-iceberg-repository-connector" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View GitHub Module</a>
+            <a href="../#simulator" class="btn btn-secondary">Try Live Simulator</a>
           </div>
         </div>
 
