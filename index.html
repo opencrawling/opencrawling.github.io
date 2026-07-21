@@ -112,7 +112,7 @@
           <span class="gradient-text">siloed content</span> to AI pipelines.
         </h1>
         <p class="hero-subtitle">
-          OpenCrawling&reg; is a high-performance enterprise data ingestion and security mapping framework. Powered by <strong>Java 25</strong> and <strong>Spring Boot 4</strong>, it orchestrates secure pipelines using <strong>Apache Tika</strong> for text extraction, <strong>Apache Kafka</strong> for queueing, <strong>Redis</strong> for caching, and <strong>Ollama</strong> for embeddings while preserving document permissions (ACLs).
+          OpenCrawling&reg; is a high-performance enterprise data ingestion and security mapping framework. Powered by <strong>Java 25</strong> and <strong>Spring Boot 4</strong>, it orchestrates secure pipelines using <strong>Apache Tika</strong> for text extraction, <strong>Apache Kafka</strong> for queueing, <strong>Apache Ozone</strong> &amp; S3 for distributed payload storage, <strong>Redis</strong> for caching, and <strong>Ollama</strong> for embeddings while preserving document permissions (ACLs).
         </p>
         <div class="hero-actions">
           <a href="#getting-started" class="btn btn-primary">Get Started</a>
@@ -280,6 +280,9 @@
           <!-- Admin UI to Core (dashed) -->
           <path class="flow-line line-dashed" d="M295,185 L295,140" />
 
+          <!-- Core to Claim Check Store (down, dashed) -->
+          <path class="flow-line line-dashed" d="M295,275 L295,320" />
+
           <!-- Vector Writer to MCP (up, dashed) -->
           <path class="flow-line line-dashed" d="M810,190 L810,140" />
 
@@ -296,11 +299,12 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="145" width="120" height="165" rx="10" class="node-bg" />
-            <text x="70" y="175" class="node-title">Sources</text>
-            <text x="70" y="205" class="node-sub">File System</text>
-            <text x="70" y="235" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="265" class="node-sub">Alfresco</text>
+            <rect x="10" y="135" width="130" height="175" rx="10" class="node-bg" />
+            <text x="75" y="162" class="node-title">Sources</text>
+            <text x="75" y="190" class="node-sub">Apache Ozone 🌌</text>
+            <text x="75" y="217" class="node-sub">File System</text>
+            <text x="75" y="244" class="node-sub">Apache Iceberg🧊</text>
+            <text x="75" y="271" class="node-sub">Alfresco</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -365,6 +369,14 @@
             <text x="770" y="350" class="node-title-small">Authority Service</text>
             <text x="770" y="370" class="node-desc">Access Filters</text>
             <text x="770" y="385" class="node-desc">ACL Mapping</text>
+          </g>
+
+          <!-- Node 10: Claim Check Store (Bottom Left) -->
+          <g class="node-group" data-node="claimcheck">
+            <rect x="225" y="320" width="140" height="80" rx="8" class="node-bg border-only" />
+            <text x="295" y="348" class="node-title-small">Claim Check Store</text>
+            <text x="295" y="368" class="node-desc">Apache Ozone (s3g)</text>
+            <text x="295" y="385" class="node-desc">Local / S3 Storage</text>
           </g>
 
           <!-- Scale-out badge on embedding service -->
@@ -472,6 +484,7 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
+            <option value="ozone">Apache Ozone (Object Storage)</option>
             <option value="database">File System</option>
             <option value="alfresco">Alfresco Content Services</option>
             <option value="iceberg">Apache Iceberg (Data Lakehouse)</option>
@@ -726,6 +739,21 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
       <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new">New</span>
+          <span class="blog-date">July 21, 2026</span>
+          <span class="blog-read-time">6 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-apache-ozone-claim-check-store.html">Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</a></h3>
+        <p class="blog-excerpt">
+          OpenCrawling now offers full, native support for <strong>Apache Ozone</strong> (v2.2.0+) as a distributed Claim Check store provider. Learn how combining the Claim Check Pattern with Ozone's S3 Gateway eliminates Kafka payload bottlenecks and scales RAG binary ingestion to petabyte scale.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-apache-ozone-claim-check-store.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge">Connector</span>
           <span class="blog-date">July 16, 2026</span>
           <span class="blog-read-time">6 min read</span>
         </div>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</title>
+  <meta name="description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
+  <meta name="keywords" content="apache ozone, claim check pattern, opencrawling, object storage, s3 gateway, kafka ingestion, spring boot 4, java 25, enterprise rag, vector database, ozone claim check store">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
+  <meta property="og:title" content="Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling">
+  <meta property="og:description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html">
+  <meta property="twitter:title" content="Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling">
+  <meta property="twitter:description" content="Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling",
+    "description": "Learn how OpenCrawling integrates Apache Ozone as a distributed Claim Check Store provider, eliminating Kafka payload bottlenecks and scaling RAG binary ingestion to petabyte scale.",
+    "datePublished": "2026-07-21",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-ozone-claim-check-store.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #06B6D4, #22D3EE); color: #0F172A; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #06B6D4; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #06B6D4; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #22D3EE; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #22D3EE; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(6,182,212,0.05); border-color: #06B6D4; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(6,182,212,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #06B6D4; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #06B6D4; color: #22D3EE; background: rgba(6,182,212,0.06); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: var(--accent-color); }
+    .article-cta { background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #22D3EE; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(6,182,212,0.08); color: #22D3EE; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(6,182,212,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="blog-article-wrapper">
+      <div class="back-link-wrapper">
+        <a href="../#blog" class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to Blog
+        </a>
+      </div>
+
+      <header class="blog-hero">
+        <div class="blog-meta">
+          <span class="blog-category-badge">Storage</span>
+          <span class="blog-meta-date">July 21, 2026</span>
+          <span class="blog-meta-read">6 min read</span>
+        </div>
+        <h1 class="blog-article-title">Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</h1>
+        <p class="blog-article-lead">
+          OpenCrawling now offers full, native support for <strong>Apache Ozone</strong> (v2.2.0+) as a distributed Claim Check store provider. Discover how combining the <strong>Claim Check Pattern</strong> with Apache Ozone's S3 Gateway eliminates messaging queue bottlenecks, enables multi-gigabyte document processing, and unlocks enterprise-grade scaling for big data AI ingestion pipelines.
+        </p>
+      </header>
+
+      <hr class="blog-divider">
+
+      <article class="blog-article-body">
+
+        <h2><span class="section-num">1. </span>The Binary Payload Bottleneck in AI Ingestion</h2>
+        <p>
+          In large-scale enterprise deployments, crawling millions of files (PDFs, office documents, scanned records, media assets) can produce hundreds of gigabytes of raw binary content. Streaming these raw payloads directly through message brokers like <strong>Apache Kafka</strong> introduces severe operational bottlenecks:
+        </p>
+        <ul>
+          <li><strong>Topic Partition Congestion:</strong> Multi-megabyte message payloads hit Kafka's <code>max.message.bytes</code> thresholds and inflate JVM garbage collection pauses.</li>
+          <li><strong>Memory Pressure:</strong> Downstream consumers experience high memory spikes during message buffering.</li>
+          <li><strong>Consumer Degradation:</strong> Slow payload transfers disrupt consumer group rebalancing timeouts.</li>
+        </ul>
+        <p>
+          OpenCrawling solves this challenge using the <strong>Claim Check Pattern</strong>. Instead of sending raw document bytes across message queues, the crawler uploads the raw binary payload to a centralized object store, generating a lightweight URI claim check reference (e.g. <code>s3://claims/doc-uuid.pdf</code> or <code>ofs://s3v/claims/doc-uuid.pdf</code>). This URI circulates through Kafka while consumers retrieve the binary payload only when ready for text extraction or vectorization.
+        </p>
+
+        <div class="callout-box info">
+          <span class="callout-icon">&#128161;</span>
+          <p><strong>Claim Check Benefits:</strong> Keeps Kafka topics lightweight and lightning fast while preserving exact binary stream integrity for downstream parsing with Apache Tika.</p>
+        </div>
+
+        <h2><span class="section-num">2. </span>Why Apache Ozone? Big Data Object Storage for AI</h2>
+        <p>
+          <strong>Apache Ozone</strong> is a highly scalable, redundant, and distributed object store optimized for Big Data and cloud-native analytics workloads. Designed to scale to billions of objects, Ozone provides seamless integration with Hadoop ecosystems and AWS S3 SDKs via its high-performance S3 Gateway (<code>s3g</code>).
+        </p>
+        <p>
+          By bringing Apache Ozone into OpenCrawling as a first-class <code>Claim Check Store</code> provider alongside local filesystem and standard S3 storage, enterprise teams can manage petabyte-scale data lakes without relying on proprietary cloud lock-in.
+        </p>
+
+        <div class="arch-flow-diagram">
+          <div class="flow-title">Apache Ozone Claim Check Pipeline Architecture</div>
+          <div class="flow-nodes">
+            <span class="flow-node highlight">OpenCrawling Connector<br><small>Java 25 Crawler</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node highlight">OzoneClaimCheckStore<br><small>AWS S3 SDK v2</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">Apache Ozone S3 Gateway<br><small>s3g (Port 9878)</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node accent">Kafka Topic<br><small>opencrawling-ingestion</small></span>
+            <span class="flow-arrow">&rarr;</span>
+            <span class="flow-node">IngestionConsumer<br><small>Apache Tika</small></span>
+          </div>
+        </div>
+
+        <h2><span class="section-num">3. </span>Supported URIs &amp; Protocol Handling</h2>
+        <p>
+          The <code>OzoneClaimCheckStore</code> implementation natively resolves and parses all standard Apache Ozone storage URI schemes:
+        </p>
+        <ul>
+          <li><strong>S3 Protocol URIs:</strong> <code>s3://claims/doc-123.pdf</code></li>
+          <li><strong>Ozone File System (OFS) URIs:</strong> <code>ofs://s3v/claims/doc-123.pdf</code></li>
+          <li><strong>HTTP/S Gateway URIs:</strong> <code>http://s3g:9878/s3v/claims/doc-123.pdf</code></li>
+        </ul>
+
+        <h2><span class="section-num">4. </span>Configuration &amp; Spring Boot Properties</h2>
+        <p>
+          Activating Apache Ozone in your OpenCrawling runtime instance is completely seamless via Spring Boot configuration properties (<code>application.yml</code>) or environment variables:
+        </p>
+
+        <pre><code>spring:
+  opencrawling:
+    claim-check:
+      store: ozone                       # Options: "local", "ozone", or "s3"
+      cleanup-on-consume: true           # Delete object from Ozone after ingestion
+      ozone:
+        s3-endpoint: http://localhost:9878
+        volume: s3v                      # Target Ozone Volume name
+        bucket: claims                   # Target Ozone Bucket name
+        access-key: ozone
+        secret-key: ozone-secret
+        path-style-access: true          # Required for Ozone S3 Gateway
+        region: us-east-1
+        auto-create-bucket: true         # Automatically create volume/bucket if missing</code></pre>
+
+        <h3>Environment Variables Matrix</h3>
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th>Environment Variable</th>
+              <th>Description</th>
+              <th>Default Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_STORE</code></td>
+              <td>Active Claim Check Store backend provider</td>
+              <td><code>local</code></td>
+            </tr>
+            <tr>
+              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_S3_ENDPOINT</code></td>
+              <td>Apache Ozone S3 Gateway Endpoint URL</td>
+              <td><code>http://s3g:9878</code></td>
+            </tr>
+            <tr>
+              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_VOLUME</code></td>
+              <td>Target Apache Ozone Volume name</td>
+              <td><code>s3v</code></td>
+            </tr>
+            <tr>
+              <td><code>SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_BUCKET</code></td>
+              <td>Target Apache Ozone Bucket name</td>
+              <td><code>claims</code></td>
+            </tr>
+            <tr>
+              <td><code>OZONE_ACCESS_KEY_ID</code></td>
+              <td>Ozone S3 Gateway Access Key</td>
+              <td><code>ozone</code></td>
+            </tr>
+            <tr>
+              <td><code>OZONE_SECRET_ACCESS_KEY</code></td>
+              <td>Ozone S3 Gateway Secret Access Key</td>
+              <td><code>ozone-secret</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2><span class="section-num">5. </span>Verifying Stored Content in Apache Ozone</h2>
+        <p>
+          Developers and operations teams can verify raw payloads stored in Apache Ozone using standard S3 toolchains or native Ozone CLIs:
+        </p>
+
+        <h3>A. Verification via HTTP <code>curl</code></h3>
+        <pre><code># Fetch raw payload directly from S3 Gateway
+curl -s http://localhost:9878/claims/data_ozone-claim-check-test.txt</code></pre>
+
+        <h3>B. Verification via AWS CLI</h3>
+        <pre><code># List objects in claims bucket
+AWS_ACCESS_KEY_ID=ozone AWS_SECRET_ACCESS_KEY=ozone-secret \
+aws --endpoint-url=http://localhost:9878 s3 ls s3://claims/
+
+# Read object contents
+AWS_ACCESS_KEY_ID=ozone AWS_SECRET_ACCESS_KEY=ozone-secret \
+aws --endpoint-url=http://localhost:9878 s3 cp s3://claims/data_ozone-claim-check-test.txt -</code></pre>
+
+        <h3>C. Verification via Native Apache Ozone CLI</h3>
+        <pre><code># List keys in volume s3v / bucket claims
+docker exec -it ozone-om ozone sh key list /s3v/claims
+
+# Inspect key metadata inside Ozone Manager container
+docker exec -it ozone-om ozone sh key info /s3v/claims/data_ozone-claim-check-test.txt</code></pre>
+
+        <div class="callout-box success">
+          <span class="callout-icon">&#10004;</span>
+          <p><strong>Automated Test Script:</strong> An end-to-end integration test script is available in the repository root: <code>./scripts/test-ozone-decoupled.sh</code>. It spins up a full 4-node Apache Ozone cluster, verifies document ingestion, Kafka decoupling, vector generation, and automated teardown.</p>
+        </div>
+
+        <div class="article-cta">
+          <h3>Ready to Scale Your Ingestion Pipeline?</h3>
+          <p>Explore the full source code, run the Ozone Docker stack, and check out our detailed technical documentation on GitHub.</p>
+          <div class="cta-buttons">
+            <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View GitHub Repository</a>
+            <a href="https://github.com/OpenCrawling/opencrawling.wiki/blob/main/Apache-Ozone-Claim-Check-Store.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Read Wiki Documentation</a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="../" class="brand">
+          <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+          <span class="brand-name">OpenCrawling</span>
+        </a>
+        <p class="footer-tagline">Enterprise Ingestion &amp; Security Mapping Framework for AI &amp; Search.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Framework</h4>
+          <ul>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="../index.html#getting-started">Quick Start</a></li>
+            <li><a href="../mcp.html">MCP Server</a></li>
+            <li><a href="../comparison.html">Compare</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="../index.html#blog">Blog</a></li>
+            <li><a href="../team.html">Team</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+            <li><a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCrawling Organization. Licensed under Apache 2.0.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

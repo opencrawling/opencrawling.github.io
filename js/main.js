@@ -92,6 +92,10 @@ const ARCH_DETAILS = {
   mcp: {
     title: "Secure MCP Server (Spring AI)",
     desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
+  },
+  claimcheck: {
+    title: "Claim Check Store (Apache Ozone & S3)",
+    desc: "Offloads multi-megabyte binary document payloads from Kafka topics. Connectors store raw content in Apache Ozone (via its S3 Gateway on port 9878) or S3/Local storage, circulating lightweight URI references (s3://, ofs://) through Kafka."
   }
 };
 
@@ -202,6 +206,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer received Iceberg JSON documents. Text extracted from JSON content, chunked into token segments, ChunkMessages published to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed Iceberg record chunks. Dispatched to Ollama (mxbai-embed-large) for 1024-dimension embedding. Published embedded vectors to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted Iceberg embeddings with iceberg:// URI metadata to pgvector (vector_store_1024)."
+    }
+  },
+  ozone: {
+    files: [
+      { name: "s3://claims/financial_report_q2_2026.pdf", size: "48.5 MB", acls: ["Executive-Board:Read", "Finance-Dept:Read"] },
+      { name: "ofs://s3v/claims/cad_architecture_spec.step", size: "120.2 MB", acls: ["Engineering-Lead:ReadWrite"] },
+      { name: "s3://claims/legal_contract_archive.zip", size: "215.0 MB", acls: ["Legal-Counsel:Read"] }
+    ],
+    logs: {
+      scan: "OzoneClaimCheckStore initialized connecting to Apache Ozone S3 Gateway (http://s3g:9878). Verifying s3v volume & claims bucket...",
+      claimCheck: "Crawler offloaded multi-megabyte binary payloads to Apache Ozone (S3 Gateway). Published lightweight s3:// and ofs:// claim check URIs to Kafka 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer fetched content streams from Apache Ozone port 9878 via Claim Check URIs. Parsed binary with Apache Tika, generated 1024-token chunks, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Ozone document chunks. Dispatched batches to Ollama (mxbai-embed-large). Generated 1024-dim vectors, published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted Ozone embeddings and security ACL tokens to vector database."
     }
   }
 };
