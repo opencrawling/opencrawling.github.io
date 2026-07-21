@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrawling® AIOps Observability - OpenTelemetry & AI Root Cause Analysis</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Explore OpenCrawling AI-Powered Observability (AIOps) powered by OpenTelemetry (OTel), Micrometer, and Spring AI for automated Root Cause Analysis (RCA) and performance bottleneck diagnosis.">
+  <meta name="keywords" content="OpenTelemetry, AIOps, Root Cause Analysis, RCA, Micrometer, Spring Boot 4, Distributed Tracing, Log Analysis, Model Context Protocol, OpenCrawling">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/observability.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.org/observability.html">
+  <meta property="og:title" content="OpenCrawling® AIOps Observability - OpenTelemetry & AI Root Cause Analysis">
+  <meta property="og:description" content="Automated AI Root Cause Analysis and OpenTelemetry trace correlation for enterprise document ingestion pipelines.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Mermaid.js for Architecture Diagram -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+          primaryColor: '#8B5CF6',
+          primaryTextColor: '#F1F5F9',
+          lineColor: '#06B6D4',
+          nodeBorder: '#8B5CF6',
+          mainBkg: '#0F172A',
+          clusterBkg: '#07090E'
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .aiops-wrapper {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 3rem) 2rem 6rem 2rem;
+    }
+
+    .aiops-hero {
+      text-align: center;
+      margin-bottom: 5rem;
+      position: relative;
+    }
+
+    .aiops-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--accent-color);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .aiops-hero h1 {
+      font-size: clamp(2.5rem, 1.5rem + 4vw, 4.2rem);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-color) 20%, #A855F7 70%, var(--cyan-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .aiops-hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.6;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .card-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .card-box:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(168, 85, 247, 0.15);
+    }
+
+    .card-box h3 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: #F8FAFC;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-box p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    .code-block {
+      background: #090D16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #E2E8F0;
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    .pill-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--cyan-color);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Decorative Background Glows -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="mcp.html">MCP Server</a></li>
+          <li><a href="observability.html" class="active">Observability</a></li>
+          <li><a href="comparison.html">Compare</a></li>
+          <li><a href="team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn">
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="aiops-wrapper">
+    <!-- Hero Header -->
+    <section class="aiops-hero">
+      <div class="aiops-hero-badge">⚡ OpenTelemetry &amp; Micrometer AIOps</div>
+      <h1>AI-Powered Observability &amp; Log Analysis</h1>
+      <p>
+        OpenCrawling leverages native <strong>Spring Boot 4</strong>, <strong>OpenTelemetry (OTel)</strong> correlated spans, and <strong>Spring AI Model Context Protocol (MCP)</strong> tools to transform complex multi-threaded trace telemetry into automated <strong>Root Cause Analysis (RCA)</strong> reports.
+      </p>
+    </section>
+
+    <!-- 3 Core Pillars -->
+    <section class="grid-3col">
+      <div class="card-box">
+        <h3>🔍 Correlated OTel Traces</h3>
+        <p>
+          Every ingestion pipeline stage—<strong>Scanning</strong>, <strong>Extracting</strong>, <strong>Chunking</strong>, <strong>Embedding</strong>, and <strong>Indexing</strong>—generates distributed OpenTelemetry spans correlated by unique <code>jobId</code>.
+        </p>
+        <div class="code-block">
+          <code>Tracing: Scanning (450ms) &rarr; Extracting (1200ms) &rarr; Chunking (300ms) &rarr; Embedding (1800ms) &rarr; Indexing (650ms)</code>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <h3>🛠️ System MCP Tools</h3>
+        <p>
+          Exposes system-level Model Context Protocol tools exclusively to the Admin Copilot, enabling LLM agents to query live traces, exception stack traces, and Micrometer performance metrics.
+        </p>
+        <div class="code-block">
+          <code>fetch_job_traces(jobId)<br>get_error_logs(jobId)<br>query_throughput_metrics(connectorId)</code>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <h3>⚡ "Diagnose with AI" Action</h3>
+        <p>
+          System administrators click <strong>"Diagnose with AI"</strong> in <code>oc-admin-ui</code> to trigger live Root Cause Analysis reports, bottleneck insights, and automated resolution recommendations.
+        </p>
+        <div class="code-block">
+          <code>Status: FAILED &rarr; RCA: Downstream Vector DB insertion timed out after 30s during pgvector batch flush.</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Diagram Section -->
+    <section style="margin-bottom: 5rem;">
+      <h2 style="font-family: var(--font-heading); font-size: 2rem; color: #F8FAFC; margin-bottom: 1.5rem; text-align: center;">
+        AIOps Observability Architecture
+      </h2>
+      <div class="card-box" style="padding: 2.5rem; text-align: center;">
+        <div class="mermaid">
+graph TD
+    subgraph Engine [OpenCrawling Engine]
+        Scanner[Repository Connector Scan]
+        TikaExtractor[Apache Tika Text Extractor]
+        Chunker[Token Text Splitter]
+        Embedder[Embedding Microservice]
+        Writer[PgVector / Milvus Writer]
+    end
+
+    subgraph Telemetry [OpenTelemetry & Micrometer]
+        TraceStore[TelemetryTraceStore - OTel Spans]
+        ErrorLog[InMemoryLogAppender]
+        Metrics[Micrometer Performance Counters]
+    end
+
+    subgraph AIOps [AIOps Diagnostic Layer]
+        McpTools[ObservabilityMcpTools - System MCP]
+        DiagnosticEngine[AIOpsDiagnosticService]
+        RESTController[ObservabilityController /api/observability]
+    end
+
+    subgraph AdminUI [Admin Console - oc-admin-ui]
+        DiagnoseBtn[Diagnose with AI Button]
+        RCAModal[AIOps Diagnostic Modal]
+    end
+
+    Scanner -->|Span Record| TraceStore
+    TikaExtractor -->|Span Record| TraceStore
+    Chunker -->|Span Record| TraceStore
+    Embedder -->|Span Record| TraceStore
+    Writer -->|Span Record| TraceStore
+
+    Writer -->|Exception Event| ErrorLog
+    
+    TraceStore --> McpTools
+    ErrorLog --> McpTools
+    Metrics --> McpTools
+
+    McpTools --> DiagnosticEngine
+    DiagnosticEngine --> RESTController
+    
+    DiagnoseBtn -->|GET /api/observability/diagnose/id| RESTController
+    RESTController -->|DiagnosticReport JSON| RCAModal
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 3rem 1rem; border-top: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); font-size: 0.9rem;">
+    &copy; OpenCrawling Organization. Licensed under Apache License 2.0.
+  </footer>
+</body>
+</html>
