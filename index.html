@@ -226,6 +226,16 @@
         <p>Integrates OpenTelemetry (OTel) correlated traces and Micrometer metrics. Automatically translates complex pipeline stack traces into human-readable AI Root Cause Analysis (RCA) and diagnostic recommendations. <a href="observability.html" class="learn-more-link">Learn more →</a></p>
       </div>
 
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+        </div>
+        <h3>Auto-Narrativization Copilot</h3>
+        <p>Configured per job or interactive panel. Translates connector schemas into human-readable <strong>Mustache narrative templates</strong> and mock datasets via Ollama (<code>llama3.2</code>) or OpenAI. Automatically falls back to deterministic generation when AI is offline.</p>
+      </div>
+
       <div class="feature-card full-width">
         <div class="feature-icon-wrapper">
           <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -727,12 +737,27 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new">New</span>
+          <span class="blog-date">July 23, 2026</span>
+          <span class="blog-read-time">6 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/auto-narrativization-copilot.html">Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings</a></h3>
+        <p class="blog-excerpt">
+          Learn how OpenCrawling's <strong>Auto-Narrativization Copilot</strong> translates structured database schemas and table records into rich natural language Mustache templates and mock datasets using Spring AI, Ollama (<code>llama3.2</code>), and deterministic offline fallbacks.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/auto-narrativization-copilot.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge">Connector</span>
           <span class="blog-date">July 16, 2026</span>
           <span class="blog-read-time">5 min read</span>
         </div>
         <h3 class="blog-card-title"><a href="blog/introducing-iceberg-repository-connector.html">New Connector: Apache Iceberg Repository Connector</a></h3>
         <p class="blog-excerpt">
-          OpenCrawling now supports <strong>Apache Iceberg</strong> data lakes as a first-class ingestion source. The new <code>oc-iceberg-repository-connector</code> module scans Iceberg table catalogs (REST, Hive, Hadoop, AWS Glue) and streams structured records directly into the RAG pipeline — making your data lakehouse AI-ready in minutes.
+          OpenCrawling now supports <strong>Apache Iceberg</strong> data lakes as a first-class ingestion source. The new <code>oc-iceberg-repository-connector</code> module scans Iceberg table catalogs (REST, Hive, Hadoop, AWS Glue) and streams structured records directly into the RAG pipeline.
         </p>
         <div class="blog-card-footer">
           <a href="blog/introducing-iceberg-repository-connector.html" class="card-link">Read Article &rarr;</a>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings</title>
+  <meta name="description" content="Learn how OpenCrawling's Auto-Narrativization Copilot translates structured dataset schemas into human-readable Mustache templates and mock datasets using Spring AI, Ollama (llama3.2), and deterministic offline fallbacks.">
+  <meta name="keywords" content="opencrawling, narrativization, mustache templates, spring ai, ollama, llama3.2, rag, vector search, pgvector, schema introspection, data engineering">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/auto-narrativization-copilot.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/auto-narrativization-copilot.html">
+  <meta property="og:title" content="Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings">
+  <meta property="og:description" content="Learn how OpenCrawling's Auto-Narrativization Copilot translates structured dataset schemas into human-readable Mustache templates using Ollama (llama3.2) and Spring AI.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/auto-narrativization-copilot.html">
+  <meta property="twitter:title" content="Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings">
+  <meta property="twitter:description" content="Learn how OpenCrawling's Auto-Narrativization Copilot translates structured dataset schemas into human-readable Mustache templates using Ollama (llama3.2) and Spring AI.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings",
+    "description": "Learn how OpenCrawling's Auto-Narrativization Copilot translates structured dataset schemas into human-readable Mustache templates using Ollama (llama3.2) and Spring AI.",
+    "datePublished": "2026-07-23",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/auto-narrativization-copilot.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #7C3AED, #C084FC); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #7C3AED; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #C084FC; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #C084FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C084FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(124,58,237,0.05); border-color: #7C3AED; }
+    .callout-box.tip { background: rgba(6,182,212,0.05); border-color: #06B6D4; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="nav-gh-link">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <article>
+      <div class="blog-hero">
+        <div class="blog-meta">
+          <span class="blog-category-badge">AI Pipeline & RAG</span>
+          <span class="blog-meta-date">July 23, 2026</span>
+          <span class="blog-meta-read">6 min read</span>
+        </div>
+        <h1 class="blog-article-title">Auto-Narrativization Copilot: Bridging Structured Schemas to Vector Embeddings</h1>
+        <p class="blog-article-lead">
+          Raw tabular records and key-value database schemas produce sub-optimal dense vector embeddings when passed directly to embedding models. Today, OpenCrawling introduces the <strong>Auto-Narrativization Copilot</strong> — an AI-powered pipeline that automatically translates structured dataset schemas into rich natural language Mustache templates and mock datasets.
+        </p>
+      </div>
+
+      <hr class="blog-divider">
+
+      <div class="blog-article-body">
+        <h2><span class="section-num">01.</span> The Structured Data Vector Dilemma</h2>
+        <p>
+          Vector embedding models (such as <code>mxbai-embed-large</code> or OpenAI <code>text-embedding-3</code>) are trained primarily on natural, continuous prose. When ingesting structured content sources like <strong>Apache Iceberg tables</strong>, database rows, or enterprise document metadata, simply concatenating field keys and values (e.g. <code>id=123, amount=450.0, region=EU</code>) results in fragmented semantic spaces.
+        </p>
+        <p>
+          To achieve peak retrieval performance in RAG (Retrieval-Augmented Generation) applications, structured records should be <em>narrativized</em> into coherent human sentences (e.g. <em>"Transaction 123 processed an amount of €450.0 within the EU region."</em>). However, hand-writing templates for hundreds of tables and connectors is tedious and error-prone.
+        </p>
+
+        <h2><span class="section-num">02.</span> Introducing the Auto-Narrativization Copilot</h2>
+        <p>
+          OpenCrawling's <strong>Auto-Narrativization Copilot</strong> solves this challenge by dynamically converting connector field schemas into expressive <strong>Mustache templates</strong> and typed <strong>mock datasets</strong>.
+        </p>
+
+        <div class="callout-box info">
+          <div>
+            <strong>How It Works:</strong> Given a target schema (connector type + field definitions), the Copilot leverages Spring AI to prompt Ollama (<code>llama3.2</code>) or OpenAI. It returns a Mustache template and typed mock dataset. If no LLM service is available, the system automatically falls back to an offline deterministic template generator — guaranteeing 100% uptime.
+          </div>
+        </div>
+
+        <pre><code>POST /api/transformation/copilot/generate
+Content-Type: application/json
+
+{
+  "connectorType": "iceberg",
+  "fields": [
+    { "name": "id",        "type": "STRING",    "description": "Primary transaction ID" },
+    { "name": "amount",    "type": "DOUBLE",    "description": "Monetary value in EUR" },
+    { "name": "region",    "type": "STRING",    "description": "Geographical region code" },
+    { "name": "timestamp", "type": "TIMESTAMP", "description": "Transaction date and time" }
+  ]
+}</code></pre>
+
+        <p><strong>Response:</strong></p>
+        <pre><code>{
+  "template": "Transaction {{id}} processed an amount of €{{amount}} in region {{region}} at {{timestamp}}.",
+  "mockData": {
+    "id": "TX-98421",
+    "amount": 1250.50,
+    "region": "EU-WEST",
+    "timestamp": "2026-07-23T14:30:00Z"
+  }
+}</code></pre>
+
+        <h2><span class="section-num">03.</span> Per-Job Granularity in Admin UI & Runtime</h2>
+        <p>
+          Because enterprise teams frequently crawl the same repository source for different analytical purposes, narrativization is configured at the <strong>Per-Job level</strong>.
+        </p>
+        <p>
+          Inside the OpenCrawling Admin UI, each ingestion pipeline form includes a dedicated <strong>Auto-Narrativization Copilot</strong> panel:
+        </p>
+
+        <ul>
+          <li><strong>Interactive Schema Introspection:</strong> Automatically populates table fields from connectors like <code>IcebergRepositoryConnector</code>.</li>
+          <li><strong>One-Click Generation:</strong> Click <em>"Generate with Copilot"</em> to fetch an AI-crafted Mustache template.</li>
+          <li><strong>Live Template Preview:</strong> Instant local preview showing rendered narrative text filled with sample mock values.</li>
+          <li><strong>Job Persistence:</strong> Stores the template directly within the job payload (`JobDTO.narrativization`).</li>
+        </ul>
+
+        <h2><span class="section-num">04.</span> Stream Execution via MustacheTransformationConnector</h2>
+        <p>
+          During job execution, `JobOrchestrator` inspects the job's `NarrativizationConfig`. When enabled, it passes document streams through the high-performance `MustacheTransformationConnector` in `oc-core`:
+        </p>
+
+        <pre><code>// Applied during scan in virtual thread
+if (mustacheConnector != null) {
+    doc = mustacheConnector.transform(initialDoc).blockFirst();
+}</code></pre>
+
+        <p>
+          The rendered narrative replaces the document stream before metadata references are published to Apache Kafka, ensuring downstream embedding models (in <code>oc-embedding-service</code>) process rich, contextualized prose.
+        </p>
+
+        <div class="callout-box tip">
+          <div>
+            <strong>Get Started Today:</strong> The Auto-Narrativization Copilot is available in OpenCrawling 1.0.0-SNAPSHOT. Check out the <a href="https://github.com/opencrawling/opencrawling/wiki/Auto-Narrativization-Copilot" style="color: #22D3EE;">Wiki Documentation</a> and run <code>./scripts/test-narrativization.sh</code> to test the pipeline locally.
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>&copy; 2026 OpenCrawling Organization. Released under the Apache 2.0 License.</p>
+    </div>
+  </footer>
+</body>
+</html>
