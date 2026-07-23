@@ -61,22 +61,47 @@
 </head>
 <body>
 
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
   <header class="site-header">
     <div class="header-container">
-      <a href="../index.html" class="brand">
+      <a href="../index.html" class="brand" id="nav-brand">
         <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
         <span class="brand-name">OpenCrawling</span>
       </a>
+      
       <nav class="main-nav" aria-label="Main Navigation">
         <ul>
           <li><a href="../index.html#features">Features</a></li>
-          <li><a href="../index.html#architecture">Architecture</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
           <li><a href="../mcp.html">MCP Server</a></li>
           <li><a href="../observability.html">Observability</a></li>
-          <li><a href="../index.html#blog">Blog</a></li>
-          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="nav-gh-link">GitHub</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../team.html">Team</a></li>
         </ul>
       </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -99,44 +124,37 @@
       <div class="blog-article-body">
         <h2><span class="section-num">01.</span> The Structured Data Vector Dilemma</h2>
         <p>
-          Vector embedding models (such as <code>mxbai-embed-large</code> or OpenAI <code>text-embedding-3</code>) are trained primarily on natural, continuous prose. When ingesting structured content sources like <strong>Apache Iceberg tables</strong>, database rows, or enterprise document metadata, simply concatenating field keys and values (e.g. <code>id=123, amount=450.0, region=EU</code>) results in fragmented semantic spaces.
+          Vector embeddings work best with rich, contextual text. When indexing unstructured documents like PDFs, Word files, or HTML pages, embedding models accurately capture semantic meaning. However, modern enterprise data pipelines increasingly ingest semi-structured and structured dataset records—such as database tables, Apache Iceberg catalogs, or CSV exports.
         </p>
         <p>
-          To achieve peak retrieval performance in RAG (Retrieval-Augmented Generation) applications, structured records should be <em>narrativized</em> into coherent human sentences (e.g. <em>"Transaction 123 processed an amount of €450.0 within the EU region."</em>). However, hand-writing templates for hundreds of tables and connectors is tedious and error-prone.
+          Directly concatenating raw JSON strings (e.g., <code>{"user_id": 402, "status": 3, "rev": 1205.50}</code>) produces sparse, noisy vector representations. Important semantic context is lost because embedding models cannot infer field relationships without natural language structure.
         </p>
 
-        <h2><span class="section-num">02.</span> Introducing the Auto-Narrativization Copilot</h2>
+        <h2><span class="section-num">02.</span> How the Auto-Narrativization Copilot Works</h2>
         <p>
-          OpenCrawling's <strong>Auto-Narrativization Copilot</strong> solves this challenge by dynamically converting connector field schemas into expressive <strong>Mustache templates</strong> and typed <strong>mock datasets</strong>.
+          OpenCrawling's <strong>Auto-Narrativization Copilot</strong> bridges this gap by transforming raw JSON schemas into human-readable narrative prose before documents enter the embedding pipeline.
         </p>
 
-        <div class="callout-box info">
-          <div>
-            <strong>How It Works:</strong> Given a target schema (connector type + field definitions), the Copilot leverages Spring AI to prompt Ollama (<code>llama3.2</code>) or OpenAI. It returns a Mustache template and typed mock dataset. If no LLM service is available, the system automatically falls back to an offline deterministic template generator — guaranteeing 100% uptime.
-          </div>
-        </div>
+        <pre><code>+-----------------------+     +-------------------------------+     +------------------------------+
+|  Structured Dataset   | --> |  Auto-Narrativization Copilot | --> | Generated Narrative Template |
+| Schema (e.g. Iceberg) |     |  (Ollama llama3.2 / Fallback) |     | (Mustache Template & Mock)   |
++-----------------------+     +-------------------------------+     +------------------------------+</code></pre>
 
-        <pre><code>POST /api/transformation/copilot/generate
-Content-Type: application/json
+        <p>The copilot workflow consists of three automated steps:</p>
+        <ol>
+          <li><strong>Schema Introspection:</strong> Extracts field names, data types, and sample key-value maps from the ingestion source.</li>
+          <li><strong>AI Template Synthesis:</strong> Invokes <code>TemplateGenerationCopilot</code> using Spring AI connected to a local Ollama instance running <code>llama3.2</code> (or a deterministic offline fallback template generator).</li>
+          <li><strong>Mustache Rendering:</strong> Generates a reusable Mustache template (e.g. <code>"User {{user_id}} created transaction {{transaction_id}} for amount ${{amount}}"</code>) alongside mock dataset instances for UI validation.</li>
+        </ol>
 
+        <pre><code>// Example Copilot Request Payload
 {
-  "connectorType": "iceberg",
-  "fields": [
-    { "name": "id",        "type": "STRING",    "description": "Primary transaction ID" },
-    { "name": "amount",    "type": "DOUBLE",    "description": "Monetary value in EUR" },
-    { "name": "region",    "type": "STRING",    "description": "Geographical region code" },
-    { "name": "timestamp", "type": "TIMESTAMP", "description": "Transaction date and time" }
-  ]
-}</code></pre>
-
-        <p><strong>Response:</strong></p>
-        <pre><code>{
-  "template": "Transaction {{id}} processed an amount of €{{amount}} in region {{region}} at {{timestamp}}.",
-  "mockData": {
-    "id": "TX-98421",
-    "amount": 1250.50,
-    "region": "EU-WEST",
-    "timestamp": "2026-07-23T14:30:00Z"
+  "fields": ["customer_name", "account_status", "monthly_spend", "region"],
+  "sampleData": {
+    "customer_name": "Acme Corp",
+    "account_status": "Active",
+    "monthly_spend": 4500.00,
+    "region": "US-East"
   }
 }</code></pre>
 
@@ -175,13 +193,60 @@ if (mustacheConnector != null) {
           </div>
         </div>
       </div>
+    
+        <div class="blog-nav-bar">
+          <a href="announcing-the-ois-specification-roadmap.html" class="blog-nav-btn" title="Announcing the Open Ingestion Standard (OIS) Specification Roadmap">
+            &larr; Previous Article
+          </a>
+          <a href="../index.html#blog" class="blog-nav-btn">
+            All Articles
+          </a>
+          <a href="embedding-scale-out-architecture.html" class="blog-nav-btn" title="Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling">
+            Next Article &rarr;
+          </a>
+        </div>
+
+        <section class="related-articles-section">
+          <h3 class="related-articles-heading">📚 Continue Reading</h3>
+          <div class="related-articles-grid">
+
+            <a href="embedding-scale-out-architecture.html" class="related-card">
+              <span class="related-card-badge">Architecture</span>
+              <h4 class="related-card-title">Embedding Scale-Out: Decoupling the AI Vectorization Layer in OpenCrawling</h4>
+              <span class="related-card-date">July 12, 2026</span>
+            </a>
+            <a href="introducing-alfresco-repository-connector.html" class="related-card">
+              <span class="related-card-badge">Connector</span>
+              <h4 class="related-card-title">Introducing the Alfresco Repository Connector for OpenCrawling</h4>
+              <span class="related-card-date">July 16, 2026</span>
+            </a>
+            <a href="introducing-apache-ozone-claim-check-store.html" class="related-card">
+              <span class="related-card-badge">Storage</span>
+              <h4 class="related-card-title">Enterprise Object Storage: Announcing Apache Ozone Integration in OpenCrawling</h4>
+              <span class="related-card-date">July 21, 2026</span>
+            </a>
+          </div>
+        </section>
+
     </article>
   </main>
 
+    <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
-      <p>&copy; 2026 OpenCrawling Organization. Released under the Apache 2.0 License.</p>
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
     </div>
   </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
 </body>
 </html>
