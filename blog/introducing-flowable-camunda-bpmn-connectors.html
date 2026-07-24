@@ -14,14 +14,14 @@
   <meta property="og:url" content="https://opencrawling.org/blog/introducing-flowable-camunda-bpmn-connectors.html">
   <meta property="og:title" content="Natively Connecting Flowable & Camunda BPMN Engines to Enterprise RAG">
   <meta property="og:description" content="OpenCrawling now natively supports the top open-source BPMN workflow engines: Flowable and Camunda. Stream process definitions, execution histories, and task variables into AI pipelines with full ACL security.">
-  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="og:image" content="https://opencrawling.org/assets/blog/Workflow_to_AI_Narrative_Process.png">
   
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-flowable-camunda-bpmn-connectors.html">
   <meta property="twitter:title" content="Natively Connecting Flowable & Camunda BPMN Engines to Enterprise RAG">
   <meta property="twitter:description" content="OpenCrawling now natively supports the top open-source BPMN workflow engines: Flowable and Camunda. Stream process definitions and task variables into AI pipelines.">
-  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/blog/Workflow_to_AI_Narrative_Process.png">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
   
@@ -166,6 +166,10 @@
         <p>
           The Flowable and Camunda connectors leverage OpenCrawling's event-driven, decoupled Java 25 microservice architecture. When a crawl job is initiated, the connector queries the BPM engine's REST APIs using Virtual Threads and Java 25 Structured Task Scope.
         </p>
+
+        <div style="margin: 2rem 0; text-align: center;">
+          <img src="../assets/blog/Workflow_to_AI_Narrative_Process.png" alt="Workflow to AI Narrative Process Diagram" style="width: 100%; max-width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(124,58,237,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+        </div>
 
         <div class="arch-flow-diagram">
           <div class="flow-title">BPMN Ingestion &amp; Vectorization Pipeline</div>
