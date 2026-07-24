@@ -208,6 +208,20 @@ const SIMULATOR_DATA = {
       vector: "VectorStoreWriterConsumer persisted Iceberg embeddings with iceberg:// URI metadata to pgvector (vector_store_1024)."
     }
   },
+  flowable: {
+    files: [
+      { name: "invoice-process (ID: proc-88421 / INV-2026-001)", size: "1.2 KB", acls: ["public"] },
+      { name: "onboarding-process (ID: proc-88422 / HR-2026-042)", size: "1.5 KB", acls: ["public"] },
+      { name: "approval-process (ID: proc-88423 / APP-2026-109)", size: "0.9 KB", acls: ["public"] }
+    ],
+    logs: {
+      scan: "FlowableRepositoryConnector triggered. Connecting to Flowable REST API at http://localhost:8080/flowable-rest/service (/history/historic-process-instances)...",
+      claimCheck: "Fetched 3 historic process instances and resolved historical process variables via Structured Task Scope. Emitted RepositoryDocuments with flowable:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer received Flowable process instances. Extracted BPMN variables (flowable_var_*), structured JSON payload, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Flowable process instance chunks. Generated 1024-dimension embeddings via Ollama model, published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer stored Flowable process embeddings, business keys, and BPMN variable metadata in pgvector."
+    }
+  },
   ozone: {
     files: [
       { name: "s3://claims/financial_report_q2_2026.pdf", size: "48.5 MB", acls: ["Executive-Board:Read", "Finance-Dept:Read"] },
