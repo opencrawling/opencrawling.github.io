@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Databases, Web APIs). Reads content streams, extracts metadata, and pulls native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, and Flowable BPMN engines). Reads content streams, process instances, process variables, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
