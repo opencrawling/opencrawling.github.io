@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, and Flowable BPMN engines). Reads content streams, process instances, process variables, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Flowable BPMN, and Camunda BPMN engines). Reads content streams, process instances, process variables, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -220,6 +220,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer received Flowable process instances. Extracted BPMN variables (flowable_var_*), structured JSON payload, published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed Flowable process instance chunks. Generated 1024-dimension embeddings via Ollama model, published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer stored Flowable process embeddings, business keys, and BPMN variable metadata in pgvector."
+    }
+  },
+  camunda: {
+    files: [
+      { name: "order-process (ID: proc-99821 / ORD-2026-999)", size: "1.1 KB", acls: ["public"] },
+      { name: "loan-application (ID: proc-99822 / LN-2026-512)", size: "1.4 KB", acls: ["public"] },
+      { name: "claim-settlement (ID: proc-99823 / CLM-2026-304)", size: "1.0 KB", acls: ["public"] }
+    ],
+    logs: {
+      scan: "CamundaRepositoryConnector triggered. Connecting to Camunda REST API at http://localhost:8080/engine-rest (/history/process-instance)...",
+      claimCheck: "Fetched 3 historic process instances and resolved historical process variables via Structured Task Scope. Emitted RepositoryDocuments with camunda:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer received Camunda process instances. Extracted BPMN variables (camunda_var_*), structured JSON payload, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Camunda process instance chunks. Generated 1024-dimension embeddings via Ollama model, published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer stored Camunda process embeddings, business keys, and BPMN variable metadata in pgvector."
     }
   },
   ozone: {
