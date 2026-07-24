@@ -95,7 +95,7 @@ const ARCH_DETAILS = {
   },
   claimcheck: {
     title: "Claim Check Store (Apache Ozone & S3)",
-    desc: "Offloads multi-megabyte binary document payloads from Kafka topics. Connectors store raw content in Apache Ozone (via its S3 Gateway on port 9878) or S3/Local storage, circulating lightweight URI references (s3://, ofs://) through Kafka."
+    desc: "Offloads multi-megabyte binary document payloads from Kafka topics. Connectors store raw content in Apache Ozone with dual client strategies: Native Ozone Client (ofs:// direct RPC transport on port 9862 for maximum throughput) and S3 Gateway (s3g HTTP on port 9878), circulating lightweight URI references through Kafka."
   }
 };
 
