@@ -45,6 +45,7 @@
     .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #7C3AED; padding-left: 1.25rem; margin-bottom: 2.5rem; }
     .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
     .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #C084FC; font-size: 1rem; }
     .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #C084FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
     .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
     .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
@@ -78,6 +79,7 @@
           <li><a href="../sdk.html">Java SDK</a></li>
           <li><a href="../mcp.html">MCP Server</a></li>
           <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
           <li><a href="../comparison.html">Compare</a></li>
           <li><a href="../team.html">Team</a></li>
         </ul>
@@ -96,60 +98,106 @@
       <div class="blog-meta">
         <span class="blog-category-badge">SDK &amp; Developer DX</span>
         <span class="blog-meta-date">July 28, 2026</span>
-        <span class="blog-meta-read">4 min read</span>
+        <span class="blog-meta-read">5 min read</span>
       </div>
-      <h1 class="blog-article-title">Introducing OpenCrawling Java Client SDK: Programmatic Ingestion Control</h1>
+      <h1 class="blog-article-title">Introducing OpenCrawling Java Client SDK: Programmatic Ingestion Control for Java 25 &amp; Spring Boot</h1>
       <p class="blog-article-lead">
-        We are thrilled to announce the official merging of the <strong>OpenCrawling Java Client SDK (`oc-java-client-sdk`)</strong> into main trunk! Enterprise developers building on Java 25 and Spring Boot can now programmatically orchestrate ingestion jobs, manage connectors, generate Auto-Narrativization templates, and trigger AIOps diagnostics.
+        We are excited to announce the release of the official <strong>OpenCrawling Java Client SDK (`oc-java-client-sdk`)</strong>! Enterprise developers building on Java 25 and Spring Boot 4 can now programmatically orchestrate ingestion jobs, manage connectors, generate Auto-Narrativization templates, and trigger AIOps root cause analysis directly from their microservices.
       </p>
     </header>
 
     <hr class="blog-divider">
 
     <article class="blog-article-body">
-      <h2>Why a Dedicated Java SDK?</h2>
+      <h2><span class="section-num">01.</span> Why a Dedicated Java SDK?</h2>
       <p>
-        As enterprise adoption of OpenCrawling grows, integrating Java microservices required crafting HTTP calls, handling manual JSON serialization, and managing error mappings.
+        As OpenCrawling adoption expands across enterprise systems, integrating existing Spring Boot applications, Quarkus services, or custom backend jobs with OpenCrawling required manually constructing raw HTTP REST requests, serializing JSON payloads, and managing error handling manually.
       </p>
       <p>
-        The new <code>oc-java-client-sdk</code> delivers a strongly typed, fluent builder-pattern API built on native <code>java.net.http.HttpClient</code> leveraging Java 25 Virtual Threads and Jackson.
+        The new <code>oc-java-client-sdk</code> eliminates this friction by delivering a strongly typed, fluent builder-pattern API built on modern <strong>Java 25</strong>. It leverages native <code>java.net.http.HttpClient</code> for lightweight, non-blocking I/O with Virtual Threads, requiring zero heavy third-party HTTP transport libraries.
       </p>
 
-      <h2>Key Features &amp; Architecture</h2>
+      <h2><span class="section-num">02.</span> Core Capabilities Overview</h2>
       <ul>
-        <li><strong>Fluent API</strong>: Intuitive client builder supporting custom endpoints, timeouts, and API keys.</li>
-        <li><strong>Job Lifecycle Management</strong>: Create, start, pause, stop, and inspect document ingestion jobs.</li>
-        <li><strong>Connector Registration</strong>: Dynamically register repository, output vector, and transformation connectors.</li>
-        <li><strong>Auto-Narrativization Copilot</strong>: Programmatically trigger AI Mustache narrative generation from connector schemas.</li>
-        <li><strong>AIOps Diagnostics &amp; Traces</strong>: Fetch AI Root Cause Analysis (RCA) reports and correlated OpenTelemetry spans.</li>
-        <li><strong>Spring Boot Autoconfiguration</strong>: Injectable <code>OpenCrawlingClient</code> bean via <code>opencrawling.client.*</code> properties.</li>
+        <li><strong>Fluent Client API</strong>: Intuitive client builder supporting API key authentication, custom base URLs, timeouts, and headers.</li>
+        <li><strong>Job Lifecycle Control</strong>: Programmatically <code>create</code>, <code>start</code>, <code>pause</code>, <code>stop</code>, and <code>delete</code> ingestion jobs matching Open Ingestion Standard (OIS) models.</li>
+        <li><strong>Connector Administration</strong>: Dynamically register and configure repository scanning, vector store output, and AI transformation connectors.</li>
+        <li><strong>Auto-Narrativization Copilot Integration</strong>: Trigger AI narrative generation from schema field definitions using Spring AI, Ollama, or OpenAI.</li>
+        <li><strong>AIOps Observability &amp; RCA</strong>: Query automated Root Cause Analysis (RCA) diagnostic reports and correlated OpenTelemetry spans programmatically.</li>
+        <li><strong>Spring Boot Autoconfiguration</strong>: Includes embedded Spring Boot starter support (`opencrawling.client.*`) for automatic <code>OpenCrawlingClient</code> bean injection.</li>
       </ul>
 
-      <h2>Quick Code Example</h2>
+      <h2><span class="section-num">03.</span> Quick Start Guide</h2>
+      <p>Add the dependency to your <code>pom.xml</code>:</p>
+      <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
+    &lt;artifactId&gt;oc-java-client-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+      <h3>Initializing the Client</h3>
       <pre><code>import org.opencrawling.sdk.OpenCrawlingClient;
-import org.opencrawling.sdk.models.JobRequest;
-import org.opencrawling.sdk.models.JobResponse;
+import java.time.Duration;
 
 OpenCrawlingClient client = OpenCrawlingClient.builder()
         .baseUrl("http://localhost:8080")
         .apiKey("your-api-key")
-        .build();
+        .connectTimeout(Duration.ofSeconds(10))
+        .readTimeout(Duration.ofSeconds(30))
+        .build();</code></pre>
 
-// Create and trigger an ingestion job
+      <h3>Creating and Triggering an Ingestion Job</h3>
+      <pre><code>import org.opencrawling.sdk.models.JobRequest;
+import org.opencrawling.sdk.models.JobResponse;
+import org.opencrawling.sdk.models.NarrativizationConfig;
+
 JobResponse job = client.jobs().create(
     JobRequest.builder()
         .name("Enterprise Documentation Crawler")
         .targetUrl("https://docs.example.com")
         .repositoryConnector("FileSystem_Local")
         .outputConnector("PGVector_Output")
+        .transformationConnector("Ollama_Embedding_Default")
+        .narrativization(NarrativizationConfig.builder()
+            .enabled(true)
+            .template("Document titled {{title}} with content: {{content}}")
+            .build())
         .build()
 );
 
+// Trigger job execution
 client.jobs().start(job.id());</code></pre>
 
-      <div class="callout-box info">
+      <h2><span class="section-num">04.</span> Spring Boot Autoconfiguration</h2>
+      <p>
+        When running inside a Spring Boot application, simply configure properties in <code>application.yml</code>:
+      </p>
+      <pre><code>opencrawling:
+  client:
+    base-url: http://localhost:8080
+    api-key: your-api-key
+    connect-timeout: 10s
+    read-timeout: 30s</code></pre>
+      <p>
+        The <code>OpenCrawlingClient</code> bean will be autoconfigured and ready for injection into your Spring services:
+      </p>
+      <pre><code>@Service
+public class IngestionService {
+
+    private final OpenCrawlingClient client;
+
+    public IngestionService(OpenCrawlingClient client) {
+        this.client = client;
+    }
+
+    public void triggerJob(String jobId) {
+        client.jobs().start(jobId);
+    }
+}</code></pre>
+
+      <div class="callout-box tip">
         <div>
-          <strong>Ready to explore?</strong> Check out the complete interactive documentation and code examples on the <a href="../sdk.html" style="color: #C084FC; text-decoration: underline;">Java SDK Page</a>.
+          <strong>Explore Full SDK Documentation:</strong> Interactive code examples, Copilot template generation snippets, and AIOps diagnostic queries are available on the <a href="../sdk.html" style="color: #C084FC; text-decoration: underline;">Official Java SDK Page</a>.
         </div>
       </div>
     </article>
