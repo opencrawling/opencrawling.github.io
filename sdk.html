@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrawling® Java Client SDK - Programmatic Enterprise Ingestion for Java 25 & Spring Boot</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Discover the OpenCrawling Java Client SDK (oc-java-client-sdk). Strongly typed, fluent Java 25 & Spring Boot 4 client library for managing document ingestion jobs, connectors, AIOps diagnostics, and Auto-Narrativization templates.">
+  <meta name="keywords" content="OpenCrawling Java SDK, Java Client SDK, Spring Boot starter, oc-java-client-sdk, enterprise ingestion API, Open Ingestion Standard, OIS models, Java 25, Jackson, HttpClient">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/sdk.html">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenCrawling Java Client SDK",
+    "operatingSystem": "Cross-platform",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Strongly typed, fluent Java 25 & Spring Boot 4 client SDK for the OpenCrawling REST API and Open Ingestion Standard (OIS) models.",
+    "url": "https://opencrawling.org/sdk.html",
+    "softwareVersion": "1.0.0-SNAPSHOT",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "license": "https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE"
+  }
+  </script>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.org/sdk.html">
+  <meta property="og:title" content="OpenCrawling® Java Client SDK - Fluent Ingestion Control">
+  <meta property="og:description" content="Strongly typed Java 25 & Spring Boot 4 client SDK for job management, connector administration, Copilot template generation, and AIOps diagnostics.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/sdk.html">
+  <meta property="twitter:title" content="OpenCrawling® Java Client SDK">
+  <meta property="twitter:description" content="Strongly typed Java 25 & Spring Boot 4 client SDK for job management, connector administration, Copilot template generation, and AIOps diagnostics.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    .sdk-wrapper {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 3rem) 2rem 6rem 2rem;
+    }
+
+    .sdk-hero {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .sdk-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      color: var(--accent-color);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .sdk-hero h1 {
+      font-size: clamp(2.5rem, 1.5rem + 4vw, 4.2rem);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, var(--text-color) 20%, #A78BFA 70%, #38BDF8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sdk-hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 820px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.7;
+    }
+
+    .sdk-hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-color), #6D28D9);
+      color: #FFFFFF;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(124, 58, 237, 0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Grid Feature Cards */
+    .sdk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .sdk-card {
+      background: var(--card-bg, rgba(15, 23, 42, 0.6));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sdk-card:hover {
+      border-color: rgba(124, 58, 237, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .sdk-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.12);
+      color: #A78BFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .sdk-card h3 {
+      font-size: 1.35rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-color);
+    }
+
+    .sdk-card p {
+      color: var(--text-muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    /* Interactive Code Viewer */
+    .code-section {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 2.5rem;
+      margin-bottom: 5rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .code-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .code-section-header h2 {
+      font-size: 1.8rem;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      color: var(--text-color);
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.4rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-color);
+      color: #FFFFFF;
+      box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .code-block-wrapper {
+      position: relative;
+      background: #090D16;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #94A3B8;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: #E2E8F0;
+    }
+
+    /* Installation Box */
+    .install-box {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 24px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .install-box h2 {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+    }
+
+    .install-box p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .install-snippet {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="sdk.html" class="active">Java SDK</a></li>
+          <li><a href="mcp.html">MCP Server</a></li>
+          <li><a href="observability.html">Observability</a></li>
+          <li><a href="comparison.html">Compare</a></li>
+          <li><a href="team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="sdk-wrapper">
+    <!-- Hero Section -->
+    <section class="sdk-hero">
+      <div class="sdk-hero-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        Java Client SDK (`oc-java-client-sdk`)
+      </div>
+      <h1>Programmatic Ingestion Control for Enterprise Java</h1>
+      <p>A strongly typed, fluent Java 25 client SDK designed to manage document ingestion pipelines, connector registration, Auto-Narrativization Copilot workflows, and AIOps observability directly from your Java &amp; Spring Boot microservices.</p>
+      <div class="sdk-hero-actions">
+        <a href="#code-examples" class="btn-primary">View Usage Examples</a>
+        <a href="#installation" class="btn-secondary">Install via Maven</a>
+      </div>
+    </section>
+
+    <!-- Key Capabilities Grid -->
+    <section class="sdk-grid">
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Fluent Client API</h3>
+        <p>Type-safe builder patterns for client configuration, custom endpoints, HTTP timeouts, authentication headers, and reactive execution.</p>
+      </div>
+
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Job Lifecycle Control</h3>
+        <p>Create, start, pause, stop, and monitor document ingestion pipelines asynchronously with full standard OIS model compliance.</p>
+      </div>
+
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Auto-Narrativization Copilot</h3>
+        <p>Trigger AI-driven narrative generation from connector schemas, test dry-run outputs, and update Mustache templates programmatically.</p>
+      </div>
+
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>AIOps Observability &amp; RCA</h3>
+        <p>Query automated Root Cause Analysis (RCA) reports, correlated OpenTelemetry spans, and live pipeline throughput metrics.</p>
+      </div>
+
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Spring Boot Starter</h3>
+        <p>Seamless autoconfiguration via `opencrawling.client.*` properties and injectable `OpenCrawlingClient` beans in Spring components.</p>
+      </div>
+
+      <div class="sdk-card">
+        <div class="sdk-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Java 25 &amp; Zero-Dependency</h3>
+        <p>Built with native `java.net.http.HttpClient` leveraging Virtual Threads for non-blocking I/O with zero external transport bloat.</p>
+      </div>
+    </section>
+
+    <!-- Interactive Code Viewer -->
+    <section class="code-section" id="code-examples">
+      <div class="code-section-header">
+        <h2>Interactive Usage Examples</h2>
+        <div class="tabs-nav" role="tablist">
+          <button class="tab-btn active" onclick="switchTab('tab-init')">Initialization</button>
+          <button class="tab-btn" onclick="switchTab('tab-jobs')">Job Creation</button>
+          <button class="tab-btn" onclick="switchTab('tab-connectors')">Connectors</button>
+          <button class="tab-btn" onclick="switchTab('tab-copilot')">Auto-Narrativization</button>
+          <button class="tab-btn" onclick="switchTab('tab-aiops')">AIOps RCA</button>
+          <button class="tab-btn" onclick="switchTab('tab-spring')">Spring Boot</button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Initialization -->
+      <div id="tab-init" class="tab-pane active">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>OpenCrawlingClientInitialization.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>import org.opencrawling.sdk.OpenCrawlingClient;
+import java.time.Duration;
+
+// Initialize OpenCrawlingClient with fluent configuration
+OpenCrawlingClient client = OpenCrawlingClient.builder()
+        .baseUrl("http://localhost:8080")
+        .apiKey("oc-api-key-enterprise-prod")
+        .connectTimeout(Duration.ofSeconds(10))
+        .readTimeout(Duration.ofSeconds(30))
+        .build();
+
+System.out.println("Connected to OpenCrawling REST API!");</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 2: Job Creation -->
+      <div id="tab-jobs" class="tab-pane">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>JobManagementExample.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>import org.opencrawling.sdk.models.JobRequest;
+import org.opencrawling.sdk.models.JobResponse;
+import org.opencrawling.sdk.models.NarrativizationConfig;
+
+// Create job with Auto-Narrativization enabled
+JobResponse job = client.jobs().create(
+    JobRequest.builder()
+        .name("Enterprise Documentation Crawler")
+        .targetUrl("https://docs.example.com")
+        .repositoryConnector("FileSystem_Local")
+        .outputConnector("PGVector_Output")
+        .transformationConnector("Ollama_Embedding_Default")
+        .narrativization(NarrativizationConfig.builder()
+            .enabled(true)
+            .template("Document titled {{title}} with content: {{content}}")
+            .build())
+        .build()
+);
+
+System.out.println("Job created with ID: " + job.id());
+
+// Trigger immediate job execution
+client.jobs().start(job.id());</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 3: Connectors -->
+      <div id="tab-connectors" class="tab-pane">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>ConnectorRegistrationExample.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>import org.opencrawling.sdk.models.ConnectorRequest;
+import org.opencrawling.sdk.models.ConnectorResponse;
+
+// Register custom PGVector output store connector
+ConnectorResponse connector = client.connectors().create(
+    ConnectorRequest.builder()
+        .name("Custom_PGVector_Output")
+        .description("Custom PGVector Vector Store Output Connector")
+        .type("output")
+        .className("org.opencrawling.vector.VectorOutputConnector")
+        .maxConnections(20)
+        .addConfiguration("pgVectorUrl", "jdbc:postgresql://localhost:5432/opencrawling")
+        .addConfiguration("tableName", "vector_embeddings_ais")
+        .build()
+);
+
+System.out.println("Registered connector: " + connector.name());</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 4: Copilot -->
+      <div id="tab-copilot" class="tab-pane">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>AutoNarrativizationCopilot.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>import org.opencrawling.sdk.models.CopilotRequest;
+import org.opencrawling.sdk.models.CopilotResponse;
+
+// Trigger AI Copilot to generate Mustache narrative template
+CopilotResponse copilotResponse = client.narrativization().generateTemplate(
+    CopilotRequest.builder()
+        .connectorType("repository")
+        .addField("title", "string", "Document Title")
+        .addField("content", "string", "Extracted body text content")
+        .addField("author", "string", "Document creator/author")
+        .build()
+);
+
+System.out.println("Generated Template:\n" + copilotResponse.template());</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 5: AIOps -->
+      <div id="tab-aiops" class="tab-pane">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>AIOpsObservabilityExample.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>import org.opencrawling.sdk.models.DiagnosticReport;
+import org.opencrawling.sdk.models.JobTraceResponse;
+
+// Fetch AI-powered Root Cause Analysis (RCA) report
+DiagnosticReport report = client.observability().diagnose("job-123");
+System.out.println("Health Status: " + report.status());
+System.out.println("AI Summary: " + report.summary());
+
+// Query correlated OpenTelemetry spans for trace inspection
+JobTraceResponse traces = client.observability().getTraces("job-123");
+System.out.println("Total Spans: " + traces.totalSpans() + ", Duration: " + traces.totalDurationMillis() + "ms");</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 6: Spring Boot -->
+      <div id="tab-spring" class="tab-pane">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>SpringIntegrationService.java</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>// application.yml
+opencrawling:
+  client:
+    base-url: http://localhost:8080
+    api-key: your-api-key
+    connect-timeout: 10s
+    read-timeout: 30s
+
+// Spring Service
+import org.opencrawling.sdk.OpenCrawlingClient;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DocumentIngestionService {
+
+    private final OpenCrawlingClient client;
+
+    public DocumentIngestionService(OpenCrawlingClient client) {
+        this.client = client;
+    }
+
+    public void triggerJob(String jobId) {
+        client.jobs().start(jobId);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Installation Box -->
+    <section class="install-box" id="installation">
+      <h2>Add to Your Project</h2>
+      <p>Deploying via Maven Central or local repository dependency.</p>
+      
+      <div class="install-snippet">
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <span>pom.xml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy XML</button>
+          </div>
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
+    &lt;artifactId&gt;oc-java-client-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function copyCode(button) {
+      const code = button.closest('.code-block-wrapper').querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = button.innerText;
+        button.innerText = 'Copied!';
+        button.style.background = '#10B981';
+        button.style.color = '#FFFFFF';
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.style.background = '';
+          button.style.color = '';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
