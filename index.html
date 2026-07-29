@@ -375,9 +375,9 @@
           <!-- Node 4: Vector Writer / Outputs -->
           <g class="node-group" data-node="outputs">
             <rect x="640" y="185" width="130" height="90" rx="10" class="node-bg" />
-            <text x="705" y="212" class="node-title">Vector Writer</text>
-            <text x="705" y="233" class="node-sub">pgvector (direct)</text>
-            <text x="705" y="253" class="node-sub">Milvus</text>
+            <text x="705" y="210" class="node-title">Vector Writer</text>
+            <text x="705" y="230" class="node-sub">pgvector / Milvus</text>
+            <text x="705" y="247" class="node-sub">OpenSearch / Qdrant</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -551,6 +551,8 @@
           <select id="sim-destination">
             <option value="pgvector">PostgreSQL + pgvector</option>
             <option value="milvus">Milvus Standalone</option>
+            <option value="qdrant">Qdrant Vector Database</option>
+            <option value="opensearch">OpenSearch 2.x / 3.x</option>
           </select>
         </div>
 
@@ -782,7 +784,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new">New</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #DC244C, #FF4D6D); color: #FFF;">New Release</span>
+          <span class="blog-date">July 29, 2026</span>
+          <span class="blog-read-time">5 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-qdrant-output-connector.html">Sub-Millisecond Vector Search & Payload ACL Pre-Filtering: Announcing the Qdrant Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Qdrant Output Connector (<strong>oc-qdrant-output-connector</strong>). Built with Qdrant's high-performance gRPC Java SDK, scalar quantization, and automatic payload ACL indexing for secure, low-latency enterprise RAG.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-qdrant-output-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge">SDK / Java 25</span>
           <span class="blog-date">July 28, 2026</span>
           <span class="blog-read-time">5 min read</span>
         </div>
