@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High-Speed Binary Payload Streaming & Zero-Downtime Resilience: Announcing gRPC Internal Transport in OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's new gRPC Internal Transport Layer (oc-grpc-api). Featuring HTTP/2 multiplexing, Protobuf binary payload compression up to 50%, AUTO fallback to HTTP/REST, TLS/mTLS encryption, Admin UI hot-reload, and live diagnostic ping probes.">
+  <meta name="keywords" content="grpc, protobuf, opencrawling, internal transport, http2, microservices, auto fallback, tls, mtls, spring boot 4, java 25, enterprise rag, payload compression">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-grpc-internal-transport.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-grpc-internal-transport.html">
+  <meta property="og:title" content="High-Speed Binary Payload Streaming & Zero-Downtime Resilience: Announcing gRPC Internal Transport in OpenCrawling">
+  <meta property="og:description" content="Discover OpenCrawling's new gRPC Internal Transport Layer (oc-grpc-api). Featuring HTTP/2 multiplexing, Protobuf binary payload compression up to 50%, AUTO fallback to HTTP/REST, TLS/mTLS encryption, Admin UI hot-reload, and live diagnostic ping probes.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-grpc-internal-transport.html">
+  <meta property="twitter:title" content="High-Speed Binary Payload Streaming & Zero-Downtime Resilience: Announcing gRPC Internal Transport in OpenCrawling">
+  <meta property="twitter:description" content="Discover OpenCrawling's new gRPC Internal Transport Layer (oc-grpc-api). Featuring HTTP/2 multiplexing, Protobuf binary payload compression up to 50%, AUTO fallback to HTTP/REST, TLS/mTLS encryption, Admin UI hot-reload, and live diagnostic ping probes.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234285F4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "High-Speed Binary Payload Streaming & Zero-Downtime Resilience: Announcing gRPC Internal Transport in OpenCrawling",
+    "description": "Discover OpenCrawling's new gRPC Internal Transport Layer (oc-grpc-api). Featuring HTTP/2 multiplexing, Protobuf binary payload compression up to 50%, AUTO fallback to HTTP/REST, TLS/mTLS encryption, Admin UI hot-reload, and live diagnostic ping probes.",
+    "datePublished": "2026-08-12",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-grpc-internal-transport.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #4285F4, #34A853); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #60A5FA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #4285F4; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #4285F4; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #60A5FA; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(66,133,244,0.1); border: 1px solid rgba(66,133,244,0.2); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #60A5FA; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(66,133,244,0.05); border-color: #4285F4; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(52,168,83,0.05); border-color: #34A853; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(66,133,244,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #4285F4; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #4285F4; color: #60A5FA; background: rgba(66,133,244,0.06); font-weight: 600; }
+    .flow-node.accent { border-color: #34A853; color: #4ADE80; background: rgba(52,168,83,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #60A5FA; }
+    .article-cta { background: rgba(66,133,244,0.05); border: 1px solid rgba(66,133,244,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #60A5FA; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(66,133,244,0.08); color: #60A5FA; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(66,133,244,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="index.html" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to OpenCrawling Homepage</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Feature Release</span>
+        <span class="blog-meta-date">August 12, 2026</span>
+        <span class="blog-meta-read">&bull; 6 min read</span>
+      </div>
+      <h1 class="blog-article-title">High-Speed Binary Payload Streaming & Zero-Downtime Resilience: Announcing gRPC Internal Transport</h1>
+      <p class="blog-article-lead">
+        We are excited to announce the release of the <strong>gRPC Internal Transport Layer (<code>oc-grpc-api</code>)</strong> in OpenCrawling! Designed for enterprise-scale vector ingestion workloads, gRPC brings HTTP/2 multiplexing, Protobuf binary serialization with up to <strong>50% payload compression</strong>, TLS/mTLS encryption, dynamic <code>AUTO</code> fallback to HTTP/REST, and live Admin UI diagnostic ping testing to the OpenCrawling platform.
+      </p>
+    </header>
+
+    <hr class="blog-divider">
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">01.</span> The Challenge: HTTP/1.1 JSON Overhead at Enterprise Scale</h2>
+      <p>
+        In enterprise RAG and vector ingestion pipelines, processing millions of document chunks per hour demands extreme network throughput and low CPU overhead. While standard HTTP/1.1 REST/JSON APIs are simple for single-node development, transporting heavy document payloads (containing raw extracted text, rich metadata maps, and high-dimensional floating-point vector arrays) over JSON introduces significant bottlenecks:
+      </p>
+      <ul>
+        <li><strong>Verbose JSON Serialization</strong>: Repeated string keys and ASCII float formatting inflate payload sizes by 2x–3x compared to binary streams.</li>
+        <li><strong>CPU & Garbage Collection Pressure</strong>: Constant JSON parsing and object allocations stress JVM heaps and trigger frequent GC pauses.</li>
+        <li><strong>Connection Pooling Bottlenecks</strong>: HTTP/1.1 requires managing multiple TCP sockets, incurring setup handshakes and head-of-line blocking.</li>
+      </ul>
+      <p>
+        With the new <code>oc-grpc-api</code> module, OpenCrawling transitions internal microservice transport to binary Protobuf streaming over HTTP/2, reducing network bandwidth by up to 50% while cutting transport CPU overhead in half.
+      </p>
+
+      <div class="callout-box info">
+        <span class="callout-icon">⚡</span>
+        <p><strong>Up to 50% Bandwidth Compression:</strong> Protocol Buffers encode floating-point vectors and document metadata into dense binary wire formats, eliminating JSON key repetition and string parsing overhead across internal nodes.</p>
+      </div>
+
+      <h2><span class="section-num">02.</span> Architecture & Operational Resilience Modes</h2>
+      <p>
+        To ensure zero-downtime upgrades and guarantee that ingestion jobs never fail due to unexpected network configuration issues, gRPC in OpenCrawling operates alongside an automatic <strong>HTTP/REST Fallback Engine</strong>:
+      </p>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">OpenCrawling Internal Transport Architecture</div>
+        <div class="flow-nodes">
+          <div class="flow-node">Repository Connector</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">Internal Transport Manager</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node accent">gRPC Channel (Port 9095)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Fallback: HTTP/REST</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Worker / Vector Store</div>
+        </div>
+      </div>
+
+      <h3>Supported Protocol Modes</h3>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Mode</th>
+            <th>Protocol Behaviour</th>
+            <th>Recommended Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>AUTO</code> <em>(Recommended)</em></td>
+            <td>Attempts high-speed gRPC binary streaming over port <code>9095</code>. If the gRPC channel fails or times out, it automatically falls back to HTTP/REST transport without losing data.</td>
+            <td>Production enterprise clusters, hybrid cloud setups, zero-downtime upgrades</td>
+          </tr>
+          <tr>
+            <td><code>GRPC</code> <em>(Strict)</em></td>
+            <td>Enforces strict Protobuf gRPC streaming across all internal processing nodes. Payload delivery fails if gRPC is unreachable.</td>
+            <td>High-throughput dedicated clusters with verified gRPC networking</td>
+          </tr>
+          <tr>
+            <td><code>REST</code> <em>(Standard)</em></td>
+            <td>Disables internal gRPC listener and routes all internal payload traffic through standard HTTP/REST JSON endpoints.</td>
+            <td>Single-node local development, restricted network environments</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">03.</span> Strongly Typed Protobuf Contract (<code>oc-grpc-api</code>)</h2>
+      <p>
+        The internal communication contract is compiled from Google Protocol Buffers definitions inside the <code>oc-grpc-api</code> module:
+      </p>
+
+      <pre><code>syntax = "proto3";
+
+package opencrawling.internal.v1;
+
+option java_multiple_files = true;
+option java_package = "org.opencrawling.internal.v1";
+
+service InternalPayloadService {
+  // Bi-directional document streaming
+  rpc StreamDocumentPayloads (stream DocumentPayloadRequest) returns (stream PayloadIngestionResponse);
+
+  // Single document payload ingestion
+  rpc SendDocumentPayload (DocumentPayloadRequest) returns (PayloadIngestionResponse);
+
+  // Live diagnostic health check probe for Admin UI & CLI
+  rpc PingTransport (PingRequest) returns (PingResponse);
+}
+
+message DocumentPayloadRequest {
+  string task_id = 1;
+  string repository_id = 2;
+  string document_id = 3;
+  bytes raw_content = 4;
+  map&lt;string, string&gt; metadata = 5;
+  repeated string security_acls = 6;
+  int64 timestamp = 7;
+}
+
+message PayloadIngestionResponse {
+  string document_id = 1;
+  enum Status { SUCCESS = 0; PROCESSING = 1; FAILED = 2; }
+  Status status = 2;
+  string error_message = 3;
+}</code></pre>
+
+      <h2><span class="section-num">04.</span> Enterprise TLS / mTLS Security</h2>
+      <p>
+        For secure enterprise deployments, internal gRPC communication can be encrypted using TLS / mTLS directly in <code>application.yml</code> or via the Admin UI:
+      </p>
+      <ul>
+        <li><strong>Server Certificate Chain</strong> (<code>certChainPath</code>): Absolute path to <code>.crt</code> or <code>.pem</code> file.</li>
+        <li><strong>Private Key</strong> (<code>privateKeyPath</code>): Absolute path to <code>.key</code> file.</li>
+        <li><strong>Graceful Fallback</strong>: If certificates are unreadable or missing, <code>InternalTransportManager</code> logs a security warning and safely falls back to standard HTTP/REST or plaintext mode according to your resilience settings.</li>
+      </ul>
+
+      <h2><span class="section-num">05.</span> Admin UI Hot-Reload & Live Diagnostic Probes</h2>
+      <p>
+        Administrators can manage gRPC transport from **Section 4: Internal Communication & Transport (gRPC / REST)** in the Admin UI:
+      </p>
+      <ul>
+        <li><strong>Mode Selector Cards</strong>: Interactively toggle active transport between <code>AUTO</code>, <code>GRPC</code>, and <code>REST</code>.</li>
+        <li><strong>Hot Reloading</strong>: Updating transport settings dynamically restarts the underlying gRPC Netty server lifecycle without restarting the Spring Boot application or container.</li>
+        <li><strong>Diagnostic Connection Probe</strong>: Click <strong>"Test gRPC Connectivity"</strong> to fire a live <code>PingTransport</code> RPC against host <code>127.0.0.1:9095</code>, measuring latency in milliseconds before applying changes.</li>
+      </ul>
+
+      <div class="callout-box success">
+        <span class="callout-icon">🧪</span>
+        <p><strong>Live Test Endpoint:</strong> Test gRPC channel health programmatically at any time via cURL: <br><code>curl -X POST "http://localhost:8080/api/v1/admin/settings/transport/test-grpc" -H "Content-Type: application/json" -d '{"host":"127.0.0.1","port":9095}'</code></p>
+      </div>
+
+      <h2><span class="section-num">06.</span> Configuration Parameters & Quickstart</h2>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Spring Property Key</th>
+            <th>Environment Variable</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>opencrawling.transport.mode</code></td>
+            <td><code>OPENCRAWLING_TRANSPORT_MODE</code></td>
+            <td><code>AUTO</code></td>
+            <td>Active protocol mode (<code>AUTO</code>, <code>GRPC</code>, <code>REST</code>)</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling.transport.grpc.port</code></td>
+            <td><code>OPENCRAWLING_TRANSPORT_GRPC_PORT</code></td>
+            <td><code>9095</code></td>
+            <td>gRPC Netty server listener port</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling.transport.grpc.enabled</code></td>
+            <td><code>OPENCRAWLING_TRANSPORT_GRPC_ENABLED</code></td>
+            <td><code>true</code></td>
+            <td>Enables or disables gRPC server lifecycle</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling.transport.grpc.fallback-to-rest</code></td>
+            <td><code>OPENCRAWLING_TRANSPORT_GRPC_FALLBACK_TO_REST</code></td>
+            <td><code>true</code></td>
+            <td>Enables auto-fallback to REST on channel error</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling.transport.grpc.max-message-size-mb</code></td>
+            <td><code>OPENCRAWLING_TRANSPORT_GRPC_MAX_MESSAGE_SIZE_MB</code></td>
+            <td><code>32</code></td>
+            <td>Maximum inbound gRPC payload size in MB</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Updated Docker & Docker Compose Support</h3>
+      <p>
+        All 6 multi-stage Maven build Dockerfiles (`oc-runtime/Dockerfile`, `docker/Dockerfile.*`) and all 11 Docker Compose deployment overlays (`docker-compose-apps.yml`, `docker-compose-decoupled.yml`, `oc-*-connector/docker/docker-compose-decoupled-with-*.yml`) have been updated to include `oc-grpc-api` and publish port <strong><code>9095:9095</code></strong>.
+      </p>
+
+      <h2><span class="section-num">07.</span> Summary & Next Steps</h2>
+      <p>
+        The introduction of gRPC Internal Transport reinforces OpenCrawling's commitment to delivering enterprise-grade performance, resilience, and vendor-neutral open standards for modern data ingestion.
+      </p>
+    </article>
+
+    <div class="article-cta">
+      <h3>Ready to Scale Your Ingestion Pipeline with gRPC?</h3>
+      <p>Check out the documentation, review the Protobuf schema definitions, or test the new gRPC transport panel in Admin UI today.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/opencrawling/opencrawling/tree/main/oc-grpc-api" target="_blank" rel="noopener" class="btn btn-primary">View oc-grpc-api Module</a>
+        <a href="https://github.com/opencrawling/opencrawling/wiki/gRPC-Internal-Transport" target="_blank" rel="noopener" class="btn btn-outline">Read gRPC Wiki Guide</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span class="footer-brand-name">OpenCrawling</span>
+        <p class="footer-tagline">Open Ingestion Standard Reference Implementation</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Documentation</h4>
+          <ul>
+            <li><a href="https://github.com/opencrawling/opencrawling/wiki" target="_blank" rel="noopener">Wiki</a></li>
+            <li><a href="https://github.com/opencrawling/opencrawling/wiki/Quick-Start" target="_blank" rel="noopener">Quick Start</a></li>
+            <li><a href="https://github.com/opencrawling/opencrawling/wiki/gRPC-Internal-Transport" target="_blank" rel="noopener">gRPC Guide</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener">OIS Standard</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCrawling Organization. Released under Apache License 2.0.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
