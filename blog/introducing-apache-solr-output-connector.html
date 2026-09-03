@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector | OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
+  <meta name="keywords" content="apache solr, solr 10, solr vector search, opencrawling, solr output connector, solr.DenseVectorField, hnsw indexing, vector quantization, java 25, enterprise rag, mcp server">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-solr-output-connector.html">
+  
+  <meta property="og:title" content="Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling">
+  <meta property="og:description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-solr-output-connector.html">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-1k.png">
+  
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-1k.png">
+
+  <link rel="icon" type="image/png" href="../assets/logo-without-text-200px.png">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling",
+    "description": "Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.",
+    "image": "https://opencrawling.org/assets/logo-without-text-1k.png",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "datePublished": "2026-09-03",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-solr-output-connector.html" }
+  }
+  </script>
+</head>
+<body class="blog-article-page">
+
+  <!-- Navbar -->
+  <nav class="navbar glass">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="logo-img">
+        <span class="logo-text">Open<span class="gradient-text">Crawling</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#architecture">Architecture</a>
+        <a href="../index.html#simulator">Simulator</a>
+        <a href="../index.html#blog" class="active">Blog</a>
+        <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline nav-github">
+          <svg class="github-icon" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Star on GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Article Content -->
+  <main class="article-container">
+    <header class="blog-article-header">
+      <div class="blog-card-meta">
+        <span class="blog-badge" style="background: linear-gradient(135deg, #D45B07, #FF6600); color: #FFF;">Vector Store</span>
+        <span class="blog-date">September 3, 2026</span>
+        <span class="blog-read-time">6 min read</span>
+      </div>
+      <h1 class="blog-article-title">Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector</h1>
+      <p class="blog-article-subtitle">
+        Discover OpenCrawling's native Apache Solr Output Connector (<code>oc-solr-output-connector</code>). Built with SolrJ 10 native JDK HTTP Client, <code>solr.DenseVectorField</code>, HNSW quantization, <code>efSearch</code> tuning, and REST schema auto-provisioning for enterprise RAG.
+      </p>
+    </header>
+
+    <article class="blog-article-body glass">
+      <p>
+        We are thrilled to announce the official release of the <strong>Apache Solr Output Connector (<code>oc-solr-output-connector</code>)</strong>! OpenCrawling now natively streams enterprise document repositories into <strong>Apache Solr 10.x and 9.x</strong>—one of the world's most trusted open-source search platforms—delivering high-throughput vector chunk indexing, HNSW ANN k-nearest neighbor search, Solr 10 vector quantization, dynamic REST schema auto-provisioning, and zero-trust ACL security filtering.
+      </p>
+
+      <h2><span class="section-num">01.</span> Why Apache Solr 10 for Enterprise Vector Search?</h2>
+      <p>
+        Apache Solr 10 introduces major advances in dense vector search. By natively supporting <code>solr.DenseVectorField</code> with HNSW indexing, Solr combines world-class full-text search with modern vector similarity scoring.
+      </p>
+
+      <div class="highlight-box">
+        <p><strong>SolrJ 10 JDK HTTP Client:</strong> Solr 10 replaces legacy Jetty client dependencies with Java's standard <code>java.net.http.HttpClient</code> (<code>HttpJdkSolrClient</code> / <code>CloudSolrClient</code>), eliminating classpath library conflicts and ensuring high-performance asynchronous HTTP connections.</p>
+      </div>
+
+      <h2><span class="section-num">02.</span> End-to-End Pipeline Architecture</h2>
+      
+      <div class="flow-diagram glass">
+        <div class="flow-title">Decoupled Ingestion Pipeline &rarr; Apache Solr Collection</div>
+        <div class="flow-nodes">
+          <div class="flow-node">Repository Crawlers (Filesystem, ACS, Iceberg, Flowable)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Kafka (opencrawling-embedded)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">SolrStoreWriterConsumer (oc-solr-output-connector)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Solr 10 solr.DenseVectorField ('enterprise_kb')</div>
+        </div>
+      </div>
+
+      <h2><span class="section-num">03.</span> Automatic REST Schema Auto-Provisioning</h2>
+      <p>
+        Upon initialization, <code>SolrCollectionInitializer</code> checks whether the target Solr collection contains the required <code>knn_vector</code> field type and schema fields. If missing, it automatically posts the field type definition to Solr's Schema API:
+      </p>
+
+      <pre><code>{
+  "add-field-type": {
+    "name": "knn_vector",
+    "class": "solr.DenseVectorField",
+    "vectorDimension": 1024,
+    "similarityFunction": "cosine",
+    "knnAlgorithm": "hnsw",
+    "hnswMaxConnections": 16,
+    "hnswBeamWidth": 100,
+    "vectorEncoding": "FLOAT32"
+  },
+  "add-field": [
+    { "name": "id", "type": "string", "stored": true, "indexed": true },
+    { "name": "text", "type": "text_general", "stored": true, "indexed": true },
+    { "name": "embeddings", "type": "knn_vector", "stored": true, "indexed": true },
+    { "name": "security_allowed_read", "type": "string", "stored": true, "indexed": true, "multiValued": true },
+    { "name": "security_denied_read", "type": "string", "stored": true, "indexed": true, "multiValued": true }
+  ]
+}</code></pre>
+
+      <h2><span class="section-num">04.</span> Dense Vector Search Queries with Solr 10 KNN Parser</h2>
+      <p>
+        Executing hybrid and vector similarity searches against Apache Solr is straightforward using Solr's <code>{!knn}</code> query parser:
+      </p>
+
+      <pre><code>// Full-Text Search
+curl "http://localhost:8983/solr/enterprise_kb/select?q=text:OpenCrawling&fl=id,text,uri,score"
+
+// Dense Vector KNN Search (Solr 10)
+curl --data-urlencode "q={!knn f=embeddings topK=5}[0.0123,-0.0456,0.0891,...]" \
+     --data-urlencode "fl=id,text,uri,score" \
+     "http://localhost:8983/solr/enterprise_kb/select"</code></pre>
+
+      <h2><span class="section-num">05.</span> Getting Started & Integration Testing</h2>
+      <p>
+        You can spin up Apache Solr and run the complete decoupled integration pipeline with one command:
+      </p>
+
+      <pre><code>./scripts/test-solr-decoupled.sh</code></pre>
+
+      <div class="cta-box glass">
+        <h3>Ready to Index Enterprise Documents into Apache Solr 10?</h3>
+        <p>Explore the full connector source code, build custom RAG pipelines, or read our wiki guide.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/opencrawling/opencrawling/tree/main/oc-solr-output-connector" target="_blank" rel="noopener" class="btn btn-primary">View Module Code</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Apache-Solr-Output-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read Solr Wiki Guide</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container glass">
+      <div class="footer-brand">
+        <span class="logo-text">Open<span class="gradient-text">Crawling</span></span>
+        <p>Reference implementation of the Open Ingestion Standard (OIS).</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#simulator">Simulator</a>
+        <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCrawling. Distributed under Apache 2.0 License.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
