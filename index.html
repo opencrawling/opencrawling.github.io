@@ -735,17 +735,18 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
   <section id="standard" class="standard-section">
     <div class="section-header">
       <h2 class="section-title">Open Ingestion Standard (OIS)</h2>
-      <p class="section-subtitle">A cross-platform specification for secure enterprise data exchange and configuration.</p>
+      <p class="section-subtitle">A cross-platform specification for secure enterprise data exchange, document lifecycle operations, and configuration.</p>
     </div>
 
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, and workflow processes—now featuring native integration with the <strong>CMIS</strong> standard for enterprise document retrieval and the <strong>BPMN</strong> format for business process workflows—to enable seamless interoperability.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>CMIS</strong> and <strong>BPMN</strong> integrations.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
-          <span class="std-badge">🗂️ CMIS & BPMN Ready</span>
+          <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
+          <span class="std-badge">🗂️ CMIS &amp; BPMN Ready</span>
           <span class="std-badge">🔌 Vendor-Neutral</span>
           <span class="std-badge">⚙️ Event-Decoupled</span>
         </div>
@@ -759,8 +760,9 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
       <div class="standard-visual-content">
         <div class="schema-card">
           <div class="schema-card-header">
-            <div style="display: flex; gap: 0.35rem;">
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="delete">Delete Tombstone</button>
               <button class="schema-tab-btn" data-schema="cmis">CMIS</button>
               <button class="schema-tab-btn" data-schema="bpmn">BPMN</button>
             </div>
@@ -768,6 +770,7 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
           </div>
           <pre><code class="language-json" id="schema-code-block">{
   "id": "doc-554032-sp",
+  "action": "UPSERT",
   "source": { "type": "sharepoint", "instance": "..." },
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
@@ -788,7 +791,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #D45B07, #FF6600); color: #FFF;">New Release</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #7C3AED, #9333EA); color: #FFF;">Standard Spec</span>
+          <span class="blog-date">September 3, 2026</span>
+          <span class="blog-read-time">5 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-ois-tombstone-deletion.html">Standardized Document Lifecycles &amp; Deletion Tombstones: Enhancing the Open Ingestion Standard (OIS)</a></h3>
+        <p class="blog-excerpt">
+          Discover how the Open Ingestion Standard (OIS) introduces standardized document lifecycle operations and deletion tombstones (<code>action: DELETE</code>) to ensure downstream vector stores and search engines purge deleted content automatically.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-ois-tombstone-deletion.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge" style="background: linear-gradient(135deg, #D45B07, #FF6600); color: #FFF;">Vector Store</span>
           <span class="blog-date">September 3, 2026</span>
           <span class="blog-read-time">6 min read</span>
         </div>
@@ -1132,10 +1150,28 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
           file: 'sample-document.json',
           code: `{
   "id": "doc-554032-sp",
+  "action": "UPSERT",
   "source": { "type": "sharepoint", "instance": "..." },
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
   "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        delete: {
+          file: 'sample-document-delete.json',
+          code: `{
+  "oisVersion": "1.0.0",
+  "id": "https://example.com/docs/deprecated-policy",
+  "action": "DELETE",
+  "source": {
+    "type": "stormcrawler",
+    "instance": "https://example.com"
+  },
+  "metadata": {
+    "stormcrawler.status": "DELETED",
+    "http.status": "404",
+    "deletedAt": "2026-09-03T12:00:00Z"
+  }
 }`
         },
         cmis: {
