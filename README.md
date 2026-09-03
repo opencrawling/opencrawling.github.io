@@ -4,7 +4,7 @@ This repository contains the source code for the official website of the **OpenC
 
 ## 💡 About OpenCrawling
 
-OpenCrawling is a high-performance enterprise data ingestion and security mapping framework. It bridges siloed content stores (SharePoint, Amazon S3, Databases) to AI and vector search infrastructure (pgvector, Elasticsearch, Qdrant) while fully respecting document Access Control Lists (ACLs).
+OpenCrawling is a high-performance enterprise data ingestion and security mapping framework. It bridges siloed content stores (SharePoint, Amazon S3, Databases) to AI and vector search infrastructure (pgvector, Apache Solr, Qdrant, Vespa) while fully respecting document Access Control Lists (ACLs).
 
 ## 🚀 Features of the Website
 

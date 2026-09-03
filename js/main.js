@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Vector Search Outputs & Writer",
-    desc: "Saves precomputed vector embeddings and chunks directly to the database. The Vector Store Writer consumes embedded chunk messages and uses PrecomputedEmbeddingModel to bypass downstream model execution, writing directly to PgVectorStore."
+    title: "Vector Search Outputs & Writers",
+    desc: "Persists precomputed vector embeddings and chunk payloads directly into destination vector databases and search engines: Apache Solr 10 (solr.DenseVectorField), Vespa (vespa-feed-client), pgvector, Milvus, Qdrant (gRPC), and OpenSearch 2.x/3.x."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -178,7 +178,7 @@ const SIMULATOR_DATA = {
       claimCheck: "Crawler generated storage claim check URI and sent IngestionMessage to 'opencrawling-ingestion'.",
       tika: "IngestionConsumer read object stream. Extracted text, generated semantic chunks, sent ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer requested embeddings from Ollama for S3 content chunks, published vector tokens to 'opencrawling-embedded'.",
-      vector: "VectorStoreWriterConsumer saved vectors and public ACLs to Elasticsearch KNN indices."
+      vector: "VectorStoreWriterConsumer saved vectors and public ACLs to vector store indices."
     }
   },
   database: {

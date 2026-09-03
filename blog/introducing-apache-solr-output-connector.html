@@ -1,98 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector | OpenCrawling</title>
+  <title>Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling</title>
   <meta name="description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
   <meta name="keywords" content="apache solr, solr 10, solr vector search, opencrawling, solr output connector, solr.DenseVectorField, hnsw indexing, vector quantization, java 25, enterprise rag, mcp server">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-solr-output-connector.html">
-  
-  <meta property="og:title" content="Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling">
-  <meta property="og:description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-solr-output-connector.html">
-  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-1k.png">
-  
+  <meta property="og:title" content="Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling">
+  <meta property="og:description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
   <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-apache-solr-output-connector.html">
   <meta property="twitter:title" content="Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling">
   <meta property="twitter:description" content="Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.">
-  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-1k.png">
-
-  <link rel="icon" type="image/png" href="../assets/logo-without-text-200px.png">
-  <link rel="stylesheet" href="../css/styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D45B07' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "TechArticle",
     "headline": "Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector in OpenCrawling",
     "description": "Discover OpenCrawling's native Apache Solr Output Connector (oc-solr-output-connector). Built with SolrJ 10 native JDK HTTP Client, solr.DenseVectorField, HNSW quantization, efSearch tuning, and REST schema auto-provisioning for enterprise RAG.",
-    "image": "https://opencrawling.org/assets/logo-without-text-1k.png",
+    "datePublished": "2026-09-03",
     "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
     "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
-    "datePublished": "2026-09-03",
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-solr-output-connector.html" }
   }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #D45B07, #FF6600); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #FF8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #D45B07; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #FF8800; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #FF8800; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(212,91,7,0.1); border: 1px solid rgba(212,91,7,0.2); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #FF8800; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(212,91,7,0.05); border-color: #D45B07; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(212,91,7,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #FF8800; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #D45B07; color: #FF8800; background: rgba(212,91,7,0.06); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #FF8800; }
+    .article-cta { background: rgba(212,91,7,0.05); border: 1px solid rgba(212,91,7,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #FF8800; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(212,91,7,0.08); color: #FF8800; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(212,91,7,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
 </head>
-<body class="blog-article-page">
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar glass">
-    <div class="nav-container">
-      <a href="../index.html" class="nav-logo">
-        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="logo-img">
-        <span class="logo-text">Open<span class="gradient-text">Crawling</span></span>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
       </a>
-      <div class="nav-links">
-        <a href="../index.html#features">Features</a>
-        <a href="../index.html#architecture">Architecture</a>
-        <a href="../index.html#simulator">Simulator</a>
-        <a href="../index.html#blog" class="active">Blog</a>
-        <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline nav-github">
-          <svg class="github-icon" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          Star on GitHub
-        </a>
-      </div>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="index.html" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
     </div>
-  </nav>
+  </header>
 
-  <!-- Main Article Content -->
-  <main class="article-container">
-    <header class="blog-article-header">
-      <div class="blog-card-meta">
-        <span class="blog-badge" style="background: linear-gradient(135deg, #D45B07, #FF6600); color: #FFF;">Vector Store</span>
-        <span class="blog-date">September 3, 2026</span>
-        <span class="blog-read-time">6 min read</span>
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="index.html" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Feature Release</span>
+        <span class="blog-meta-date">September 3, 2026</span>
+        <span class="blog-meta-read">&bull; 6 min read</span>
       </div>
       <h1 class="blog-article-title">Solr 10 Dense Vector Search & HNSW Quantization: Announcing the Apache Solr Output Connector</h1>
-      <p class="blog-article-subtitle">
-        Discover OpenCrawling's native Apache Solr Output Connector (<code>oc-solr-output-connector</code>). Built with SolrJ 10 native JDK HTTP Client, <code>solr.DenseVectorField</code>, HNSW quantization, <code>efSearch</code> tuning, and REST schema auto-provisioning for enterprise RAG.
+      <p class="blog-article-lead">
+        We are thrilled to announce the official release of the <strong>Apache Solr Output Connector (<code>oc-solr-output-connector</code>)</strong>! OpenCrawling now natively streams enterprise document repositories into <strong>Apache Solr 10.x and 9.x</strong>—one of the world's most trusted open-source search platforms—delivering high-throughput vector chunk indexing, HNSW ANN k-nearest neighbor search, Solr 10 vector quantization, dynamic REST schema auto-provisioning, and zero-trust ACL security filtering.
       </p>
     </header>
 
-    <article class="blog-article-body glass">
-      <p>
-        We are thrilled to announce the official release of the <strong>Apache Solr Output Connector (<code>oc-solr-output-connector</code>)</strong>! OpenCrawling now natively streams enterprise document repositories into <strong>Apache Solr 10.x and 9.x</strong>—one of the world's most trusted open-source search platforms—delivering high-throughput vector chunk indexing, HNSW ANN k-nearest neighbor search, Solr 10 vector quantization, dynamic REST schema auto-provisioning, and zero-trust ACL security filtering.
-      </p>
+    <hr class="blog-divider">
 
+    <article class="blog-article-body">
       <h2><span class="section-num">01.</span> Why Apache Solr 10 for Enterprise Vector Search?</h2>
       <p>
         Apache Solr 10 introduces major advances in dense vector search. By natively supporting <code>solr.DenseVectorField</code> with HNSW indexing, Solr combines world-class full-text search with modern vector similarity scoring.
       </p>
 
-      <div class="highlight-box">
+      <div class="callout-box info">
+        <span class="callout-icon">💡</span>
         <p><strong>SolrJ 10 JDK HTTP Client:</strong> Solr 10 replaces legacy Jetty client dependencies with Java's standard <code>java.net.http.HttpClient</code> (<code>HttpJdkSolrClient</code> / <code>CloudSolrClient</code>), eliminating classpath library conflicts and ensuring high-performance asynchronous HTTP connections.</p>
       </div>
 
       <h2><span class="section-num">02.</span> End-to-End Pipeline Architecture</h2>
       
-      <div class="flow-diagram glass">
+      <div class="arch-flow-diagram">
         <div class="flow-title">Decoupled Ingestion Pipeline &rarr; Apache Solr Collection</div>
         <div class="flow-nodes">
           <div class="flow-node">Repository Crawlers (Filesystem, ACS, Iceberg, Flowable)</div>
@@ -130,7 +175,54 @@
   ]
 }</code></pre>
 
-      <h2><span class="section-num">04.</span> Dense Vector Search Queries with Solr 10 KNN Parser</h2>
+      <h2><span class="section-num">04.</span> Configuration Properties</h2>
+      <p>
+        All properties are prefixed with <code>spring.opencrawling.output.solr.*</code> and support environment variable overrides:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.mode</code></td>
+            <td><code>standalone</code></td>
+            <td>Solr deployment mode: <code>standalone</code> or <code>cloud</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.url</code></td>
+            <td><code>http://localhost:8983/solr</code></td>
+            <td>Base HTTP URL of standalone Solr instance</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.collection</code></td>
+            <td><code>enterprise_kb</code></td>
+            <td>Target Solr collection / core name</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.dimensions</code></td>
+            <td><code>1024</code></td>
+            <td>Vector embedding dimension size</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.vector-encoding</code></td>
+            <td><code>FLOAT32</code></td>
+            <td>Solr 10 vector encoding: <code>FLOAT32</code> or <code>BYTE</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.solr.quantization</code></td>
+            <td><code>none</code></td>
+            <td>Solr 10 quantization: <code>none</code>, <code>scalar</code>, or <code>binary</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">05.</span> Dense Vector Search Queries with Solr 10 KNN Parser</h2>
       <p>
         Executing hybrid and vector similarity searches against Apache Solr is straightforward using Solr's <code>{!knn}</code> query parser:
       </p>
@@ -143,14 +235,14 @@ curl --data-urlencode "q={!knn f=embeddings topK=5}[0.0123,-0.0456,0.0891,...]" 
      --data-urlencode "fl=id,text,uri,score" \
      "http://localhost:8983/solr/enterprise_kb/select"</code></pre>
 
-      <h2><span class="section-num">05.</span> Getting Started & Integration Testing</h2>
+      <h2><span class="section-num">06.</span> Getting Started & Integration Testing</h2>
       <p>
         You can spin up Apache Solr and run the complete decoupled integration pipeline with one command:
       </p>
 
       <pre><code>./scripts/test-solr-decoupled.sh</code></pre>
 
-      <div class="cta-box glass">
+      <div class="article-cta">
         <h3>Ready to Index Enterprise Documents into Apache Solr 10?</h3>
         <p>Explore the full connector source code, build custom RAG pipelines, or read our wiki guide.</p>
         <div class="cta-buttons">
@@ -161,11 +253,10 @@ curl --data-urlencode "q={!knn f=embeddings topK=5}[0.0123,-0.0456,0.0891,...]" 
     </article>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-container glass">
+  <footer class="site-footer">
+    <div class="footer-container">
       <div class="footer-brand">
-        <span class="logo-text">Open<span class="gradient-text">Crawling</span></span>
+        <span class="brand-name">OpenCrawling</span>
         <p>Reference implementation of the Open Ingestion Standard (OIS).</p>
       </div>
       <div class="footer-links">
@@ -178,6 +269,5 @@ curl --data-urlencode "q={!knn f=embeddings topK=5}[0.0123,-0.0456,0.0891,...]" 
       <p>&copy; 2026 OpenCrawling. Distributed under Apache 2.0 License.</p>
     </div>
   </footer>
-
 </body>
 </html>
