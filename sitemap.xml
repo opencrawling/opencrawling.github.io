@@ -25,6 +25,24 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://opencrawling.org/blog/introducing-luxir-output-connector.html</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/blog/introducing-ois-tombstone-deletion.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://opencrawling.org/blog/introducing-apache-solr-output-connector.html</loc>
+    <lastmod>2026-09-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://opencrawling.org/blog/introducing-grpc-internal-transport.html</loc>
     <lastmod>2026-08-12</lastmod>
     <changefreq>monthly</changefreq>

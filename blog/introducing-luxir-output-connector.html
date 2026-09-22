@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightweight Hybrid Search & Dense Vector kNN: Announcing the Luxir Output Connector in OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native Luxir Output Connector (oc-luxir-output-connector). Built with Java 25 HttpClient, dynamic schema conventions, 1024-dimension dense vector kNN search, Zero-Trust ACL token indexing, and decoupled Kafka writer consumer execution for enterprise RAG.">
+  <meta name="keywords" content="luxir, luxir search, luxir output connector, opencrawling, vector search, knn search, hybrid search, java 25, enterprise rag, mcp server, zero trust acl">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-luxir-output-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-luxir-output-connector.html">
+  <meta property="og:title" content="Lightweight Hybrid Search & Dense Vector kNN: Announcing the Luxir Output Connector in OpenCrawling">
+  <meta property="og:description" content="Discover OpenCrawling's native Luxir Output Connector (oc-luxir-output-connector). Built with Java 25 HttpClient, dynamic schema conventions, 1024-dimension dense vector kNN search, Zero-Trust ACL token indexing, and decoupled Kafka writer consumer execution for enterprise RAG.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-luxir-output-connector.html">
+  <meta property="twitter:title" content="Lightweight Hybrid Search & Dense Vector kNN: Announcing the Luxir Output Connector in OpenCrawling">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Luxir Output Connector (oc-luxir-output-connector). Built with Java 25 HttpClient, dynamic schema conventions, 1024-dimension dense vector kNN search, Zero-Trust ACL token indexing, and decoupled Kafka writer consumer execution for enterprise RAG.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ADD8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Lightweight Hybrid Search & Dense Vector kNN: Announcing the Luxir Output Connector in OpenCrawling",
+    "description": "Discover OpenCrawling's native Luxir Output Connector (oc-luxir-output-connector). Built with Java 25 HttpClient, dynamic schema conventions, 1024-dimension dense vector kNN search, Zero-Trust ACL token indexing, and decoupled Kafka writer consumer execution for enterprise RAG.",
+    "datePublished": "2026-09-22",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-luxir-output-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #00ADD8, #0284C7); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #00ADD8; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #38BDF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(0,173,216,0.1); border: 1px solid rgba(0,173,216,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #38BDF8; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,173,216,0.05); border-color: #00ADD8; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(0,173,216,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #00ADD8; color: #38BDF8; background: rgba(0,173,216,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #38BDF8; }
+    .article-cta { background: rgba(0,173,216,0.05); border: 1px solid rgba(0,173,216,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #38BDF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(0,173,216,0.08); color: #38BDF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(0,173,216,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="index.html" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="index.html" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Vector Store Release</span>
+        <span class="blog-meta-date">September 22, 2026</span>
+        <span class="blog-meta-read">&bull; 6 min read</span>
+      </div>
+      <h1 class="blog-article-title">Lightweight Hybrid Search & Dense Vector kNN: Announcing the Luxir Output Connector</h1>
+      <p class="blog-article-lead">
+        We are thrilled to announce the official release of the <strong>Luxir Output Connector (<code>oc-luxir-output-connector</code>)</strong>! OpenCrawling now natively streams enterprise documents and vector embeddings into <strong><a href="https://luxir.org/" target="_blank" rel="noopener" style="color: #38BDF8; text-decoration: underline;">Luxir</a></strong>—the modern, lightweight search engine designed for high performance, dynamic typing, and developer ergonomics.
+      </p>
+    </header>
+
+    <hr class="blog-divider">
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">01.</span> What is Luxir and Why Luxir for Enterprise AI?</h2>
+      <p>
+        <strong><a href="https://luxir.org/" target="_blank" rel="noopener">Luxir</a></strong> is an open-source, lightweight search engine built from the ground up to provide high-speed full-text indexing, dense vector kNN similarity search, and hybrid ranking using Reciprocal Rank Fusion (RRF). Unlike legacy search clusters that require complex JVM orchestrations or heavy multi-container topologies, Luxir runs as a sleek, low-footprint single process with native JSON REST APIs over HTTP on port <code>9400</code>.
+      </p>
+      <p>
+        In enterprise Retrieval-Augmented Generation (RAG) pipelines, simplicity, fast start times, and zero client footprint are critical. Luxir brings a refreshingly modern approach with dynamic field typing conventions and native vector support, making it an ideal choice for both local AI development and high-throughput production workloads.
+      </p>
+
+      <div class="callout-box info">
+        <span class="callout-icon">💡</span>
+        <p><strong>Zero External Client Footprint:</strong> <code>oc-luxir-output-connector</code> uses Java 25's standard <code>java.net.http.HttpClient</code> to communicate directly with Luxir's HTTP/1.1 and JSON endpoints, avoiding dependency sprawl and preventing classpath conflicts in decoupled microservice deployments.</p>
+      </div>
+
+      <h2><span class="section-num">02.</span> End-to-End Pipeline Architecture</h2>
+      <p>
+        The Luxir Output Connector integrates seamlessly into OpenCrawling's event-driven, decoupled microservice pipeline:
+      </p>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">Decoupled Ingestion Pipeline &rarr; Luxir Collection</div>
+        <div class="flow-nodes">
+          <div class="flow-node">Repository Crawlers (Filesystem, ACS, Iceberg, BPMN)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Kafka (opencrawling-embedded)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">LuxirStoreWriterConsumer (oc-luxir-output-connector)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Luxir Collection ('opencrawling') on :9400</div>
+        </div>
+      </div>
+
+      <p>
+        Once document chunks are converted to high-dimensional embeddings by <code>oc-embedding-consumer</code> (powered by Spring AI and Ollama's <code>mxbai-embed-large</code>), they are published to the <code>opencrawling-embedded</code> Kafka topic. The <code>LuxirStoreWriterConsumer</code> processes these messages in batches and indexes them directly into Luxir via its batch <code>/_update</code> REST endpoint.
+      </p>
+
+      <h2><span class="section-num">03.</span> Dynamic Schema Conventions & Auto-Provisioning</h2>
+      <p>
+        Luxir features dynamic schema type inference based on field name suffix conventions:
+      </p>
+      <ul>
+        <li><code>_t</code>: Text field analyzed for full-text search (e.g. <code>text_t</code>, <code>title_t</code>)</li>
+        <li><code>_s</code>: Keyword string field (e.g. <code>doc_id_s</code>, <code>uri_s</code>, <code>security_inheritance_s</code>)</li>
+        <li><code>_ss</code>: Multi-valued string array for tags and security tokens (e.g. <code>acl_ss</code>)</li>
+        <li><code>_v</code>: Dense floating-point vector for kNN search (e.g. <code>embedding_v</code>)</li>
+        <li><code>_vs</code>: Multi-vector array for passage retrieval</li>
+        <li><code>_i</code>: Integer numeric field (e.g. <code>chunk_index_i</code>)</li>
+      </ul>
+
+      <p>
+        To ensure optimal vector similarity search, OpenCrawling includes <code>LuxirCollectionInitializer</code>. Upon startup, it automatically provisions the collection and declares explicit vector field properties using Luxir's <code>_schema</code> endpoint:
+      </p>
+
+      <pre><code>POST /collections/opencrawling/_schema
+{
+  "fields": {
+    "embedding_v": {
+      "type": "vector",
+      "dims": 1024,
+      "metric": "cosine"
+    },
+    "passages_vs": {
+      "type": "vector",
+      "dims": 1024,
+      "metric": "cosine",
+      "multi": true
+    }
+  }
+}</code></pre>
+
+      <h2><span class="section-num">04.</span> Zero-Trust Security ACLs & OIS v1.1 Tombstone Lifecycle</h2>
+      <p>
+        In accordance with the <strong>Open Ingestion Standard (OIS)</strong>, every document chunk indexed into Luxir carries granular enterprise security tokens. Access Control Lists are mapped into dynamic string array fields:
+      </p>
+      <ul>
+        <li><code>acl_ss</code>: Consolidated security identifiers and role tokens.</li>
+        <li><code>security_allowed_read_ss</code>: Principals granted explicit read access.</li>
+        <li><code>security_denied_read_ss</code>: Principals explicitly denied read access (enabling Zero-Trust precedence).</li>
+        <li><code>security_inheritance_s</code>: Inheritance flag mapped as a string (<code>"true"</code> or <code>"false"</code>) for dynamic compatibility.</li>
+      </ul>
+
+      <p>
+        Furthermore, when an upstream repository document is deleted, OpenCrawling emits an OIS tombstone message (<code>action: DELETE</code>). The <code>LuxirStoreWriterConsumer</code> processes this tombstone by invoking Luxir's native <code>delete_ids</code> batch command, ensuring that deleted knowledge is immediately and permanently purged from downstream RAG retrieval indexes:
+      </p>
+
+      <pre><code>POST /collections/opencrawling/_update
+{
+  "delete_ids": ["doc-001_chunk_0"],
+  "commit": {}
+}</code></pre>
+
+      <h2><span class="section-num">05.</span> Configuration Properties</h2>
+      <p>
+        The Luxir Output Connector is configured via standard Spring Boot properties prefixed with <code>spring.opencrawling.output.luxir.*</code>:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.output.type</code></td>
+            <td><code>luxir</code></td>
+            <td>Activates Luxir as the active output destination</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.endpoint</code></td>
+            <td><code>http://localhost:9400</code></td>
+            <td>Base HTTP endpoint for Luxir instance</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.collection</code></td>
+            <td><code>opencrawling</code></td>
+            <td>Target Luxir collection name</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.vector-field</code></td>
+            <td><code>embedding_v</code></td>
+            <td>Vector field name matching <code>_v</code> suffix convention</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.dimensions</code></td>
+            <td><code>1024</code></td>
+            <td>Dense vector dimension (aligned with <code>mxbai-embed-large</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.similarity</code></td>
+            <td><code>cosine</code></td>
+            <td>Vector similarity function: <code>cosine</code>, <code>l2</code>, or <code>ip</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.auto-commit</code></td>
+            <td><code>true</code></td>
+            <td>Whether to automatically commit document updates</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.commit-within-ms</code></td>
+            <td><code>1000</code></td>
+            <td>Soft-commit latency window in milliseconds</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.luxir.timeout-seconds</code></td>
+            <td><code>30</code></td>
+            <td>HTTP socket and connection timeout in seconds</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">06.</span> Executing Full-Text & Dense Vector Queries</h2>
+      <p>
+        Querying indexed content in Luxir is fast and intuitive using JSON payloads over HTTP POST:
+      </p>
+
+      <h3>1. Document Count</h3>
+      <pre><code>curl -s -X POST "http://localhost:9400/collections/opencrawling/_search" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "*:*", "get_number": true}' | jq .</code></pre>
+
+      <h3>2. Full-Text BM25 Search</h3>
+      <pre><code>curl -s -X POST "http://localhost:9400/collections/opencrawling/_search" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "text_t:OpenCrawling"}' | jq .</code></pre>
+
+      <h3>3. 1024-Dimension Dense Vector kNN Search</h3>
+      <pre><code>curl -s -X POST "http://localhost:9400/collections/opencrawling/_search" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "query": {
+         "knn": {
+           "field": "embedding_v",
+           "query": [0.0123, -0.0456, 0.0891, ...],
+           "k": 5
+         }
+       }
+     }' | jq .</code></pre>
+
+      <h2><span class="section-num">07.</span> Admin UI & Real-Time Diagnostics</h2>
+      <p>
+        The OpenCrawling Admin UI (<code>oc-admin-ui</code>) fully supports the Luxir connector out-of-the-box. Administrators can select <strong>Luxir Hybrid Search Store</strong> from the output connector dropdown, configure collection endpoints, and click <strong>Check Connection</strong> to trigger dynamic connectivity testing through <code>ConnectorCheckerService</code>.
+      </p>
+
+      <h2><span class="section-num">08.</span> Automated Decoupled Integration Testing</h2>
+      <p>
+        OpenCrawling ships with a complete Docker Compose decoupled definition (<code>docker-compose-decoupled-with-luxir.yml</code>) and an automated test suite. The script sets up the full stack—Luxir, Kafka, Zookeeper, Redis, Ollama, and OpenCrawling microservices—and verifies the entire pipeline:
+      </p>
+
+      <pre><code># Run end-to-end integration test
+./scripts/test-luxir-decoupled.sh</code></pre>
+
+      <div class="callout-box tip">
+        <span class="callout-icon">🍎</span>
+        <p><strong>Apple Silicon & ARM64 Support:</strong> The Luxir Docker image (<code>luxir/luxir:v0.1.0</code>) is compiled for <code>linux/amd64</code>. The OpenCrawling compose configuration specifies <code>platform: linux/amd64</code>, enabling seamless Rosetta 2 / QEMU binary emulation on Apple Silicon macOS hosts.</p>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Experience OpenCrawling with Luxir?</h3>
+        <p>Try the live interactive simulator, inspect the source code, or read our complete Wiki documentation.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/tree/main/oc-luxir-output-connector" target="_blank" rel="noopener" class="btn btn-outline">View Module Code</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Luxir-Output-Connector" target="_blank" rel="noopener" class="btn btn-secondary">Read Wiki Guide</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

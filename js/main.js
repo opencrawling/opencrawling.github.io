@@ -67,7 +67,7 @@ const ARCH_DETAILS = {
   },
   outputs: {
     title: "Vector Search Outputs & Writers",
-    desc: "Persists precomputed vector embeddings and chunk payloads directly into destination vector databases and search engines: Apache Solr 10 (solr.DenseVectorField), Vespa (vespa-feed-client), pgvector, Milvus, Qdrant (gRPC), and OpenSearch 2.x/3.x."
+    desc: "Persists precomputed vector embeddings and chunk payloads directly into destination vector databases and search engines: Luxir (native JSON REST / kNN), Apache Solr 10 (solr.DenseVectorField), Vespa (vespa-feed-client), pgvector, Milvus, Qdrant (gRPC), and OpenSearch 2.x/3.x."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -375,8 +375,21 @@ function initSimulator() {
 
       // Step 9: Vector Store Output
       stationVector.classList.add('active');
-      addLog(`[PROCESS] Vector Writer: ${simData.logs.vector}`, "process");
-      addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into vector store successfully.`, "success");
+      let vectorLog = simData.logs.vector;
+      const destKey = destSelect.value;
+      if (destKey === 'luxir') {
+        vectorLog = "LuxirStoreWriterConsumer indexed document chunks, 1024-dim dense embeddings, dynamic text fields (text_t), and Zero-Trust ACL attributes into Luxir collection via POST /collections/opencrawling/_update.";
+      } else if (destKey === 'solr') {
+        vectorLog = "SolrStoreWriterConsumer stored dense vectors, dynamic fields, and ACL tokens into Apache Solr 10 collection via SolrJ HTTP client.";
+      } else if (destKey === 'vespa') {
+        vectorLog = "VespaWriterConsumer fed document chunks with tensor embeddings and ACL tokens to Vespa via vespa-feed-client.";
+      } else if (destKey === 'qdrant') {
+        vectorLog = "QdrantWriterConsumer persisted high-dimensional vectors and Zero-Trust payload ACL filters to Qdrant cluster via gRPC.";
+      } else if (destKey === 'milvus') {
+        vectorLog = "MilvusWriterConsumer inserted vectors, entity metadata, and security tokens into Milvus standalone collection.";
+      }
+      addLog(`[PROCESS] Vector Writer (${destName}): ${vectorLog}`, "process");
+      addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into ${destName} successfully.`, "success");
       await sleep(1000);
       
       // Reset pipeline state for next document, leaving Crawler active
