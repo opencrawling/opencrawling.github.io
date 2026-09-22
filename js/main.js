@@ -678,7 +678,7 @@ function initMobileMenu() {
   
   // Close menu on resize if we scale past mobile breakpoint
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 992 && header.classList.contains('mobile-menu-open')) {
+    if (window.innerWidth > 1140 && header.classList.contains('mobile-menu-open')) {
       closeMenu();
     }
   });
