@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling</title>
+  <meta name="description" content="Discover oc-mcf-migrator: OpenCrawling's new migration tool and visual Admin UI wizard for auditing, converting, and importing Apache ManifoldCF crawler configurations, jobs, and schedules into OpenCrawling and Open Ingestion Standard (OIS) formats.">
+  <meta name="keywords" content="manifoldcf, apache manifoldcf, opencrawling, crawler migration, enterprise search, ois, open ingestion standard, oc-mcf-migrator, search ingestion, vector search, rag">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-manifoldcf-migrator.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-manifoldcf-migrator.html">
+  <meta property="og:title" content="Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling">
+  <meta property="og:description" content="Discover oc-mcf-migrator: OpenCrawling's new migration tool and visual Admin UI wizard for auditing, converting, and importing Apache ManifoldCF crawler configurations, jobs, and schedules into OpenCrawling and Open Ingestion Standard (OIS) formats.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-apache-manifoldcf-migrator.html">
+  <meta property="twitter:title" content="Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling">
+  <meta property="twitter:description" content="Discover oc-mcf-migrator: OpenCrawling's new migration tool and visual Admin UI wizard for auditing, converting, and importing Apache ManifoldCF crawler configurations, jobs, and schedules into OpenCrawling and Open Ingestion Standard (OIS) formats.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ADD8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling",
+    "description": "Discover oc-mcf-migrator: OpenCrawling's new migration tool and visual Admin UI wizard for auditing, converting, and importing Apache ManifoldCF crawler configurations, jobs, and schedules into OpenCrawling and Open Ingestion Standard (OIS) formats.",
+    "datePublished": "2026-09-21",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-manifoldcf-migrator.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #10B981, #059669); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #34D399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #10B981; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #34D399; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #34D399; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,173,216,0.05); border-color: #00ADD8; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.05); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #34D399; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #10B981; color: #34D399; background: rgba(16,185,129,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #00ADD8; color: #38BDF8; background: rgba(0,173,216,0.08); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #34D399; }
+    .article-cta { background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #34D399; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(16,185,129,0.08); color: #34D399; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(16,185,129,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="index.html" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="index.html" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Migration Tooling</span>
+        <span class="blog-meta-date">September 21, 2026</span>
+        <span class="blog-meta-read">&bull; 7 min read</span>
+      </div>
+      <h1 class="blog-article-title">Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling</h1>
+      <p class="blog-article-lead">
+        We are thrilled to announce <strong><code>oc-mcf-migrator</code></strong>, a dedicated migration engine, CLI tool, and visual Admin UI wizard designed to transition existing <strong><a href="https://manifoldcf.apache.org/" target="_blank" rel="noopener" style="color: #34D399; text-decoration: underline;">Apache ManifoldCF</a></strong> crawler deployments into OpenCrawling and the <strong>Open Ingestion Standard (OIS)</strong> with full transparency and zero guesswork.
+      </p>
+    </header>
+
+    <hr class="blog-divider">
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">01.</span> The Motivation: Modernizing Enterprise Ingestion for the AI Era</h2>
+      <p>
+        For over a decade, <strong>Apache ManifoldCF (MCF)</strong> has served as the open-source cornerstone of enterprise search ingestion. Organizations have invested years crafting intricate crawler configurations, filtering rules, scheduling intervals, and repository connections across countless enterprise systems.
+      </p>
+      <p>
+        However, the demands of the modern enterprise AI stack have fundamentally shifted. Traditional monolithic crawlers designed solely for keyword search engines struggle to meet the requirements of today's <strong>Retrieval-Augmented Generation (RAG)</strong> ecosystems. Modern architectures demand decoupled, event-driven microservices, high-throughput asynchronous embedding generation, vector database integrations (such as Qdrant, Vespa, Milvus, Solr 10, and Luxir), and standardized payload contracts defined by the <strong>Open Ingestion Standard (OIS)</strong>.
+      </p>
+      <p>
+        The <code>oc-mcf-migrator</code> bridges this divide. It provides enterprise teams with a reliable, audited path to modernize their ingestion infrastructure without losing years of accumulated operational rules, connection parameters, and scheduling logic.
+      </p>
+
+      <div class="callout-box success">
+        <span class="callout-icon">✨</span>
+        <p><strong>First-Class Reactor Module:</strong> <code>oc-mcf-migrator</code> is built directly inside the OpenCrawling Maven reactor. A standard <code>mvn install</code> from the project root compiles both the standalone CLI executable (<code>oc-mcf-migrator-cli.jar</code>) and the integrated <code>oc mcf</code> commands inside the OpenCrawling CLI (<code>oc-cli</code>).</p>
+      </div>
+
+      <h2><span class="section-num">02.</span> Core Philosophy: Transparency and Fidelity Over Guesswork</h2>
+      <p>
+        Migration scripts often fail because they attempt to approximate or silently discard unsupported configurations, leading to subtle runtime failures weeks later. <code>oc-mcf-migrator</code> is built upon strict engineering invariants:
+      </p>
+      <ul>
+        <li><strong>Zero Guesswork:</strong> Connection classes must match registered mappers exactly. If an MCF connector has no direct OpenCrawling counterpart, it is skipped and clearly reported in the audit log—never guessed or silently dropped.</li>
+        <li><strong>Field-Level Fidelity Notes:</strong> Every configuration parameter is audited with precise taxonomy tags: <code>EXACT</code>, <code>DROPPED</code>, <code>DEFAULTED</code>, <code>CONVERTED</code>, or <code>RUNTIME_RISK</code>. Every warning includes an actionable <code>recommendedAction</code> suggestion.</li>
+        <li><strong>Automatic Secret Redaction:</strong> Passwords, private keys, API tokens, and credentials are automatically masked across all report formats, keeping migration plans safe to share across engineering teams.</li>
+        <li><strong>Job-Level Atomicity:</strong> An MCF job is migratable only if its repository connection and all referenced pipeline stages (transformation and output) are individually supported or explicitly overridden.</li>
+      </ul>
+
+      <h2><span class="section-num">03.</span> Architecture &amp; Migration Pipeline</h2>
+      <p>
+        The migration engine operates across a structured, multi-stage pipeline:
+      </p>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">Apache ManifoldCF &rarr; oc-mcf-migrator &rarr; OpenCrawling &amp; OIS</div>
+        <div class="flow-nodes">
+          <div class="flow-node">ManifoldCF (Live API / JSON / XML)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">MigrationEngine (Connector Mappers &amp; Cron Translator)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node accent">Multi-Format Reports (MD, JSON, HTML)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">Target: OpenCrawling API &amp; OIS Manifests</div>
+        </div>
+      </div>
+
+      <h2><span class="section-num">04.</span> Three Operational Modes</h2>
+      <p>
+        Whether evaluating an environment, generating declarative GitOps manifests, or performing a live cutover, <code>oc-mcf-migrator</code> provides three purpose-built execution modes:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Mode / Command</th>
+            <th>Primary Function</th>
+            <th>Writes to Live OpenCrawling?</th>
+            <th>Target Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>audit</code></td>
+            <td>Extracts and evaluates connections, jobs, and schedules. Calculates a compatibility score and flags gaps.</td>
+            <td><strong>Never</strong></td>
+            <td>Audit report (Markdown, JSON, or self-contained HTML)</td>
+          </tr>
+          <tr>
+            <td><code>convert</code></td>
+            <td>Translates each supported MCF job into an Open Ingestion Standard (<code>ois/v1alpha1</code>) YAML/JSON manifest.</td>
+            <td><strong>Never (File-to-file)</strong></td>
+            <td>Declarative OIS job definition files on disk</td>
+          </tr>
+          <tr>
+            <td><code>import</code></td>
+            <td>Extracts, maps, and writes supported connections and jobs directly to OpenCrawling via idempotent REST APIs.</td>
+            <td><strong>Always</strong></td>
+            <td>Live OpenCrawling instance (<code>POST /api/connectors</code>, <code>POST /api/jobs</code>)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">05.</span> Flexible Ingestion Sources</h2>
+      <p>
+        The migrator can read your existing Apache ManifoldCF topology through three distinct mechanisms:
+      </p>
+      <ul>
+        <li><strong>Live REST API:</strong> Connects directly to an active ManifoldCF JSON API endpoint using <code>--mcf-url http://host:8345/mcf-api-service/json</code> (with optional basic authentication credentials).</li>
+        <li><strong>Offline JSON Snapshots:</strong> Reads a directory containing exported JSON payloads (<code>repositoryconnections.json</code>, <code>outputconnections.json</code>, <code>transformationconnections.json</code>, <code>authorityconnections.json</code>, and <code>jobs.json</code>) via <code>--mcf-input-dir</code>.</li>
+        <li><strong>Native ManifoldCF XML Exports:</strong> Ingests the single-file XML archive produced by ManifoldCF's built-in <code>ExportConfiguration</code> utility via <code>--mcf-export-file</code>, enabling air-gapped migrations without requiring active network connectivity.</li>
+      </ul>
+
+      <h2><span class="section-num">06.</span> Extensible Connector Mapping &amp; Manual Overrides</h2>
+      <p>
+        The migrator uses a standard Java <code>ServiceLoader</code> registry for connector mappers. The initial release includes native mappers for key enterprise workloads:
+      </p>
+      <ul>
+        <li><strong>FileSystem:</strong> Translates <code>org.apache.manifoldcf.crawler.connectors.filesystem.FileConnector</code> into OpenCrawling's FileSystem repository connector, preserving root directory specifications and scan rules.</li>
+        <li><strong>Vespa:</strong> Maps <code>org.apache.manifoldcf.agents.output.vespa.VespaOutputConnector</code> directly to <code>oc-vespa-output-connector</code>, preserving document schemas and endpoint routing.</li>
+        <li><strong>Elasticsearch / OpenSearch:</strong> Translates legacy <code>org.apache.manifoldcf.agents.output.elasticsearch.ElasticSearchOutputConnector</code> configurations into <code>oc-opensearch3-output-connector</code> (targeting OpenSearch 2/3 clusters).</li>
+      </ul>
+
+      <div class="callout-box tip">
+        <span class="callout-icon">💡</span>
+        <p><strong>Manual Connector Overrides with <code>--map-connector</code>:</strong> If you have an existing MCF connection whose connector class does not have an automatic mapper (for instance, an old Solr output), you can manually redirect it to any OpenCrawling connector you have created:
+        <br><code>--map-connector "Solr_Output=Qdrant_Vector_Store"</code>
+        <br>Jobs referencing <code>Solr_Output</code> will treat the pipeline as fully supported and substitute in <code>Qdrant_Vector_Store</code> automatically.</p>
+      </div>
+
+      <p>
+        Additionally, <code>CronTranslator</code> automatically translates ManifoldCF's granular schedule records (day-of-week, hour, and minute matrices) into standard 5-part UNIX cron expressions, ensuring your automated ingestion schedules continue running seamlessly in OpenCrawling.
+      </p>
+
+      <h2><span class="section-num">07.</span> Visual Migration Wizard in Admin UI</h2>
+      <p>
+        For teams that prefer a graphical interface, the same migration engine powers an interactive, step-by-step wizard inside the OpenCrawling Admin Dashboard (<strong><code>oc-admin-ui</code> &rarr; ManifoldCF Migration</strong>):
+      </p>
+
+      <ol>
+        <li><strong>Configure:</strong> Enter your ManifoldCF API endpoint or select an offline snapshot directory.</li>
+        <li><strong>Plan &amp; Review:</strong> Inspect the parsed connections, jobs, compatibility scores, and field-level fidelity notes. Deselect individual jobs or connections with a single click.</li>
+        <li><strong>Apply:</strong> Trigger the idempotent import into the OpenCrawling cluster.</li>
+        <li><strong>Results:</strong> View execution outcomes, download the comprehensive migration report in JSON or HTML, and optionally start migrated crawling jobs immediately.</li>
+      </ol>
+
+      <p>
+        The wizard is backed by two dedicated endpoints on <code>oc-runtime</code> (<code>POST /api/mcf-migration/plan</code> and <code>POST /api/mcf-migration/apply</code>), ensuring that the web interface and the CLI share the exact same underlying logic, response DTOs, and compatibility checks.
+      </p>
+
+      <h2><span class="section-num">08.</span> CLI Quick Start</h2>
+      <p>
+        You can invoke <code>oc-mcf-migrator</code> using either the standalone JAR or the OpenCrawling CLI (<code>oc mcf</code>):
+      </p>
+
+      <h3>1. Discover Available Mappers</h3>
+      <pre><code># Using the standalone JAR
+java -jar oc-mcf-migrator-cli.jar list-mappers
+
+# Using the OpenCrawling CLI
+oc mcf list-mappers</code></pre>
+
+      <h3>2. Perform a Dry-Run Audit</h3>
+      <pre><code>java -jar oc-mcf-migrator-cli.jar audit \
+  --mcf-url http://localhost:8345/mcf-api-service/json \
+  --oc-url http://localhost:8080 \
+  --report-format html \
+  --report-file ./mcf-migration-report.html</code></pre>
+
+      <h3>3. Convert Jobs into OIS Declarative YAML Manifests</h3>
+      <pre><code>java -jar oc-mcf-migrator-cli.jar convert \
+  --mcf-url http://localhost:8345/mcf-api-service/json \
+  --output-dir ./ois-jobs</code></pre>
+
+      <h3>4. Import Live Workloads Directly into OpenCrawling</h3>
+      <pre><code>java -jar oc-mcf-migrator-cli.jar import \
+  --mcf-url http://localhost:8345/mcf-api-service/json \
+  --oc-url http://localhost:8080</code></pre>
+
+      <div class="article-cta">
+        <h3>Ready to Modernize Your Enterprise Crawler Stack?</h3>
+        <p>Read the step-by-step Migration Guide in our documentation, explore the source code on GitHub, or test the interactive simulator.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/opencrawling/opencrawling/blob/main/docs/Migration-Guide.md" target="_blank" rel="noopener" class="btn btn-primary">Read Migration Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling/tree/main/oc-mcf-migrator" target="_blank" rel="noopener" class="btn btn-outline">Explore Module Source</a>
+          <a href="../index.html#simulator" class="btn btn-secondary">Try Live Simulator</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
