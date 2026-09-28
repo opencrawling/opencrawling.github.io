@@ -391,7 +391,9 @@ function initSimulator() {
       stationVector.classList.add('active');
       let vectorLog = simData.logs.vector;
       const destKey = destSelect.value;
-      if (destKey === 'luxir') {
+      if (destKey === 'seatunnel') {
+        vectorLog = "SeaTunnelStoreWriterConsumer published OIS embedded chunks to fan-out Kafka topic ('seatunnel-ois-in'); Apache SeaTunnel Zeta cluster orchestrated parallel streaming and fanned out data to downstream sinks (ClickHouse, Milvus, Iceberg).";
+      } else if (destKey === 'luxir') {
         vectorLog = "LuxirStoreWriterConsumer indexed document chunks, 1024-dim dense embeddings, dynamic text fields (text_t), and Zero-Trust ACL attributes into Luxir collection via POST /collections/opencrawling/_update.";
       } else if (destKey === 'solr') {
         vectorLog = "SolrStoreWriterConsumer stored dense vectors, dynamic fields, and ACL tokens into Apache Solr 10 collection via SolrJ HTTP client.";

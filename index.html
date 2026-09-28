@@ -377,8 +377,8 @@
           <g class="node-group" data-node="outputs">
             <rect x="640" y="145" width="145" height="145" rx="10" class="node-bg" />
             <text x="712" y="168" class="node-title">Vector Writer</text>
-            <text x="712" y="188" class="node-sub">Luxir Engine ✨</text>
-            <text x="712" y="206" class="node-sub">Apache Solr 10 ☀️</text>
+            <text x="712" y="188" class="node-sub">SeaTunnel Fan-Out 🌊</text>
+            <text x="712" y="206" class="node-sub">Luxir / Solr 10 ✨</text>
             <text x="712" y="224" class="node-sub">Vespa Engine 🚀</text>
             <text x="712" y="242" class="node-sub">pgvector / Milvus</text>
             <text x="712" y="260" class="node-sub">Qdrant / OpenSearch</text>
@@ -552,8 +552,9 @@
         </div>
         
         <div class="sim-group">
-          <label for="sim-destination">2. Select Vector Database</label>
+          <label for="sim-destination">2. Select Vector Database / Output</label>
           <select id="sim-destination">
+            <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
             <option value="luxir">Luxir Hybrid Search Engine</option>
             <option value="pgvector">PostgreSQL + pgvector</option>
             <option value="milvus">Milvus Standalone</option>
@@ -795,7 +796,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #DC2626, #B91C1C); color: #FFF;">Connector Release</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #FFF;">Distributed Fan-Out</span>
+          <span class="blog-date">September 28, 2026</span>
+          <span class="blog-read-time">6 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-apache-seatunnel-output-connector.html">Distributed Fan-Out &amp; Multi-Sink Pipelines: Announcing the Apache SeaTunnel Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Apache SeaTunnel integration (<strong>oc-seatunnel-output-connector</strong>). Built on Apache SeaTunnel 2.3.13, automated HOCON DAG synthesis, and Zeta Engine REST API v2 orchestration, delivering parallel streaming fan-out of Open Ingestion Standard (OIS) chunks, vectors, and Zero-Trust ACLs across 100+ destination sinks.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-apache-seatunnel-output-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge" style="background: linear-gradient(135deg, #DC2626, #B91C1C); color: #FFF;">Connector Release</span>
           <span class="blog-date">September 28, 2026</span>
           <span class="blog-read-time">6 min read</span>
         </div>

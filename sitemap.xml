@@ -25,6 +25,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://opencrawling.org/blog/introducing-apache-seatunnel-output-connector.html</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://opencrawling.org/blog/introducing-stormcrawler-repository-connector.html</loc>
     <lastmod>2026-09-28</lastmod>
     <changefreq>monthly</changefreq>
