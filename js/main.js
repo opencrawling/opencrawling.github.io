@@ -249,6 +249,20 @@ const SIMULATOR_DATA = {
       ollama: "EmbeddingConsumer consumed Ozone document chunks. Dispatched batches to Ollama (mxbai-embed-large). Generated 1024-dim vectors, published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted Ozone embeddings and security ACL tokens to vector database."
     }
+  },
+  stormcrawler: {
+    files: [
+      { name: "https://docs.opencrawling.org/architecture.html", size: "18.4 KB", acls: ["public"] },
+      { name: "https://docs.opencrawling.org/api-reference.html", size: "32.1 KB", acls: ["public"] },
+      { name: "https://docs.opencrawling.org/deprecated-page (HTTP 404 Tombstone)", size: "0 B", acls: ["public"] }
+    ],
+    logs: {
+      scan: "StormCrawlerRepositoryConnector triggered. Connecting to Apache Storm Nimbus REST API at http://localhost:8080. Validating topology 'opencrawling-web-crawler'...",
+      claimCheck: "StormCrawler topology workers processed crawl streams. OpenCrawlingBolt intercepted parsed HTML content and emitted OIS UPSERT payloads; HTTP 404 stream emitted DELETE tombstones.",
+      tika: "IngestionConsumer received OIS payloads. Extracted canonical URLs, document titles, generated SHA-256 hashes, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed crawl chunks. Dispatched batches to Ollama (mxbai-embed-large) for 1024-dimension vector embeddings. Published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted web crawl vectors, canonical metadata, and purged HTTP 404 tombstones from vector store."
+    }
   }
 };
 
