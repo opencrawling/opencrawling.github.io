@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Process-Aware Enterprise RAG: Announcing the Alfresco Process Services Repository Connector (APS 26.2)</title>
+  <meta name="description" content="Discover OpenCrawling's native Alfresco Process Services integration (oc-aps-repository-connector). Built on APS 26.2.0, Java 25 Virtual Threads, dynamic BPMN variable extraction, candidate group ACLs, and automated workflow attachment ingestion with Model Context Protocol (MCP) server support.">
+  <meta name="keywords" content="alfresco process services, aps 26.2, bpmn, workflow ingestion, opencrawling, enterprise rag, candidate group acls, model context protocol, mcp, java 25, structured task scope, claim check pattern, apache tika">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-alfresco-process-services-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-alfresco-process-services-repository-connector.html">
+  <meta property="og:title" content="Process-Aware Enterprise RAG: Announcing the Alfresco Process Services Repository Connector (APS 26.2)">
+  <meta property="og:description" content="Discover OpenCrawling's native Alfresco Process Services integration (oc-aps-repository-connector). Built on APS 26.2.0, Java 25 Virtual Threads, dynamic BPMN variable extraction, candidate group ACLs, and automated workflow attachment ingestion with Model Context Protocol (MCP) server support.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-alfresco-process-services-repository-connector.html">
+  <meta property="twitter:title" content="Process-Aware Enterprise RAG: Announcing the Alfresco Process Services Repository Connector (APS 26.2)">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Alfresco Process Services integration (oc-aps-repository-connector). Built on APS 26.2.0, Java 25 Virtual Threads, dynamic BPMN variable extraction, candidate group ACLs, and automated workflow attachment ingestion with Model Context Protocol (MCP) server support.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230090DF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Process-Aware Enterprise RAG: Announcing the Alfresco Process Services Repository Connector (APS 26.2)",
+    "description": "Discover OpenCrawling's native Alfresco Process Services integration (oc-aps-repository-connector). Built on APS 26.2.0, Java 25 Virtual Threads, dynamic BPMN variable extraction, candidate group ACLs, and automated workflow attachment ingestion with Model Context Protocol (MCP) server support.",
+    "datePublished": "2026-10-01",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-alfresco-process-services-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #0090DF, #0284C7); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #0090DF; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #38BDF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(0,144,223,0.1); border: 1px solid rgba(0,144,223,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #7DD3FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,144,223,0.05); border-color: #0090DF; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(0,144,223,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #0090DF; color: #7DD3FC; background: rgba(0,144,223,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #38BDF8; }
+    .article-cta { background: rgba(0,144,223,0.05); border: 1px solid rgba(0,144,223,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #38BDF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(0,144,223,0.08); color: #38BDF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(0,144,223,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Workflow Ingestion</span>
+        <span class="blog-meta-date">October 1, 2026</span>
+        <span class="blog-meta-read">&bull; 7 min read</span>
+      </div>
+      <h1 class="blog-article-title">Process-Aware Enterprise RAG: Announcing the Alfresco Process Services Repository Connector (APS 26.2)</h1>
+      <p class="blog-article-lead">
+        Enterprise knowledge does not reside exclusively in static PDF documents or file drives. Mission-critical business decisions, invoice approvals, loan evaluations, and compliance reviews happen inside dynamic workflow executions. Today, we are announcing <code>oc-aps-repository-connector</code>, bringing native <strong>Alfresco Process Services (APS 26.2.0)</strong> crawling, dynamic BPMN process variable extraction, candidate group ACLs, and automated workflow attachment ingestion to OpenCrawling! 🎉
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">APS Workflow & Attachment Ingestion Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">APS 26.2.0 REST API</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">ApsRepositoryConnector (Java 25)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Claim-Check Attachment Store</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">OIS with Candidate Group ACLs</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Kafka & Vector Stores</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Why Workflow Engines Matter for Enterprise RAG</h2>
+      <p>
+        In modern enterprise architectures, organizations frequently pair <strong>Alfresco Content Services (ACS)</strong> with <strong>Alfresco Process Services (APS)</strong> to power automated case management and core operational workflows. While ACS holds static files, APS records the living history of business operations: who approved an invoice, what credit risk score was assigned, what comments were submitted by underwriting agents, and what documents were attached during process execution.
+      </p>
+      <p>
+        Until now, connecting Large Language Models (LLMs) to enterprise workflow data required complex custom ETL pipelines that stripped out BPMN state, discarded form variables, and lost crucial candidate group access controls.
+      </p>
+      <p>
+        The new <strong>Alfresco Process Services Repository Connector</strong> (<code>oc-aps-repository-connector</code>) bridges APS directly to OpenCrawling, allowing enterprise AI assistants and Retrieval-Augmented Generation (RAG) applications to retrieve real-time and historical workflow context safely.
+      </p>
+
+      <h2><span class="section-num">2. </span>Core Capabilities: From BPMN Instances to Vector Stores</h2>
+      <p>
+        Targeted specifically for <strong>Alfresco Process Services version 26.2.0</strong> (via the Enterprise REST API under <code>/activiti-app/api/enterprise</code>), the connector provides complete coverage of BPMN operational data:
+      </p>
+      <ul>
+        <li>
+          <strong>Historic &amp; Active Instance Crawling</strong>: Paginates through workflow executions via <code>POST /historic-process-instances/query</code>, capturing process definition keys, execution durations, start/end timestamps, and initiator IDs.
+        </li>
+        <li>
+          <strong>Dynamic BPMN Variable Extraction</strong>: Automatically resolves typed process variables (strings, doubles, booleans, dates, JSON payloads) via <code>GET /historic-process-instances/{id}/variables</code> and maps them into structured metadata attributes prefixed with <code>aps_var_<varName></code>.
+        </li>
+        <li>
+          <strong>Candidate Group &amp; User ACLs</strong>: Evaluates assigned user tasks and candidate groups via <code>POST /tasks/query</code>, transforming BPMN roles into Open Ingestion Standard (OIS) <code>security.permissions</code>.
+        </li>
+        <li>
+          <strong>Workflow Attachment Ingestion</strong>: Recursively discovers documents and attachments uploaded to process instances (<code>/process-instances/{id}/content</code>) or user tasks (<code>/tasks/{id}/content</code>), downloads raw binary content streams via <code>/content/{id}/raw</code> into the Claim-Check store, and extracts text using Apache Tika.
+        </li>
+        <li>
+          <strong>Model Context Protocol (MCP) Integration</strong>: The included <code>ApsMcpClient</code> connects to the APS MCP Server to dynamically discover deployed workflow definitions, variable schemas, and candidate groups over standard JSON-RPC 2.0.
+        </li>
+      </ul>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#8505;&#65039;</div>
+        <div>
+          <p><strong>Java 25 Virtual Threads &amp; StructuredTaskScope:</strong> Process instance batching, variable enrichment, and binary attachment downloads are processed concurrently using Java 25 Virtual Threads (<code>StructuredTaskScope.open()</code>), preventing thread pool exhaustion during large-scale workflow crawls.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">3. </span>Zero-Trust Security & Candidate Group Enforcement</h2>
+      <p>
+        A critical hazard in enterprise generative AI is <em>context leakage</em>: an employee asking an AI assistant a question about corporate financials must never see invoices or sensitive approval decisions intended solely for the executive committee or finance department.
+      </p>
+      <p>
+        The APS connector addresses this by inspecting the workflow initiator, assigned users, and candidate groups for every process instance and attachment. These identities are translated directly into OIS security permissions:
+      </p>
+
+      <pre><code>{
+  "id": "aps://process-instances/10042",
+  "action": "UPSERT",
+  "metadata": {
+    "aps.processDefinitionKey": "invoiceApproval",
+    "aps.businessKey": "INV-2026-9041",
+    "aps_var_invoiceNumber": "INV-2026-9041",
+    "aps_var_amount": "14500.50"
+  },
+  "security": {
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "identity": "finance_agent_1", "identityType": "user", "access": "read" },
+      { "identity": "group:finance-managers", "identityType": "group", "access": "read" },
+      { "identity": "group:accounting", "identityType": "group", "access": "read" }
+    ]
+  }
+}</code></pre>
+
+      <p>
+        When an AI agent queries OpenCrawling's <strong>Secure Model Context Protocol (MCP) Server</strong>, permissions are verified in real time against the user's active session, strictly preventing unauthorized data retrieval.
+      </p>
+
+      <h2><span class="section-num">4. </span>Configuring the APS Repository Connector</h2>
+      <p>
+        Enabling the connector in OpenCrawling is simple. You can configure it via <code>application.yml</code> or environment variables:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property Key</th>
+            <th>Environment Variable</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.url</code></td>
+            <td><code>APS_URL</code></td>
+            <td><code>http://localhost:8080/activiti-app/api/enterprise</code></td>
+            <td>Base URL of the APS Enterprise REST API</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.username</code></td>
+            <td><code>APS_USERNAME</code></td>
+            <td><code>admin@app.activiti.com</code></td>
+            <td>APS Basic Auth username</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.password</code></td>
+            <td><code>APS_PASSWORD</code></td>
+            <td><code>admin</code></td>
+            <td>APS Basic Auth password</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.batch-size</code></td>
+            <td><code>APS_BATCH_SIZE</code></td>
+            <td><code>100</code></td>
+            <td>Process instances page batch size</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.include-attachments</code></td>
+            <td><code>APS_INCLUDE_ATTACHMENTS</code></td>
+            <td><code>true</code></td>
+            <td>Ingest workflow instance attachments &amp; documents</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.aps.scope</code></td>
+            <td><code>APS_SCOPE</code></td>
+            <td><code>all</code></td>
+            <td>Filter: <code>all</code> (active &amp; completed), <code>active</code>, or <code>completed</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Docker Compose Example</h3>
+      <pre><code>services:
+  oc-crawler:
+    image: opencrawling/oc-runtime:latest
+    environment:
+      CONNECTOR_TYPE: aps
+      SCAN_PATH: /
+      APS_URL: http://aps:8080/activiti-app/api/enterprise
+      APS_USERNAME: admin@app.activiti.com
+      APS_PASSWORD: admin
+      APS_INCLUDE_VARIABLES: "true"
+      APS_INCLUDE_TASKS: "true"
+      APS_INCLUDE_ATTACHMENTS: "true"</code></pre>
+
+      <h2><span class="section-num">5. </span>Enterprise Licensing & Testing Modes</h2>
+      <p>
+        Because Alfresco Process Services is an enterprise commercial product, the connector and its test suites are designed to support two modes:
+      </p>
+      <ol>
+        <li>
+          <strong>Community Evaluation Mode (Unlicensed)</strong>: If no enterprise license is provided, the connector connects to APS, verifies authentication, checks health, and performs queries against an empty repository. The test scripts (<code>test-aps-connector.sh</code> and <code>test-aps-decoupled.sh</code>) detect the unlicensed state gracefully and validate the pipeline cleanly.
+        </li>
+        <li>
+          <strong>Enterprise Licensed Mode</strong>: If you possess Alfresco license files (<code>activiti.lic</code> and/or <code>transform.lic</code>), the test runner automatically discovers them from <code>~/.activiti/enterprise-license/</code> or environment variables, mounts them into the container, registers the license via <code>POST /activiti-app/api/enterprise/license</code>, imports a sample BPMN 2.0 invoice approval workflow, and seeds real process instances with variables and attachments.
+        </li>
+      </ol>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>1-Command Integration Testing:</strong> Validate the entire distributed decoupled pipeline with: <code>./scripts/test-aps-decoupled.sh</code>. It spins up APS 26.2, PostgreSQL, Kafka, Ingestion Consumer, Ollama embeddings, and pgvector, verifying the full journey from workflow execution to semantic vector search.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Make Your Workflows AI-Searchable?</h3>
+        <p>Explore the full documentation on our Wiki, test the simulator, or deploy the Docker Compose stack today.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Alfresco-Process-Services-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read APS Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

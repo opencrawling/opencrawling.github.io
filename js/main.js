@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Flowable BPMN, and Camunda BPMN engines). Reads content streams, process instances, process variables, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, process instances, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -262,6 +262,34 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer received OIS payloads. Extracted canonical URLs, document titles, generated SHA-256 hashes, and published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed crawl chunks. Dispatched batches to Ollama (mxbai-embed-large) for 1024-dimension vector embeddings. Published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted web crawl vectors, canonical metadata, and purged HTTP 404 tombstones from vector store."
+    }
+  },
+  alfresco: {
+    files: [
+      { name: "corporate_policy_2026.pdf (Node UUID: a1b2c3d4-001)", size: "4.2 MB", acls: ["GROUP_INTERNAL_STAFF:Read", "ROLE_ADMINISTRATOR:All"] },
+      { name: "annual_report_financials.docx (Node UUID: a1b2c3d4-002)", size: "8.6 MB", acls: ["GROUP_FINANCE:ReadWrite", "ROLE_ADMINISTRATOR:All"] },
+      { name: "quarterly_kpi_review.xlsx (Node UUID: a1b2c3d4-003)", size: "1.9 MB", acls: ["GROUP_MANAGEMENT:Read"] }
+    ],
+    logs: {
+      scan: "AlfrescoRepositoryConnector triggered. Connecting to Alfresco Content Services REST API at http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1 (/nodes/-root-/children)...",
+      claimCheck: "Crawler traversed node hierarchy via Structured Task Scope. Downloaded content streams to Claim-Check store, published IngestionMessages with alfresco:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer read claim references. Extracted text & metadata properties (cm:title, cm:description) via Apache Tika, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed chunks. Generated 1024-dimension embeddings via Ollama (mxbai-embed-large), published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted vectors and mapped Alfresco ACL authority SIDs into vector store index."
+    }
+  },
+  aps: {
+    files: [
+      { name: "invoiceApproval (ID: proc-10042 / INV-2026-9041)", size: "1.4 KB", acls: ["group:finance-managers", "group:accounting"] },
+      { name: "invoice_vendor_acme_spec.pdf (Task Attachment)", size: "2.8 MB", acls: ["group:finance-managers"] },
+      { name: "vendorOnboarding (ID: proc-10043 / VND-2026-088)", size: "1.1 KB", acls: ["group:procurement-leads"] }
+    ],
+    logs: {
+      scan: "ApsRepositoryConnector triggered. Connecting to Alfresco Process Services 26.2 REST API at http://localhost:8080/activiti-app/api/enterprise (/historic-process-instances/query)...",
+      claimCheck: "Discovered active/historic workflow instances and attachments. Streamed raw binary attachments to Claim-Check store. Emitted OIS RepositoryDocuments with candidate group ACLs and aps:// URIs.",
+      tika: "IngestionConsumer received APS process instances & workflow attachments. Extracted BPMN variables (aps_var_*), parsed attachment PDFs via Apache Tika, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed APS workflow chunks. Dispatched batches to Ollama (mxbai-embed-large) for 1024-dimension embeddings, published vectors to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted APS workflow embeddings, business keys, BPMN variables, and candidate group ACLs into vector store."
     }
   }
 };
