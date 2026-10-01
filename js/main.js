@@ -154,6 +154,20 @@ function initArchHover() {
    3. Live Ingestion Simulator
    ========================================== */
 const SIMULATOR_DATA = {
+  cmis: {
+    files: [
+      { name: "specs/enterprise_cloud_architecture_2026.pdf (v2.0)", size: "5.4 MB", acls: ["group:cloud-architects:read", "admin:all"] },
+      { name: "contracts/vendor_master_services_agreement.docx (v1.2)", size: "2.1 MB", acls: ["group:legal-counsel:read", "group:procurement:write"] },
+      { name: "finance/q3_board_forecast_presentation.pptx (v1.0)", size: "14.7 MB", acls: ["group:executive-board:read"] }
+    ],
+    logs: {
+      scan: "CmisRepositoryConnector triggered. Connecting to OASIS CMIS 1.1 Browser Binding at http://localhost:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser (/Company Home)...",
+      claimCheck: "Crawler traversed CMIS folder hierarchy via Java 25 Structured Task Scope. Extracted secondary types (cmis:secondaryObjectTypeIds), mapped ACEs to OIS permissions, downloaded content streams to Claim-Check store, and published IngestionMessages with cmis:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim references. Extracted text, CMIS aspects, and version metadata (cmis:versionLabel, cmis:isLatestMajorVersion) via Apache Tika, published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed CMIS document chunks. Generated 1024-dimension embeddings via Ollama (mxbai-embed-large), published vectors to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted CMIS vectors, aspect metadata, and Zero-Trust ACL SIDs into target vector store."
+    }
+  },
   sharepoint: {
     files: [
       { name: "hr_salary_reviews_2026.xlsx", size: "3.4 MB", acls: ["HR-Admins:Read", "Exec-Board:Read"] },

@@ -345,14 +345,15 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="145" width="120" height="185" rx="10" class="node-bg" />
-            <text x="70" y="168" class="node-title">Sources</text>
-            <text x="70" y="188" class="node-sub">File System</text>
-            <text x="70" y="206" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="224" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="242" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="260" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="278" class="node-sub">StormCrawler🕷️</text>
+            <rect x="10" y="135" width="120" height="205" rx="10" class="node-bg" />
+            <text x="70" y="156" class="node-title">Sources</text>
+            <text x="70" y="174" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="192" class="node-sub">File System</text>
+            <text x="70" y="210" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="228" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="246" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="264" class="node-sub">Camunda BPMN⚡</text>
+            <text x="70" y="282" class="node-sub">StormCrawler🕷️</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -542,6 +543,7 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
+            <option value="cmis">OASIS CMIS (ECM Repository)</option>
             <option value="aps">Alfresco Process Services (APS)</option>
             <option value="alfresco">Alfresco Content Services (ACS)</option>
             <option value="database">File System</option>
@@ -797,7 +799,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #0090DF, #0284C7); color: #FFF;">Workflow Ingestion</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #005A9C, #0284C7); color: #FFF;">Connector Release</span>
+          <span class="blog-date">October 1, 2026</span>
+          <span class="blog-read-time">7 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-oasis-cmis-repository-connector.html">Universal ECM Ingestion for Enterprise RAG: Announcing the OASIS CMIS Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native OASIS CMIS integration (<strong>oc-cmis-repository-connector</strong>). Built on the OASIS CMIS 1.1 Browser Binding, native Java 25 HttpClient, Virtual Threads, CMIS-SQL query support, secondary types/aspects, and Zero-Trust ACL mapping across Alfresco, Documentum, FileNet, and Nuxeo repositories.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-oasis-cmis-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge" style="background: linear-gradient(135deg, #0090DF, #0284C7); color: #FFF;">Workflow Ingestion</span>
           <span class="blog-date">October 1, 2026</span>
           <span class="blog-read-time">7 min read</span>
         </div>
