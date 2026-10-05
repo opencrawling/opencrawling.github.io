@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Relational Ingestion &amp; Tabular RAG: Announcing the JDBC Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native JDBC Repository Connector (oc-jdbc-repository-connector). Built on JDBC 4.2+, Java 25 Virtual Threads (StructuredTaskScope), HikariCP, and Schema Introspection, delivering dual-path ingestion: Tabular RAG with auto-narrativization via Spring AI Copilot, and high-throughput binary BLOB/CLOB streaming with magic byte detection across PostgreSQL, MySQL, Oracle, SQL Server, and SQLite.">
+  <meta name="keywords" content="jdbc connector, relational database rag, tabular rag, sql ingestion, postgresql, mysql, oracle, sql server, sqlite, duckdb, opencrawling, enterprise rag, zero-trust acls, java 25, structured task scope, claim check pattern, apache tika, auto-narrativization, mustache templates">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-jdbc-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-jdbc-repository-connector.html">
+  <meta property="og:title" content="Universal Relational Ingestion &amp; Tabular RAG: Announcing the JDBC Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native JDBC Repository Connector (oc-jdbc-repository-connector). Built on JDBC 4.2+, Java 25 Virtual Threads (StructuredTaskScope), HikariCP, and Schema Introspection, delivering dual-path ingestion: Tabular RAG with auto-narrativization via Spring AI Copilot, and high-throughput binary BLOB/CLOB streaming with magic byte detection across PostgreSQL, MySQL, Oracle, SQL Server, and SQLite.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-jdbc-repository-connector.html">
+  <meta property="twitter:title" content="Universal Relational Ingestion &amp; Tabular RAG: Announcing the JDBC Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native JDBC Repository Connector (oc-jdbc-repository-connector). Built on JDBC 4.2+, Java 25 Virtual Threads (StructuredTaskScope), HikariCP, and Schema Introspection, delivering dual-path ingestion: Tabular RAG with auto-narrativization via Spring AI Copilot, and high-throughput binary BLOB/CLOB streaming with magic byte detection across PostgreSQL, MySQL, Oracle, SQL Server, and SQLite.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='12' cy='5' rx='9' ry='3'/%3E%3Cpath d='M21 12c0 1.66-4 3-9 3s-9-1.34-9-3'/%3E%3Cpath d='M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Universal Relational Ingestion & Tabular RAG: Announcing the JDBC Repository Connector",
+    "description": "Discover OpenCrawling's native JDBC Repository Connector (oc-jdbc-repository-connector). Built on JDBC 4.2+, Java 25 Virtual Threads (StructuredTaskScope), HikariCP, and Schema Introspection, delivering dual-path ingestion: Tabular RAG with auto-narrativization via Spring AI Copilot, and high-throughput binary BLOB/CLOB streaming with magic byte detection across PostgreSQL, MySQL, Oracle, SQL Server, and SQLite.",
+    "datePublished": "2026-10-05",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-jdbc-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #2563EB, #3B82F6); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #60A5FA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #2563EB; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #60A5FA; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #60A5FA; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #93C5FD; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(37,99,235,0.06); border-color: #2563EB; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(37,99,235,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #60A5FA; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #2563EB; color: #93C5FD; background: rgba(37,99,235,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #60A5FA; }
+    .article-cta { background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #60A5FA; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(37,99,235,0.1); color: #60A5FA; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(37,99,235,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 5, 2026</span>
+        <span class="blog-meta-read">&bull; 8 min read</span>
+      </div>
+      <h1 class="blog-article-title">Universal Relational Ingestion &amp; Tabular RAG: Announcing the JDBC Repository Connector</h1>
+      <p class="blog-article-lead">
+        While enterprise content management (ECM) platforms and document stores hold millions of corporate files, the overwhelming majority of day-to-day enterprise intelligence resides directly in <strong>Relational Database Management Systems (RDBMS)</strong>: ERP invoices, CRM client notes, support case tickets, catalog entries, and binary document attachments stored inside database columns. Today, we are proud to release <code>oc-jdbc-repository-connector</code>, unlocking universal relational database crawling, schema-aware Tabular RAG narrativization, binary BLOB streaming, and column-based Zero-Trust Access Control Lists (ACLs) for OpenCrawling! 🎉
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">JDBC Relational Ingestion &amp; Tabular RAG Pipeline Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">RDBMS (Postgres / MySQL / Oracle / DB2)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">HikariCP &amp; Streaming Cursor (Java 25)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">StructuredTaskScope Batching</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Dual Path: Tabular RAG / BLOB Claim Check</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Kafka Broker</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Stores &amp; Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Impedance Mismatch: Relational Data vs. Vector RAG</h2>
+      <p>
+        Building Retrieval-Augmented Generation (RAG) systems over relational databases has historically presented an awkward engineering trade-off. Naive approaches often flatten tables into dense comma-separated values (CSVs) or dump raw JSON structures into text splitters. 
+      </p>
+      <p>
+        This approach causes two critical issues:
+      </p>
+      <ul>
+        <li><strong>Loss of Semantic Density</strong>: Dense vector models (such as <code>mxbai-embed-large</code>, <code>text-embedding-3-small</code>, or <code>bge-large-en</code>) perform poorly on unstructured key-value dumps. Embedding models expect cohesive prose, human syntax, and grammatical context to calculate accurate semantic distances.</li>
+        <li><strong>Security &amp; Authorization Leakage</strong>: Tables often hold row-level permissions (e.g. <code>owner_id</code>, <code>department_id</code>, <code>tenant_id</code>) that are stripped during scraping, resulting in unauthorized retrieval when querying large language models.</li>
+      </ul>
+      <p>
+        The <strong>JDBC Repository Connector</strong> bridges this divide. It introduces native <strong>Dual-Path Ingestion</strong>: transforming relational records into rich natural-language narratives for Tabular RAG while routing binary attachments (PDFs, images, office files) directly through Apache Tika via decoupled Claim-Check streaming.
+      </p>
+
+      <h2><span class="section-num">2. </span>Universal SQL Compatibility Across Major Database Engines</h2>
+      <p>
+        Built on standard <strong>JDBC 4.2+</strong> specifications and enterprise-grade <strong>HikariCP</strong> connection pooling, <code>oc-jdbc-repository-connector</code> runs out-of-the-box against all major enterprise database engines:
+      </p>
+      <ul>
+        <li><strong>PostgreSQL 14–17+</strong> (including pgvector, Citus, and Supabase)</li>
+        <li><strong>MySQL 8.x &amp; MariaDB 10/11</strong></li>
+        <li><strong>Oracle Database 19c / 21c / 23ai</strong></li>
+        <li><strong>Microsoft SQL Server 2019 / 2022 / Azure SQL</strong></li>
+        <li><strong>IBM DB2 &amp; Informix</strong></li>
+        <li><strong>SQLite 3 &amp; DuckDB</strong> (ideal for local testing and embedded analytics)</li>
+        <li><strong>Cloud Data Warehouses</strong> (Snowflake, Databricks via JDBC)</li>
+      </ul>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <p><strong>Engine-Specific Streaming Optimizations:</strong> To guarantee constant $O(1)$ client heap utilization when scanning multi-million-row tables, the connector automatically adjusts JDBC driver behavior. In PostgreSQL, it disables auto-commit (<code>connection.setAutoCommit(false)</code>) to activate server-side cursor streaming; in MySQL, it sets streaming fetch mode (<code>statement.setFetchSize(Integer.MIN_VALUE)</code>) to prevent driver buffering.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">3. </span>Dual Ingestion Strategies: Table Mode vs. Custom SQL Query Mode</h2>
+      <p>
+        The connector offers two operational strategies configurable via the Admin UI, Spring Boot YAML, or dynamic <code>SCAN_PATH</code> parameters:
+      </p>
+      
+      <h3>A. Table / View Ingestion Mode</h3>
+      <p>
+        Specify a target table or view (e.g. <code>support_tickets</code> or <code>crm.customers</code>). The connector inspects table metadata via <code>DatabaseMetaData.getColumns()</code>, identifies primary keys, and projects all columns into Open Ingestion Standard (OIS) attributes.
+      </p>
+
+      <h3>B. Custom SQL Query Mode</h3>
+      <p>
+        For complex domain models involving normalized schemas, supply an arbitrary SQL query joining multiple tables:
+      </p>
+      <pre><code class="language-sql">SELECT t.id AS ticket_id, t.title, t.description, t.status, t.created_at, t.updated_at,
+       c.name AS customer_name, c.tier AS customer_tier,
+       t.owner_username, t.department_id, t.is_deleted, t.tenant_id
+FROM support_tickets t
+LEFT JOIN customers c ON t.customer_id = c.id
+WHERE (:lastCrawledTime IS NULL OR t.updated_at >= :lastCrawledTime)</code></pre>
+
+      <h3>C. Multi-Table Concurrent Scanning</h3>
+      <p>
+        Need to ingest an entire database catalog at once? The connector accepts a comma-separated list of tables (e.g. <code>customers,orders,invoices</code>). It forks parallel scanning tasks across Java 25 <code>StructuredTaskScope</code> subtasks, maximizing I/O throughput across database connections.
+      </p>
+
+      <h2><span class="section-num">4. </span>Tabular RAG &amp; Auto-Narrativization Copilot</h2>
+      <p>
+        OpenCrawling's <code>RepositoryConnector.getSchema(basePath)</code> SPI inspects SQL columns, data types, and remarks at runtime. This feeds directly into the Admin UI and the Spring AI <strong>TemplateGenerationCopilot</strong>, which automatically synthesizes natural-language Mustache templates.
+      </p>
+      
+      <p>For example, given a support ticket row, the narrativizer produces:</p>
+      <pre><code class="language-markdown"># Support Ticket {{id}}: {{title}}
+Customer: {{customer_name}} (Tier: {{customer_tier}})
+Status: {{status}} | Assigned to: {{owner_username}}
+Created: {{created_at}} | Last Updated: {{updated_at}}
+
+## Description
+{{description}}</code></pre>
+
+      <p>
+        When narrativization is disabled, the connector generates a clean, deterministic Markdown key-value fallback representation, eliminating the flat CSV anti-pattern and maximizing vector retrieval relevance.
+      </p>
+
+      <h2><span class="section-num">5. </span>Binary BLOB / CLOB Streaming with Magic Byte Sniffing</h2>
+      <p>
+        Many enterprise databases store binary files directly in database columns (such as <code>BLOB</code>, <code>BYTEA</code>, <code>RAW</code>, or <code>LONGVARBINARY</code>). Loading these binaries into memory during database cursor scans is a notorious cause of JVM OutOfMemoryErrors.
+      </p>
+      <p>
+        The JDBC connector solves this via OpenCrawling's decoupled <strong>Claim Check Pattern</strong>:
+      </p>
+      <ul>
+        <li><strong>Automatic Detection</strong>: Auto-detects binary columns from SQL metadata or maps explicitly configured column names (<code>blob-column-name</code>).</li>
+        <li><strong>Magic Byte Sniffing</strong>: Automatically inspects leading file bytes to resolve MIME types:
+          <ul>
+            <li><code>\x89PNG\r\n\x1a\n</code> &rarr; <code>image/png</code></li>
+            <li><code>\xFF\xD8\xFF</code> &rarr; <code>image/jpeg</code></li>
+            <li><code>%PDF-</code> &rarr; <code>application/pdf</code></li>
+            <li><code>PK\x03\x04</code> &rarr; <code>application/zip</code> (DOCX / XLSX / ZIP)</li>
+            <li><code>GIF8</code> &rarr; <code>image/gif</code>, <code>RIFF....WEBP</code> &rarr; <code>image/webp</code></li>
+          </ul>
+        </li>
+        <li><strong>Claim-Check Offloading</strong>: Streams binary payloads directly to local storage, Apache Ozone, or AWS S3, passing lightweight URI references to Kafka while routing content to Apache Tika 4.1.0 for process-isolated text extraction.</li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Incremental Delta Crawling &amp; Soft Deletes</h2>
+      <p>
+        Enterprise databases change continuously. The JDBC connector provides full change data capture (CDC) mechanisms:
+      </p>
+      <ul>
+        <li><strong>High-Water Mark (HWM)</strong>: Tracks either a timestamp column (e.g. <code>updated_at &gt;= :lastCrawledTime</code>) or an auto-incrementing integer primary key (e.g. <code>id &gt; :lastCrawledId</code>).</li>
+        <li><strong>Soft-Delete Tombstone Generation</strong>: If a row has a soft-delete indicator (e.g. <code>is_deleted = TRUE</code> or <code>status = 'PURGED'</code>), the connector creates an OIS <code>DocumentAction.DELETE</code> tombstone via <code>RepositoryDocument.createTombstone(...)</code>. Downstream consumers immediately purge stale vectors from target vector stores!</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Zero-Trust Security &amp; Column-Based ACL Mapping</h2>
+      <p>
+        Security is a first-class citizen in OpenCrawling. Using <code>JdbcSecurityMapper</code>, database security columns are mapped directly into standard OIS <code>SecurityConfig</code> and <code>PermissionRule</code> objects:
+      </p>
+      <ul>
+        <li><strong>User Columns</strong>: e.g. <code>owner_id</code>, <code>assignee</code> &rarr; <code>PermissionRule(user, "user", user, "read")</code></li>
+        <li><strong>Group Columns</strong>: e.g. <code>department_id</code>, <code>role_group</code> &rarr; <code>PermissionRule(group, "group", group, "read")</code></li>
+        <li><strong>Tenant Column</strong>: e.g. <code>tenant_id</code> &rarr; Stamped into metadata for multi-tenant isolation</li>
+      </ul>
+      <p>
+        Downstream, OpenCrawling's <strong>Secure Model Context Protocol (MCP) Server</strong> enforces strict principal filtering against vector store indices, guaranteeing that users and LLM agents only retrieve information they have explicit row-level authority to view.
+      </p>
+
+      <h2><span class="section-num">8. </span>Quick Configuration Reference</h2>
+      <p>
+        Add the following configuration to your <code>application.yml</code> or environment variables:
+      </p>
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property Key</th>
+            <th>Environment Variable</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.url</code></td>
+            <td><code>JDBC_URL</code></td>
+            <td><code>jdbc:h2:mem:...</code></td>
+            <td>JDBC connection string (PostgreSQL, MySQL, Oracle, etc.)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.driver-class-name</code></td>
+            <td><code>JDBC_DRIVER_CLASS_NAME</code></td>
+            <td><code>""</code> (auto-detected)</td>
+            <td>Driver class name (e.g. <code>org.postgresql.Driver</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.username</code></td>
+            <td><code>JDBC_USERNAME</code></td>
+            <td><code>sa</code></td>
+            <td>Database authentication username</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.password</code></td>
+            <td><code>JDBC_PASSWORD</code></td>
+            <td><code>""</code></td>
+            <td>Database authentication password</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.mode</code></td>
+            <td><code>JDBC_MODE</code></td>
+            <td><code>table</code></td>
+            <td>Ingestion mode: <code>table</code> or <code>query</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.table-name</code></td>
+            <td><code>JDBC_TABLE_NAME</code></td>
+            <td><code>""</code></td>
+            <td>Table or view name to ingest</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.primary-key-columns</code></td>
+            <td><code>JDBC_PRIMARY_KEY_COLUMNS</code></td>
+            <td><code>id</code></td>
+            <td>Comma-separated column name(s) for document primary key</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.title-column</code></td>
+            <td><code>JDBC_TITLE_COLUMN</code></td>
+            <td><code>title</code></td>
+            <td>Column mapped to document title</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.blob-column-name</code></td>
+            <td><code>JDBC_BLOB_COLUMN_NAME</code></td>
+            <td><code>""</code></td>
+            <td>Binary BLOB column name (auto-detected if blank)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.security-enabled</code></td>
+            <td><code>JDBC_SECURITY_ENABLED</code></td>
+            <td><code>false</code></td>
+            <td>Enable row security and column-to-ACL mapping</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.user-columns</code></td>
+            <td><code>JDBC_USER_COLUMNS</code></td>
+            <td><code>""</code></td>
+            <td>User identity columns (e.g. <code>owner_id</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.group-columns</code></td>
+            <td><code>JDBC_GROUP_COLUMNS</code></td>
+            <td><code>""</code></td>
+            <td>Group/role columns (e.g. <code>department_id</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.connector.jdbc.soft-delete-enabled</code></td>
+            <td><code>JDBC_SOFT_DELETE_ENABLED</code></td>
+            <td><code>false</code></td>
+            <td>Enable soft-delete tombstone emission</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">9. </span>Automated Verification &amp; Testing</h2>
+      <p>
+        The JDBC connector is backed by comprehensive integration testing scripts:
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Standalone Test Script:</strong> Run <code>./scripts/test-jdbc-connector.sh</code> to test schema introspection, BLOB extraction, and structured concurrency across in-memory H2 and ephemeral PostgreSQL Testcontainers.</p>
+        </div>
+      </div>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Decoupled Pipeline Test:</strong> Run <code>./scripts/test-jdbc-decoupled.sh</code> to execute the full end-to-end containerized pipeline: PostgreSQL source database &rarr; oc-crawler (JDBC) &rarr; Kafka broker &rarr; Ingestion Consumer (Tika &amp; chunks) &rarr; Embedding Consumer (Ollama) &rarr; Writer Consumer (pgvector) &rarr; Secure MCP Server queries.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Connect Your Relational Data to AI?</h3>
+        <p>Test the brand new JDBC Repository Connector in our interactive simulator, read the comprehensive documentation on our Wiki, or clone the repository on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/JDBC-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read JDBC Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -345,15 +345,16 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="135" width="120" height="205" rx="10" class="node-bg" />
-            <text x="70" y="156" class="node-title">Sources</text>
-            <text x="70" y="174" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="192" class="node-sub">File System</text>
-            <text x="70" y="210" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="228" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="246" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="264" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="282" class="node-sub">StormCrawler🕷️</text>
+            <rect x="10" y="125" width="120" height="225" rx="10" class="node-bg" />
+            <text x="70" y="145" class="node-title">Sources</text>
+            <text x="70" y="163" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="181" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="199" class="node-sub">File System</text>
+            <text x="70" y="217" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="235" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="253" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="271" class="node-sub">Camunda BPMN⚡</text>
+            <text x="70" y="289" class="node-sub">StormCrawler🕷️</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -543,10 +544,11 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
+            <option value="jdbc" selected>Relational Database (JDBC / PostgreSQL)</option>
             <option value="cmis">OASIS CMIS (ECM Repository)</option>
             <option value="aps">Alfresco Process Services (APS)</option>
             <option value="alfresco">Alfresco Content Services (ACS)</option>
-            <option value="database">File System</option>
+            <option value="filesystem">Local / NFS File System</option>
             <option value="flowable">Flowable BPMN (Historic Workflow Instances)</option>
             <option value="camunda">Camunda BPMN (Historic Workflow Instances)</option>
             <option value="iceberg">Apache Iceberg (Data Lakehouse)</option>
@@ -770,6 +772,7 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="jdbc">JDBC Tabular</button>
               <button class="schema-tab-btn" data-schema="delete">Delete Tombstone</button>
               <button class="schema-tab-btn" data-schema="cmis">CMIS</button>
               <button class="schema-tab-btn" data-schema="bpmn">BPMN</button>
@@ -799,7 +802,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #D97706, #F59E0B); color: #FFF;">Core Engine &amp; Security</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #2563EB, #3B82F6); color: #FFF;">Connector Release</span>
+          <span class="blog-date">October 5, 2026</span>
+          <span class="blog-read-time">8 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-jdbc-repository-connector.html">Universal Relational Ingestion &amp; Tabular RAG: Announcing the JDBC Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native JDBC Repository Connector (<strong>oc-jdbc-repository-connector</strong>). Built on standard JDBC 4.2+, Java 25 Virtual Threads (<code>StructuredTaskScope</code>), HikariCP, and Schema Introspection, delivering dual-path ingestion: Tabular RAG with auto-narrativization via Spring AI Copilot, and high-throughput binary BLOB/CLOB streaming with magic byte detection across PostgreSQL, MySQL, Oracle, SQL Server, and SQLite.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-jdbc-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge" style="background: linear-gradient(135deg, #D97706, #F59E0B); color: #FFF;">Core Engine &amp; Security</span>
           <span class="blog-date">October 3, 2026</span>
           <span class="blog-read-time">7 min read</span>
         </div>
@@ -1268,6 +1286,31 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
   "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        jdbc: {
+          file: 'jdbc-tabular-record.json',
+          code: `{
+  "id": "support_tickets:10482",
+  "action": "UPSERT",
+  "source": { "type": "jdbc", "instance": "postgresql-crm" },
+  "content": {
+    "mimeType": "text/markdown",
+    "text": "# Support Ticket 10482\\nTitle: Unable to connect to SSO gateway\\nStatus: IN_PROGRESS\\nOwner: alice"
+  },
+  "metadata": {
+    "table_name": "support_tickets",
+    "primary_key": "10482",
+    "tenant_id": "acme_corp",
+    "is_tabular": true
+  },
+  "security": {
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "principal": "alice", "type": "user", "access": "read" },
+      { "principal": "it_support", "type": "group", "access": "read" }
+    ]
+  }
 }`
         },
         delete: {

@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan enterprise data stores (SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, process instances, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan enterprise data stores (Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -195,17 +195,44 @@ const SIMULATOR_DATA = {
       vector: "VectorStoreWriterConsumer saved vectors and public ACLs to vector store indices."
     }
   },
-  database: {
+  jdbc: {
     files: [
-      { name: "active_customer_accounts (Row-ID: 10243)", size: "4 KB", acls: ["Sales-Rep-RegionWest:Read"] },
-      { name: "pending_invoice_ledger (Row-ID: 55430)", size: "12 KB", acls: ["Accounting-Dept:ReadWrite"] }
+      { name: "support_tickets (Row-ID: 10482) - 'SSO Auth Failure' [Tabular RAG]", size: "2.4 KB", acls: ["user:alice:read", "group:it_support:read", "tenant:acme_corp"] },
+      { name: "customer_invoices (Row-ID: 88201 / invoice_88201.pdf) [BLOB Stream & Tika]", size: "1.8 MB", acls: ["group:finance_dept:read", "tenant:acme_corp"] },
+      { name: "support_tickets (Row-ID: 10485) - 'Obsolete ticket' [DELETE Tombstone]", size: "0 B", acls: ["tenant:acme_corp"] }
     ],
     logs: {
-      scan: "Database JDBC Connector triggered. Scanning PostgreSQL CRM tables, verifying Row-Level Security parameters...",
-      claimCheck: "Crawler published row metadata and primary key references as claim checks to 'opencrawling-ingestion'.",
+      scan: "JdbcRepositoryConnector triggered. Connecting to PostgreSQL 17 (crm_production) via HikariCP pool. Inspecting schema metadata via DatabaseMetaData.getColumns() for table 'support_tickets'...",
+      claimCheck: "Crawler scanned records via server-side cursors (fetchSize=1000) with Java 25 StructuredTaskScope. Streamed PDF BLOB column directly to ClaimCheckStore (Apache Ozone); generated Mustache narrative markdown for tabular rows; published OIS UPSERT and DELETE tombstones to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer received OIS payloads. Processed tabular narrative markdown into semantic chunks; extracted full text from binary invoice PDF via Apache Tika PipesForkParser; published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed JDBC chunks. Dispatched batches to local Ollama (mxbai-embed-large) generating 1024-dimension vectors with stamped tenant_id and ACL permissions; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer stored dense embeddings and collocated security SIDs into vector store; purged soft-deleted tombstone (Row: 10485) from index."
+    }
+  },
+  filesystem: {
+    files: [
+      { name: "/data/docs/enterprise_rag_specification.pdf", size: "3.2 MB", acls: ["user:staff:read"] },
+      { name: "/data/docs/quarterly_compliance_guide.docx", size: "1.5 MB", acls: ["group:compliance:read"] }
+    ],
+    logs: {
+      scan: "FileSystemRepositoryConnector triggered. Recursively scanning directory '/data/docs' via Java 25 StructuredTaskScope...",
+      claimCheck: "Crawler discovered files using Java NIO directory streams. Emitted RepositoryDocuments with file:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer read files from local filesystem. Extracted text via Apache Tika, generated semantic chunks, published to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed chunks. Generated 1024-dimension embeddings via Ollama, published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted file embeddings and POSIX security ACL tokens to vector store."
+    }
+  },
+  database: {
+    files: [
+      { name: "support_tickets (Row-ID: 10482) - 'SSO Auth Failure' [Tabular RAG]", size: "2.4 KB", acls: ["user:alice:read", "group:it_support:read", "tenant:acme_corp"] },
+      { name: "customer_invoices (Row-ID: 88201 / invoice_88201.pdf) [BLOB Stream & Tika]", size: "1.8 MB", acls: ["group:finance_dept:read", "tenant:acme_corp"] }
+    ],
+    logs: {
+      scan: "JdbcRepositoryConnector triggered. Scanning PostgreSQL CRM tables via server-side cursors...",
+      claimCheck: "Crawler published row metadata, binary BLOB claim checks, and tombstones to 'opencrawling-ingestion'.",
       tika: "IngestionConsumer mapped relational column contents, chunked record texts, sent ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer called local Ollama server, generated record embeddings, sent to 'opencrawling-embedded'.",
-      vector: "VectorStoreWriterConsumer saved embeddings, record primary keys, and regional ACL SIDs to Qdrant Cloud."
+      vector: "VectorStoreWriterConsumer saved embeddings, record primary keys, and tenant ACL SIDs to target vector store."
     }
   },
   iceberg: {
