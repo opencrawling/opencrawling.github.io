@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Vector Search Outputs & Writers",
-    desc: "Persists precomputed vector embeddings and chunk payloads directly into destination vector databases and search engines: Luxir (native JSON REST / kNN), Apache Solr 10 (solr.DenseVectorField), Vespa (vespa-feed-client), pgvector, Milvus, Qdrant (gRPC), and OpenSearch 2.x/3.x."
+    title: "Outputs: Vector Stores & Migration Sinks",
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -391,6 +391,7 @@ function initSimulator() {
     
     const sourceKey = sourceSelect.value;
     const destName = destSelect.options[destSelect.selectedIndex].text;
+    const destKey = destSelect.value;
     const simData = SIMULATOR_DATA[sourceKey];
     const embedReplicas = embedScaleSelect ? parseInt(embedScaleSelect.value, 10) : 1;
 
@@ -406,7 +407,9 @@ function initSimulator() {
     // Clear logs and print start message
     logsContainer.innerHTML = "";
     addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
-    if (embedReplicas > 1) {
+    if (destKey === 'ozone') {
+      addLog(`[MIGRATION] Pipeline execution mode set to [MIGRATION]. Text extraction, narrativization, chunking, and embedding will be bypassed.`, "warn");
+    } else if (embedReplicas > 1) {
       addLog(`[INFO] oc-embedding-service scaled to ${embedReplicas} replicas. Kafka will distribute partitions automatically.`, "info");
     }
     await sleep(800);
@@ -430,6 +433,26 @@ function initSimulator() {
       stationKafka.classList.add('active');
       addLog(`[KAFKA] ${simData.logs.claimCheck}`, "info");
       await sleep(1000);
+
+      if (destKey === 'ozone') {
+        // MIGRATION MODE FAST-PATH: Bypasses Tika Text Extraction & Embedding Service!
+        addLog(`[MIGRATION] Migration Mode active (pipelineMode=migration). Bypassing Apache Tika text extraction, narrativization, chunking, and embedding generation.`, "warn");
+        await sleep(700);
+
+        stationVector.classList.add('active');
+        addLog(`[PROCESS] Ozone Migration Writer: Streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit directly into Apache Ozone (ofs://opencrawling/migration/...).`, "process");
+        await sleep(900);
+        addLog(`[SECURITY] Ozone Migration Writer: Emitted Open Ingestion Standard (OIS) Zero-Trust metadata sidecar '${file.name}.ois.json' with cryptographic SHA-256 and SIDs: [${file.acls.join(', ')}].`, "info");
+        await sleep(700);
+        addLog(`[SUCCESS] Stored pristine binary and Zero-Trust OIS sidecar into Apache Ozone successfully.`, "success");
+        await sleep(1000);
+
+        // Reset pipeline state for next document, leaving Crawler active
+        stationKafka.classList.remove('active');
+        stationVector.classList.remove('active');
+        await sleep(500);
+        continue;
+      }
 
       // Step 4: Pulse 2 - Kafka to Ingestion (Tika)
       pulse2.classList.add('active');
@@ -459,7 +482,6 @@ function initSimulator() {
       // Step 9: Vector Store Output
       stationVector.classList.add('active');
       let vectorLog = simData.logs.vector;
-      const destKey = destSelect.value;
       if (destKey === 'seatunnel') {
         vectorLog = "SeaTunnelStoreWriterConsumer published OIS embedded chunks to fan-out Kafka topic ('seatunnel-ois-in'); Apache SeaTunnel Zeta cluster orchestrated parallel streaming and fanned out data to downstream sinks (ClickHouse, Milvus, Iceberg).";
       } else if (destKey === 'luxir') {

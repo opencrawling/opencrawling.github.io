@@ -271,6 +271,16 @@
         <p>Strongly typed, fluent <strong>Java 25 &amp; Spring Boot 4</strong> client SDK. Programmatically manage ingestion job lifecycles, connector setups, Copilot templates, and AIOps diagnostics with zero third-party HTTP transport bloat. <a href="sdk.html" class="learn-more-link">Explore SDK →</a></p>
       </div>
 
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+          </svg>
+        </div>
+        <h3>Enterprise Migration Mode &amp; Apache Ozone</h3>
+        <p>Run high-throughput bulk content migrations with <strong>bit-for-bit fidelity</strong> directly into <strong>Apache Ozone</strong>. Bypasses text extraction, narrativization, chunking, and vector embedding to maximize transfer rates, generating Open Ingestion Standard (OIS) <strong>Zero-Trust metadata sidecars (<code>.ois.json</code>)</strong> with SHA-256 hashes and source ACLs.</p>
+      </div>
+
       <div class="feature-card full-width">
         <div class="feature-icon-wrapper">
           <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -375,15 +385,16 @@
             <text x="495" y="265" class="node-desc">Embedded Topic</text>
           </g>
 
-          <!-- Node 4: Vector Writer / Outputs -->
+          <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
-            <rect x="640" y="145" width="145" height="145" rx="10" class="node-bg" />
-            <text x="712" y="168" class="node-title">Vector Writer</text>
-            <text x="712" y="188" class="node-sub">SeaTunnel Fan-Out 🌊</text>
-            <text x="712" y="206" class="node-sub">Luxir / Solr 10 ✨</text>
-            <text x="712" y="224" class="node-sub">Vespa Engine 🚀</text>
-            <text x="712" y="242" class="node-sub">pgvector / Milvus</text>
-            <text x="712" y="260" class="node-sub">Qdrant / OpenSearch</text>
+            <rect x="640" y="140" width="150" height="155" rx="10" class="node-bg" />
+            <text x="715" y="162" class="node-title">Outputs &amp; Sinks</text>
+            <text x="715" y="180" class="node-sub">Ozone Migration 🗄️</text>
+            <text x="715" y="198" class="node-sub">SeaTunnel Fan-Out 🌊</text>
+            <text x="715" y="216" class="node-sub">Luxir / Solr 10 ✨</text>
+            <text x="715" y="234" class="node-sub">Vespa Engine 🚀</text>
+            <text x="715" y="252" class="node-sub">pgvector / Milvus</text>
+            <text x="715" y="270" class="node-sub">Qdrant / OpenSearch</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -559,6 +570,7 @@
         <div class="sim-group">
           <label for="sim-destination">2. Select Vector Database / Output</label>
           <select id="sim-destination">
+            <option value="ozone">Apache Ozone (Migration Mode &amp; OIS Sidecars)</option>
             <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
             <option value="luxir">Luxir Hybrid Search Engine</option>
             <option value="pgvector">PostgreSQL + pgvector</option>
@@ -802,7 +814,22 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
         <div class="blog-card-meta">
-          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #2563EB, #3B82F6); color: #FFF;">Connector Release</span>
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #059669, #10B981); color: #FFF;">Enterprise Migration</span>
+          <span class="blog-date">October 6, 2026</span>
+          <span class="blog-read-time">8 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-migration-mode-and-apache-ozone-output-connector.html">Bit-for-Bit Enterprise Data Liberation: Announcing Migration Mode and the Apache Ozone Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's dedicated <strong>Migration Mode</strong> and native <strong>Apache Ozone Output Connector</strong> (<strong>oc-ozone-output-connector</strong>). Built for high-throughput enterprise content migration, bit-for-bit binary streaming, Zero-Trust OIS metadata sidecars (<code>.ois.json</code>), dual Ozone Native RPC and S3 Gateway transports, and parallel decoupled Kafka orchestration without RAG text-extraction or embedding overhead.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-migration-mode-and-apache-ozone-output-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge" style="background: linear-gradient(135deg, #2563EB, #3B82F6); color: #FFF;">Connector Release</span>
           <span class="blog-date">October 5, 2026</span>
           <span class="blog-read-time">8 min read</span>
         </div>
