@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcoming Davide Polato as Contributor for Apache Storm &amp; StormCrawler - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="OpenCrawling welcomes Apache Storm and StormCrawler open-source contributor Davide Polato to the team to drive distributed web crawling integration, topology test determinism, and streaming pipeline reliability.">
+  <meta name="keywords" content="opencrawling, Davide Polato, dpol1, apache storm, stormcrawler, contributor, distributed web crawling, stream processing, java 25, open ingestion standard, ois, enterprise rag">
+  <meta name="author" content="Piergiorgio Lucidi">
+  <link rel="canonical" href="https://opencrawling.org/blog/welcoming-davide-polato-as-contributor.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/welcoming-davide-polato-as-contributor.html">
+  <meta property="og:title" content="Welcoming Davide Polato as Contributor for Apache Storm &amp; StormCrawler - OpenCrawling">
+  <meta property="og:description" content="OpenCrawling welcomes Apache Storm and StormCrawler contributor Davide Polato to the team to drive distributed web crawling integration, topology test determinism, and streaming pipeline reliability.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/welcoming-davide-polato-as-contributor.html">
+  <meta property="twitter:title" content="Welcoming Davide Polato as Contributor for Apache Storm &amp; StormCrawler - OpenCrawling">
+  <meta property="twitter:description" content="OpenCrawling welcomes Apache Storm and StormCrawler contributor Davide Polato to the team to drive distributed web crawling integration, topology test determinism, and streaming pipeline reliability.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Welcoming Davide Polato as Contributor for Apache Storm & StormCrawler",
+    "description": "OpenCrawling welcomes Apache Storm and StormCrawler open-source contributor Davide Polato to the team to drive distributed web crawling integration, topology test determinism, and streaming pipeline reliability.",
+    "datePublished": "2026-10-07",
+    "author": {
+      "@type": "Person",
+      "name": "Piergiorgio Lucidi"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.org/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://opencrawling.org/blog/welcoming-davide-polato-as-contributor.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 800px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: 2.75rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-color);
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .post-content h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .post-content h3 {
+      font-size: 1.35rem;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 4px;
+      padding: 0.15em 0.4em;
+    }
+    
+    .post-content blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(139, 92, 246, 0.05);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+
+    .announcement-box {
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 12px;
+      background: rgba(124, 58, 237, 0.05);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .announcement-icon {
+      font-size: 2.5rem;
+      flex-shrink: 0;
+    }
+
+    .announcement-text h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-color);
+    }
+
+    .announcement-text p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <article class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Blog</a>
+    
+    <header class="post-header">
+      <h1 class="post-title">Ecosystem Growth: Welcoming Davide Polato as Contributor for Apache Storm &amp; StormCrawler</h1>
+      <div class="post-meta">
+        <span>By <strong>Piergiorgio Lucidi</strong></span>
+        <span>October 7, 2026</span>
+        <span>4 min read</span>
+      </div>
+    </header>
+
+    <div class="post-content">
+      <p>
+        The OpenCrawling ecosystem continues to expand rapidly as we bridge enterprise document repositories, relational databases, content systems, and web data sources to modern AI vector databases. As our architectural footprint widens, so does our community of passionate engineers.
+      </p>
+      <p>
+        Today, I am thrilled to officially announce that <strong>Davide Polato</strong> (<a href="https://github.com/dpol1" target="_blank" rel="noopener noreferrer">@dpol1</a>) has joined the OpenCrawling project as a <strong>Contributor for Apache Storm &amp; StormCrawler</strong>.
+      </p>
+
+      <div class="announcement-box">
+        <div class="announcement-icon">&#9889;</div>
+        <div class="announcement-text">
+          <h4>Distributed Stream Processing &amp; Web Crawling</h4>
+          <p>Davide joins to reinforce OpenCrawling's distributed web crawling capabilities, bringing deep hands-on expertise in Apache Storm topologies, StormCrawler components, and test suite determinism.</p>
+        </div>
+      </div>
+
+      <h2>Distributed Web Crawling for Enterprise AI</h2>
+      <p>
+        While enterprise content systems (Alfresco, SharePoint, CMIS, Documentum, FileNet) and structured databases host proprietary internal knowledge, modern enterprise RAG and LLM agent systems frequently require web-scale crawling of documentation hubs, product sites, knowledge portals, and authenticated partner domains.
+      </p>
+      <p>
+        To address this need, OpenCrawling recently introduced native support for <strong>Apache StormCrawler</strong> through two key modules:
+      </p>
+      <ul>
+        <li>
+          <strong><code>oc-stormcrawler-bolt</code></strong>: An Apache Storm Bolt that intercepts parsed web pages and emits normalized <strong>Open Ingestion Standard (OIS)</strong> documents with cryptographic deduplication, as well as HTTP 404/410 lifecycle events as OIS deletion tombstones (<code>action: "DELETE"</code>).
+        </li>
+        <li>
+          <strong><code>oc-stormcrawler-repository-connector</code></strong>: An OpenCrawling repository connector that coordinates StormCrawler topologies via the Apache Storm Nimbus REST API, handling lifecycle supervision and scheduling directly from the OpenCrawling Admin UI.
+        </li>
+      </ul>
+      <p>
+        Running large-scale distributed stream topologies across Apache Storm clusters introduces unique challenges: asynchronous tuple emission, frontier synchronization, stateful URL tracking, and testing non-determinism under parallel execution. This is where Davide's expertise shines.
+      </p>
+
+      <h2>Engineering Rigor &amp; Test Determinism</h2>
+      <p>
+        Davide is a software engineer and computer science researcher focused on Java backend internals, distributed stream processing, and clean code principles. As an active open-source contributor to both <strong>Apache Storm</strong> and <strong>Apache StormCrawler</strong>, he has been deeply engaged in solving complex distributed systems problems, including charset resolution, distributed mode stability, and observability context propagation.
+      </p>
+      <p>
+        Davide recently made an invaluable contribution to OpenCrawling by resolving a tricky, non-deterministic test issue in our StormCrawler repository connector test suite. In parallel stream topologies, tuples can be emitted in non-sequential order across worker threads. Davide collaborated with the core team to ensure unit and integration tests assert scan results independently of emission order, dramatically improving the determinism and reliability of our continuous integration pipelines.
+      </p>
+
+      <blockquote>
+        <p>"Distributed stream processing with Apache Storm and StormCrawler offers extraordinary throughput and scalability for web crawling. Bringing that stream-first power into OpenCrawling's Open Ingestion Standard—while ensuring bulletproof test reliability and clean code architecture—is an exciting journey. I am delighted to collaborate with the team to push the boundaries of distributed enterprise data ingestion."</p>
+        <cite style="display: block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted); font-style: normal;">&mdash; Davide Polato, Contributor for Apache Storm &amp; StormCrawler</cite>
+      </blockquote>
+
+      <h2>What Davide Will Be Focusing on Next</h2>
+      <p>
+        Davide is actively collaborating on the OpenCrawling codebase. His immediate roadmap includes:
+      </p>
+      <ul>
+        <li>
+          <strong>Deepening Storm &amp; StormCrawler Integration</strong>: Ensuring complete harmony between Apache Storm 3.1.0, StormCrawler 3.7.0, and the Open Ingestion Standard (OIS) document model.
+        </li>
+        <li>
+          <strong>Distributed Test Reliability</strong>: Enhancing test harnesses for distributed crawler topologies, status stream emission, and tombstone lifecycle events to maintain high quality and CI determinism.
+        </li>
+        <li>
+          <strong>Performance &amp; Frontier Tuning</strong>: Optimizing low-latency streaming pipeline execution, backpressure management, and URL frontier coordination.
+        </li>
+        <li>
+          <strong>Cross-Community Synergy</strong>: Strengthening ties and collaboration between the Apache Storm, Apache StormCrawler, and OpenCrawling developer communities.
+        </li>
+      </ul>
+
+      <h2>A Note from Piergiorgio Lucidi</h2>
+      <p>
+        <em>&ldquo;Building a truly robust open-source ingestion platform requires not only visionary architectural design but also rigorous engineering discipline under the hood. Davide's mastery of Apache Storm, his deep understanding of distributed stream mechanics, and his commitment to clean, maintainable code make him a fantastic addition to our team. Having him join as a Contributor for Apache Storm &amp; StormCrawler ensures that our web crawling capabilities are second to none in reliability and throughput. Welcome to the team, Davide!&rdquo;</em>
+      </p>
+
+      <h2>Join Us in Welcoming Davide!</h2>
+      <p>
+        You can find Davide's profile on our <a href="../team.html">Team Page</a>, follow his open-source work on <a href="https://github.com/dpol1" target="_blank" rel="noopener noreferrer">GitHub (@dpol1)</a>, connect with him on <a href="https://www.linkedin.com/in/davide-polato/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, or chat with him directly in the <a href="https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw" target="_blank" rel="noopener noreferrer">OpenCrawling Slack Community</a>!
+      </p>
+    </div>
+
+    <div class="blog-nav-bar">
+      <a href="introducing-migration-mode-and-apache-ozone-output-connector.html" class="blog-nav-btn" title="Bit-for-Bit Enterprise Data Liberation: Announcing Migration Mode and the Apache Ozone Output Connector">
+        &larr; Previous Article
+      </a>
+      <a href="../index.html#blog" class="blog-nav-btn">
+        All Articles
+      </a>
+      <a href="introducing-stormcrawler-repository-connector.html" class="blog-nav-btn" title="Enterprise Distributed Web Crawling: Announcing the Apache StormCrawler Repository Connector &amp; Bolt">
+        Related: StormCrawler &rarr;
+      </a>
+    </div>
+
+    <section class="related-articles-section">
+      <h3 class="related-articles-heading">📚 Continue Reading</h3>
+      <div class="related-articles-grid">
+        <a href="introducing-stormcrawler-repository-connector.html" class="related-card">
+          <span class="related-card-badge">Connector</span>
+          <h4 class="related-card-title">Enterprise Distributed Web Crawling: Announcing the Apache StormCrawler Repository Connector &amp; Bolt</h4>
+          <span class="related-card-date">September 28, 2026</span>
+        </a>
+        <a href="welcoming-luis-cabaceira-as-core-contributor.html" class="related-card">
+          <span class="related-card-badge">Team</span>
+          <h4 class="related-card-title">Ecosystem Growth: Welcoming Luis Cabaceira as Core Contributor and Lead Architect</h4>
+          <span class="related-card-date">July 16, 2026</span>
+        </a>
+        <a href="welcoming-michael-cizmar-as-lead-architect.html" class="related-card">
+          <span class="related-card-badge">Team</span>
+          <h4 class="related-card-title">Scale-Out Ingestion: Welcoming Michael Cizmar as Lead Architect</h4>
+          <span class="related-card-date">July 14, 2026</span>
+        </a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Theme Toggle
+      const toggleBtn = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      applyTheme(initialTheme);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+        });
+      }
+
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          html.classList.remove('light');
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
+        } else {
+          html.classList.remove('dark');
+          html.classList.add('light');
+          html.style.colorScheme = 'light';
+        }
+        localStorage.setItem('theme', theme);
+      }
+
+      // Mobile Menu Toggle
+      const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
+      const header = document.querySelector('.site-header');
+      if (mobileToggleBtn && header) {
+        mobileToggleBtn.addEventListener('click', () => {
+          const isOpen = header.classList.contains('mobile-menu-open');
+          if (isOpen) {
+            header.classList.remove('mobile-menu-open');
+            document.body.classList.remove('mobile-menu-active');
+            document.documentElement.classList.remove('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'false');
+          } else {
+            header.classList.add('mobile-menu-open');
+            document.body.classList.add('mobile-menu-active');
+            document.documentElement.classList.add('mobile-menu-active');
+            mobileToggleBtn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
