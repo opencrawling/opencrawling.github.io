@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Overhead Lakehouse Audit Reporting &amp; Embedded DuckDB Analytics: Announcing OpenCrawling's Document Ledger</title>
+  <meta name="description" content="Discover OpenCrawling's new Lakehouse Columnar Audit Reporting and Document Ledger. Features zero runtime overhead, Apache Parquet with Zstandard compression, RFC 4180 CSV compliance manifests, Hive partitioning, embedded DuckDB vectorized analytical OLAP, Admin UI query playground, and CLI/SDK governance.">
+  <meta name="keywords" content="lakehouse reporting, embedded duckdb, apache parquet, document ledger, audit trail, soc 2, compliance manifest, zstandard compression, hive partitioning, open ingestion standard, rag token tracking, migration verification, opencrawling cli, duckdb olap">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-lakehouse-audit-reporting-and-embedded-duckdb.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-lakehouse-audit-reporting-and-embedded-duckdb.html">
+  <meta property="og:title" content="Zero-Overhead Lakehouse Audit Reporting &amp; Embedded DuckDB Analytics: Announcing OpenCrawling's Document Ledger">
+  <meta property="og:description" content="Discover OpenCrawling's new Lakehouse Columnar Audit Reporting and Document Ledger. Features zero runtime overhead, Apache Parquet with Zstandard compression, RFC 4180 CSV compliance manifests, Hive partitioning, embedded DuckDB vectorized analytical OLAP, Admin UI query playground, and CLI/SDK governance.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-lakehouse-audit-reporting-and-embedded-duckdb.html">
+  <meta property="twitter:title" content="Zero-Overhead Lakehouse Audit Reporting &amp; Embedded DuckDB Analytics: Announcing OpenCrawling's Document Ledger">
+  <meta property="twitter:description" content="Discover OpenCrawling's new Lakehouse Columnar Audit Reporting and Document Ledger. Features zero runtime overhead, Apache Parquet with Zstandard compression, RFC 4180 CSV compliance manifests, Hive partitioning, embedded DuckDB vectorized analytical OLAP, Admin UI query playground, and CLI/SDK governance.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230284C7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Zero-Overhead Lakehouse Audit Reporting & Embedded DuckDB Analytics: Announcing OpenCrawling's Document Ledger",
+    "description": "Discover OpenCrawling's new Lakehouse Columnar Audit Reporting and Document Ledger. Features zero runtime overhead, Apache Parquet with Zstandard compression, RFC 4180 CSV compliance manifests, Hive partitioning, embedded DuckDB vectorized analytical OLAP, Admin UI query playground, and CLI/SDK governance.",
+    "datePublished": "2026-10-17",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-lakehouse-audit-reporting-and-embedded-duckdb.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #0284C7, #38BDF8); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #38BDF8, #818CF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #38BDF8; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #38BDF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #7DD3FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(14,165,233,0.06); border-color: #0284C7; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #0284C7; color: #7DD3FC; background: rgba(14,165,233,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #F59E0B; color: #FCD34D; background: rgba(245,158,11,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #38BDF8; }
+    .article-cta { background: rgba(14,165,233,0.06); border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #38BDF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(14,165,233,0.1); color: #38BDF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(56,189,248,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .stat-pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-family: var(--font-mono); font-weight: 600; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #E2E8F0; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Lakehouse &amp; Analytics</span>
+        <span class="blog-meta-date">October 17, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Zero-Overhead Lakehouse Audit Reporting &amp; Embedded DuckDB Analytics: Announcing OpenCrawling's Document Ledger</h1>
+      <p class="blog-article-lead">
+        When an enterprise crawler processes millions of documents across distributed repositories, enterprise leaders face a critical governance blindspot: <em>Which exact files succeeded, failed, or were quarantined? What were their SHA-256 cryptographic checksums? Exactly how many tokens were fed into our embedding models, and what was the dollar cost? And can compliance officers audit billions of records instantly with standard SQL without deploying a heavyweight data warehouse?</em> Today, we are thrilled to introduce OpenCrawling's brand new <strong>Lakehouse Audit Reporting &amp; Document Ledger</strong> feature, powered by <strong>Apache Parquet</strong>, <strong>RFC 4180 CSV compliance manifests</strong>, and an <strong>embedded DuckDB vectorized analytical OLAP engine</strong>! 🦆📊
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Lakehouse Columnar Audit Reporting &amp; Vectorized OLAP Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Parallel Ingestion Workers</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">JobLedgerAccumulator (Lock-Free Memory Buffer)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">JobReportService (On Complete Hook)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Hive Storage: Parquet (ZSTD) + CSV + JSON</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Embedded DuckDB OLAP Engine</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Admin UI &bull; oc report CLI &bull; Java SDK</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Enterprise Governance &amp; AI Token Cost Dilemma</h2>
+      <p>
+        In modern enterprise AI stacks, ingesting unstructured data into Retrieval-Augmented Generation (RAG) vector stores or migrating legacy archives into modern object storage is no longer just a pipeline task; it is a <strong>heavily regulated compliance workflow</strong>:
+      </p>
+      <ul>
+        <li><strong>Regulatory Audits (SOC 2, GDPR, HIPAA, ISO 27001):</strong> Enterprise compliance officers cannot rely on ephemeral log files. They demand immutable, Write-Once-Read-Many (WORM) audit manifests proving exactly when an asset was ingested, its bit-for-bit SHA-256 hash, and which ACL rules were applied.</li>
+        <li><strong>AI Economics &amp; Token Budget Governance:</strong> With massive crawls generating tens of millions of vector embeddings across models like <code>mxbai-embed-large</code> or OpenAI <code>text-embedding-3-small</code>, finance and platform engineering teams need precise per-document and per-run accounting of chunks, tokens, and estimated dollar costs.</li>
+        <li><strong>Bit-for-Bit Migration Verification:</strong> In archive migration mode, safe-pruning source repositories requires mathematically verifiable proof that 100% of binary payloads landed uncorrupted in cloud object storage (such as Apache Ozone or Amazon S3).</li>
+        <li><strong>The Log File Trap:</strong> Parsing multi-gigabyte unindexed text logs with <code>grep</code> or <code>awk</code> is agonizingly slow, resource-heavy, and fragile. Organizations shouldn't be forced to deploy and pay for external data warehouses like Snowflake, BigQuery, or ClickHouse just to audit crawler job runs.</li>
+      </ul>
+
+      <p>
+        The new OpenCrawling Reporting Subsystem solves this holistically by integrating an enterprise Lakehouse audit architecture right into the crawler runtime, with zero database lock contention and zero runtime penalty.
+      </p>
+
+      <h2><span class="section-num">2. </span>Zero Main-Thread Overhead: The Asynchronous <code>JobLedgerAccumulator</code></h2>
+      <p>
+        A core requirement of OpenCrawling is high-throughput parallelism: worker threads running on Java 25 Virtual Threads must never block on disk I/O, database locks, or external network logging calls while crawling and extracting content.
+      </p>
+      <p>
+        To achieve this, OpenCrawling introduces the <code>JobLedgerAccumulator</code>. As ingestion and migration workers process documents across parallel lanes, they emit lightweight, structured ledger events directly into a <strong>concurrent in-memory lock-free accumulator</strong>. No database queries, no row-level mutexes, and no serialization bottlenecks occur during the active crawl.
+      </p>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#9889;</div>
+        <div>
+          <p><strong>Lock-Free In-Memory Accumulation:</strong> Ingestion workers record document outcomes (<code>SUCCESS</code>, <code>FAILED</code>, <code>SKIPPED</code>, <code>QUARANTINED</code>, <code>TOMBSTONED</code>, <code>MIGRATED</code>) in sub-microsecond time. Only upon job completion does the orchestrator trigger the background <code>JobReportService</code> to serialize the accumulated ledger into columnar lakehouse formats.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">3. </span>Hive Partitioning &amp; Multi-Format Lakehouse Artifacts</h2>
+      <p>
+        Upon job completion, OpenCrawling automatically generates up to four complementary artifacts organized in standard <strong>Hive-partitioned directory layouts</strong> (<code>mode={RAG|MIGRATION}/year=YYYY/month=MM/day=DD/</code>):
+      </p>
+
+      <pre><code>${opencrawling.reporting.storage.local-dir}/
+├── mode=RAG/
+│   └── year=2026/
+│       └── month=10/
+│           └── day=17/
+│               ├── job_1_exec_exec-6e03d06c.parquet
+│               ├── manifest_exec-6e03d06c.csv
+│               ├── summary_exec-6e03d06c.json
+│               └── job_1_exec_exec-6e03d06c.avro       (optional)
+└── mode=MIGRATION/
+    └── year=2026/
+        └── month=10/
+            └── day=17/
+                ├── job_2_exec_exec-9f82a11b.parquet
+                ├── manifest_exec-9f82a11b.csv
+                └── summary_exec-9f82a11b.json</code></pre>
+
+      <h3>1. Columnar Apache Parquet with Zstandard Compression</h3>
+      <p>
+        The primary audit ledger is written as a binary columnar <strong>Apache Parquet</strong> file compressed with <strong>Zstandard (<code>ZSTD</code>)</strong>. Configured with 128 MB row groups and 1 MB data pages with dictionary encoding for repeating strings (connector types, MIME types, disposition statuses), Parquet achieves up to <strong>90% storage savings</strong> while enabling sub-second vectorized scans over tens of millions of records.
+      </p>
+
+      <h3>2. RFC 4180 CSV Compliance Manifest</h3>
+      <p>
+        For external auditors, compliance officers, and legal teams, OpenCrawling produces an RFC 4180-compliant CSV manifest. It provides an immediate, tamper-evident record ready for spreadsheet inspection or regulatory discovery:
+      </p>
+
+      <pre><code>job_id,execution_id,document_id,source_uri,status,duration_ms,rag_chunk_count,rag_token_count,mig_sha256_checksum,timestamp_utc
+1,exec-6e03d06c,doc-001,file:///data/contract.pdf,SUCCESS,142,8,2140,,2026-10-17T10:14:22Z
+1,exec-6e03d06c,doc-002,file:///data/invoice.docx,SUCCESS,98,4,950,,2026-10-17T10:14:23Z
+1,exec-6e03d06c,doc-003,file:///data/quarantine.bin,FAILED,12,0,0,,2026-10-17T10:14:24Z</code></pre>
+
+      <h3>3. Operational JSON Summary</h3>
+      <p>
+        A lightweight operational snapshot containing high-level run KPIs, document throughput, chunk counts, token totals, and estimated dollar costs:
+      </p>
+
+      <pre><code>{
+  "executionId": "exec-6e03d06c",
+  "jobId": "1",
+  "jobName": "Default_RAG_Pipeline",
+  "pipelineMode": "RAG",
+  "status": "COMPLETED",
+  "totalDocuments": 1540,
+  "successfulDocuments": 1538,
+  "failedDocuments": 2,
+  "skippedDocuments": 0,
+  "durationMs": 42180,
+  "totalChunks": 6160,
+  "totalTokens": 1848000,
+  "estimatedEmbeddingCostUsd": 0.03696,
+  "embeddingModel": "mxbai-embed-large",
+  "reportPathParquet": "mode=RAG/year=2026/month=10/day=17/job_1_exec_exec-6e03d06c.parquet",
+  "reportPathCsv": "mode=RAG/year=2026/month=10/day=17/manifest_exec-6e03d06c.csv",
+  "reportPathJson": "mode=RAG/year=2026/month=10/day=17/summary_exec-6e03d06c.json"
+}</code></pre>
+
+      <h3>4. Optional Canonical Avro Container</h3>
+      <p>
+        When enterprise streaming pipelines require binary schema enforcement, OpenCrawling can emit binary Avro container files using the canonical <code>job_execution_report.avsc</code> schema for direct ingestion into Kafka Lakehouse sinks or Apache Iceberg/Hadoop tables.
+      </p>
+
+      <h2><span class="section-num">4. </span>Serverless Vectorized OLAP: Embedded DuckDB Engine</h2>
+      <p>
+        Here is where things get truly exciting. Instead of requiring you to load Parquet files into a remote data warehouse or spin up external query infrastructure, OpenCrawling embeds <strong>DuckDB 1.2.x</strong> directly inside the Java runtime.
+      </p>
+      <p>
+        DuckDB executes vectorized, zero-copy SQL queries over local or cloud Parquet files with blazing speed. You can submit analytical SQL queries via the REST API (<code>POST /api/reports/query</code>), through the Admin UI, or using the CLI:
+      </p>
+
+      <pre><code>curl -X POST http://localhost:8080/api/reports/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sql": "SELECT status, count(*) AS doc_count, sum(rag_token_count) AS tokens, avg(duration_ms) AS avg_ms FROM read_parquet(\"target/reports/mode=RAG/**/*.parquet\") GROUP BY status"
+  }'</code></pre>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#129414;</div>
+        <div>
+          <p><strong>Direct DuckDB CLI Interoperability:</strong> Because OpenCrawling outputs industry-standard Parquet with Hive partitioning, you can also query your report directory directly from your laptop using the standalone <code>duckdb</code> CLI: <code>duckdb -c "SELECT * FROM read_parquet('target/reports/**/*.parquet') WHERE status = 'FAILED';"</code></p>
+        </div>
+      </div>
+
+      <h3>Essential Analytical Queries for Operations &amp; Finance</h3>
+      <ul>
+        <li><strong>Top 5 Latency Bottlenecks:</strong>
+          <pre><code>SELECT document_id, source_uri, duration_ms, rag_chunk_count 
+FROM read_parquet('target/reports/mode=RAG/**/*.parquet') 
+ORDER BY duration_ms DESC LIMIT 5;</code></pre>
+        </li>
+        <li><strong>Error Root-Cause Analysis:</strong>
+          <pre><code>SELECT error_code, error_message, count(*) AS occurrences 
+FROM read_parquet('target/reports/**/*.parquet') 
+WHERE status = 'FAILED' 
+GROUP BY error_code, error_message 
+ORDER BY occurrences DESC;</code></pre>
+        </li>
+        <li><strong>AI Embedding Cost Accounting (e.g. $0.02 / 1M tokens):</strong>
+          <pre><code>SELECT rag_embedding_model, 
+       sum(rag_token_count) AS total_tokens, 
+       (sum(rag_token_count) / 1000000.0) * 0.02 AS total_cost_usd 
+FROM read_parquet('target/reports/mode=RAG/**/*.parquet') 
+GROUP BY rag_embedding_model;</code></pre>
+        </li>
+        <li><strong>Migration Cryptographic Integrity Verification:</strong>
+          <pre><code>SELECT mig_target_bucket, 
+       count(*) AS objects_migrated, 
+       sum(mig_binary_size_bytes) AS total_bytes, 
+       count(mig_sha256_checksum) AS checksums_verified 
+FROM read_parquet('target/reports/mode=MIGRATION/**/*.parquet') 
+GROUP BY mig_target_bucket;</code></pre>
+        </li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Admin UI: The "Reports &amp; Audit Ledger" Dashboard</h2>
+      <p>
+        The OpenCrawling Admin UI now features a dedicated <strong>Reports &amp; Audit Ledger</strong> view (accessible at <code>/reports</code>):
+      </p>
+
+      <ul>
+        <li><strong>Executive KPI Cards:</strong> High-level metrics showing Total Reports Generated, Total Documents Audited (with unique job deduplication stats), Ingestion Success Rate, and Aggregate Tokens Consumed.</li>
+        <li><strong>Job Execution Table:</strong> Displays each crawl execution with pipeline mode badges (<code>RAG</code> vs <code>MIGRATION</code>), job name, duration, and OK vs Failed document counters.</li>
+        <li><strong>One-Click Artifact Downloads:</strong> Instant buttons to download <code>manifest.csv</code>, <code>report.parquet</code>, and <code>summary.json</code> for any execution.</li>
+        <li><strong>Interactive Document Ledger Modal:</strong> Drill into any completed job to search individual documents by URI or ID, filter by status (<code>ALL</code>, <code>SUCCESS</code>, <code>FAILED</code>, <code>SKIPPED</code>), and inspect latency, chunk counts, and error stacktraces.</li>
+        <li><strong>Embedded DuckDB Query Playground:</strong> An interactive in-browser SQL code editor equipped with one-click query templates (Token Costs, Latency Analysis, Migration Verification, Error Breakdown), instant query execution, and one-click <strong>Export to CSV</strong>.</li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Terminal-First Auditing with <code>oc report</code> CLI</h2>
+      <p>
+        For DevOps and automation pipelines, the OpenCrawling CLI introduces the <code>oc report</code> command suite:
+      </p>
+
+      <h3>1. List All Execution Reports</h3>
+      <pre><code>$ oc report list
++---------------------+--------+------+-----------+---------------------+----------+-----------------+--------+--------+-----------+
+| EXECUTION ID        | JOB ID | MODE | STATUS    | START TIME          | DURATION | DOCS (OK/FAIL)  | CHUNKS | TOKENS | EST. COST |
++---------------------+--------+------+-----------+---------------------+----------+-----------------+--------+--------+-----------+
+| exec-6e03d06c       | 1      | RAG  | COMPLETED | 2026-10-17 10:14:00 | 12s      | 9 (9/0)         | 42     | 11840  | $0.0024   |
+| exec-9f82a11b       | 2      | MIG  | COMPLETED | 2026-10-17 11:20:00 | 45s      | 1500 (1500/0)   | -      | -      | -         |
++---------------------+--------+------+-----------+---------------------+----------+-----------------+--------+--------+-----------+</code></pre>
+
+      <h3>2. Inspect Granular Document Ledger</h3>
+      <pre><code>$ oc report ledger 1 exec-6e03d06c --status SUCCESS --page 0 --size 5
++------------------+------------------------------------+---------+--------+--------+----------+-------+
+| DOCUMENT ID      | SOURCE URI                         | STATUS  | CHUNKS | TOKENS | DURATION | ERROR |
++------------------+------------------------------------+---------+--------+--------+----------+-------+
+| doc-001          | file:///data/contracts/nda.pdf     | SUCCESS | 8      | 2140   | 142ms    | -     |
+| doc-002          | file:///data/contracts/sla.pdf     | SUCCESS | 5      | 1200   | 98ms     | -     |
++------------------+------------------------------------+---------+--------+--------+----------+-------+
+Showing 2 items | Page 0 | Total: 9</code></pre>
+
+      <h3>3. Export Artifacts &amp; Run Direct DuckDB Queries</h3>
+      <pre><code># Download Parquet columnar audit file
+$ oc report export 1 exec-6e03d06c --format parquet --out ./audit-run.parquet
+
+# Run analytical SQL query directly via CLI
+$ oc report query --sql "SELECT count(*) AS total_docs, avg(duration_ms) AS avg_duration_ms FROM read_parquet('mode=RAG/**/*.parquet')"
++------------+-----------------+
+| total_docs | avg_duration_ms |
++------------+-----------------+
+| 9          | 124.44          |
++------------+-----------------+
+✔ Query executed in 14 ms (1 rows returned)</code></pre>
+
+      <h2><span class="section-num">7. </span>Programmatic Governance with Java Client SDK (<code>ReportClient</code>)</h2>
+      <p>
+        Building custom governance bots or automated CI/CD compliance gates? The official OpenCrawling Java SDK provides full programmatic access through <code>client.reports()</code>:
+      </p>
+
+      <pre><code>import org.opencrawling.sdk.OpenCrawlingClient;
+import org.opencrawling.sdk.models.JobReportSummary;
+import org.opencrawling.sdk.models.PaginatedLedgerResponse;
+import org.opencrawling.sdk.models.QueryResult;
+import java.nio.file.Path;
+
+OpenCrawlingClient client = OpenCrawlingClient.builder()
+        .baseUrl("http://localhost:8080")
+        .build();
+
+// 1. List all completed job execution summaries
+for (JobReportSummary r : client.reports().list()) {
+    System.out.printf("Exec: %s | Mode: %s | Docs: %d (Success: %d, Fail: %d) | Tokens: %d%n",
+            r.executionId(), r.pipelineMode(), r.totalDocuments(), 
+            r.successfulDocuments(), r.failedDocuments(), r.totalTokens());
+}
+
+// 2. Query document ledger for failures
+PaginatedLedgerResponse ledger = client.reports().getDocumentLedger(
+        "1", "exec-6e03d06c", "FAILED", "contracts", 0, 50);
+ledger.items().forEach(entry -> {
+    System.err.println("Document Failed: " + entry.documentId() + " Reason: " + entry.errorMessage());
+});
+
+// 3. Download Parquet file directly to disk
+client.reports().downloadToFile("1", "exec-6e03d06c", "parquet", Path.of("./job1-report.parquet"));
+
+// 4. Run embedded DuckDB query programmatically
+QueryResult qr = client.reports().query(
+        "SELECT status, count(*) AS total FROM read_parquet('target/reports/**/*.parquet') GROUP BY status");
+System.out.println("Result: " + qr.rows());</code></pre>
+
+      <h2><span class="section-num">8. </span>Storage Targets &amp; Configuration Reference</h2>
+      <p>
+        Lakehouse audit reporting is enabled by default in OpenCrawling 2.0+ and supports both local filesystems and enterprise cloud object stores (Apache Ozone, AWS S3, MinIO):
+      </p>
+
+      <pre><code>opencrawling:
+  reporting:
+    enabled: true                     # Enable Lakehouse audit reporting
+    storage:
+      type: LOCAL                     # LOCAL or S3
+      local-dir: target/reports       # Local disk directory (Docker: /data/reports)
+      s3:
+        endpoint: http://localhost:9878
+        bucket: opencrawling-audit-reports
+        region: us-east-1
+    formats:
+      parquet:
+        enabled: true                 # Generate columnar Parquet file
+        compression: ZSTD             # ZSTD, SNAPPY, GZIP, UNCOMPRESSED
+        row-group-size-bytes: 134217728 # 128 MB row groups
+        page-size-bytes: 1048576       # 1 MB data pages
+      csv: true                       # Generate CSV compliance manifest
+      json: true                      # Generate operational JSON summary
+      avro: false                     # Generate optional binary Avro file</code></pre>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Environment Variable</th>
+            <th>Spring Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_ENABLED</code></td>
+            <td><code>opencrawling.reporting.enabled</code></td>
+            <td><code>true</code></td>
+            <td>Master toggle for audit reporting &amp; document ledger</td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_STORAGE_TYPE</code></td>
+            <td><code>opencrawling.reporting.storage.type</code></td>
+            <td><code>LOCAL</code></td>
+            <td>Storage provider: <code>LOCAL</code> or <code>S3</code></td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_LOCAL_DIR</code></td>
+            <td><code>opencrawling.reporting.storage.local-dir</code></td>
+            <td><code>target/reports</code></td>
+            <td>Reports path (Docker: <code>/data/reports</code>)</td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_S3_ENDPOINT</code></td>
+            <td><code>opencrawling.reporting.storage.s3.endpoint</code></td>
+            <td><code>http://localhost:9878</code></td>
+            <td>Target S3 / Apache Ozone S3 Gateway endpoint</td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_S3_BUCKET</code></td>
+            <td><code>opencrawling.reporting.storage.s3.bucket</code></td>
+            <td><code>opencrawling-audit-reports</code></td>
+            <td>Bucket for audit artifacts</td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_FORMATS_PARQUET_COMPRESSION</code></td>
+            <td><code>opencrawling.reporting.formats.parquet.compression</code></td>
+            <td><code>ZSTD</code></td>
+            <td>Codec: <code>ZSTD</code>, <code>SNAPPY</code>, <code>GZIP</code>, <code>UNCOMPRESSED</code></td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_FORMATS_CSV</code></td>
+            <td><code>opencrawling.reporting.formats.csv</code></td>
+            <td><code>true</code></td>
+            <td>Generate RFC 4180 CSV compliance manifest</td>
+          </tr>
+          <tr>
+            <td><code>SPRING_OPENCRAWLING_REPORTING_FORMATS_JSON</code></td>
+            <td><code>opencrawling.reporting.formats.json</code></td>
+            <td><code>true</code></td>
+            <td>Generate operational JSON summary</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">9. </span>Automated Verification &amp; Testing</h2>
+      <p>
+        The Reporting Subsystem is backed by a comprehensive end-to-end integration test suite that runs against the decoupled multi-service containerized stack:
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Decoupled Multi-Container Test:</strong> Run <code>./scripts/test-reporting-decoupled.sh</code> to spin up the complete containerized stack (PostgreSQL + pgvector, Redis, Ollama, Kafka, crawler, decoupled consumers, and MCP server). The test verifies end-to-end ingestion, verifies Hive-partitioned Parquet generation with valid <code>PAR1</code> magic bytes, executes serverless DuckDB queries, and tests all REST and CLI commands.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Experience Enterprise Lakehouse Reporting Today</h3>
+        <p>Explore the OpenCrawling architecture in our live interactive simulator, read the complete Lakehouse documentation on our Wiki, or clone the repository on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Lakehouse-Audit-Reporting-and-Ledger" target="_blank" rel="noopener" class="btn btn-outline">Read Lakehouse Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
