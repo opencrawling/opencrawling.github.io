@@ -1378,12 +1378,12 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
         doxis: {
           file: 'doxis-ois-document.json',
           code: `{
-  "id": "doxis://DX4/DB1/documents/3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
+  "id": "doxis://ACME/DB1/documents/3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
   "action": "UPSERT",
   "source": {
     "type": "doxis",
     "instance": "https://csb.enterprise.local/restws/publicws/rest/api/v1",
-    "customer": "DX4",
+    "customer": "ACME",
     "repository": "DB1"
   },
   "content": {
@@ -1394,7 +1394,7 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     "title": "Master Services Agreement 2026",
     "mimeType": "application/pdf",
     "doxis.documentId": "3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
-    "doxis.customer": "DX4",
+    "doxis.customer": "ACME",
     "doxis.repository": "DB1",
     "doxis.documentClass": "ContractDocument",
     "doxis.version": "1",
@@ -1407,9 +1407,9 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
   "security": {
     "inheritanceEnabled": true,
     "permissions": [
-      { "identity": "DX4/Legal", "identityType": "group", "access": "read" },
-      { "identity": "DX4/elena.weber", "identityType": "user", "access": "write" },
-      { "identity": "DX4/restricted.user", "identityType": "user", "access": "deny" }
+      { "identity": "ACME/Legal", "identityType": "group", "access": "read" },
+      { "identity": "ACME/elena.weber", "identityType": "user", "access": "write" },
+      { "identity": "ACME/restricted.user", "identityType": "user", "access": "deny" }
     ]
   }
 }`

@@ -156,15 +156,15 @@ function initArchHover() {
 const SIMULATOR_DATA = {
   doxis: {
     files: [
-      { name: "contracts/MSA_Vendor_Enterprise_2026.pdf (UUID: 3f2a9c1e-5b7d / v1)", size: "2.1 MB", acls: ["DX4/Legal:read", "DX4/elena.weber:write", "DX4/restricted.user:deny"] },
-      { name: "dossiers/HR_Dossier_Johann_Schmidt (Parent E-File: 9e8d7c6b) [ Akten ]", size: "1.4 MB", acls: ["DX4/HR-Managers:read", "DX4/johann.schmidt:read"] },
-      { name: "invoices/INV-2026-0042.pdf (UUID: 8a1b2c3d-9f0e) [DELETE Tombstone]", size: "0 B", acls: ["DX4/Accounting:read"] }
+      { name: "contracts/MSA_Vendor_Enterprise_2026.pdf (UUID: 3f2a9c1e-5b7d / v1)", size: "2.1 MB", acls: ["ACME/Legal:read", "ACME/elena.weber:write", "ACME/restricted.user:deny"] },
+      { name: "dossiers/HR_Dossier_Johann_Schmidt (Parent E-File: 9e8d7c6b) [ Akten ]", size: "1.4 MB", acls: ["ACME/HR-Managers:read", "ACME/johann.schmidt:read"] },
+      { name: "invoices/INV-2026-0042.pdf (UUID: 8a1b2c3d-9f0e) [DELETE Tombstone]", size: "0 B", acls: ["ACME/Accounting:read"] }
     ],
     logs: {
-      scan: "DoxisRepositoryConnector triggered. Connecting to Doxis 4 CSB REST API (contract 14.4.1) at http://csb:8080/restws/publicws/rest/api/v1 (Customer: DX4, Repository: DB1, Role: admins)...",
-      claimCheck: "Crawler executed paged CQL search via Java 25 StructuredTaskScope in a single CSB session. Normalized typed descriptors (ObjectName, ObjectDate), merged parent e-file ACEs with document ACLs (Tenant Isolation: DX4/*), spooled binary payloads to TempFileInputStream, and published OIS UPSERT and DELETE tombstones with doxis:// URIs to 'opencrawling-ingestion'.",
+      scan: "DoxisRepositoryConnector triggered. Connecting to Doxis 4 CSB REST API (contract 14.4.1) at http://csb:8080/restws/publicws/rest/api/v1 (Customer: ACME, Repository: DB1, Role: admins)...",
+      claimCheck: "Crawler executed paged CQL search via Java 25 StructuredTaskScope in a single CSB session. Normalized typed descriptors (ObjectName, ObjectDate), merged parent e-file ACEs with document ACLs (Tenant Isolation: ACME/*), spooled binary payloads to TempFileInputStream, and published OIS UPSERT and DELETE tombstones with doxis:// URIs to 'opencrawling-ingestion'.",
       tika: "IngestionConsumer retrieved claim references. Parsed primary binary content stream via Apache Tika PipesForkParser, extracted normalized descriptors, and published ChunkMessages to 'opencrawling-chunks'.",
-      ollama: "EmbeddingConsumer consumed Doxis document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension embeddings with stamped tenant isolation (DX4) and Zero-Trust SIDs; published to 'opencrawling-embedded'.",
+      ollama: "EmbeddingConsumer consumed Doxis document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension embeddings with stamped tenant isolation (ACME) and Zero-Trust SIDs; published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted Doxis document embeddings, typed descriptor metadata, and tenant-isolated security SIDs into vector store; purged deleted tombstone (INV-2026-0042) from index."
     }
   },
