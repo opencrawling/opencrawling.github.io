@@ -357,14 +357,15 @@
           <g class="node-group" data-node="sources">
             <rect x="10" y="125" width="120" height="225" rx="10" class="node-bg" />
             <text x="70" y="145" class="node-title">Sources</text>
-            <text x="70" y="163" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="181" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="199" class="node-sub">File System</text>
-            <text x="70" y="217" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="235" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="253" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="271" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="289" class="node-sub">StormCrawler🕷️</text>
+            <text x="70" y="163" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="181" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="199" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="217" class="node-sub">File System</text>
+            <text x="70" y="235" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="253" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="271" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="289" class="node-sub">Camunda BPMN⚡</text>
+            <text x="70" y="307" class="node-sub">StormCrawler🕷️</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -555,7 +556,8 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
-            <option value="jdbc" selected>Relational Database (JDBC / PostgreSQL)</option>
+            <option value="doxis" selected>Doxis 4 ECM (Intelligent Content Automation)</option>
+            <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
             <option value="cmis">OASIS CMIS (ECM Repository)</option>
             <option value="aps">Alfresco Process Services (APS)</option>
             <option value="alfresco">Alfresco Content Services (ACS)</option>
@@ -763,12 +765,12 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>CMIS</strong> and <strong>BPMN</strong> integrations.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
-          <span class="std-badge">🗂️ CMIS &amp; BPMN Ready</span>
+          <span class="std-badge">🏛️ Doxis &amp; CMIS Ready</span>
           <span class="std-badge">🔌 Vendor-Neutral</span>
           <span class="std-badge">⚙️ Event-Decoupled</span>
         </div>
@@ -784,6 +786,7 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
               <button class="schema-tab-btn" data-schema="jdbc">JDBC Tabular</button>
               <button class="schema-tab-btn" data-schema="delete">Delete Tombstone</button>
               <button class="schema-tab-btn" data-schema="cmis">CMIS</button>
@@ -1369,6 +1372,45 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     "stormcrawler.status": "DELETED",
     "http.status": "404",
     "deletedAt": "2026-09-03T12:00:00Z"
+  }
+}`
+        },
+        doxis: {
+          file: 'doxis-ois-document.json',
+          code: `{
+  "id": "doxis://DX4/DB1/documents/3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
+  "action": "UPSERT",
+  "source": {
+    "type": "doxis",
+    "instance": "https://csb.enterprise.local/restws/publicws/rest/api/v1",
+    "customer": "DX4",
+    "repository": "DB1"
+  },
+  "content": {
+    "mimeType": "application/pdf"
+  },
+  "metadata": {
+    "name": "MSA_Vendor_Enterprise_2026.pdf",
+    "title": "Master Services Agreement 2026",
+    "mimeType": "application/pdf",
+    "doxis.documentId": "3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
+    "doxis.customer": "DX4",
+    "doxis.repository": "DB1",
+    "doxis.documentClass": "ContractDocument",
+    "doxis.version": "1",
+    "doxis.isLatestVersion": "true",
+    "doxis.parentFolderName": "Acme Corp Master File",
+    "doxis_desc_ObjectName": "Master Services Agreement 2026",
+    "doxis_desc_ObjectNumberExternal": "CTR-2026-0042",
+    "doxis_desc_ObjectDate": "2026-03-15"
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "DX4/Legal", "identityType": "group", "access": "read" },
+      { "identity": "DX4/elena.weber", "identityType": "user", "access": "write" },
+      { "identity": "DX4/restricted.user", "identityType": "user", "access": "deny" }
+    ]
   }
 }`
         },
