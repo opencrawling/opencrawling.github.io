@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligent Content Automation Meets Enterprise RAG: Announcing the Doxis Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native Doxis 4 integration (oc-doxis-repository-connector & oc-doxis-client). Ingest SER Group Doxis documents, electronic dossiers (Akten), custom typed descriptors, and Zero-Trust tenant-isolated ACLs via Content Service Bus (CSB) REST API using Java 25 Virtual Threads and incremental tombstone synchronization.">
+  <meta name="keywords" content="doxis 4, ser group, content service bus, csb rest api, doxis repository connector, enterprise content management, dms, akten, electronic file, zero-trust acls, tenant isolation, java 25, structured task scope, claim check pattern, enterprise rag, open ingestion standard">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-doxis-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-doxis-repository-connector.html">
+  <meta property="og:title" content="Intelligent Content Automation Meets Enterprise RAG: Announcing the Doxis Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native Doxis 4 integration (oc-doxis-repository-connector & oc-doxis-client). Ingest SER Group Doxis documents, electronic dossiers (Akten), custom typed descriptors, and Zero-Trust tenant-isolated ACLs via Content Service Bus (CSB) REST API using Java 25 Virtual Threads and incremental tombstone synchronization.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-doxis-repository-connector.html">
+  <meta property="twitter:title" content="Intelligent Content Automation Meets Enterprise RAG: Announcing the Doxis Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Doxis 4 integration (oc-doxis-repository-connector & oc-doxis-client). Ingest SER Group Doxis documents, electronic dossiers (Akten), custom typed descriptors, and Zero-Trust tenant-isolated ACLs via Content Service Bus (CSB) REST API using Java 25 Virtual Threads and incremental tombstone synchronization.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cpolyline points='10 9 9 9 8 9'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Intelligent Content Automation Meets Enterprise RAG: Announcing the Doxis Repository Connector",
+    "description": "Discover OpenCrawling's native Doxis 4 integration (oc-doxis-repository-connector & oc-doxis-client). Ingest SER Group Doxis documents, electronic dossiers (Akten), custom typed descriptors, and Zero-Trust tenant-isolated ACLs via Content Service Bus (CSB) REST API using Java 25 Virtual Threads and incremental tombstone synchronization.",
+    "datePublished": "2026-10-17",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-doxis-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #7C3AED, #A855F7); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #A78BFA, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #7C3AED; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #A78BFA; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #A78BFA; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C4B5FD; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(124,58,237,0.06); border-color: #7C3AED; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #A78BFA; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #7C3AED; color: #C4B5FD; background: rgba(124,58,237,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #7DD3FC; background: rgba(56,189,248,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #A78BFA; }
+    .article-cta { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #A78BFA; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(124,58,237,0.1); color: #A78BFA; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(124,58,237,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 17, 2026</span>
+        <span class="blog-meta-read">&bull; 8 min read</span>
+      </div>
+      <h1 class="blog-article-title">Intelligent Content Automation Meets Enterprise RAG: Announcing the Doxis Repository Connector</h1>
+      <p class="blog-article-lead">
+        Across banking, insurance, healthcare, and public administration, <strong>SER Group's Doxis 4 / Doxis Intelligent Content Automation</strong> platform serves as the mission-critical foundation for enterprise document management (DMS), electronic file (*Akten*) lifecycle records, and business process automation. Today, we are thrilled to release the official <strong>Doxis Repository Connector (<code>oc-doxis-repository-connector</code>)</strong> and native <strong>Doxis Client SDK (<code>oc-doxis-client</code>)</strong>! Ingest Doxis documents, traverse hierarchical electronic files, normalize custom metadata descriptors, enforce strict Zero-Trust multi-tenant isolation, and sync deletions with automated tombstone detection. 🚀📄
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Doxis 4 CSB Enterprise Ingestion Pipeline Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Doxis 4 CSB REST API (Customer: ACME, DB1)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">DoxisRepositoryConnector (CQL / Akten Tree)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Java 25 StructuredTaskScope + TempFileInputStream</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Claim-Check Store (Ozone / S3)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">OIS Document + Tenant SIDs (ACME/*)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Stores &amp; Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Enterprise ECM Challenge: Liberating Doxis Knowledge for AI</h2>
+      <p>
+        Organizations managing tens of millions of documents in Doxis face a significant hurdle when adopting enterprise Generative AI and Retrieval-Augmented Generation (RAG):
+      </p>
+      <ul>
+        <li><strong>Beyond Plain Files:</strong> Doxis does not merely store binary blobs. Documents are deeply contextualized inside <em>Akten</em> (electronic dossiers), governed by rich typed metadata descriptors (contract dates, object numbers, cost centers, document classes), and protected by strict multi-tier permissions.</li>
+        <li><strong>Multi-Tenant Isolation:</strong> In shared or hosted environments, a Doxis Content Service Bus (CSB) instance hosts multiple customer tenants (e.g. <code>ACME</code>). Naively indexing permissions into vector stores without qualifying identities creates severe cross-tenant privilege bleed vulnerabilities.</li>
+        <li><strong>Fail-Secure Permission Boundaries:</strong> In Doxis CSB, class-level permissions ("All instances") are not queryable over the REST contract. A crawler that defaults missing permissions to "public" risks catastrophic data exposure. Security must be <em>deny-by-default</em>.</li>
+        <li><strong>Session &amp; Server Stability:</strong> Long-running crawlers that open unbounded sessions can exhaust CSB connection pools, trigger HTTP 429 throttling, or leave orphaned search result sets on the server.</li>
+      </ul>
+
+      <p>
+        The <code>oc-doxis-repository-connector</code> was engineered from the ground up to solve every one of these enterprise challenges natively, adhering strictly to the Open Ingestion Standard (OIS).
+      </p>
+
+      <h2><span class="section-num">2. </span>Native Transport: The <code>oc-doxis-client</code> Subsystem</h2>
+      <p>
+        Rather than relying on third-party dependencies or legacy SOAP interfaces, OpenCrawling communicates with Doxis via the modern <strong>Doxis Content Service Bus (CSB) REST API</strong> (contract 14.4.1+) using a dedicated, zero-dependency Java 25 client module: <code>oc-doxis-client</code>.
+      </p>
+      <p>
+        Key architectural highlights of the client layer include:
+      </p>
+      <ul>
+        <li><strong>Triple Authentication Support:</strong> Basic Authentication (<code>basic</code>), CSB Session Tickets (<code>ticket</code>), and OAuth2/OIDC token exchange (<code>oauth2</code>) with automated background token expiration detection and renewal.</li>
+        <li><strong>Session Lifecycle Guarantee:</strong> Authenticated session tokens (passed via <code>X-Doxis-SessionTicket</code> or Bearer headers) are maintained throughout the crawl and cleanly invalidated upon completion.</li>
+        <li><strong>Paged Search Cursor Cleanup:</strong> Server-side search result sets created during paged queries are systematically released using <code>DELETE /documents/searchResults/{searchId}</code>, preventing resource leaks on the CSB application servers.</li>
+        <li><strong>Resilience &amp; Exponential Backoff:</strong> Built-in retry handling for rate limits (HTTP 429 honoring <code>Retry-After</code> headers) and transient gateway errors (HTTP 502, 503, 504).</li>
+      </ul>
+
+      <h2><span class="section-num">3. </span>Dual Crawling Strategies: CQL Search &amp; E-File (*Akten*) Traversal</h2>
+      <p>
+        Different enterprise workloads require different crawl patterns. The connector supports two distinct execution modes:
+      </p>
+
+      <h3>Mode A: High-Speed CQL Search Crawling (<code>crawl-mode: search</code>)</h3>
+      <p>
+        Leverages Doxis Context Query Language (CQL) to query repositories directly. Crawl jobs can target specific document classes, date ranges, or descriptor attributes:
+      </p>
+      <pre><code>spring:
+  opencrawling:
+    connector:
+      doxis:
+        crawl-mode: search
+        search-query: "OBJECTNAME LIKE 'Contract*' AND ObjectDate >= '2026-01-01'"
+        document-classes:
+          - "ContractDocument"
+          - "ProcurementRecord"
+        batch-size: 100</code></pre>
+      <p>
+        Hits are retrieved in configurable page batches (default: 100) via <code>GET /documents/searchResults/{searchId}</code>, streaming items directly into Java 25 Virtual Threads for downstream parsing.
+      </p>
+
+      <h3>Mode B: Hierarchical Dossier Navigation (<code>crawl-mode: folder</code>)</h3>
+      <p>
+        In document-centric business processes (e.g. HR employee dossiers, legal matter files, loan origination *Akten*), relationships between documents and their enclosing folders are vital. In <code>folder</code> mode, the connector starts at a designated <code>root-folder-id</code> and traverses the hierarchy recursively, filing documents under their respective dossier paths while capturing child dossiers.
+      </p>
+
+      <h3>Flexible Version Handling</h3>
+      <p>
+        Control version indexing using <code>version-mode</code>:
+      </p>
+      <ul>
+        <li><code>latest_only</code> (default): Ingests the current active version of each document, stamping <code>doxis.isLatestVersion: "true"</code>.</li>
+        <li><code>all_versions</code>: Ingests the complete historical revision chain. Historical versions receive immutable version-qualified canonical URIs: <code>doxis://ACME/DB1/documents/{docUuid}/versions/{versionNum}</code>.</li>
+      </ul>
+
+      <h2><span class="section-num">4. </span>Typed Descriptor Normalization &amp; Schema Integrity</h2>
+      <p>
+        Doxis metadata descriptors contain the true business context of your files. The connector's normalization engine introspects descriptor types and converts them to standardized formats:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Doxis Descriptor Type</th>
+            <th>Raw CSB Format</th>
+            <th>Normalized OIS Format</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DATE</code></td>
+            <td><code>YYYYMMDD</code> string</td>
+            <td>ISO-8601 Date string</td>
+            <td><code>20260315</code> &rarr; <code>2026-03-15</code></td>
+          </tr>
+          <tr>
+            <td><code>DATETIME</code> / <code>TIMESTAMP</code></td>
+            <td>Epoch ms or raw string</td>
+            <td>ISO-8601 UTC timestamp</td>
+            <td><code>2026-03-15T11:20:00.000Z</code></td>
+          </tr>
+          <tr>
+            <td><code>NUMERIC</code> / <code>DECIMAL</code></td>
+            <td>Formatted currency/number</td>
+            <td>Plain decimal number string</td>
+            <td><code>"1,250.50"</code> &rarr; <code>"1250.50"</code></td>
+          </tr>
+          <tr>
+            <td><code>BOOL</code></td>
+            <td><code>1</code> / <code>0</code> or <code>Y</code> / <code>N</code></td>
+            <td>Standard boolean string</td>
+            <td><code>"true"</code> / <code>"false"</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#128273;</div>
+        <div>
+          <p><strong>Configurable Prefixing &amp; Key Collision Protection:</strong> Custom descriptors are prefixed with <code>descriptor-prefix</code> (e.g. <code>doxis_desc_ObjectName</code>). Raw unnormalized values are preserved under <code>doxis.raw.&lt;name&gt;</code>, and reserved OIS metadata keys are mapped safely to <code>doxis.attr.&lt;name&gt;</code>.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">5. </span>Zero-Trust Security, E-File Inheritance &amp; Multi-Tenant Isolation</h2>
+      <p>
+        Enterprise AI search requires that a user querying the vector database or an MCP agent can <strong>never</strong> see results for documents they lack permission to view in Doxis:
+      </p>
+
+      <h3>1. Granular ACE Translation</h3>
+      <p>
+        The <code>DoxisSecurityMapper</code> inspects Access Control Entries (ACEs) on both documents and e-files:
+      </p>
+      <ul>
+        <li><code>VIEW_DOCUMENT_CONTENTS</code> &amp; <code>VIEW_FOLDER_CONTENTS</code> map to OIS <code>read</code> access.</li>
+        <li>Negative permission variants map to explicit OIS <code>deny</code> rules.</li>
+        <li><code>UPDATE_*</code> permissions map to OIS <code>write</code> access.</li>
+        <li>Principals are categorized as <code>user</code>, <code>group</code>, or <code>role</code> via CSB principal lookups.</li>
+      </ul>
+
+      <h3>2. Hierarchical Dossier Inheritance</h3>
+      <p>
+        Documents filed inside an electronic file (*Akte*) inherit their parent dossier's ACEs. The connector merges e-file permissions with document-level instance ACEs, emitting <code>inheritanceEnabled: true</code> to ensure seamless downstream policy enforcement.
+      </p>
+
+      <h3>3. Fail-Secure Fallbacks (Deny by Default)</h3>
+      <p>
+        Because class-level permissions are not exposed over the REST API, documents lacking explicit instance ACEs receive configured <code>fallback-principals</code> (e.g. <code>group:Legal</code>) or an empty ACL. They are <strong>never</strong> marked public, preventing accidental data leaks.
+      </p>
+
+      <h3>4. Multi-Tenant Isolation</h3>
+      <p>
+        When <code>tenant-isolation: true</code> is configured, all user and group identities are automatically qualified by the customer tenant name:
+      </p>
+      <pre><code>"security": {
+  "inheritanceEnabled": true,
+  "permissions": [
+    { "identity": "ACME/Legal", "identityType": "group", "access": "read" },
+    { "identity": "ACME/elena.weber", "identityType": "user", "access": "write" },
+    { "identity": "ACME/restricted.user", "identityType": "user", "access": "deny" }
+  ]
+}</code></pre>
+      <p>
+        This allows multiple business units or SaaS tenants to share a single PostgreSQL pgvector, Qdrant, or Solr index while maintaining ironclad tenant boundaries during retrieval filtering.
+      </p>
+
+      <h2><span class="section-num">6. </span>Claim-Check Streaming &amp; Disk Leak Prevention with <code>TempFileInputStream</code></h2>
+      <p>
+        In enterprise content repositories, files can range from kilobytes to gigabytes. Holding document payloads in JVM heap memory causes Out-Of-Memory (OOM) errors, while naive temporary disk caching can fill up worker volumes if files are not deleted after indexing.
+      </p>
+      <p>
+        OpenCrawling solves this with <code>TempFileInputStream</code>:
+      </p>
+      <ul>
+        <li>Binary payloads are spooled to temporary files under <code>java.io.tmpdir</code>.</li>
+        <li>The custom <code>TempFileInputStream</code> hooks into stream closure: the moment Apache Tika or the Claim-Check uploader finishes reading the stream, the underlying temporary file is <strong>immediately unlinked and deleted</strong> from disk.</li>
+        <li>Massive blobs exceeding <code>max-content-size-bytes</code> (default: 50 MB) skip binary transfer while preserving full descriptor and ACL indexing.</li>
+        <li>External content links (<code>doxis.contentLink</code>) are captured directly without binary transfer.</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Incremental Synchronization &amp; Deletion Tombstones</h2>
+      <p>
+        Crawling millions of documents repeatedly is unacceptable in production. OpenCrawling maintains state atomically in <code>data/doxis-state/{customer}-{repository}.json</code>:
+      </p>
+
+      <pre><code>{
+  "lastCrawlTime": "2026-10-17T12:00:00.000Z",
+  "documentStates": {
+    "3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f": {
+      "version": "1",
+      "modifiedDate": "2026-09-28T14:15:30.000Z",
+      "hash": "a1b2c3d4..."
+    }
+  }
+}</code></pre>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Automated Deletion Tombstones:</strong> When a document is marked logically deleted in Doxis (<code>logicalDeleted: true</code>) or disappears from search listings, OpenCrawling automatically emits an OIS <code>action: "DELETE"</code> tombstone. Downstream vector stores immediately purge obsolete chunks and vector embeddings!</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">8. </span>Sample OIS Document Payload</h2>
+      <p>
+        Here is an example of an ingested Doxis contract document mapped to canonical OIS JSON:
+      </p>
+
+      <pre><code>{
+  "id": "doxis://ACME/DB1/documents/3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
+  "action": "UPSERT",
+  "source": {
+    "type": "doxis",
+    "instance": "https://csb.enterprise.local/restws/publicws/rest/api/v1",
+    "customer": "ACME",
+    "repository": "DB1"
+  },
+  "content": {
+    "mimeType": "application/pdf"
+  },
+  "metadata": {
+    "name": "MSA_Vendor_Enterprise_2026.pdf",
+    "title": "Master Services Agreement 2026",
+    "mimeType": "application/pdf",
+    "doxis.documentId": "3f2a9c1e-5b7d-4e8a-9c0f-1a2b3c4d5e6f",
+    "doxis.customer": "ACME",
+    "doxis.repository": "DB1",
+    "doxis.documentClass": "ContractDocument",
+    "doxis.version": "1",
+    "doxis.isLatestVersion": "true",
+    "doxis.parentFolderName": "Acme Corp Master File",
+    "doxis_desc_ObjectName": "Master Services Agreement 2026",
+    "doxis_desc_ObjectNumberExternal": "CTR-2026-0042",
+    "doxis_desc_ObjectDate": "2026-03-15"
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "ACME/Legal", "identityType": "group", "access": "read" },
+      { "identity": "ACME/elena.weber", "identityType": "user", "access": "write" },
+      { "identity": "ACME/restricted.user", "identityType": "user", "access": "deny" }
+    ]
+  }
+}</code></pre>
+
+      <h2><span class="section-num">9. </span>Configuration &amp; Deployment</h2>
+      <p>
+        Configure the Doxis connector via Spring Boot properties or environment variables:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Environment Variable</th>
+            <th>Spring Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DOXIS_URL</code></td>
+            <td><code>spring.opencrawling.connector.doxis.url</code></td>
+            <td><code>http://localhost:8080/restws/publicws/rest/api/v1</code></td>
+            <td>CSB REST API base URL</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_CUSTOMER_NAME</code></td>
+            <td><code>spring.opencrawling.connector.doxis.customer-name</code></td>
+            <td>—</td>
+            <td><strong>Required.</strong> CSB customer (tenant), e.g. <code>ACME</code></td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_AUTH_TYPE</code></td>
+            <td><code>spring.opencrawling.connector.doxis.auth-type</code></td>
+            <td><code>basic</code></td>
+            <td>Auth mode: <code>basic</code>, <code>ticket</code>, or <code>oauth2</code></td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_USERNAME</code> / <code>DOXIS_PASSWORD</code></td>
+            <td><code>spring.opencrawling.connector.doxis.username</code> / <code>password</code></td>
+            <td>—</td>
+            <td>Credentials for <code>basic</code> auth</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_REPOSITORY_ID</code></td>
+            <td><code>spring.opencrawling.connector.doxis.repository-id</code></td>
+            <td>—</td>
+            <td><strong>Required.</strong> DMS repository UUID or name (e.g. <code>DB1</code>)</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_CRAWL_MODE</code></td>
+            <td><code>spring.opencrawling.connector.doxis.crawl-mode</code></td>
+            <td><code>search</code></td>
+            <td>Mode: <code>search</code> (CQL) or <code>folder</code> (e-files)</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_TENANT_ISOLATION</code></td>
+            <td><code>spring.opencrawling.connector.doxis.tenant-isolation</code></td>
+            <td><code>false</code></td>
+            <td>Qualify SIDs with tenant (e.g. <code>ACME/Legal</code>)</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_INCREMENTAL</code></td>
+            <td><code>spring.opencrawling.connector.doxis.incremental</code></td>
+            <td><code>false</code></td>
+            <td>Enable incremental crawl &amp; tombstone sync</td>
+          </tr>
+          <tr>
+            <td><code>DOXIS_PARALLELISM</code></td>
+            <td><code>spring.opencrawling.connector.doxis.parallelism</code></td>
+            <td><code>2</code></td>
+            <td>Concurrent document processing workers</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Testing Connectivity with OpenCrawling CLI</h3>
+      <pre><code># Check connector health and session auth
+$ oc connector check --name Doxis_Repository --type repository
+
+# Run automated integration test script
+$ ./scripts/test-doxis-repository-connector.sh</code></pre>
+
+      <div class="article-cta">
+        <h3>Ready to Connect Doxis to Enterprise RAG?</h3>
+        <p>Test the Doxis connector right in our live interactive simulator, explore the detailed configuration guide on our Wiki, or star the project on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Doxis-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read Doxis Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
