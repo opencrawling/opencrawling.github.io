@@ -6,8 +6,8 @@
   <title>Meet the Team - OpenCrawling</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Meet the OpenCrawling core team and contributors. The architects and developers building the zero-trust open standard for enterprise AI data ingestion.">
-  <meta name="keywords" content="opencrawling team, opencrawling core contributors, Piergiorgio Lucidi, Michael Cizmar, Luis Cabaceira, Davide Polato, Apache Storm, StormCrawler, enterprise search architects, open ingestion standard steering">
+  <meta name="description" content="Meet the OpenCrawling core team, advisors, and contributors. The architects and leaders building the zero-trust open standard for enterprise AI data ingestion.">
+  <meta name="keywords" content="opencrawling team, opencrawling core contributors, Piergiorgio Lucidi, Michael Cizmar, Luis Cabaceira, Davide Polato, Maurizio Turatti, Strategy & Enterprise Architecture Advisor, Apache Storm, StormCrawler, enterprise search architects, open ingestion standard steering">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/team.html">
 
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://opencrawling.org/team.html">
   <meta property="og:title" content="Meet the Team - OpenCrawling">
-  <meta property="og:description" content="Meet the pioneers driving the Open Ingestion Standard (OIS) and the OpenCrawling secure ingestion framework.">
+  <meta property="og:description" content="Meet the pioneers and advisors driving the Open Ingestion Standard (OIS) and the OpenCrawling secure ingestion framework.">
   <meta property="og:image" content="assets/logo-without-text-200px.png">
 
   <!-- SVG Favicon -->
@@ -48,6 +48,15 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 3rem;
       margin-bottom: 5rem;
+    }
+
+    @media (min-width: 969px) {
+      .team-grid > article:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        max-width: calc((100% - 3rem) / 2);
+        width: 100%;
+        margin: 0 auto;
+      }
     }
 
     @media (max-width: 968px) {
@@ -587,18 +596,18 @@
     <!-- Header Title -->
     <header class="team-header">
       <div class="badge-container" style="display: flex; justify-content: center; margin-bottom: 1rem;">
-        <span class="animated-badge">Open-Source Contributors</span>
+        <span class="animated-badge">Open-Source Contributors &amp; Advisors</span>
       </div>
       <h1 style="font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem;">
-        Meet the <span class="gradient-text">Core Architects</span>
+        Meet the <span class="gradient-text">Core Architects &amp; Advisors</span>
       </h1>
       <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
-        The steering team behind the Open Ingestion Standard (OIS) and OpenCrawling, building high-throughput, secure connectors bridging content to AI vector store architectures.
+        The steering team and strategic advisors behind the Open Ingestion Standard (OIS) and OpenCrawling, building high-throughput, secure connectors bridging content to AI vector store architectures.
       </p>
     </header>
 
     <!-- Team Cards Grid -->
-    <section class="team-grid" aria-label="Core Team Members">
+    <section class="team-grid" aria-label="Core Team Members and Advisors">
       
       <!-- Contributor 1: Piergiorgio Lucidi -->
       <article class="team-card glass">
@@ -943,6 +952,93 @@
             <svg viewBox="0 0 16 16" fill="currentColor" width="20" height="20"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
           </a>
           <a href="https://www.linkedin.com/in/davide-polato/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Davide Polato LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Advisor: Maurizio Turatti -->
+      <article class="team-card glass">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring"></div>
+          <div class="avatar-ring-static"></div>
+          <div class="avatar-inner">
+            <img src="assets/team/maurizio-turatti.jpeg" alt="Maurizio Turatti" class="avatar-img">
+          </div>
+        </div>
+        
+        <h2 class="member-name">Maurizio Turatti</h2>
+        <p class="member-role">Strategy &amp; Enterprise Architecture Advisor</p>
+        
+        <!-- Card Tabs -->
+        <div class="card-tabs" data-member="mt">
+          <button class="tab-btn active" data-tab="bio">About</button>
+          <button class="tab-btn" data-tab="skills">Expertise</button>
+          <button class="tab-btn" data-tab="focus">Focus Areas</button>
+        </div>
+        
+        <!-- Card Tab Content -->
+        <div class="tab-content" id="mt-content">
+          <!-- Bio -->
+          <div class="tab-pane active" id="mt-bio">
+            <p class="bio-text">
+              Maurizio is a software architect and technical strategy advisor with over 25 years of experience in distributed systems, enterprise integration, and content platforms. Co-founder of SoftInstigate and co-creator of RESTHeart, he brings deep architectural expertise from Sun Microsystems and Alfresco to advise OpenCrawling on enterprise architecture, system scalability, and engineering discipline in AI data ingestion.
+            </p>
+          </div>
+          <!-- Skills -->
+          <div class="tab-pane skills-pane" id="mt-skills">
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Enterprise Architecture &amp; Technical Strategy</span>
+                <span class="skill-value">96%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 96%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Distributed Systems &amp; Cloud-Native Platforms</span>
+                <span class="skill-value">94%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 94%;"></div>
+              </div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-label-row">
+                <span class="skill-name">Enterprise Integration &amp; Content Platforms</span>
+                <span class="skill-value">90%</span>
+              </div>
+              <div class="skill-bar-bg">
+                <div class="skill-bar-fill" style="width: 90%;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Focus Areas -->
+          <div class="tab-pane focus-pane" id="mt-focus">
+            <ul>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Guiding enterprise architecture, strategic technical direction, and system scalability for the Open Ingestion Standard (OIS).</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Advising on distributed component boundaries, enterprise integration patterns, and decoupled ingestion architectures.</span>
+              </li>
+              <li>
+                <span class="focus-icon">⚡</span>
+                <span>Bringing architectural discipline, rigorous verification, and production reliability to enterprise AI and RAG ingestion pipelines.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="member-socials">
+          <a href="https://github.com/mkjsix" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Maurizio Turatti GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" width="20" height="20"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/maurizioturatti/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Maurizio Turatti LinkedIn">
             <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
         </div>
