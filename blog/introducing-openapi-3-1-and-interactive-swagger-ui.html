@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contract-First Ingestion &amp; Living Documentation: Announcing OpenAPI 3.1 &amp; Interactive Swagger UI in OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's platform-wide OpenAPI 3.1 adoption and embedded Swagger UI. Features interactive API exploration, living documentation, end-to-end type safety for React 19 / TypeScript, synchronized client SDKs, autonomous AI Agent tool calling, and automated contract testing on Java 25 and Spring Boot 4.">
+  <meta name="keywords" content="openapi 3.1, swagger ui, springdoc openapi, contract-first, opencrawling rest api, api explorer, type safety, react 19, typescript api client, java 25, spring boot 4, model context protocol, ai agent tool calling, ois ingestion, lakehouse reporting api">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-openapi-3-1-and-interactive-swagger-ui.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-openapi-3-1-and-interactive-swagger-ui.html">
+  <meta property="og:title" content="Contract-First Ingestion &amp; Living Documentation: Announcing OpenAPI 3.1 &amp; Interactive Swagger UI in OpenCrawling">
+  <meta property="og:description" content="Discover OpenCrawling's platform-wide OpenAPI 3.1 adoption and embedded Swagger UI. Features interactive API exploration, living documentation, end-to-end type safety for React 19 / TypeScript, synchronized client SDKs, autonomous AI Agent tool calling, and automated contract testing on Java 25 and Spring Boot 4.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-openapi-3-1-and-interactive-swagger-ui.html">
+  <meta property="twitter:title" content="Contract-First Ingestion &amp; Living Documentation: Announcing OpenAPI 3.1 &amp; Interactive Swagger UI in OpenCrawling">
+  <meta property="twitter:description" content="Discover OpenCrawling's platform-wide OpenAPI 3.1 adoption and embedded Swagger UI. Features interactive API exploration, living documentation, end-to-end type safety for React 19 / TypeScript, synchronized client SDKs, autonomous AI Agent tool calling, and automated contract testing on Java 25 and Spring Boot 4.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236BA539' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Contract-First Ingestion & Living Documentation: Announcing OpenAPI 3.1 & Interactive Swagger UI in OpenCrawling",
+    "description": "Discover OpenCrawling's platform-wide OpenAPI 3.1 adoption and embedded Swagger UI. Features interactive API exploration, living documentation, end-to-end type safety for React 19 / TypeScript, synchronized client SDKs, autonomous AI Agent tool calling, and automated contract testing on Java 25 and Spring Boot 4.",
+    "datePublished": "2026-10-18",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-openapi-3-1-and-interactive-swagger-ui.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #6BA539, #84CC16); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #A3E635, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #84CC16; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #84CC16; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #84CC16; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(132,204,22,0.12); border: 1px solid rgba(132,204,22,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #BEF264; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(132,204,22,0.06); border-color: #84CC16; }
+    .callout-box.tip { background: rgba(14,165,233,0.06); border-color: #0284C7; }
+    .callout-box.warning { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(132,204,22,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #A3E635; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #84CC16; color: #BEF264; background: rgba(132,204,22,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #7DD3FC; background: rgba(14,165,233,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #A3E635; }
+    .article-cta { background: rgba(132,204,22,0.06); border: 1px solid rgba(132,204,22,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #A3E635; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(132,204,22,0.1); color: #A3E635; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(132,204,22,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .endpoint-badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; font-family: var(--font-mono); }
+    .badge-get { background: rgba(14,165,233,0.15); color: #38BDF8; border: 1px solid rgba(14,165,233,0.3); }
+    .badge-post { background: rgba(34,197,94,0.15); color: #4ADE80; border: 1px solid rgba(34,197,94,0.3); }
+    .badge-put { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-del { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Platform &amp; Developer Tooling</span>
+        <span class="blog-meta-date">October 18, 2026</span>
+        <span class="blog-meta-read">&bull; 7 min read</span>
+      </div>
+      <h1 class="blog-article-title">Contract-First Ingestion &amp; Living Documentation: Announcing OpenAPI 3.1 &amp; Interactive Swagger UI in OpenCrawling</h1>
+      <p class="blog-article-lead">
+        As enterprise data architectures embrace decoupled microservices, high-throughput lakehouses, and autonomous AI agents, API documentation cannot remain an afterthought buried in wikis or stale source code. Today, we are proud to announce the complete platform-wide adoption of the <strong>OpenAPI 3.1 Specification</strong> and an embedded, interactive <strong>Swagger UI Explorer</strong> across the entire OpenCrawling engine! From end-to-end type safety for our React 19 frontend to synchronized client SDKs and direct LLM tool calling via the Model Context Protocol (MCP), explore how contract-first architecture elevates developer velocity and enterprise interoperability. 📖⚡
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Contract-First OpenAPI 3.1 Pipeline &amp; Downstream Ecosystem</div>
+      <div class="flow-nodes">
+        <div class="flow-node">REST Controllers (Java 25 &bull; Spring Boot 4)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">springdoc-openapi (v3.1+)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Swagger UI Portal (:8080/swagger-ui.html)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">OpenAPI 3.1 Spec (:8080/v3/api-docs)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">TypeScript Types &bull; Java SDK &bull; AI Agent Tools</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Modern Enterprise Ingestion Dilemma: Beyond Documentation Drift</h2>
+      <p>
+        Building high-performance document ingestion engines on modern runtimes (Java 25 Virtual Threads, Structured Concurrency, Spring Boot 4) provides immense computing power. However, as OpenCrawling's footprint expanded across 10 functional domains—spanning job lifecycle orchestration, dynamic connector registration, OIS direct streaming, columnar Parquet lakehouse auditing, and AIOps root-cause telemetry—we recognized an architectural imperative:
+      </p>
+      <ul>
+        <li><strong>Eliminating Documentation Drift:</strong> Handwritten wiki tables and static markdown guides inevitably lag behind rapid controller code enhancements. Developers need living documentation where every query parameter, payload DTO schema, HTTP status code, and validation rule is derived directly from the active codebase.</li>
+        <li><strong>Interactive In-Browser Exploration:</strong> DevOps and integration engineers testing new pipelines should not need to manually craft complex <code>curl</code> commands or configure Postman collections. An interactive explorer with a <em>"Try it out"</em> sandbox accelerates day-0 onboarding.</li>
+        <li><strong>Preventing Frontend Runtime Mismatches:</strong> The OpenCrawling Admin UI (<code>oc-admin-ui</code>), built on React 19 and Vite, requires strict type safety. Generating TypeScript interfaces and API client functions directly from backend contracts guarantees zero payload mismatches.</li>
+        <li><strong>Autonomous AI Agent Operability:</strong> LLMs (GPT-4o, Claude 3.5, Gemini 2.0) and agentic frameworks (LangChain, LlamaIndex, Semantic Kernel) natively translate OpenAPI 3.1 definitions into structured function-calling schemas. A standard OpenAPI foundation turns OpenCrawling into an out-of-the-box toolkit for autonomous agents.</li>
+      </ul>
+
+      <h2><span class="section-num">2. </span>Platform Architecture: Standardizing on OpenAPI 3.1</h2>
+      <p>
+        Rather than adopting legacy Swagger 2.0 or OpenAPI 3.0, OpenCrawling standardizes strictly on <strong>OpenAPI 3.1</strong>. This version represents a milestone alignment with <strong>JSON Schema 2020-12</strong>, supporting full schema polymorphism, standard type arrays, and modern web interoperability.
+      </p>
+      <p>
+        Under the hood, OpenCrawling leverages <code>springdoc-openapi-starter-webmvc-ui</code> (v3.1+), seamlessly integrated with Spring Boot 4. The architecture utilizes a <strong>code-first approach via standard Swagger annotations</strong>, preserving developer velocity in Java while generating contract-first specifications for downstream consumers:
+      </p>
+
+      <pre><code>// oc-runtime OpenApiConfig.java
+@Configuration
+public class OpenApiConfig {
+
+    public static final String OIS_TOKEN_AUTH = "OisTokenAuth";
+
+    @Bean
+    public OpenAPI openCrawlingOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("OpenCrawling Runtime REST API")
+                        .description("Enterprise-grade document crawling, RAG ingestion, and Lakehouse analytics pipeline.")
+                        .version("1.0.0")
+                        .license(new License().name("Apache License 2.0").url("https://www.apache.org/licenses/LICENSE-2.0")))
+                .components(new Components()
+                        .addSecuritySchemes(OIS_TOKEN_AUTH, new SecurityScheme()
+                                .name(OIS_TOKEN_AUTH)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("Token")
+                                .description("Bearer token authentication for OIS document direct ingestion")));
+    }
+}</code></pre>
+
+      <h2><span class="section-num">3. </span>Interactive Swagger UI Explorer: Zero-Setup Sandbox</h2>
+      <p>
+        Every OpenCrawling runtime instance now serves the interactive Swagger UI out-of-the-box:
+      </p>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#128640;</div>
+        <div>
+          <p><strong>Instant Browser Access:</strong> Navigate directly to <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener"><code>http://localhost:8080/swagger-ui.html</code></a>. If running via Docker Compose with the Admin UI container on port <code>3000</code>, access it transparently via Nginx reverse proxy at <code>http://localhost:3000/swagger-ui.html</code>.</p>
+        </div>
+      </div>
+
+      <p>
+        The explorer allows developers to expand any endpoint, inspect required query filters (e.g. <code>page</code>, <code>size</code>, <code>status</code>), review comprehensive JSON request bodies, and execute live queries directly against running clusters.
+      </p>
+
+      <h2><span class="section-num">4. </span>Comprehensive 10-Domain API Coverage</h2>
+      <p>
+        Every single REST controller and DTO record in <code>oc-runtime</code> has been rigorously annotated with <code>@Tag</code>, <code>@Operation</code>, <code>@ApiResponse</code>, and <code>@Schema</code> annotations across 10 functional domains:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Domain Tag</th>
+            <th>Primary Route</th>
+            <th>Core Operations &amp; Highlights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pipeline &amp; Jobs</strong></td>
+            <td><code>/api/jobs</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-post">POST</span> <span class="endpoint-badge badge-del">DELETE</span> Job creation, lifecycle control (<code>/start</code>, <code>/stop</code>, <code>/pause</code>, <code>/resume</code>), real-time status monitoring, and document ledgers.</td>
+          </tr>
+          <tr>
+            <td><strong>Connectors</strong></td>
+            <td><code>/api/connectors</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-post">POST</span> <span class="endpoint-badge badge-del">DELETE</span> Registry management, discovery of supported repository/output types, and live connection health probing (<code>/check</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>OIS Direct Ingestion</strong></td>
+            <td><code>/api/v1/ingest/ois</code></td>
+            <td><span class="endpoint-badge badge-post">POST</span> High-throughput HTTP gateway for external producers (e.g., StormCrawler bolts) publishing OIS <code>UPSERT</code> and <code>DELETE</code> tombstones. Secured with Bearer token authentication.</td>
+          </tr>
+          <tr>
+            <td><strong>Reports &amp; Lakehouse Audit</strong></td>
+            <td><code>/api/reports</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-post">POST</span> Job audit summaries, paginated document ledger queries, multi-format export (<code>parquet</code>, <code>csv</code>, <code>avro</code>, <code>json</code>), and embedded DuckDB SQL analytics (<code>/query</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Observability &amp; AIOps</strong></td>
+            <td><code>/api/observability</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> Automated AI Root Cause Analysis (<code>/diagnose/{jobId}</code>), correlated OpenTelemetry trace timelines (<code>/traces/{jobId}</code>), error logs, and JVM virtual thread metrics.</td>
+          </tr>
+          <tr>
+            <td><strong>System &amp; Settings</strong></td>
+            <td><code>/api/system</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-post">POST</span> JVM health stats, memory consumption, real-time log streaming with level filters (<code>/logs</code>), and dynamic configuration tuning.</td>
+          </tr>
+          <tr>
+            <td><strong>Transport Settings</strong></td>
+            <td><code>/api/system/settings/transport</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-put">PUT</span> <span class="endpoint-badge badge-post">POST</span> Internal transport mode toggling (<code>AUTO</code>, <code>GRPC</code>, <code>REST</code>), gRPC port configuration, and live diagnostic ping probes (<code>/ping</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>ManifoldCF Migration</strong></td>
+            <td><code>/api/mcf-migration</code></td>
+            <td><span class="endpoint-badge badge-post">POST</span> Automated translation of legacy Apache ManifoldCF crawler configurations into OpenCrawling with visual fidelity scoring (<code>/plan</code>, <code>/apply</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Vespa Insights</strong></td>
+            <td><code>/api/vespa</code></td>
+            <td><span class="endpoint-badge badge-get">GET</span> <span class="endpoint-badge badge-post">POST</span> Cluster health checks, document counting, BM25 text queries, and bundled/custom schema package deployment.</td>
+          </tr>
+          <tr>
+            <td><strong>Auto-Narrativization Copilot</strong></td>
+            <td><code>/api/transformation/copilot</code></td>
+            <td><span class="endpoint-badge badge-post">POST</span> AI-powered generation of Mustache narrative templates and mock datasets from structured schema definitions using local Ollama or cloud OpenAI models.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">5. </span>Securing Endpoints with Bearer Token Authentication</h2>
+      <p>
+        The OpenAPI specification explicitly defines the <strong><code>OisTokenAuth</code></strong> HTTP Bearer security scheme. In the Swagger UI portal, developers can click the <strong>Authorize &#128275;</strong> button, input their ingestion token, and test token-protected endpoints like <code>POST /api/v1/ingest/ois/{jobId}</code> seamlessly without having to configure HTTP header flags manually.
+      </p>
+
+      <pre><code>// Sample OisIngestController Swagger documentation
+@Operation(
+    summary = "Direct Ingestion of OIS Document",
+    description = "Publishes an Open Ingestion Standard (OIS) document payload directly into the active job pipeline.",
+    security = @SecurityRequirement(name = OpenApiConfig.OIS_TOKEN_AUTH)
+)
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "202", description = "Document accepted and published to Kafka"),
+    @ApiResponse(responseCode = "400", description = "Malformed JSON or invalid OIS document structure"),
+    @ApiResponse(responseCode = "401", description = "Missing or invalid bearer token"),
+    @ApiResponse(responseCode = "404", description = "Endpoint disabled or target job ID not found"),
+    @ApiResponse(responseCode = "409", description = "Job runs in migration mode (OIS supports RAG mode only)"),
+    @ApiResponse(responseCode = "503", description = "Kafka ingestion event bus unavailable")
+})
+@PostMapping("/{jobId}")
+public ResponseEntity&lt;String&gt; ingest(...) { ... }</code></pre>
+
+      <h2><span class="section-num">6. </span>End-to-End Type Safety for React 19 &amp; Client SDKs</h2>
+      <p>
+        With machine-readable OpenAPI schemas exported at <code>/v3/api-docs</code>, downstream clients benefit from automated contract generation:
+      </p>
+      <ul>
+        <li><strong>React 19 Frontend (<code>oc-admin-ui</code>):</strong> Using <code>openapi-typescript</code>, frontend developers can run <code>npm run generate:api</code> to synthesize fully typed interfaces directly into <code>src/lib/api-generated.ts</code>. If backend engineers alter a DTO record or add query options, TypeScript build checks immediately flag type breakages before runtime deployment.</li>
+        <li><strong>Java Client SDK (<code>oc-java-client-sdk</code>):</strong> The official Java SDK models align with the server-side OpenAPI schema. Automated contract verification tests validate that Java SDK records match backend response DTOs.</li>
+        <li><strong>Multi-Language Client Generation:</strong> Python, Go, and Node.js teams can generate custom clients instantly using standard tooling:
+          <pre><code>npx @openapitools/openapi-generator-cli generate \
+  -i http://localhost:8080/v3/api-docs \
+  -g python \
+  -o ./opencrawling-python-sdk</code></pre>
+        </li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Empowering Autonomous AI Agents &amp; MCP Tool Calling</h2>
+      <p>
+        One of the most exciting advantages of standardizing on OpenAPI 3.1 is its native compatibility with <strong>LLM Function Calling</strong> and the <strong>Model Context Protocol (MCP)</strong>:
+      </p>
+      <ul>
+        <li><strong>Automated Tool Definitions:</strong> Autonomous agents running on LangChain, LlamaIndex, or OpenAI Custom GPTs can ingest the OpenAPI 3.1 schema directly, converting each REST endpoint into an executable tool with full parameter descriptions and JSON Schema validations.</li>
+        <li><strong>Natural Language Crawling Operations:</strong> An agent can receive an instruction like <em>"Inspect job #4, run a DuckDB diagnostic query on failed PDFs, and fetch the AIOps root-cause trace"</em>, map it to the corresponding OpenAPI operations, and execute the multi-step investigation autonomously.</li>
+      </ul>
+
+      <h2><span class="section-num">8. </span>Configuration &amp; Nginx Docker Reverse Proxy</h2>
+      <p>
+        OpenAPI docs and Swagger UI paths are fully configurable via Spring Boot properties in <code>application.yml</code>:
+      </p>
+
+      <pre><code>springdoc:
+  api-docs:
+    path: ${SPRINGDOC_API_DOCS_PATH:/v3/api-docs}
+    enabled: ${SPRINGDOC_API_DOCS_ENABLED:true}
+    version: OPENAPI_3_1
+  swagger-ui:
+    path: ${SPRINGDOC_SWAGGER_UI_PATH:/swagger-ui.html}
+    enabled: ${SPRINGDOC_SWAGGER_UI_ENABLED:true}
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+  show-actuator: false</code></pre>
+
+      <p>
+        In containerized deployments, <code>oc-admin-ui</code>'s Nginx reverse proxy routes all <code>/v3</code> and <code>/swagger-ui</code> traffic transparently to the backend container, while Spring WebMVC's single-page application router (<code>WebConfig.java</code>) preserves these documentation paths from client-side fallback forwards.
+      </p>
+
+      <h2><span class="section-num">9. </span>Automated CI/CD Contract Testing</h2>
+      <p>
+        To ensure API governance remains airtight across community contributions, OpenCrawling enforces documentation assertions via reflection tests in <code>OpenApiDocumentationTest.java</code>:
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Automated Validation Suite:</strong> Verifies that every <code>@RestController</code> implements <code>@Tag</code>, every public mapping method defines <code>@Operation</code> summaries and explicit <code>@ApiResponse</code> codes, core DTO records have <code>@Schema</code> descriptions, and Swagger <code>ModelConverters</code> cleanly resolves all Java 25 record models.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Explore the Interactive Swagger UI Today</h3>
+        <p>Start OpenCrawling locally or in Docker, explore the interactive Swagger UI portal, read our comprehensive Wiki guide, or join the discussion on GitHub!</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/OpenAPI-Specification-and-Swagger-UI" target="_blank" rel="noopener" class="btn btn-outline">Read OpenAPI Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
