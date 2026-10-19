@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ecosystem Comparison: OpenCrawling vs. alternatives</title>
+  <title>Ecosystem Comparison: OpenCrawling vs. Alternatives | Enterprise AI Ingestion Matrix</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="An in-depth architectural comparison of OpenCrawling with LangChain, LlamaIndex, Unstructured.io, Apache Nutch, Airbyte, Fivetran, Apache NiFi, Glean, and Elastic.">
-  <meta name="keywords" content="opencrawling, langchain, llamaindex, unstructured.io, apache nutch, airbyte, fivetran, apache nifi, glean, elastic, comparison, vector database, RAG, ACL mapping">
+  <meta name="description" content="An in-depth architectural comparison of OpenCrawling with Apache ManifoldCF, LangChain, LlamaIndex, Unstructured.io, Apache Nutch, Airbyte, Fivetran, Apache NiFi, Glean, and Elastic.">
+  <meta name="keywords" content="opencrawling, apache manifoldcf, langchain, llamaindex, unstructured.io, apache nutch, airbyte, fivetran, apache nifi, glean, elastic, grpc push connector, duckdb audit ledger, openapi 3.1, comparison, vector database, RAG, ACL mapping">
   <meta name="author" content="OpenCrawling GitHub Organization">
   <link rel="canonical" href="https://opencrawling.org/comparison.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://opencrawling.org/comparison.html">
-  <meta property="og:title" content="OpenCrawling Ingestion Comparison Matrix">
-  <meta property="og:description" content="Compare secure document ingestion pipelines: OpenCrawling vs. LangChain, LlamaIndex, Unstructured, Airbyte, Fivetran, NiFi, Glean, and Elastic.">
-  <meta property="og:image" content="assets/logo-without-text-200px.png">
+  <meta property="og:title" content="OpenCrawling Ecosystem Comparison & Architecture Duel">
+  <meta property="og:description" content="Compare secure enterprise document ingestion pipelines: OpenCrawling vs. ManifoldCF, LangChain, LlamaIndex, Unstructured, Airbyte, NiFi, Glean, and Elastic.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
 
   <!-- SVG Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
@@ -39,43 +39,331 @@
 
     .comparison-header {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .comparison-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(6, 182, 212, 0.18));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      color: #C4B5FD;
+      margin-bottom: 1.25rem;
     }
 
     .comparison-header h1 {
-      font-size: clamp(2.2rem, 1.2rem + 4vw, 3.8rem);
+      font-size: clamp(2.3rem, 1.2rem + 4vw, 3.8rem);
       font-family: var(--font-heading);
       font-weight: 800;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       letter-spacing: -0.03em;
-      line-height: 1.15;
+      line-height: 1.12;
     }
 
     .comparison-subtitle {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: var(--text-muted);
-      max-width: 800px;
+      max-width: 840px;
       margin: 0 auto;
-      text-wrap: pretty;
+      line-height: 1.65;
     }
 
-    /* Tabs for Category Switcher */
-    .category-tabs {
+    /* 6-Pillar Edge Telemetry Strip */
+    .pillars-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .pillar-mini-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.15rem 1rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .pillar-mini-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 10px 25px -10px rgba(124, 58, 237, 0.35);
+    }
+
+    .pillar-mini-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-mini-icon {
+      font-size: 1.25rem;
+    }
+
+    .pillar-mini-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      background: rgba(6, 182, 212, 0.14);
+      color: #22D3EE;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .pillar-mini-title {
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 0.3rem;
+    }
+
+    .pillar-mini-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Interactive Head-to-Head Architecture Duel */
+    .duel-section {
+      margin-bottom: 4.5rem;
+      border-radius: 20px;
+      padding: 2.5rem;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.72), rgba(9, 13, 24, 0.85));
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .duel-section::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .duel-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .duel-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .duel-header p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      max-width: 680px;
+    }
+
+    .duel-selector {
       display: flex;
       justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    .duel-btn {
+      padding: 0.6rem 1.15rem;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .duel-btn:hover {
+      border-color: rgba(6, 182, 212, 0.45);
+      color: var(--text-color);
+    }
+
+    .duel-btn.active {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.28), rgba(6, 182, 212, 0.22));
+      border-color: #22D3EE;
+      color: #FFFFFF;
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.25);
+    }
+
+    .duel-arena {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .duel-fighter {
+      border-radius: 16px;
+      padding: 1.75rem;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .duel-fighter.oc-fighter {
+      border-color: rgba(139, 92, 246, 0.45);
+      background: linear-gradient(160deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.04) 70%, rgba(15, 23, 42, 0.65));
+    }
+
+    .duel-fighter-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.9rem;
+    }
+
+    .duel-fighter-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .duel-fighter-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 99px;
+    }
+
+    .tag-oc {
+      background: rgba(139, 92, 246, 0.2);
+      color: #C4B5FD;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
+
+    .tag-alt {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94A3B8;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .duel-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .duel-metric-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .duel-metric-val {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      line-height: 1.45;
+    }
+
+    .duel-vs-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .vs-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      color: #FFFFFF;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+    }
+
+    .duel-verdict {
+      margin-top: 1.5rem;
+      padding: 1.1rem 1.4rem;
+      border-radius: 12px;
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .duel-verdict-text {
+      font-size: 0.92rem;
+      color: var(--text-color);
+      line-height: 1.5;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .duel-verdict-text strong {
+      color: #22D3EE;
+    }
+
+    /* Filter & Search Bar for Matrix */
+    .matrix-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
 
     .category-tab-btn {
-      padding: 0.6rem 1.2rem;
+      padding: 0.55rem 1.1rem;
       border-radius: 30px;
       background: rgba(15, 23, 42, 0.45);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       font-weight: 600;
       transition: all 0.25s ease;
     }
@@ -92,6 +380,38 @@
       box-shadow: 0 0 12px var(--accent-glow);
     }
 
+    .matrix-search-wrap {
+      position: relative;
+      min-width: 260px;
+    }
+
+    .matrix-search-input {
+      width: 100%;
+      padding: 0.58rem 1rem 0.58rem 2.25rem;
+      border-radius: 99px;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.55);
+      color: var(--text-color);
+      font-size: 0.86rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .matrix-search-input:focus {
+      border-color: #22D3EE;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+    }
+
+    .matrix-search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
     /* Glassmorphic Table Styles */
     .table-container {
       overflow-x: auto;
@@ -105,34 +425,31 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       background: rgba(15, 23, 42, 0.35);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      min-width: 900px;
+      min-width: 980px;
     }
 
     .comparison-table th, 
     .comparison-table td {
-      padding: 1.25rem 1.25rem;
+      padding: 1.15rem 1.15rem;
       border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+      transition: opacity 0.25s ease, background 0.2s ease;
     }
 
     .comparison-table th {
-      background: rgba(9, 13, 22, 0.7);
+      background: rgba(9, 13, 22, 0.82);
       font-family: var(--font-heading);
       font-weight: 700;
       color: var(--text-color);
       letter-spacing: -0.01em;
-      font-size: 1rem;
-    }
-
-    .comparison-table th:first-child {
-      border-top-left-radius: 16px;
-    }
-
-    .comparison-table th:last-child {
-      border-top-right-radius: 16px;
+      font-size: 0.96rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
 
     .comparison-table tr:last-child td {
@@ -140,25 +457,33 @@
     }
 
     .comparison-table tr:hover td {
-      background: rgba(255, 255, 255, 0.015);
+      background: rgba(255, 255, 255, 0.018);
     }
 
     .feature-name {
       font-weight: 600;
       color: var(--text-color);
       background: rgba(255, 255, 255, 0.01);
-      width: 18%;
+      width: 17%;
+    }
+
+    .feature-sub {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
     }
 
     .highlight-col {
-      background: rgba(139, 92, 246, 0.04);
-      border-left: 1px solid rgba(139, 92, 246, 0.15);
-      border-right: 1px solid rgba(139, 92, 246, 0.15);
-      width: 25%;
+      background: rgba(139, 92, 246, 0.055);
+      border-left: 1px solid rgba(139, 92, 246, 0.22);
+      border-right: 1px solid rgba(139, 92, 246, 0.22);
+      width: 24%;
     }
 
     .comparison-table tr:hover .highlight-col {
-      background: rgba(139, 92, 246, 0.07);
+      background: rgba(139, 92, 246, 0.09);
     }
 
     .check-icon {
@@ -179,6 +504,24 @@
       margin-right: 0.25rem;
     }
 
+    .cell-pill {
+      display: inline-block;
+      margin-top: 0.35rem;
+      padding: 0.12rem 0.5rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: rgba(124, 58, 237, 0.16);
+      color: #C4B5FD;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .cell-pill.cyan {
+      background: rgba(6, 182, 212, 0.14);
+      color: #67E8F9;
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
     /* Grid Section Styles */
     .details-grid {
       display: grid;
@@ -188,7 +531,7 @@
     }
 
     .detail-card {
-      padding: 2.2rem 1.8rem;
+      padding: 2.1rem 1.75rem;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -196,7 +539,7 @@
     }
 
     .detail-card h2 {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-family: var(--font-heading);
       font-weight: 700;
       margin-bottom: 0.75rem;
@@ -217,7 +560,7 @@
     .detail-card p {
       color: var(--text-muted);
       font-size: 0.9rem;
-      line-height: 1.5;
+      line-height: 1.55;
       margin-bottom: 1.25rem;
     }
 
@@ -235,18 +578,19 @@
       color: var(--text-color);
       display: flex;
       align-items: flex-start;
-      gap: 0.4rem;
+      gap: 0.45rem;
+      line-height: 1.45;
     }
 
     .detail-card li::before {
-      content: "•";
+      content: "▹";
       color: var(--accent-color);
       font-weight: bold;
     }
 
     .detail-card.opencrawling-card {
-      border-color: rgba(139, 92, 246, 0.35);
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent 80%), rgba(15, 23, 42, 0.55);
+      border-color: rgba(139, 92, 246, 0.4);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), transparent 80%), rgba(15, 23, 42, 0.6);
     }
 
     .detail-card.opencrawling-card h2 {
@@ -261,7 +605,7 @@
 
     /* Interactive Matcher Quiz */
     .matcher-section {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.03), rgba(139, 92, 246, 0.03));
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.04), rgba(139, 92, 246, 0.04));
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 3rem;
@@ -283,7 +627,7 @@
       font-family: var(--font-heading);
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       background: linear-gradient(135deg, var(--text-color), var(--cyan-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -291,49 +635,50 @@
 
     .matcher-desc {
       color: var(--text-muted);
-      max-width: 600px;
+      max-width: 640px;
       margin: 0 auto 2.5rem auto;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
     }
 
     .quiz-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto 2.5rem auto;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      max-width: 1120px;
+      margin: 0 auto 2.25rem auto;
       text-align: left;
     }
 
     .quiz-card {
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(15, 23, 42, 0.5);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem;
+      border-radius: 14px;
+      padding: 1.4rem;
       transition: all 0.3s ease;
     }
 
     .quiz-card:hover {
-      border-color: rgba(6, 182, 212, 0.25);
+      border-color: rgba(6, 182, 212, 0.3);
     }
 
     .quiz-card h4 {
       font-family: var(--font-heading);
-      font-size: 1.05rem;
-      font-weight: 600;
+      font-size: 0.98rem;
+      font-weight: 700;
       margin-bottom: 1rem;
       color: var(--text-color);
     }
 
     .quiz-option {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      align-items: flex-start;
+      gap: 0.65rem;
       margin-bottom: 0.75rem;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       color: var(--text-muted);
       transition: color 0.2s ease;
+      line-height: 1.35;
     }
 
     .quiz-option:hover {
@@ -344,6 +689,8 @@
       appearance: none;
       width: 16px;
       height: 16px;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
       border: 1.5px solid var(--card-border);
       border-radius: 50%;
       outline: none;
@@ -371,16 +718,16 @@
 
     .quiz-option input[type="radio"]:checked + span {
       color: var(--text-color);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .quiz-result-box {
       margin-top: 2rem;
       padding: 2rem;
-      border-radius: 12px;
-      border: 1px dashed rgba(139, 92, 246, 0.25);
-      background: rgba(139, 92, 246, 0.02);
-      max-width: 700px;
+      border-radius: 14px;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      background: rgba(15, 23, 42, 0.75);
+      max-width: 780px;
       margin-left: auto;
       margin-right: auto;
       display: none;
@@ -396,43 +743,75 @@
 
     .result-badge {
       display: inline-block;
-      padding: 0.35rem 0.75rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+      margin-bottom: 0.9rem;
     }
 
-    .badge-oc { background: rgba(139, 92, 246, 0.15); color: #C084FC; border: 1px solid rgba(139, 92, 246, 0.3); }
-    .badge-st { background: rgba(6, 182, 212, 0.15); color: #22D3EE; border: 1px solid rgba(6, 182, 212, 0.3); }
-    .badge-mcf { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-oc { background: rgba(139, 92, 246, 0.18); color: #C084FC; border: 1px solid rgba(139, 92, 246, 0.4); }
+    .badge-st { background: rgba(6, 182, 212, 0.18); color: #22D3EE; border: 1px solid rgba(6, 182, 212, 0.4); }
+    .badge-mcf { background: rgba(245, 158, 11, 0.18); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
 
     .result-title {
       font-family: var(--font-heading);
       font-size: 1.4rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.65rem;
       color: var(--text-color);
     }
 
     .result-text {
       color: var(--text-muted);
       font-size: 0.95rem;
-      line-height: 1.6;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+
+    .result-cli-hint {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      background: rgba(5, 8, 14, 0.85);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      color: #67E8F9;
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
+    @media (max-width: 1150px) {
+      .pillars-strip {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .quiz-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .duel-arena {
+        grid-template-columns: 1fr;
+      }
+      .duel-vs-divider {
+        padding: 0.25rem 0;
+      }
       .details-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
       }
-      
+    }
+
+    @media (max-width: 640px) {
+      .pillars-strip {
+        grid-template-columns: 1fr;
+      }
       .quiz-container {
         grid-template-columns: 1fr;
-        gap: 1rem;
+      }
+      .duel-section {
+        padding: 1.5rem;
       }
     }
   </style>
@@ -455,9 +834,11 @@
       <nav class="main-nav" aria-label="Main Navigation">
         <ul>
           <li><a href="index.html#features">Features</a></li>
+          <li><a href="sdk.html">Java SDK</a></li>
           <li><a href="index.html#standard">Open Standard</a></li>
           <li><a href="index.html#getting-started">Quick Start</a></li>
           <li><a href="mcp.html">MCP Server</a></li>
+          <li><a href="observability.html">Observability</a></li>
           <li><a href="index.html#blog">Blog</a></li>
           <li><a href="comparison.html" class="active">Compare</a></li>
           <li><a href="team.html">Team</a></li>
@@ -485,17 +866,161 @@
   <!-- Main Content Wrapper -->
   <main class="comparison-wrapper">
     <div class="comparison-header">
+      <div class="comparison-badge">⚡ Architectural Deep-Dive &amp; Interactive Matrix</div>
       <h1 class="gradient-text">Ecosystem Comparison</h1>
-      <p class="comparison-subtitle">OpenCrawling sits at the intersection of enterprise security and AI ingestion. See how it compares to orchestrators, crawlers, parsers, and data integration platforms.</p>
+      <p class="comparison-subtitle">
+        OpenCrawling sits at the intersection of <strong>Zero-Trust enterprise security</strong>, <strong>event-driven pull &amp; gRPC push ingestion</strong>, and <strong>agentic AI infrastructure</strong>. Explore how it compares to legacy crawlers, LLM frameworks, document parsers, ETL tools, and SaaS search platforms.
+      </p>
     </div>
 
-    <!-- Category Tabs Switcher -->
-    <div class="category-tabs" id="tab-switcher">
-      <button class="category-tab-btn active" data-category="all">Show All</button>
-      <button class="category-tab-btn" data-category="rag">RAG & AI Frameworks</button>
-      <button class="category-tab-btn" data-category="parsers">Parsers & Web Crawlers</button>
-      <button class="category-tab-btn" data-category="etl">ETL & Data Flows</button>
-      <button class="category-tab-btn" data-category="search">Enterprise Search/RAG Platforms</button>
+    <!-- 6-Pillar Capability Strip -->
+    <div class="pillars-strip" aria-label="OpenCrawling Architectural Pillars">
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">🔒</span>
+          <span class="pillar-mini-tag">Zero-Trust</span>
+        </div>
+        <div class="pillar-mini-title">ACL &amp; Tenant Sync</div>
+        <div class="pillar-mini-desc">Maps source allow/deny SIDs &amp; multi-tenant scopes directly into vector queries.</div>
+      </div>
+
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">📡</span>
+          <span class="pillar-mini-tag">Pull + Push</span>
+        </div>
+        <div class="pillar-mini-title">gRPC &amp; OIS Streams</div>
+        <div class="pillar-mini-desc">Scheduled crawlers plus sub-ms HTTP/2 Protobuf v3 Unary &amp; BiDi streaming.</div>
+      </div>
+
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">🛡️</span>
+          <span class="pillar-mini-tag">Tika 4.1</span>
+        </div>
+        <div class="pillar-mini-title">PipesForkParser</div>
+        <div class="pillar-mini-desc">Process-isolated child JVMs with watchdog timeouts prevent poison-pill crashes.</div>
+      </div>
+
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">🗄️</span>
+          <span class="pillar-mini-tag">Claim-Check</span>
+        </div>
+        <div class="pillar-mini-title">Apache Ozone &amp; S3</div>
+        <div class="pillar-mini-desc">Offloads multi-MB binaries via native <code>ofs://</code> RPC &amp; S3 Gateway.</div>
+      </div>
+
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">🦆</span>
+          <span class="pillar-mini-tag">Lakehouse</span>
+        </div>
+        <div class="pillar-mini-title">Parquet &amp; DuckDB</div>
+        <div class="pillar-mini-desc">Zero-overhead ZSTD Parquet audit ledgers queried live via embedded DuckDB SQL.</div>
+      </div>
+
+      <div class="pillar-mini-card">
+        <div class="pillar-mini-top">
+          <span class="pillar-mini-icon">🤖</span>
+          <span class="pillar-mini-tag">OpenAPI 3.1</span>
+        </div>
+        <div class="pillar-mini-title">MCP &amp; AI Tooling</div>
+        <div class="pillar-mini-desc">Secure MCP Server, OpenAPI 3.1 tool export (<code>oc openapi tools</code>), &amp; Java 25 SDK.</div>
+      </div>
+    </div>
+
+    <!-- Interactive Head-to-Head Architecture Duel -->
+    <section class="duel-section" aria-labelledby="duel-heading">
+      <div class="duel-header">
+        <h2 id="duel-heading">⚔️ Interactive Architecture Duel</h2>
+        <p>Select any technology category below to compare its architectural trade-offs head-to-head against OpenCrawling.</p>
+      </div>
+
+      <div class="duel-selector" id="duel-selector">
+        <button class="duel-btn active" data-opponent="manifoldcf">🏛️ vs. Apache ManifoldCF</button>
+        <button class="duel-btn" data-opponent="langchain">🦜 vs. LangChain / LlamaIndex</button>
+        <button class="duel-btn" data-opponent="unstructured">🧩 vs. Unstructured.io</button>
+        <button class="duel-btn" data-opponent="airbyte">🌊 vs. Airbyte / Fivetran / NiFi</button>
+        <button class="duel-btn" data-opponent="glean">🔍 vs. Glean / Elastic</button>
+      </div>
+
+      <div class="duel-arena">
+        <!-- Left Fighter: OpenCrawling -->
+        <div class="duel-fighter oc-fighter">
+          <div class="duel-fighter-head">
+            <span class="duel-fighter-title">🚀 OpenCrawling</span>
+            <span class="duel-fighter-tag tag-oc">Java 25 • OIS 1.0 • Apache 2.0</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Ingestion &amp; Transport Model</span>
+            <span class="duel-metric-val" id="duel-oc-transport">Java 25 Virtual Threads (StructuredTaskScope), Kafka event mesh, Apache Ozone Claim-Check, plus native gRPC HTTP/2 &amp; REST push ingestion.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Security &amp; Zero-Trust ACLs</span>
+            <span class="duel-metric-val" id="duel-oc-security">First-class allow/deny SID translation, inherited folder/dossier ACLs (Doxis, CMIS, Alfresco, AD), and server-side MCP query filtering.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Extraction, AI &amp; Vector Readiness</span>
+            <span class="duel-metric-val" id="duel-oc-ai">Apache Tika 4.1 PipesForkParser, Auto-Narrativization Copilot (Mustache), decoupled oc-embedding-service, and 9+ vector/migration sinks.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Auditability &amp; Dev Tooling</span>
+            <span class="duel-metric-val" id="duel-oc-audit">Lakehouse Parquet (ZSTD) document ledgers, embedded DuckDB SQL, OpenTelemetry AIOps RCA, OpenAPI 3.1, oc-cli, and Java Client SDK.</span>
+          </div>
+        </div>
+
+        <!-- Center VS Badge -->
+        <div class="duel-vs-divider">
+          <div class="vs-circle">VS</div>
+        </div>
+
+        <!-- Right Fighter: Selected Opponent -->
+        <div class="duel-fighter" id="duel-alt-card">
+          <div class="duel-fighter-head">
+            <span class="duel-fighter-title" id="duel-alt-title">🏛️ Apache ManifoldCF</span>
+            <span class="duel-fighter-tag tag-alt" id="duel-alt-tag">Legacy Java Crawler • Apache 2.0</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Ingestion &amp; Transport Model</span>
+            <span class="duel-metric-val" id="duel-alt-transport">Monolithic polling crawler backed by PostgreSQL state tables and classic OS thread pools; no Kafka event mesh, Claim-Check, or gRPC streaming.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Security &amp; Zero-Trust ACLs</span>
+            <span class="duel-metric-val" id="duel-alt-security">Strong legacy Authority Connector architecture for Solr/Elasticsearch keyword search, but no native MCP server or vector store ACL pushdown.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Extraction, AI &amp; Vector Readiness</span>
+            <span class="duel-metric-val" id="duel-alt-ai">Built for keyword search engines; lacks semantic token chunking, embedding model orchestration, and tabular auto-narrativization.</span>
+          </div>
+          <div class="duel-metric">
+            <span class="duel-metric-label">Auditability &amp; Dev Tooling</span>
+            <span class="duel-metric-val" id="duel-alt-audit">Legacy JSP admin UI and XML job exports; no Parquet Lakehouse ledger, DuckDB analytics, OpenAPI 3.1, or OpenTelemetry AIOps.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="duel-verdict" id="duel-verdict-box">
+        <div class="duel-verdict-text" id="duel-verdict-text">
+          <strong>Migration Path &amp; Verdict:</strong> OpenCrawling is the modern cloud-native successor for ManifoldCF workloads. Use the built-in <code>oc-mcf-migrator</code> (<code>oc mcf audit</code> &amp; <code>oc mcf convert</code>) or the Admin UI Migration Wizard to convert legacy ManifoldCF XML/JSON exports into Open Ingestion Standard (OIS) pipelines in seconds.
+        </div>
+      </div>
+    </section>
+
+    <!-- Matrix Toolbar: Category Tabs + Live Filter -->
+    <div class="matrix-toolbar">
+      <div class="category-tabs" id="tab-switcher">
+        <button class="category-tab-btn active" data-category="all">Show All</button>
+        <button class="category-tab-btn" data-category="rag">RAG &amp; AI Frameworks</button>
+        <button class="category-tab-btn" data-category="parsers">Crawlers &amp; Parsers</button>
+        <button class="category-tab-btn" data-category="etl">ETL &amp; Data Flows</button>
+        <button class="category-tab-btn" data-category="search">Enterprise Search Platforms</button>
+      </div>
+
+      <div class="matrix-search-wrap">
+        <span class="matrix-search-icon">🔎</span>
+        <input type="text" id="matrix-search" class="matrix-search-input" placeholder="Filter features (e.g. gRPC, DuckDB, ACL, Tika)..." aria-label="Filter comparison matrix rows">
+      </div>
     </div>
 
     <!-- Comparison Table -->
@@ -503,62 +1028,225 @@
       <table class="comparison-table" id="comparison-matrix-table">
         <thead>
           <tr>
-            <th>Feature</th>
+            <th>Capability / Dimension</th>
             <th class="highlight-col">🚀 OpenCrawling</th>
             <th class="cat-col-rag">🦜 LangChain / LlamaIndex</th>
-            <th class="cat-col-parsers">🧩 Unstructured / Nutch</th>
+            <th class="cat-col-parsers">🧩 Unstructured / Nutch / MCF</th>
             <th class="cat-col-etl">🌊 Airbyte / NiFi / Fivetran</th>
             <th class="cat-col-search">🔍 Glean / Elastic</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="feature-name">Primary Role</td>
-            <td class="highlight-col"><strong>Secure Ingestion Middleware</strong></td>
-            <td>Application Orchestration & Logic</td>
-            <td>Data Extraction / Web Scraping</td>
-            <td>General ETL & System Sync</td>
-            <td>End-to-End Enterprise Search</td>
+            <td class="feature-name">
+              Primary Role
+              <span class="feature-sub">Core architectural focus</span>
+            </td>
+            <td class="highlight-col">
+              <strong>Zero-Trust AI Ingestion &amp; Migration Middleware</strong>
+              <br><span class="cell-pill">OIS 1.0 Reference Engine</span>
+            </td>
+            <td>Application-Level LLM Orchestration &amp; Agent SDKs</td>
+            <td>Document Partitioning (Unstructured) / Legacy Crawling (Nutch, MCF)</td>
+            <td>Tabular Data Warehouse Replication &amp; General Data Routing</td>
+            <td>Turn-Key SaaS Search (Glean) / Search &amp; Analytics Index (Elastic)</td>
           </tr>
+
           <tr>
-            <td class="feature-name">ACL / Document Security</td>
-            <td class="highlight-col"><span class="check-icon">✓</span> <strong>Native ACL Translation</strong><br><small>AD, SharePoint SIDs mapped to DB rows</small></td>
-            <td><span class="cross-icon">✗</span> <strong>No Security Sync</strong><br><small>Developer must implement filtering</small></td>
-            <td><span class="cross-icon">✗</span> <strong>No Security Sync</strong><br><small>Extracts raw content only</small></td>
-            <td><span class="cross-icon">✗</span> <strong>No Document Security</strong><br><small>Moves tables, no permission mapping</small></td>
-            <td><span class="check-icon">✓</span> <strong>Built-in Security</strong><br><small>Integrates with identity management</small></td>
+            <td class="feature-name">
+              Ingestion Paradigms
+              <span class="feature-sub">Pull polling vs. real-time Push</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Hybrid Pull + Sub-ms Push</strong><br>
+              <small>Scheduled Crawlers + <strong>gRPC Push Streaming</strong> (HTTP/2, Protobuf v3, Unary/Client/BiDi) + OIS REST Webhook</small>
+              <br><span class="cell-pill cyan">Port 9096 gRPC</span>
+            </td>
+            <td><span class="warning-icon">!</span> <strong>In-Memory Loaders</strong><br><small>Script-driven document readers; no standalone streaming server</small></td>
+            <td><span class="warning-icon">!</span> <strong>Batch Polling / API</strong><br><small>Batch crawl jobs (Nutch/MCF) or synchronous REST file uploads</small></td>
+            <td><span class="check-icon">✓</span> <strong>CDC &amp; Batch Sync</strong><br><small>Strong tabular DB CDC, limited unstructured document streaming</small></td>
+            <td><span class="check-icon">✓</span> <strong>SaaS Webhooks &amp; Crawlers</strong><br><small>Cloud API polling and indexing APIs</small></td>
           </tr>
+
           <tr>
-            <td class="feature-name">Data Types</td>
-            <td class="highlight-col">Unstructured Files & Repositories</td>
-            <td>Any (Simple document readers)</td>
-            <td>Highly Complex Unstructured Formats</td>
-            <td>Mainly Structured & SaaS APIs</td>
-            <td>Federated APIs & Unstructured Docs</td>
+            <td class="feature-name">
+              Zero-Trust ACL Security
+              <span class="feature-sub">Document-level permission sync</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Native Allow/Deny &amp; Tenant Isolation</strong><br>
+              <small>Translates AD, Doxis, CMIS, SharePoint &amp; gRPC ACLs into vector store filters + Authority Service</small>
+            </td>
+            <td><span class="cross-icon">✗</span> <strong>No Security Sync</strong><br><small>Developer must manually code metadata filtering</small></td>
+            <td><span class="warning-icon">!</span> <strong>MCF Only (Legacy)</strong><br><small>Unstructured &amp; Nutch drop ACLs; ManifoldCF supports legacy Solr/ES</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No Document ACLs</strong><br><small>Replicates rows/tables without file permission hierarchies</small></td>
+            <td><span class="check-icon">✓</span> <strong>Built-in Workspace ACLs</strong><br><small>Glean syncs SaaS identities; Elastic requires connector setup</small></td>
           </tr>
+
           <tr>
-            <td class="feature-name">Semantic Chunking & Embedding</td>
-            <td class="highlight-col"><span class="check-icon">✓</span> <strong>Decoupled Service</strong><br><small>Orchestrates splitters & model factories</small></td>
-            <td><span class="check-icon">✓</span> <strong>Local / In-memory</strong><br><small>Excellent library utilities</small></td>
-            <td><span class="warning-icon">!</span> <strong>Simple Chunking</strong><br><small>Document-level chunking hooks</small></td>
-            <td><span class="cross-icon">✗</span> <strong>No AI Native Features</strong><br><small>Relies on downstream APIs</small></td>
-            <td><span class="check-icon">✓</span> <strong>End-to-End Vector Indexing</strong><br><small>Embedded semantic search models</small></td>
+            <td class="feature-name">
+              Lifecycle &amp; Tombstones
+              <span class="feature-sub">Purging deleted source content</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>OIS <code>UPSERT</code> &amp; <code>DELETE</code> Tombstones</strong><br>
+              <small>Automatically purges obsolete chunks &amp; vectors across all target stores</small>
+            </td>
+            <td><span class="warning-icon">!</span> <strong>Manual Indexing API</strong><br><small>Requires custom record manager setup</small></td>
+            <td><span class="warning-icon">!</span> <strong>Crawler-Specific</strong><br><small>Supported in MCF/Nutch; not in Unstructured</small></td>
+            <td><span class="check-icon">✓</span> <strong>Soft-Delete CDC Rows</strong><br><small>Marks deleted rows in destination tables</small></td>
+            <td><span class="check-icon">✓</span> <strong>Automated Index Sync</strong><br><small>Purges deleted SaaS docs on sync cycle</small></td>
           </tr>
+
           <tr>
-            <td class="feature-name">Scaling Mechanism</td>
-            <td class="highlight-col"><span class="check-icon">✓</span> Kafka Event Streams & Java Virtual Threads</td>
-            <td><span class="cross-icon">✗</span> In-Memory Threading / Script Execution</td>
-            <td>MapReduce (Nutch) / Serverless Container</td>
-            <td>Distributed Nodes / Cloud Engines</td>
-            <td>Elastic Cluster Scaling / SaaS Cloud</td>
+            <td class="feature-name">
+              Binary Claim-Check Store
+              <span class="feature-sub">Handling multi-MB/GB payloads</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Apache Ozone (<code>ofs://</code> &amp; S3G) + S3</strong><br>
+              <small>Automatic threshold offloading keeps Kafka messages lightweight</small>
+            </td>
+            <td><span class="cross-icon">✗</span> <strong>In-Process Memory</strong><br><small>Loads binaries directly into application RAM</small></td>
+            <td><span class="warning-icon">!</span> <strong>HDFS / Temp Disk</strong><br><small>Nutch uses HDFS segments; MCF buffers in DB/disk</small></td>
+            <td><span class="check-icon">✓</span> <strong>S3 / GCS Staging</strong><br><small>Stages batch files in cloud buckets before warehouse load</small></td>
+            <td><span class="check-icon">✓</span> <strong>Proprietary Cloud Storage</strong><br><small>Managed internally within SaaS/cluster</small></td>
           </tr>
+
           <tr>
-            <td class="feature-name">License & Model</td>
-            <td class="highlight-col"><strong>Apache 2.0 (Open Source)</strong></td>
-            <td>MIT / BSD (Open Source)</td>
-            <td>Apache 2.0 (Nutch) / Commercial (Unstructured)</td>
-            <td>Elastic License (Airbyte) / Proprietary SaaS</td>
-            <td>Proprietary SaaS (Glean) / Elastic License</td>
+            <td class="feature-name">
+              Crash-Resilient Extraction
+              <span class="feature-sub">Poison-pill PDF/Office isolation</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Apache Tika 4.1 <code>PipesForkParser</code></strong><br>
+              <small>Process-isolated child JVMs with watchdog timeouts, heap caps &amp; Zip Slip defense</small>
+            </td>
+            <td><span class="cross-icon">✗</span> <strong>In-Process Python Loaders</strong><br><small>Corrupt PDFs or OOMs can crash the worker process</small></td>
+            <td><span class="check-icon">✓</span> <strong>Container / Tika Parsing</strong><br><small>Unstructured uses OCR/DL containers; Nutch/MCF use standard Tika</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No Binary Document Parser</strong><br><small>Designed for JSON/CSV/tabular records</small></td>
+            <td><span class="check-icon">✓</span> <strong>Managed Document Parsers</strong><br><small>Built-in cloud extraction pipelines</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Tabular RAG &amp; Copilot
+              <span class="feature-sub">Structured DB rows to semantic text</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Auto-Narrativization Copilot</strong><br>
+              <small>Spring AI + Ollama/OpenAI converts schemas into Mustache narratives with offline fallback</small>
+            </td>
+            <td><span class="warning-icon">!</span> <strong>Custom Prompt Chains</strong><br><small>Requires manual Python code per table</small></td>
+            <td><span class="cross-icon">✗</span> <strong>Not Supported</strong><br><small>No relational schema-to-narrative copilot</small></td>
+            <td><span class="cross-icon">✗</span> <strong>Raw Column Copy Only</strong><br><small>Copies raw columns without semantic prose synthesis</small></td>
+            <td><span class="warning-icon">!</span> <strong>SaaS Object Templates</strong><br><small>Fixed templates for Jira/Salesforce tickets</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Enterprise Source Connectors
+              <span class="feature-sub">ECM, BPMN, Lakehouse &amp; Web</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>11+ Enterprise &amp; Stream Sources</strong><br>
+              <small>gRPC Push, Doxis 4 CSB, OASIS CMIS 1.1, Alfresco ACS &amp; APS 26.2, Flowable, Camunda, JDBC, Apache Iceberg, StormCrawler, FileSystem</small>
+            </td>
+            <td><span class="check-icon">✓</span> <strong>Community Loaders</strong><br><small>Hundreds of lightweight Python loaders (varying production maturity)</small></td>
+            <td><span class="check-icon">✓</span> <strong>Legacy ECM (MCF) / Web (Nutch)</strong><br><small>MCF has legacy ECM connectors; OpenCrawling migrates them via <code>oc-mcf-migrator</code></small></td>
+            <td><span class="check-icon">✓</span> <strong>300+ SaaS &amp; DB Sources</strong><br><small>Focused on CRM, ERP, and relational databases</small></td>
+            <td><span class="check-icon">✓</span> <strong>SaaS Workplace Apps</strong><br><small>Google Drive, Slack, Confluence, SharePoint Online</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Outputs, Vector Sinks &amp; Migration
+              <span class="feature-sub">RAG indexing &amp; bit-for-bit liberation</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>9 Vector Sinks + Ozone Migration Mode</strong><br>
+              <small>pgvector, Milvus, Qdrant, Vespa, Solr 10, Luxir, OpenSearch, <strong>SeaTunnel (100+ sinks)</strong>, &amp; bit-for-bit <strong>Apache Ozone</strong> (<code>.ois.json</code> sidecars)</small>
+            </td>
+            <td><span class="check-icon">✓</span> <strong>Vector Store Adapters</strong><br><small>Broad library wrappers, no bit-for-bit ECM migration mode</small></td>
+            <td><span class="warning-icon">!</span> <strong>Search / JSON Sinks</strong><br><small>Solr/ES outputs (MCF/Nutch) or JSON chunks (Unstructured)</small></td>
+            <td><span class="check-icon">✓</span> <strong>Warehouses &amp; Lakes</strong><br><small>Snowflake, BigQuery, Databricks, Iceberg, ClickHouse</small></td>
+            <td><span class="cross-icon">✗</span> <strong>Locked to Own Index</strong><br><small>Data is indexed strictly into Glean or Elasticsearch</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Embedding Scale-Out
+              <span class="feature-sub">Horizontal GPU/CPU vectorization</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Decoupled <code>oc-embedding-service</code></strong><br>
+              <small>Stateless Kafka consumer group scaling (<code>×N</code> replicas) across Ollama, OpenAI &amp; HuggingFace</small>
+            </td>
+            <td><span class="cross-icon">✗</span> <strong>Application-Bound</strong><br><small>Runs inside caller script or requires custom Celery queues</small></td>
+            <td><span class="warning-icon">!</span> <strong>API / Commercial Only</strong><br><small>Unstructured Platform offers cloud embedding hooks</small></td>
+            <td><span class="cross-icon">✗</span> <strong>Minimal Vector Support</strong><br><small>Basic destination-side embedding plugins</small></td>
+            <td><span class="check-icon">✓</span> <strong>Built-in ML Nodes</strong><br><small>Managed Elastic ML nodes or Glean cloud models</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Lakehouse Audit Ledger &amp; OLAP
+              <span class="feature-sub">Compliance &amp; per-document accounting</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Parquet (<code>ZSTD</code>) + Embedded DuckDB</strong><br>
+              <small>Zero-overhead lock-free ledger, Hive partitioning, RFC 4180 CSV &amp; interactive DuckDB SQL Playground</small>
+              <br><span class="cell-pill cyan">Zero-DB Load</span>
+            </td>
+            <td><span class="cross-icon">✗</span> <strong>None</strong><br><small>No built-in compliance ledger or columnar audit reports</small></td>
+            <td><span class="warning-icon">!</span> <strong>Relational History Table</strong><br><small>MCF logs to PostgreSQL (high I/O bottleneck at scale)</small></td>
+            <td><span class="check-icon">✓</span> <strong>Sync Job Logs</strong><br><small>Job-level row counts &amp; state checkpoints</small></td>
+            <td><span class="check-icon">✓</span> <strong>Admin Audit Logs</strong><br><small>Cloud admin activity and indexing logs</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Observability &amp; AIOps
+              <span class="feature-sub">Distributed tracing &amp; AI diagnostics</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>OpenTelemetry + AI Root Cause Analysis</strong><br>
+              <small>End-to-end W3C <code>traceparent</code> across HTTP/gRPC/Kafka + LLM-powered failure diagnostics</small>
+            </td>
+            <td><span class="check-icon">✓</span> <strong>LangSmith / Arize Phoenix</strong><br><small>Strong LLM trace observability (commercial SaaS add-ons)</small></td>
+            <td><span class="cross-icon">✗</span> <strong>Standard Logs / JMX</strong><br><small>No native W3C trace propagation or AI RCA</small></td>
+            <td><span class="check-icon">✓</span> <strong>Prometheus / OpenTelemetry</strong><br><small>Infrastructure metrics without AI stack-trace RCA</small></td>
+            <td><span class="check-icon">✓</span> <strong>Elastic APM / Cloud Console</strong><br><small>Full cluster telemetry</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              Agentic AI, OpenAPI 3.1 &amp; CLI
+              <span class="feature-sub">MCP tools, contracts &amp; SDKs</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>Secure MCP + OpenAPI 3.1 + <code>oc-cli</code></strong><br>
+              <small>ACL-enforced MCP Server, Swagger UI, <code>oc openapi tools</code> (OpenAI/Gemini/Anthropic/MCP export), &amp; <code>oc-java-client-sdk</code></small>
+            </td>
+            <td><span class="check-icon">✓</span> <strong>Rich Agent Toolkits</strong><br><small>Python/TS agent frameworks, no built-in ACL-enforced MCP server</small></td>
+            <td><span class="cross-icon">✗</span> <strong>No MCP or AI Tool Export</strong><br><small>Requires external wrappers for agentic access</small></td>
+            <td><span class="warning-icon">!</span> <strong>REST API / Terraform</strong><br><small>Control-plane APIs for pipeline provisioning</small></td>
+            <td><span class="check-icon">✓</span> <strong>Search Agents &amp; REST APIs</strong><br><small>Glean Assistant / Elastic Agent Builder</small></td>
+          </tr>
+
+          <tr>
+            <td class="feature-name">
+              License &amp; Sovereignty
+              <span class="feature-sub">Self-hosted vs. vendor lock-in</span>
+            </td>
+            <td class="highlight-col">
+              <span class="check-icon">✓</span> <strong>100% Apache 2.0 Open Source</strong><br>
+              <small>Air-gapped ready, zero vendor lock-in, full data sovereignty</small>
+            </td>
+            <td>MIT / Apache 2.0 (Core) + Commercial Cloud Platform</td>
+            <td>Apache 2.0 (Nutch, MCF) / Commercial SaaS (Unstructured Platform)</td>
+            <td>ELv2 (Airbyte) / Proprietary SaaS (Fivetran) / Apache 2.0 (NiFi)</td>
+            <td>Proprietary SaaS Only (Glean) / SSPL &amp; AGPLv3 (Elastic)</td>
           </tr>
         </tbody>
       </table>
@@ -569,167 +1257,203 @@
       
       <!-- OpenCrawling -->
       <article class="detail-card opencrawling-card glass" data-cat="all">
-        <span class="category-label">Secure Ingestion Middleware</span>
+        <span class="category-label">Zero-Trust Ingestion &amp; Migration Engine</span>
         <h2>🚀 OpenCrawling</h2>
-        <p>A modern, high-performance open standard engine designed to securely bridge enterprise repositories with AI pipelines.</p>
+        <p>The open-source reference engine for the <strong>Open Ingestion Standard (OIS)</strong>, built on Java 25 and Spring Boot 4 to bridge enterprise repositories and real-time event streams with AI and vector infrastructure.</p>
         <ul>
-          <li><strong>Virtual Thread Parallelism</strong>: Built on Java 25 virtual threads for extremely low-footprint scales.</li>
-          <li><strong>Enterprise Connectors</strong>: Out-of-the-box connectors for FileSystem, Apache Iceberg, Alfresco ACS, Flowable/Camunda BPMN engines, and Apache StormCrawler.</li>
-          <li><strong>Document-Level ACLs</strong>: Retains and translates file access permissions directly into pgvector row security filters.</li>
-          <li><strong>Event-Driven Ingestion</strong>: Leverages Apache Kafka to scale crawler, parsing, and embedding tasks independently.</li>
+          <li><strong>Hybrid Pull + gRPC Push</strong>: Combine scheduled repository crawlers with sub-millisecond HTTP/2 Protobuf v3 gRPC Push streaming (<code>oc-grpc-push-connector</code>).</li>
+          <li><strong>End-to-End Zero-Trust ACLs</strong>: Preserves allow/deny SIDs and multi-tenant boundaries from Doxis, CMIS, Alfresco, JDBC, and gRPC directly into vector queries and the Secure MCP Server.</li>
+          <li><strong>Crash-Resilient &amp; Scalable</strong>: Isolates parsing in Apache Tika 4.1 <code>PipesForkParser</code> child JVMs, offloads binaries to Apache Ozone (<code>ofs://</code>), and scales embedding workers horizontally via Kafka.</li>
+          <li><strong>Lakehouse Audit &amp; OpenAPI 3.1</strong>: Generates ZSTD Parquet ledgers queryable via embedded DuckDB SQL, and exports OpenAPI 3.1 specs directly as LLM tool definitions via <code>oc openapi tools</code>.</li>
+        </ul>
+      </article>
+
+      <!-- Apache ManifoldCF -->
+      <article class="detail-card glass" data-cat="parsers">
+        <span class="category-label">Legacy Enterprise Crawler</span>
+        <h2>🏛️ Apache ManifoldCF</h2>
+        <p>The pioneering open-source enterprise crawler created for classic keyword search engines like Apache Solr and Elasticsearch.</p>
+        <ul>
+          <li><strong>Proven Authority Model</strong>: Introduced early repository ACL and Active Directory SID synchronization for keyword search indexes.</li>
+          <li><strong>Legacy Architecture</strong>: Relies on monolithic PostgreSQL polling tables, classic thread pools, and XML configurations without Kafka decoupling or native vector chunking.</li>
+          <li><strong>1-Click Migration to OpenCrawling</strong>: Use OpenCrawling's <code>oc-mcf-migrator</code> (<code>oc mcf audit</code> / <code>oc mcf convert</code>) to modernize legacy ManifoldCF jobs into OIS pipelines automatically.</li>
         </ul>
       </article>
 
       <!-- LangChain / LlamaIndex -->
       <article class="detail-card glass" data-cat="rag">
-        <span class="category-label">RAG & AI Frameworks</span>
+        <span class="category-label">RAG &amp; AI Frameworks</span>
         <h2>🦜 LangChain / LlamaIndex</h2>
-        <p>Popular Python/JS SDKs for building application-level LLM orchestration, agent workflows, and data integrations.</p>
+        <p>Popular Python/TypeScript SDKs for building application-level LLM orchestration, prompt chains, and agent workflows.</p>
         <ul>
-          <li><strong>Orchestration Layers</strong>: Unmatched library support for prompt templates, chains, memory, and LLM providers.</li>
-          <li><strong>Prototyping Focus</strong>: Perfect for app logic, but lacks industrial-scale crawling infrastructure (e.g., rate-limiting, failure recovery).</li>
-          <li><strong>No Native Permission Sync</strong>: Does not translate or synchronize enterprise repository ACLs to database targets.</li>
+          <li><strong>Rich App Orchestration</strong>: Unmatched ecosystem for prompt engineering, agent memory, query routing, and LLM evaluation.</li>
+          <li><strong>In-Memory Loader Limits</strong>: Built for application logic rather than distributed ingestion; lacks process-isolated Tika parsing, Claim-Check offloading, and Lakehouse audit ledgers.</li>
+          <li><strong>Better Together</strong>: Let OpenCrawling handle enterprise ingestion, ACL synchronization, and vector indexing, then connect LangChain or LlamaIndex agents via OpenCrawling's <strong>Secure MCP Server</strong>.</li>
         </ul>
       </article>
 
       <!-- Unstructured.io -->
       <article class="detail-card glass" data-cat="parsers">
-        <span class="category-label">Parsers & Web Crawlers</span>
+        <span class="category-label">Document Partitioning &amp; OCR</span>
         <h2>🧩 Unstructured.io</h2>
-        <p>Specialized file preprocessing libraries and APIs for partitioning and parsing complex layout PDFs, slides, and files.</p>
+        <p>Specialized file preprocessing libraries and commercial cloud APIs for partitioning complex layout PDFs, slides, and scanned images.</p>
         <ul>
-          <li><strong>Layout Detection</strong>: Deep learning models to detect tables, headers, and text chunks from raw images/documents.</li>
-          <li><strong>Pre-processing Focus</strong>: Focuses strictly on cleaning and normalizing text elements, not crawling enterprise networks.</li>
-          <li><strong>No Security Mappings</strong>: Pure parsing tool; does not connect to LDAP or map active document permission models.</li>
+          <li><strong>Layout &amp; Vision Detection</strong>: Uses vision models and OCR to detect bounding boxes, tables, and headers in complex visual documents.</li>
+          <li><strong>No Native Authority Service</strong>: Focuses on document element partitioning rather than multi-tenant ECM authority translation or bit-for-bit Apache Ozone migration.</li>
+          <li><strong>Cloud vs. Self-Hosted</strong>: Advanced connectors and high-throughput pipelines are part of the commercial Unstructured Platform, whereas OpenCrawling is 100% Apache 2.0.</li>
         </ul>
       </article>
 
       <!-- Apache Nutch -->
       <article class="detail-card glass" data-cat="parsers">
-        <span class="category-label">Parsers & Web Crawlers</span>
+        <span class="category-label">Web-Scale Scrapers</span>
         <h2>🕸️ Apache Nutch</h2>
-        <p>A highly mature, production-tested open-source web crawler designed for web-scale scraping and search engines.</p>
+        <p>A mature, battle-tested open-source web crawler built for massive public internet scraping on Hadoop clusters.</p>
         <ul>
-          <li><strong>Web-Scale Crawling</strong>: Excellent handles for massive, public web crawls using distributed Hadoop clusters.</li>
-          <li><strong>Legacy Infrastructure</strong>: Very complex setup relying on MapReduce, making it heavy for modern container clouds.</li>
-          <li><strong>No Intranet Security</strong>: Tailored for public web content; lacks connectors for secure repositories like SharePoint.</li>
+          <li><strong>Massive Public Web Crawling</strong>: Excels at link-graph traversal and politeness throttling across millions of public web domains.</li>
+          <li><strong>Batch MapReduce Heritage</strong>: Heavy Hadoop infrastructure compared to OpenCrawling's lightweight Java 25 Virtual Threads or StormCrawler streaming integration.</li>
+          <li><strong>No Intranet ECM Security</strong>: Designed for public HTTP pages; lacks connectors for Doxis, CMIS, Alfresco, BPMN engines, or Zero-Trust ACL mapping.</li>
         </ul>
       </article>
 
       <!-- Airbyte / Fivetran -->
       <article class="detail-card glass" data-cat="etl">
-        <span class="category-label">ETL & Data Flows</span>
+        <span class="category-label">ETL &amp; Data Integration</span>
         <h2>🌊 Airbyte / Fivetran</h2>
-        <p>Leader platforms in modern structured ETL, connecting databases, SaaS tools, and cloud storage to data warehouses.</p>
+        <p>Leading ELT platforms for replicating structured relational databases and SaaS API tables into analytical data warehouses.</p>
         <ul>
-          <li><strong>SaaS API Connectors</strong>: Thousands of pre-built integrations for structured data (Salesforce, Stripe, MySQL).</li>
-          <li><strong>Data Warehouse Focus</strong>: Built to replicate tabular databases, not to parse raw binary documents for semantic search.</li>
-          <li><strong>No ACL Mapping</strong>: Replicates database schemas directly without translating repository-level file permissions.</li>
+          <li><strong>300+ SaaS Table Connectors</strong>: Ideal for syncing Salesforce, Stripe, or Postgres tables into Snowflake, BigQuery, or Databricks.</li>
+          <li><strong>Not Built for Unstructured RAG</strong>: Replicates tabular rows as-is without Apache Tika binary extraction, Auto-Narrativization Copilot prose synthesis, or document ACL inheritance.</li>
+          <li><strong>Complementary via SeaTunnel</strong>: OpenCrawling integrates natively with <strong>Apache SeaTunnel</strong> for distributed multi-sink fan-out while preserving OIS chunks and vectors.</li>
         </ul>
       </article>
 
       <!-- Apache NiFi -->
       <article class="detail-card glass" data-cat="etl">
-        <span class="category-label">ETL & Data Flows</span>
+        <span class="category-label">Dataflow Routing</span>
         <h2>⚡ Apache NiFi</h2>
-        <p>A powerful, visual drag-and-drop data routing and distribution system built to orchestrate complex corporate data flows.</p>
+        <p>A visual drag-and-drop dataflow routing system designed to move and transform files and events across corporate networks.</p>
         <ul>
-          <li><strong>Visual Pipeline Editor</strong>: Interactive dashboard for managing data ingestion, schema routing, and delivery.</li>
-          <li><strong>Heavy Infrastructure</strong>: Runs as a large clustered Java environment, which is highly resource-intensive.</li>
-          <li><strong>No AI Specialization</strong>: Requires custom scripted processors to achieve semantic chunking and RAG ACL synchronization.</li>
+          <li><strong>Visual Flow Canvas</strong>: Powerful UI for backpressure management, data provenance, and protocol mediation.</li>
+          <li><strong>DIY RAG &amp; Security</strong>: Requires custom processors to implement semantic token splitting, decoupled embedding scale-out, OIS tombstone lifecycles, and vector store ACL enforcement.</li>
+          <li><strong>gRPC Bridge Ready</strong>: NiFi flows can push real-time documents directly into OpenCrawling's <code>oc-grpc-push-connector</code> on port <code>9096</code> to gain instant RAG and ACL capabilities.</li>
         </ul>
       </article>
 
       <!-- Glean -->
       <article class="detail-card glass" data-cat="search">
-        <span class="category-label">Enterprise Search Platforms</span>
+        <span class="category-label">Commercial SaaS Search</span>
         <h2>🧠 Glean</h2>
-        <p>A premium, closed-source SaaS workspace search assistant that federates answers across all company tools.</p>
+        <p>A turnkey, closed-source SaaS enterprise search and AI assistant that federates knowledge across cloud workplace tools.</p>
         <ul>
-          <li><strong>Out-of-the-Box RAG</strong>: Exceptional pre-built product interface that integrates search, chat, and agents.</li>
-          <li><strong>Closed Ecosystem</strong>: Fully managed SaaS solution with no local self-hosted open-source model. High vendor lock-in.</li>
-          <li><strong>Pre-integrated Security</strong>: Fully synchronizes permissions across SaaS accounts, but lacks customization for local private DBs.</li>
+          <li><strong>Polished End-User SaaS</strong>: Delivers a ready-to-use chat and search web app across Slack, Google Workspace, and Jira.</li>
+          <li><strong>Closed Ecosystem &amp; Lock-In</strong>: Proprietary commercial SaaS with per-seat licensing; cannot be self-hosted in air-gapped environments or customized with open SPIs.</li>
+          <li><strong>No Open Data Liberation</strong>: Data stays inside Glean's index, whereas OpenCrawling lets you route into any open vector database or Apache Ozone Lakehouse.</li>
         </ul>
       </article>
 
       <!-- Elastic -->
       <article class="detail-card glass" data-cat="search">
-        <span class="category-label">Enterprise Search Platforms</span>
-        <h2>🔍 Elastic</h2>
-        <p>The standard search and analytics database engine, equipped with vector capabilities and lexical indexing.</p>
+        <span class="category-label">Search &amp; Vector Index Engine</span>
+        <h2>🔍 Elastic / OpenSearch</h2>
+        <p>Industry-standard distributed search and analytics engines offering lexical BM25 and dense vector kNN indexing.</p>
         <ul>
-          <li><strong>Storage & Indexing</strong>: Outstanding database engine for keyword search, hybrid retrieval, and pgvector-style indexing.</li>
-          <li><strong>Not an Ingest Engine</strong>: Lacks the capability to actively schedule crawls, scan local drives, or parse raw SharePoint ACL files.</li>
-          <li><strong>Synergetic Match</strong>: OpenCrawling is designed to sit in front of Elastic, handling the secure ingest and feeding documents safely into it.</li>
+          <li><strong>World-Class Retrieval Index</strong>: Exceptional hybrid lexical + vector search performance at petabyte scale.</li>
+          <li><strong>Index Engine, Not a Zero-Trust Middleware</strong>: Lacks native Doxis/BPMN/CMIS crawlers, Auto-Narrativization Copilot, and Lakehouse Parquet audit ledgers out of the box.</li>
+          <li><strong>First-Class OpenCrawling Target</strong>: OpenCrawling sits upstream of OpenSearch, Solr 10, Vespa, and Luxir—feeding them clean, chunked, embedded, and ACL-stamped documents.</li>
         </ul>
       </article>
     </div>
 
     <!-- Interactive Matcher Quiz -->
     <section class="matcher-section glass" aria-labelledby="matcher-title">
-      <h2 id="matcher-title" class="matcher-title">Smart Architecture Matcher</h2>
-      <p class="matcher-desc">Select your stack requirements and the matcher engine will recommend the best-fit technology for your pipeline.</p>
+      <h2 id="matcher-title" class="matcher-title">🧭 Smart Architecture Matcher</h2>
+      <p class="matcher-desc">Configure your target architecture across 4 dimensions and receive a tailored pipeline recommendation.</p>
       
       <div class="quiz-container">
         <!-- Question 1 -->
         <div class="quiz-card">
-          <h4>1. Where are you storing the data?</h4>
+          <h4>1. Primary Destination</h4>
           <label class="quiz-option">
             <input type="radio" name="q-target" value="ai" checked>
-            <span>Vector Database / Vector Index</span>
+            <span>Vector DB / Hybrid Search (pgvector, Milvus, Qdrant, Vespa, Solr 10)</span>
           </label>
           <label class="quiz-option">
-            <input type="radio" name="q-target" value="search">
-            <span>Traditional Search Engine (Solr, ES)</span>
+            <input type="radio" name="q-target" value="ozone">
+            <span>Bit-for-Bit Content Migration to Apache Ozone Lakehouse</span>
           </label>
           <label class="quiz-option">
             <input type="radio" name="q-target" value="lake">
-            <span>Warehouse / Data Lake / DB Replication</span>
+            <span>Tabular Data Warehouse (Snowflake, BigQuery, ClickHouse)</span>
           </label>
           <label class="quiz-option">
             <input type="radio" name="q-target" value="saas">
-            <span>None (Want a ready-to-use SaaS App)</span>
+            <span>Turnkey Cloud SaaS Workplace Search App</span>
           </label>
         </div>
 
         <!-- Question 2 -->
         <div class="quiz-card">
-          <h4>2. What is your primary data format?</h4>
+          <h4>2. Source Data &amp; Format</h4>
           <label class="quiz-option">
             <input type="radio" name="q-data" value="docs" checked>
-            <span>Intranet PDFs, Office docs, Emails</span>
+            <span>Enterprise ECM, PDFs, Office Docs, BPMN Workflows (Doxis, CMIS, Alfresco)</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-data" value="tabular-rag">
+            <span>Relational DBs + Binary BLOBs needing Tabular RAG Narrativization</span>
           </label>
           <label class="quiz-option">
             <input type="radio" name="q-data" value="web">
-            <span>Public Web Pages / Web Scraping</span>
+            <span>Massive Public Web Scraping (Millions of public URLs)</span>
           </label>
           <label class="quiz-option">
             <input type="radio" name="q-data" value="tables">
-            <span>Structured Database Tables / SaaS API logs</span>
+            <span>Pure SaaS CRM/Billing Tables (Stripe, Salesforce)</span>
           </label>
         </div>
 
         <!-- Question 3 -->
         <div class="quiz-card">
-          <h4>3. What are your security requirements?</h4>
+          <h4>3. Ingestion Delivery Mode</h4>
+          <label class="quiz-option">
+            <input type="radio" name="q-delivery" value="pull" checked>
+            <span>Scheduled Repository Crawling &amp; Incremental Sync (Pull)</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-delivery" value="grpc">
+            <span>Sub-Millisecond Event / CDC Streaming (gRPC HTTP/2 or REST Push)</span>
+          </label>
+          <label class="quiz-option">
+            <input type="radio" name="q-delivery" value="mcf">
+            <span>Modernizing Legacy Apache ManifoldCF XML/JSON Jobs</span>
+          </label>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="quiz-card">
+          <h4>4. Security &amp; Governance</h4>
           <label class="quiz-option">
             <input type="radio" name="q-security" value="acl" checked>
-            <span>Must sync complex file ACLs (SharePoint, AD)</span>
+            <span>Zero-Trust ACLs (Allow/Deny SIDs) + Parquet/DuckDB Audit Ledger</span>
           </label>
           <label class="quiz-option">
             <input type="radio" name="q-security" value="none">
-            <span>Public data / No permission checking</span>
+            <span>Public Data Only (No document-level permission checks)</span>
           </label>
         </div>
       </div>
 
-      <button id="calculate-fit-btn" class="btn btn-primary" style="padding: 0.75rem 2.5rem; font-size: 1rem;">Find Recommendation</button>
+      <button id="calculate-fit-btn" class="btn btn-primary" style="padding: 0.85rem 2.75rem; font-size: 1rem;">Generate Architecture Recommendation</button>
 
       <!-- Quiz Result -->
-      <div class="quiz-result-box" id="quiz-result">
-        <span class="result-badge" id="result-badge">OpenCrawling</span>
-        <h3 class="result-title" id="result-title">OpenCrawling is your perfect match!</h3>
-        <p class="result-text" id="result-text">Based on your focus on Vector Databases, Unstructured Documents, and security ACL preservation, OpenCrawling provides the modern, Spring Boot 4-powered ingestion pipeline built specifically for your needs.</p>
+      <div class="quiz-result-box active" id="quiz-result">
+        <span class="result-badge badge-oc" id="result-badge">OpenCrawling Recommended</span>
+        <h3 class="result-title" id="result-title">🚀 OpenCrawling Decoupled RAG Pipeline is your ideal match!</h3>
+        <p class="result-text" id="result-text">
+          Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.1 <code>PipesForkParser</code>, decoupled <code>oc-embedding-service</code>, and Secure MCP Server are purpose-built for this exact stack.
+        </p>
+        <div class="result-cli-hint" id="result-cli-hint">$ docker compose -f docker-compose-decoupled.yml up -d &amp;&amp; oc openapi status</div>
       </div>
     </section>
   </main>
@@ -749,156 +1473,217 @@
     </div>
   </footer>
 
-  <!-- Page Logic (Theme Toggle, Mobile Menu, and Matcher Engine) -->
+  <!-- Page Logic (Theme Toggle, Mobile Menu, Duel Arena, Matrix Filter, and Matcher Engine) -->
   <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Re-use Theme Toggle state locally to ensure it is fast
-      const html = document.documentElement;
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-        html.classList.add('dark');
-        html.style.colorScheme = 'dark';
-      } else {
-        html.classList.remove('dark');
-        html.style.colorScheme = 'light';
-      }
+      // 1. Head-to-Head Duel Data & Switcher
+      const DUEL_DATA = {
+        manifoldcf: {
+          title: "🏛️ Apache ManifoldCF",
+          tag: "Legacy Java Crawler • Apache 2.0",
+          transport: "Monolithic polling crawler backed by PostgreSQL state tables and classic OS thread pools; no Kafka event mesh, Claim-Check, or gRPC streaming.",
+          security: "Strong legacy Authority Connector architecture for Solr/Elasticsearch keyword search, but no native MCP server or vector store ACL pushdown.",
+          ai: "Built for keyword search engines; lacks semantic token chunking, embedding model orchestration, and tabular auto-narrativization.",
+          audit: "Legacy JSP admin UI and XML job exports; no Parquet Lakehouse ledger, DuckDB analytics, OpenAPI 3.1, or OpenTelemetry AIOps.",
+          verdict: "<strong>Migration Path &amp; Verdict:</strong> OpenCrawling is the cloud-native successor for ManifoldCF workloads. Use the built-in <code>oc-mcf-migrator</code> (<code>oc mcf audit</code> &amp; <code>oc mcf convert</code>) or the Admin UI Migration Wizard to convert legacy ManifoldCF XML/JSON exports into Open Ingestion Standard (OIS) pipelines in seconds."
+        },
+        langchain: {
+          title: "🦜 LangChain / LlamaIndex",
+          tag: "App-Level LLM SDKs • MIT",
+          transport: "In-process Python/JS document loaders executed inside application threads; lacks distributed crawler scheduling, Claim-Check offloading, or gRPC push servers.",
+          security: "No built-in enterprise repository ACL extraction or Authority Service; developers must manually wire metadata filters per vector store.",
+          ai: "World-class prompt chaining, agent memory, and query orchestration, but relies on in-process parsers susceptible to poison-pill file crashes.",
+          audit: "Observability focuses on LLM prompt traces (LangSmith/Phoenix) rather than immutable Lakehouse Parquet document ingestion ledgers.",
+          verdict: "<strong>Synergy Verdict:</strong> Use OpenCrawling as your upstream Zero-Trust ingestion engine to crawl, extract, embed, and enforce ACLs, then connect LangChain or LlamaIndex agents directly to OpenCrawling's <strong>Secure MCP Server</strong> or exported OpenAPI tools (<code>oc openapi tools</code>)."
+        },
+        unstructured: {
+          title: "🧩 Unstructured.io",
+          tag: "Document Partitioning • SaaS / OSS",
+          transport: "Synchronous REST API and batch connector workflows focused on file partitioning rather than sub-millisecond gRPC HTTP/2 streaming or Kafka Claim-Check meshes.",
+          security: "Extracts document layout elements (tables, titles) without end-to-end Active Directory/Doxis/CMIS allow/deny SID translation or MCP query enforcement.",
+          ai: "Strong vision/OCR layout partitioning for complex PDFs, but lacks relational Tabular RAG Auto-Narrativization Copilot or bit-for-bit Apache Ozone migration.",
+          audit: "Job status logs in commercial SaaS console; no self-hosted embedded DuckDB OLAP SQL playground over local Parquet ledgers.",
+          verdict: "<strong>Architectural Verdict:</strong> Choose Unstructured when your sole bottleneck is OCR layout bounding-box detection; choose OpenCrawling when you need a 100% Apache 2.0 self-hosted ingestion fabric with Zero-Trust ACLs, gRPC streaming, ECM/BPMN connectors, and Lakehouse auditability."
+        },
+        airbyte: {
+          title: "🌊 Airbyte / Fivetran / NiFi",
+          tag: "Tabular ELT & Dataflow • ELv2 / SaaS",
+          transport: "High-throughput batch and CDC replication for structured tables (Airbyte/Fivetran) or visual flow routing (NiFi), without native OIS document chunking pipelines.",
+          security: "Replicates database schemas and credentials at the connection level, but drops file-level allow/deny ACLs and folder permission inheritance.",
+          ai: "Moves raw columns into data warehouses without Apache Tika 4.1 process-isolated binary extraction or Spring AI Mustache narrative synthesis.",
+          audit: "Tracks table sync state and row counts, but lacks per-document cryptographic SHA-256 sidecars and RAG chunk/vector telemetry.",
+          verdict: "<strong>Synergy Verdict:</strong> For existing NiFi or CDC pipelines, stream events directly into OpenCrawling's <strong>gRPC Push Connector</strong> (port <code>9096</code>), or use OpenCrawling's <strong>Apache SeaTunnel Output Connector</strong> to fan out OIS chunks and vectors to 100+ data sinks."
+        },
+        glean: {
+          title: "🔍 Glean / Elastic",
+          tag: "SaaS Search / Index Engine • Proprietary",
+          transport: "Cloud-managed SaaS crawlers (Glean) or index-coupled ingest nodes (Elastic) tightly bound to their respective proprietary storage engines.",
+          security: "Glean provides turnkey SaaS workspace permission sync but cannot be self-hosted air-gapped; Elastic requires custom security filter wiring per index.",
+          ai: "Deliver end-user search UIs and hybrid retrieval, but lock your embeddings and chunks inside a single vendor's index.",
+          audit: "Proprietary cloud admin logs; no vendor-neutral Open Ingestion Standard (OIS) manifests or portable Parquet/DuckDB ledgers.",
+          verdict: "<strong>Sovereignty Verdict:</strong> Glean is ideal if you want a turnkey closed-source SaaS app. OpenCrawling gives you 100% open-source data sovereignty—And sits directly in front of OpenSearch, Solr 10, Vespa, Qdrant, Milvus, or pgvector without vendor lock-in."
+        }
+      };
 
-      // Tab switcher logic
+      const duelBtns = document.querySelectorAll('.duel-btn');
+      const altTitle = document.getElementById('duel-alt-title');
+      const altTag = document.getElementById('duel-alt-tag');
+      const altTransport = document.getElementById('duel-alt-transport');
+      const altSecurity = document.getElementById('duel-alt-security');
+      const altAi = document.getElementById('duel-alt-ai');
+      const altAudit = document.getElementById('duel-alt-audit');
+      const verdictText = document.getElementById('duel-verdict-text');
+
+      duelBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          duelBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const key = btn.getAttribute('data-opponent');
+          const d = DUEL_DATA[key];
+          if (!d) return;
+          altTitle.textContent = d.title;
+          altTag.textContent = d.tag;
+          altTransport.textContent = d.transport;
+          altSecurity.textContent = d.security;
+          altAi.textContent = d.ai;
+          altAudit.textContent = d.audit;
+          verdictText.innerHTML = d.verdict;
+        });
+      });
+
+      // 2. Category Tab Switcher & Live Matrix Search
       const tabBtns = document.querySelectorAll('.category-tab-btn');
       const detailsCards = document.querySelectorAll('.detail-card');
       const tableHeaders = document.querySelectorAll('#comparison-matrix-table th');
       const tableRows = document.querySelectorAll('#comparison-matrix-table tbody tr');
+      const searchInput = document.getElementById('matrix-search');
 
       tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          // Toggle active class on buttons
           tabBtns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
 
           const category = btn.getAttribute('data-category');
 
-          // Filter Details Cards
           detailsCards.forEach(card => {
             if (category === 'all') {
               card.style.display = 'flex';
             } else {
               const cardCat = card.getAttribute('data-cat');
-              if (cardCat === category || cardCat === 'all') {
-                card.style.display = 'flex';
-              } else {
-                card.style.display = 'none';
-              }
+              card.style.display = (cardCat === category || cardCat === 'all') ? 'flex' : 'none';
             }
           });
 
-          // Highlight/Filter table columns
           if (category === 'all') {
-            // Restore visibility of columns
             tableHeaders.forEach(th => th.style.opacity = '1');
             tableRows.forEach(tr => {
               Array.from(tr.cells).forEach(cell => cell.style.opacity = '1');
             });
           } else {
-            // Dim other columns
-            const colIndexMap = {
-              'rag': 2,
-              'parsers': 3,
-              'etl': 4,
-              'search': 5
-            };
+            const colIndexMap = { 'rag': 2, 'parsers': 3, 'etl': 4, 'search': 5 };
             const targetColIndex = colIndexMap[category];
-            
+
             tableHeaders.forEach((th, index) => {
-              if (index === 0 || index === 1 || index === targetColIndex) {
-                th.style.opacity = '1';
-              } else {
-                th.style.opacity = '0.25';
-              }
+              th.style.opacity = (index === 0 || index === 1 || index === targetColIndex) ? '1' : '0.22';
             });
 
             tableRows.forEach(tr => {
               Array.from(tr.cells).forEach((cell, index) => {
-                if (index === 0 || index === 1 || index === targetColIndex) {
-                  cell.style.opacity = '1';
-                } else {
-                  cell.style.opacity = '0.25';
-                }
+                cell.style.opacity = (index === 0 || index === 1 || index === targetColIndex) ? '1' : '0.22';
               });
             });
           }
         });
       });
 
-      // Quiz Matching Engine Logic
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.trim().toLowerCase();
+          tableRows.forEach(tr => {
+            const text = tr.textContent.toLowerCase();
+            tr.style.display = (!query || text.includes(query)) ? '' : 'none';
+          });
+        });
+      }
+
+      // 3. Smart Architecture Matcher Engine
       const calcBtn = document.getElementById('calculate-fit-btn');
       const resultBox = document.getElementById('quiz-result');
       const resBadge = document.getElementById('result-badge');
       const resTitle = document.getElementById('result-title');
       const resText = document.getElementById('result-text');
+      const resCliHint = document.getElementById('result-cli-hint');
 
       if (calcBtn && resultBox) {
         calcBtn.addEventListener('click', () => {
           const target = document.querySelector('input[name="q-target"]:checked').value;
           const data = document.querySelector('input[name="q-data"]:checked').value;
+          const delivery = document.querySelector('input[name="q-delivery"]:checked').value;
           const security = document.querySelector('input[name="q-security"]:checked').value;
 
-          let match = "opencrawling"; // Default
-          
-          if (target === "saas") {
-            match = "glean";
-          } else if (target === "lake" || data === "tables") {
-            match = "seatunnel"; // General ETL / SeaTunnel
-          } else if (target === "search" && security === "acl") {
-            match = "manifoldcf"; // ManifoldCF legacy Enterprise Search
-          } else if (data === "web" && security === "none") {
-            match = "nutch";
-          } else if (target === "ai" && security === "none") {
-            match = "llamaindex";
-          }
-
-          // Render Results
           resultBox.classList.remove('active');
-          
-          // Small timeout to trigger CSS slide-in animation
+
           setTimeout(() => {
-            if (match === "opencrawling") {
+            if (delivery === "mcf") {
               resBadge.className = "result-badge badge-oc";
-              resBadge.textContent = "OpenCrawling Recommended";
-              resTitle.textContent = "🚀 OpenCrawling is your perfect match!";
-              resText.textContent = "Your project targets Vector Databases / AI pipelines with unstructured documents and requires strong ACL security mappings. OpenCrawling is specifically architected for this, utilizing Java 25 virtual threads, Apache Tika, Kafka, and Spring Boot 4 to deliver secure, event-driven embeddings directly to vector indices.";
-            } else if (match === "llamaindex") {
+              resBadge.textContent = "OpenCrawling + oc-mcf-migrator";
+              resTitle.textContent = "🔄 OpenCrawling with the ManifoldCF Migrator is your match!";
+              resText.textContent = "Use OpenCrawling's dedicated oc-mcf-migrator engine (CLI or Admin UI Wizard) to audit your legacy ManifoldCF XML/JSON exports and automatically convert them into declarative Open Ingestion Standard (OIS) pipelines with Java 25 Virtual Threads and Zero-Trust ACL preservation.";
+              resCliHint.textContent = "$ oc mcf audit --file mcf-export.xml && oc mcf convert --file mcf-export.xml --output ois-job.json";
+            } else if (target === "ozone") {
               resBadge.className = "result-badge badge-oc";
-              resBadge.textContent = "LangChain / LlamaIndex Recommended";
-              resTitle.textContent = "🦜 LangChain / LlamaIndex is your fit!";
-              resText.textContent = "If you are prototyping an AI assistant using public, un-siloed data without security permission constraints, LlamaIndex or LangChain's in-memory document loaders provide the easiest Python/JS libraries to get started quickly. For enterprise-scale production scaling, pair them with OpenCrawling.";
-            } else if (match === "glean") {
+              resBadge.textContent = "OpenCrawling Migration Mode (Apache Ozone)";
+              resTitle.textContent = "🗄️ OpenCrawling Migration Mode + Apache Ozone Output Connector!";
+              resText.textContent = "When liberating enterprise content bit-for-bit into Apache Ozone, enable OpenCrawling's Migration Mode (pipelineMode=migration). It bypasses Tika text extraction and vector embedding for maximum throughput while emitting Zero-Trust OIS metadata sidecars (.ois.json) with SHA-256 hashes and source ACLs.";
+              resCliHint.textContent = "$ oc jobs create --file ozone-migration-job.json && oc reports list --mode MIGRATION";
+            } else if (delivery === "grpc") {
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "OpenCrawling gRPC Push Streaming";
+              resTitle.textContent = "📡 OpenCrawling gRPC Push Repository Connector (Port 9096)!";
+              resText.textContent = "For real-time event-driven or CDC ingestion, stream Protobuf v3 payloads over HTTP/2 (Unary, Client-Streaming, or Bi-Directional) into oc-grpc-push-connector. Large binaries (> 256 KB) are automatically offloaded to Apache Ozone Claim-Check, W3C traceparent headers are propagated, and Lakehouse Parquet ledgers record every document.";
+              resCliHint.textContent = "$ oc push status && oc reports query --sql \"SELECT status, count(*) FROM read_parquet('**/*.parquet') GROUP BY status\"";
+            } else if (data === "tabular-rag") {
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "OpenCrawling JDBC + Auto-Narrativization Copilot";
+              resTitle.textContent = "🧬 OpenCrawling JDBC Connector + Spring AI Copilot!";
+              resText.textContent = "For relational databases containing structured rows alongside PDF/Office BLOB columns, OpenCrawling's JDBC Repository Connector pairs with the Auto-Narrativization Copilot to synthesize natural-language Mustache narratives for tabular rows while streaming binary BLOBs through Apache Tika 4.1 PipesForkParser.";
+              resCliHint.textContent = "$ oc copilot generate --connector-id 1 && oc jobs trigger 1";
+            } else if (target === "saas") {
               resBadge.className = "result-badge badge-mcf";
               resBadge.textContent = "Glean SaaS Recommended";
-              resTitle.textContent = "🧠 Glean is your match!";
-              resText.textContent = "If you want a fully managed, turn-key SaaS application that federates search across all corporate workspaces (Slack, Google Drive, Jira) out-of-the-box and don't need a self-hosted open-source framework, Glean is the premier enterprise search platform. For a self-hosted, self-managed alternative, pair OpenCrawling with Elastic.";
-            } else if (match === "seatunnel") {
+              resTitle.textContent = "🧠 Glean SaaS (or OpenCrawling + OpenSearch for Self-Hosted)";
+              resText.textContent = "If you want a fully managed, closed-source SaaS application out of the box without running your own infrastructure, Glean is the leading commercial workspace search tool. If you require open-source data sovereignty or air-gapped deployment, pair OpenCrawling with OpenSearch, Vespa, or Luxir.";
+              resCliHint.textContent = "# Self-hosted alternative: docker compose -f docker-compose-decoupled.yml up -d";
+            } else if (target === "lake" && data === "tables" && security === "none") {
               resBadge.className = "result-badge badge-st";
-              resBadge.textContent = "Airbyte / SeaTunnel Recommended";
-              resTitle.textContent = "🌀 Airbyte or Apache SeaTunnel fits!";
-              resText.textContent = "For replicating structured databases, database tables, or SaaS log APIs into data warehouses or lakes (without needing document-level security translation or semantic text splitting), general ETL tools like Airbyte (for SaaS) or Apache SeaTunnel (for Big Data) are the standard choices.";
-            } else if (match === "nutch") {
+              resBadge.textContent = "Airbyte / Apache SeaTunnel Recommended";
+              resTitle.textContent = "🌊 Airbyte or Apache SeaTunnel (or OpenCrawling SeaTunnel Fan-Out)";
+              resText.textContent = "For replicating pure structured SaaS tables into analytical data warehouses without document-level ACL translation or binary parsing, Airbyte or Apache SeaTunnel are great choices. Note that OpenCrawling also includes a native Apache SeaTunnel Output Connector to fan out OIS chunks to 100+ sinks!";
+              resCliHint.textContent = "$ oc connectors list --type output # Includes oc-seatunnel-output-connector";
+            } else if (data === "web" && security === "none") {
               resBadge.className = "result-badge badge-st";
-              resBadge.textContent = "Apache Nutch Recommended";
-              resTitle.textContent = "🕸️ Apache Nutch is your match!";
-              resText.textContent = "If your primary goal is indexing or scraping the public web on a massive scale (millions of public URLs) into a search engine, and you do not need enterprise document connectors or security permission synchronization, Apache Nutch remains the most robust distributed crawling engine.";
+              resBadge.textContent = "OpenCrawling StormCrawler / Apache Nutch";
+              resTitle.textContent = "🕷️ OpenCrawling StormCrawler Connector (or Apache Nutch)";
+              resText.textContent = "For distributed web crawling into AI vector stores with automatic HTTP 404 DELETE tombstone purging and SHA-256 deduplication, use OpenCrawling's Apache StormCrawler Repository Connector & Bolt. For classic Hadoop MapReduce public web archiving, Apache Nutch remains a solid alternative.";
+              resCliHint.textContent = "$ ./scripts/test-stormcrawler-connector.sh";
+            } else if (security === "none" && target === "ai") {
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "OpenCrawling + LangChain / LlamaIndex";
+              resTitle.textContent = "🦜 Pair OpenCrawling with LangChain / LlamaIndex via MCP!";
+              resText.textContent = "For rapid prototyping on small public files, LangChain or LlamaIndex in-memory loaders are easy to start with. As soon as you scale to production volumes or need crash-resilient Tika 4.1 extraction, Kafka decoupling, and OpenAPI/MCP agent tools, run OpenCrawling underneath your agent framework.";
+              resCliHint.textContent = "$ oc openapi tools --provider mcp -o opencrawling-mcp-tools.json";
             } else {
-              resBadge.className = "result-badge badge-mcf";
-              resBadge.textContent = "Apache ManifoldCF Recommended";
-              resTitle.textContent = "📂 Apache ManifoldCF fits!";
-              resText.textContent = "For classic keyword search platforms (like Apache Solr or Elasticsearch) that require syncing legacy enterprise document systems (such as SharePoint, Documentum, or FileNet) alongside complete, complex Active Directory group security mappings, Apache ManifoldCF remains the standard legacy choice.";
+              resBadge.className = "result-badge badge-oc";
+              resBadge.textContent = "OpenCrawling Recommended";
+              resTitle.textContent = "🚀 OpenCrawling Decoupled RAG Pipeline is your ideal match!";
+              resText.textContent = "Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.1 PipesForkParser, decoupled oc-embedding-service, and Secure MCP Server are purpose-built for this stack.";
+              resCliHint.textContent = "$ docker compose -f docker-compose-decoupled.yml up -d && oc openapi status";
             }
+
             resultBox.classList.add('active');
-            
-            // Scroll result box into view smoothly
             resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 150);
+          }, 120);
         });
       }
     });
