@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan enterprise data stores (Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -154,6 +154,20 @@ function initArchHover() {
    3. Live Ingestion Simulator
    ========================================== */
 const SIMULATOR_DATA = {
+  'grpc-push': {
+    files: [
+      { name: "grpc://push-job-1/contracts/enterprise_msa_2026.pdf [Unary PushDocument / mTLS]", size: "3.8 MB", acls: ["group:legal-counsel:read", "user:alice.smith:write", "user:external-contractor:deny"] },
+      { name: "grpc://push-job-1/architecture/zero_trust_rag_blueprint.md [BiDi StreamPush / Batch #14]", size: "42.5 KB", acls: ["group:cloud-architects:read", "role:security-auditor:read"] },
+      { name: "grpc://push-job-1/legacy/deprecated_policy_v1.pdf [DELETE Tombstone / StreamBatch]", size: "0 B", acls: ["group:compliance:read"] }
+    ],
+    logs: {
+      scan: "GrpcPushRepositoryConnector active in event-driven receiver mode on HTTP/2 port 9096 (Java 25 Virtual Threads, mTLS & Bearer Token AuthInterceptor enabled). Receiving Unary & Bi-Directional Protobuf v3 streams for job_id='1'...",
+      claimCheck: "GrpcPushIngestionService validated PushDocumentRequest & PushAclEntry permissions. Offloaded 3.8 MB binary payload (> 256 KB threshold) to ClaimCheckStore (Apache Ozone ofs://), propagated W3C traceparent, recorded Lakehouse Parquet audit ledger entries, and published OIS UPSERT & DELETE tombstones to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check stream & inline Protobuf UTF-8 text. Parsed PDF binary via Apache Tika PipesForkParser, split into semantic token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed gRPC Push document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension embeddings with Zero-Trust ACL SIDs; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted gRPC Push embeddings, source metadata (source_type=grpc-push), and Zero-Trust ACL SIDs into vector store; purged DELETE tombstone (deprecated_policy_v1.pdf) from index."
+    }
+  },
   doxis: {
     files: [
       { name: "contracts/MSA_Vendor_Enterprise_2026.pdf (UUID: 3f2a9c1e-5b7d / v1)", size: "2.1 MB", acls: ["ACME/Legal:read", "ACME/elena.weber:write", "ACME/restricted.user:deny"] },

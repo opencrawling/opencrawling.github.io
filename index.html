@@ -355,17 +355,18 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="125" width="120" height="225" rx="10" class="node-bg" />
-            <text x="70" y="145" class="node-title">Sources</text>
-            <text x="70" y="163" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="181" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="199" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="217" class="node-sub">File System</text>
-            <text x="70" y="235" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="253" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="271" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="289" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="307" class="node-sub">StormCrawler🕷️</text>
+            <rect x="10" y="118" width="120" height="232" rx="10" class="node-bg" />
+            <text x="70" y="138" class="node-title">Sources</text>
+            <text x="70" y="156" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="174" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="192" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="210" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="228" class="node-sub">File System</text>
+            <text x="70" y="246" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="264" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="282" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="300" class="node-sub">Camunda BPMN⚡</text>
+            <text x="70" y="318" class="node-sub">StormCrawler🕷️</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -556,7 +557,8 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
-            <option value="doxis" selected>Doxis 4 ECM (Intelligent Content Automation)</option>
+            <option value="grpc-push" selected>gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
+            <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
             <option value="cmis">OASIS CMIS (ECM Repository)</option>
             <option value="aps">Alfresco Process Services (APS)</option>
@@ -765,10 +767,11 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
+          <span class="std-badge">📡 gRPC Push Streaming</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
           <span class="std-badge">🏛️ Doxis &amp; CMIS Ready</span>
           <span class="std-badge">🔌 Vendor-Neutral</span>
@@ -786,6 +789,7 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="grpc">gRPC Push</button>
               <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
               <button class="schema-tab-btn" data-schema="jdbc">JDBC Tabular</button>
               <button class="schema-tab-btn" data-schema="delete">Delete Tombstone</button>
@@ -816,6 +820,21 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
 
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #FFF;">Connector Release</span>
+          <span class="blog-date">October 19, 2026</span>
+          <span class="blog-read-time">9 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-grpc-push-repository-connector.html">Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native gRPC Push Repository Connector (<strong>oc-grpc-push-connector</strong>). Built on HTTP/2, Protocol Buffers v3, and Java 25 Virtual Threads, delivering Unary, Client-Streaming, and Bi-Directional Streaming ingestion, automatic Claim-Check offloading to Apache Ozone &amp; S3, Zero-Trust ACL mapping, Mutual TLS (mTLS), W3C OpenTelemetry trace propagation, and Lakehouse Parquet audit ledgers.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-grpc-push-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #6BA539, #84CC16); color: #FFF;">OpenAPI &amp; Dev Tooling</span>
           <span class="blog-date">October 18, 2026</span>
@@ -1391,6 +1410,37 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
   "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        grpc: {
+          file: 'grpc-push-ois-document.json',
+          code: `{
+  "id": "grpc://push-job-1/contracts/enterprise_msa_2026.pdf",
+  "action": "UPSERT",
+  "source": {
+    "type": "grpc-push",
+    "instance": "grpc://0.0.0.0:9096",
+    "jobId": "1"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "claimCheckKey": "ofs://s3v/claims/grpc-push-job-1-9f3a8c12.bin"
+  },
+  "metadata": {
+    "title": "Enterprise Master Services Agreement 2026",
+    "source_type": "grpc-push",
+    "grpc.rpcMethod": "PushDocument",
+    "grpc.tlsMode": "mTLS",
+    "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "legal-counsel", "identityType": "group", "access": "read" },
+      { "identity": "alice.smith", "identityType": "user", "access": "write" },
+      { "identity": "external-contractor", "identityType": "user", "access": "deny" }
+    ]
+  }
 }`
         },
         jdbc: {

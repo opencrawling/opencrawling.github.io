@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native gRPC Push Repository Connector (oc-grpc-push-connector). Built on HTTP/2, Protocol Buffers v3, and Java 25 Virtual Threads, delivering Unary, Client-Streaming, and Bi-Directional Streaming ingestion, automatic Claim-Check offloading to Apache Ozone/S3, Zero-Trust ACL mapping, mTLS security, W3C OpenTelemetry trace propagation, and Lakehouse Parquet audit ledgers.">
+  <meta name="keywords" content="grpc push connector, protocol buffers, http2 streaming, bidirectional streaming, event-driven ingestion, cdc rag, debezium, opencrawling, open ingestion standard, java 25 virtual threads, claim check pattern, apache ozone, zero-trust acls, mtls, opentelemetry traceparent, lakehouse audit ledger">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-grpc-push-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-grpc-push-repository-connector.html">
+  <meta property="og:title" content="Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native gRPC Push Repository Connector (oc-grpc-push-connector). Built on HTTP/2, Protocol Buffers v3, and Java 25 Virtual Threads, delivering Unary, Client-Streaming, and Bi-Directional Streaming ingestion, automatic Claim-Check offloading to Apache Ozone/S3, Zero-Trust ACL mapping, mTLS security, W3C OpenTelemetry trace propagation, and Lakehouse Parquet audit ledgers.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-grpc-push-repository-connector.html">
+  <meta property="twitter:title" content="Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native gRPC Push Repository Connector (oc-grpc-push-connector). Built on HTTP/2, Protocol Buffers v3, and Java 25 Virtual Threads, delivering Unary, Client-Streaming, and Bi-Directional Streaming ingestion, automatic Claim-Check offloading to Apache Ozone/S3, Zero-Trust ACL mapping, mTLS security, W3C OpenTelemetry trace propagation, and Lakehouse Parquet audit ledgers.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306B6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector",
+    "description": "Discover OpenCrawling's native gRPC Push Repository Connector (oc-grpc-push-connector). Built on HTTP/2, Protocol Buffers v3, and Java 25 Virtual Threads, delivering Unary, Client-Streaming, and Bi-Directional Streaming ingestion, automatic Claim-Check offloading to Apache Ozone/S3, Zero-Trust ACL mapping, mTLS security, W3C OpenTelemetry trace propagation, and Lakehouse Parquet audit ledgers.",
+    "datePublished": "2026-10-19",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-grpc-push-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #22D3EE, #60A5FA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #06B6D4; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #22D3EE; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #22D3EE; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #67E8F9; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(6,182,212,0.06); border-color: #06B6D4; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(6,182,212,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #22D3EE; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #3B82F6; color: #93C5FD; background: rgba(59,130,246,0.12); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #22D3EE; }
+    .article-cta { background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #22D3EE; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(6,182,212,0.1); color: #22D3EE; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(6,182,212,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .rpc-badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; font-family: var(--font-mono); }
+    .badge-unary { background: rgba(6,182,212,0.15); color: #22D3EE; border: 1px solid rgba(6,182,212,0.3); }
+    .badge-stream { background: rgba(59,130,246,0.15); color: #60A5FA; border: 1px solid rgba(59,130,246,0.3); }
+    .badge-bidi { background: rgba(168,85,247,0.15); color: #C084FC; border: 1px solid rgba(168,85,247,0.3); }
+    .badge-ping { background: rgba(34,197,94,0.15); color: #4ADE80; border: 1px solid rgba(34,197,94,0.3); }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 19, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Sub-Millisecond Event-Driven Ingestion: Announcing the gRPC Push Repository Connector</h1>
+      <p class="blog-article-lead">
+        While traditional enterprise crawlers operate on a scheduled <strong>pull/poll</strong> paradigm—periodically scanning file systems, ECM repositories, or relational tables—modern event-driven architectures demand real-time, low-latency <strong>push ingestion</strong>. Change Data Capture (CDC) pipelines, enterprise webhook listeners, polyglot microservices in Go, Rust, or Python, and distributed crawler workers need to stream documents and lifecycle events directly into AI pipelines the millisecond they occur. Today, we are thrilled to announce the <strong>gRPC Push Repository Connector (<code>oc-grpc-push-connector</code>)</strong>: a high-throughput HTTP/2 and Protocol Buffers v3 streaming ingestion gateway powered by Java 25 Virtual Threads, intelligent Claim-Check offloading, Zero-Trust ACL mapping, Mutual TLS (mTLS), W3C distributed trace propagation, and automated Lakehouse Parquet audit ledgers! ⚡📡
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">gRPC HTTP/2 Binary Push Ingestion &amp; Decoupled RAG Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Producers (CDC / Webhooks / Go / Python / CLI)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Netty gRPC Server (:9096 &bull; Java 25 Virtual Threads)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Bearer / mTLS &amp; W3C OTel Interceptor</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">OisDocumentTranslator &amp; Claim-Check Offload</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Kafka &bull; Tika 4 &bull; Vector Sinks</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Lakehouse Parquet Ledger</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Beyond Polling: The Case for Binary Push Ingestion</h2>
+      <p>
+        Earlier this year, we introduced OpenCrawling's <a href="introducing-grpc-internal-transport.html" style="color: #22D3EE; text-decoration: underline;">gRPC Internal Transport Layer (<code>oc-grpc-api</code>)</a> to accelerate inter-service communication between the crawler core and decoupled workers. Immediately, enterprise architects asked the natural follow-up question: <em>"Can our external event producers push documents directly into OpenCrawling over gRPC with the same binary efficiency?"</em>
+      </p>
+      <p>
+        In large-scale production environments, waiting for a 15-minute or hourly polling window is often too slow—and pushing multi-megabyte binary files encoded in Base64 over HTTP/1.1 JSON REST endpoints introduces severe serialization overhead:
+      </p>
+      <ul>
+        <li><strong>Change Data Capture (CDC) &amp; Event Streams:</strong> Debezium connectors, Kafka Connect sinks, and transactional outbox workers emit real-time row mutations and document updates that require immediate vector index synchronization.</li>
+        <li><strong>Eliminating Base64 JSON Bloat:</strong> Encoding binary PDFs, DOCX contracts, or media assets into JSON strings inflates wire sizes by ~33% and forces heavy CPU allocation during UTF-8 parsing. Protocol Buffers v3 transmit raw binary <code>bytes</code> natively over multiplexed HTTP/2 streams.</li>
+        <li><strong>Polyglot Microservice Ecosystems:</strong> Enterprise AI platforms rarely run on a single language. Go, Rust, Python, C#, and Node.js services need a strongly-typed, contract-first Protobuf interface to stream documents into OpenCrawling with per-document acknowledgments and reactive backpressure.</li>
+        <li><strong>Real-Time Compliance Purges:</strong> When a sensitive record is revoked or deleted in an upstream application, compliance mandates require sub-second vector eviction via <code>DELETE</code> tombstones rather than waiting for a nightly reconciliation scan.</li>
+      </ul>
+
+      <h2><span class="section-num">2. </span>Four Native gRPC Interaction Models (<code>OisPushService</code>)</h2>
+      <p>
+        Listening on default port <code>9096</code>, the <code>oc-grpc-push-connector</code> exposes the strongly-typed <strong><code>opencrawling.push.v1.OisPushService</code></strong> contract, supporting four distinct RPC patterns tailored to every workload profile:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>RPC Method</th>
+            <th>Pattern</th>
+            <th>Ideal Use Case &amp; Behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>PushDocument</code></td>
+            <td><span class="rpc-badge badge-unary">UNARY</span></td>
+            <td>Single-document transactional webhooks and real-time event hooks. Returns an immediate <code>PushDocumentResponse</code> with status (<code>ACCEPTED</code>, <code>QUEUED</code>, or rejection code) and server timestamp.</td>
+          </tr>
+          <tr>
+            <td><code>StreamDocuments</code></td>
+            <td><span class="rpc-badge badge-stream">CLIENT STREAM</span></td>
+            <td>High-throughput bulk ingestion streams over a single HTTP/2 connection. Upon stream completion, returns an aggregated <code>StreamSummaryResponse</code> detailing <code>total_received</code>, <code>total_accepted</code>, <code>total_rejected</code>, <code>duration_ms</code>, and granular <code>PushFailure</code> diagnostics.</td>
+          </tr>
+          <tr>
+            <td><code>BiDirectionalStream</code></td>
+            <td><span class="rpc-badge badge-bidi">BIDI STREAM</span></td>
+            <td>Full-duplex asynchronous streaming for continuous CDC pipelines and distributed crawlers. As the producer streams <code>PushDocumentRequest</code> frames, the server emits real-time per-document <code>IngestionAck</code> frames with thread-safe ordering and backpressure.</td>
+          </tr>
+          <tr>
+            <td><code>Ping</code></td>
+            <td><span class="rpc-badge badge-ping">DIAGNOSTIC</span></td>
+            <td>Zero-overhead health and liveness check returning server status (<code>UP</code>), connector version, and epoch timestamp. Used by the Admin UI and CLI health probes.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>The Canonical Protobuf v3 Contract (<code>ois_push_service.proto</code>)</h3>
+      <p>
+        The contract translates the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener" style="color: #22D3EE; text-decoration: underline;">Open Ingestion Standard (OIS)</a> directly into Protocol Buffers v3:
+      </p>
+
+      <pre><code>syntax = "proto3";
+
+package opencrawling.push.v1;
+
+service OisPushService {
+  rpc PushDocument (PushDocumentRequest) returns (PushDocumentResponse);
+  rpc StreamDocuments (stream PushDocumentRequest) returns (StreamSummaryResponse);
+  rpc BiDirectionalStream (stream PushDocumentRequest) returns (stream IngestionAck);
+  rpc Ping (PingRequest) returns (PingResponse);
+}
+
+message PushDocumentRequest {
+  string job_id = 1;                           // Target active OpenCrawling Job ID
+  OisDocumentPayload document = 2;              // Document content, metadata, and ACLs
+  PushOptions options = 3;                      // Pipeline routing and execution options
+}
+
+message OisDocumentPayload {
+  string id = 1;                               // Unique document identifier (URI or primary key)
+  DocumentAction action = 2;                   // UPSERT or DELETE
+  string mime_type = 3;                        // MIME type (e.g. text/plain, application/pdf)
+  int64 timestamp = 4;                         // Event timestamp (epoch milliseconds)
+
+  oneof content_payload {
+    bytes raw_bytes = 5;                       // Inline binary or raw text content
+    string claim_check_uri = 6;                // Pre-uploaded claim check URI (file://, ozone://, s3://)
+    string text_content = 7;                   // Direct plaintext content
+  }
+
+  map&lt;string, string&gt; metadata = 8;            // Dynamic structured metadata attributes
+  SecurityConfig security = 9;                 // Document-level Zero-Trust security rules
+  string checksum_sha256 = 10;                 // Optional SHA-256 for cryptographic integrity audit
+}
+
+message SecurityConfig {
+  repeated string allow_sids = 1;              // Security Identifiers allowed to read (users/groups)
+  repeated string deny_sids = 2;               // Security Identifiers denied access
+  string owner = 3;                            // Document owner / creator SID
+  string tenant_id = 4;                        // Multi-tenant isolation boundary
+  map&lt;string, string&gt; attributes = 5;          // Custom ABAC attributes
+}</code></pre>
+
+      <h2><span class="section-num">3. </span>Java 25 Virtual Threads &amp; Intelligent Claim-Check Offloading</h2>
+      <p>
+        Under the hood, <code>GrpcPushServerManager</code> configures the shaded Netty HTTP/2 server to dispatch every incoming RPC onto a dedicated <strong>Java 25 Virtual Thread</strong> via <code>Executors.newVirtualThreadPerTaskExecutor()</code>. This allows thousands of concurrent streaming producers to push documents simultaneously without exhausting OS platform threads or blocking Netty event loops.
+      </p>
+      <p>
+        Even more importantly, the connector protects JVM heap memory and Kafka broker stability through <strong>three-tier payload handling</strong> in <code>OisDocumentTranslator</code>:
+      </p>
+      <ol>
+        <li><strong>Fast-Path In-Memory Streaming (&le; <code>512 KB</code>):</strong> Inline <code>raw_bytes</code> or <code>text_content</code> payloads smaller than <code>inline-binary-threshold-kb</code> (default: <code>512 KB</code>) flow through a lightweight <code>ByteArrayInputStream</code> directly into the orchestrator without redundant temporary disk writes.</li>
+        <li><strong>Automatic Claim-Check Offloading (&gt; <code>512 KB</code>):</strong> When an inline binary payload (such as a 25 MB PDF report or CAD drawing) exceeds <code>inline-binary-threshold-kb</code>, <code>OisDocumentTranslator</code> automatically streams the bytes into the active <code>ClaimCheckStore</code> (Local storage, <strong>Apache Ozone</strong> <code>ofs://</code> / <code>s3g</code>, or <strong>AWS S3</strong>) and replaces the payload with a compact Claim-Check URI reference.</li>
+        <li><strong>Zero-Copy Pre-Uploaded <code>claim_check_uri</code> Pass-Through:</strong> If an upstream producer is handling multi-gigabyte archives or media files that already reside in Apache Ozone or S3, it can simply set <code>claim_check_uri</code> in the Protobuf <code>oneof content_payload</code>. OpenCrawling completely bypasses gRPC binary transfer and routes the URI directly to the decoupled Apache Tika 4 extraction consumers!</li>
+      </ol>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#9889;</div>
+        <div>
+          <p><strong>Adaptive Memory Protection:</strong> By combining configurable inbound frame limits (<code>max-message-size-mb: 64</code>) with automatic threshold-based Claim-Check offloading (<code>inline-binary-threshold-kb: 512</code>), Kafka messages remain tiny metadata envelopes regardless of document size.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">4. </span>Instant Tombstone <code>DELETE</code> Short-Circuiting</h2>
+      <p>
+        Keeping enterprise RAG vector stores synchronized with source-of-truth deletions is effortless. When a client pushes a request with <code>action = DELETE</code>:
+      </p>
+      <ul>
+        <li><code>OisDocumentTranslator</code> constructs a tombstone <code>RepositoryDocument</code> via <code>RepositoryDocument.createTombstone(id, id)</code>.</li>
+        <li><code>JobOrchestrator</code> detects the <code>DELETE</code> lifecycle action and <strong>immediately short-circuits</strong> Apache Tika text extraction, Mustache narrativization, token chunking, and Ollama/OpenAI embedding generation.</li>
+        <li>A lightweight deletion event is published directly to the writer topic, instructing downstream output connectors (<strong>pgvector</strong>, <strong>Milvus</strong>, <strong>Qdrant</strong>, <strong>Vespa</strong>, <strong>OpenSearch</strong>, <strong>Apache Solr 10</strong>, or <strong>Luxir</strong>) to purge all vector chunks associated with that document ID.</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Zero-Trust Security, Multi-Tenant ACLs &amp; Mutual TLS (mTLS)</h2>
+      <p>
+        The gRPC Push Connector enforces defense-in-depth at both the <strong>transport layer</strong> and the <strong>document retrieval layer</strong>:
+      </p>
+
+      <h3>1. Transport Security: Constant-Time Bearer Auth &amp; Mutual TLS</h3>
+      <ul>
+        <li><strong>Bearer Token Interceptor:</strong> When <code>opencrawling.connector.grpc-push.token</code> is configured, <code>GrpcSecurityInterceptor</code> validates the <code>authorization: Bearer &lt;token&gt;</code> gRPC metadata header using constant-time byte comparison (<code>MessageDigest.isEqual</code>) to prevent timing attacks, while exempting the diagnostic <code>Ping</code> RPC for container health probes.</li>
+        <li><strong>TLS &amp; Mutual TLS (mTLS):</strong> <code>GrpcPushServerManager</code> integrates Netty's <code>GrpcSslContexts</code> with X.509 certificate chains, PKCS#8 private keys, custom CA trust stores, and configurable client certificate verification (<code>ClientAuth.NONE</code>, <code>OPTIONAL</code>, or <code>REQUIRE</code>).</li>
+      </ul>
+
+      <h3>2. Document-Level Zero-Trust ACL Translation</h3>
+      <p>
+        <code>OisDocumentTranslator.translateSecurity(...)</code> maps the Protobuf <code>SecurityConfig</code> directly into OpenCrawling's unified <code>org.opencrawling.core.security.SecurityConfig</code>:
+      </p>
+      <ul>
+        <li><code>allow_sids</code> &rarr; <code>PermissionRule(sid, "GROUP", sid, "read")</code></li>
+        <li><code>deny_sids</code> &rarr; <code>PermissionRule(sid, "GROUP", sid, "deny")</code> (preserving explicit deny precedence)</li>
+        <li><code>owner</code> &rarr; <code>PermissionRule(owner, "USER", owner, "write")</code></li>
+        <li><code>tenant_id</code> &rarr; <code>PermissionRule(tenantId, "TENANT", tenantId, "read")</code></li>
+      </ul>
+      <p>
+        When AI agents query the vector index via the <strong>OpenCrawling Secure MCP Server</strong>, these permissions are strictly enforced at query time—ensuring zero unauthorized data leakage.
+      </p>
+
+      <h2><span class="section-num">6. </span>W3C Distributed Tracing &amp; Lakehouse Audit Ledgers</h2>
+      <p>
+        Pushed documents enjoy the exact same enterprise observability and compliance governance as scheduled repository crawls:
+      </p>
+      <ul>
+        <li><strong>End-to-End W3C Trace Context Propagation:</strong> <code>OpenTelemetryServerInterceptor</code> extracts standard <code>traceparent</code> and <code>tracestate</code> headers from inbound gRPC metadata via <code>GlobalOpenTelemetry.getPropagators()</code>. Upstream microservice spans link seamlessly with OpenCrawling's Kafka producer/consumer spans, Apache Tika extraction spans, and vector indexing spans—visible in the Admin UI Trace Timeline and AIOps Root Cause Analysis engine.</li>
+        <li><strong>Automated Lakehouse Parquet Audit Reporting:</strong> <code>RuntimePushDocumentDispatcher</code> tracks every unary push execution (<code>exec-push-&lt;8char&gt;</code>) and streaming session (<code>exec-stream-&lt;8char&gt;</code>) in <code>JobLedgerAccumulator</code>. Upon completion, OpenCrawling automatically writes Hive-partitioned <strong>Apache Parquet (<code>ZSTD</code>)</strong>, <strong>RFC 4180 CSV Compliance Manifests</strong>, and <strong>Operational JSON Summaries</strong>—immediately queryable via the embedded <strong>DuckDB SQL Playground</strong>!</li>
+      </ul>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#129414;</div>
+        <div>
+          <p><strong>Stream Session Aggregation:</strong> During a <code>StreamDocuments</code> or <code>BiDirectionalStream</code> session, all 10,000+ pushed documents are grouped under a single <code>exec-stream-*</code> execution ID, producing one consolidated Parquet audit ledger and updating live job throughput counters in real time.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">7. </span>Developer Experience: <code>oc push</code> CLI, <code>grpcurl</code> &amp; Java 25 Client</h2>
+      <p>
+        We built first-class tooling into the OpenCrawling CLI (<code>oc-cli</code>), the embedded gRPC reflection service, and the Admin Dashboard so you can test and operate gRPC push pipelines in seconds.
+      </p>
+
+      <h3>1. Native OpenCrawling CLI (<code>oc push</code>)</h3>
+      <pre><code># 1. Probe gRPC Push listener health and round-trip latency
+$ oc push ping --host 127.0.0.1 --port 9096
+
+# 2. Verify via Admin REST API Connector Checker
+$ oc connector check --name Grpc_Push_Connector --type repository --config host=127.0.0.1 --config port=9096
+
+# 3. Push an inline UPSERT document with Zero-Trust ACLs
+$ oc push upsert \
+  --job-id 1 \
+  --id "https://ecm.example.com/contracts/2026-msa.md" \
+  --text "# Master Services Agreement 2026..." \
+  --acl-allow "GROUP_LEGAL,ROLE_EXECUTIVE" \
+  --acl-deny "GROUP_CONTRACTORS" \
+  --metadata "department=legal" \
+  --token "my-secret-token"
+
+# 4. Stream an entire directory of files over Bi-Directional HTTP/2 gRPC
+$ oc push stream --bidi --job-id 1 --dir ./docs/contracts --token "my-secret-token"
+
+# 5. Push a DELETE tombstone to purge vectors
+$ oc push delete --job-id 1 --id "https://ecm.example.com/contracts/2026-msa.md" --token "my-secret-token"</code></pre>
+
+      <h3>2. Interactive Exploration with <code>grpcurl</code> (Server Reflection Enabled)</h3>
+      <p>
+        Because <code>ProtoReflectionService</code> is enabled by default, tools like <code>grpcurl</code>, Postman, and Kreya auto-discover the schema without needing local <code>.proto</code> files:
+      </p>
+      <pre><code># Discover exposed gRPC services
+$ grpcurl -plaintext 127.0.0.1:9096 list
+
+# Push a document with Zero-Trust ACLs via grpcurl
+$ grpcurl -plaintext \
+  -H "authorization: Bearer my-secret-token" \
+  -d '{
+    "job_id": "1",
+    "document": {
+      "id": "https://ecm.example.com/contracts/2026-msa.md",
+      "action": "UPSERT",
+      "mime_type": "text/markdown",
+      "text_content": "# Master Services Agreement\n\nGoverns enterprise cloud services...",
+      "metadata": {
+        "department": "legal",
+        "contract_year": "2026"
+      },
+      "security": {
+        "allow_sids": ["GROUP_LEGAL", "ROLE_EXECUTIVE"],
+        "deny_sids": ["GROUP_CONTRACTORS"],
+        "owner": "alice.smith",
+        "tenant_id": "acme-corp"
+      }
+    },
+    "options": {
+      "immediate_flush": true,
+      "routing_key": "legal-contracts"
+    }
+  }' \
+  127.0.0.1:9096 opencrawling.push.v1.OisPushService/PushDocument</code></pre>
+
+      <h3>3. Embedding a Java 25 Bi-Directional Streaming Producer</h3>
+      <pre><code>import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.Metadata;
+import io.grpc.stub.MetadataUtils;
+import io.grpc.stub.StreamObserver;
+import org.opencrawling.push.v1.*;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+public class GrpcBiDiStreamingProducer {
+    public static void main(String[] args) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("127.0.0.1", 9096)
+                .usePlaintext()
+                .build();
+
+        Metadata headers = new Metadata();
+        headers.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER),
+                "Bearer my-secret-token");
+
+        OisPushServiceGrpc.OisPushServiceStub asyncStub = OisPushServiceGrpc.newStub(channel)
+                .withInterceptors(MetadataUtils.newAttachHeadersInterceptor(headers));
+
+        CountDownLatch done = new CountDownLatch(1);
+        StreamObserver&lt;PushDocumentRequest&gt; requestObserver = asyncStub.biDirectionalStream(
+                new StreamObserver&lt;&gt;() {
+                    @Override
+                    public void onNext(IngestionAck ack) {
+                        System.out.printf("ACK doc=%s status=%s at=%d%n",
+                                ack.getDocumentId(), ack.getStatus(), ack.getAckTimestamp());
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                        done.countDown();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        done.countDown();
+                    }
+                });
+
+        for (int i = 1; i &lt;= 5; i++) {
+            requestObserver.onNext(PushDocumentRequest.newBuilder()
+                    .setJobId("1")
+                    .setDocument(OisDocumentPayload.newBuilder()
+                            .setId("doc://kb/article-" + i)
+                            .setAction(DocumentAction.UPSERT)
+                            .setMimeType("text/plain")
+                            .setTextContent("Real-time event-driven knowledge base entry #" + i)
+                            .setSecurity(SecurityConfig.newBuilder()
+                                    .addAllowSids("GROUP_ENGINEERING")
+                                    .setTenantId("acme-corp")
+                                    .build())
+                            .build())
+                    .build());
+        }
+        requestObserver.onCompleted();
+        done.await(10, TimeUnit.SECONDS);
+        channel.shutdownNow();
+    }
+}</code></pre>
+
+      <h2><span class="section-num">8. </span>Configuration Reference</h2>
+      <p>
+        Configure the gRPC Push Repository Connector via <code>application.yml</code>, environment variables, or the <strong>Admin UI Connector Registry</strong> (which includes a live <strong>Test gRPC Push Listener (Ping)</strong> diagnostic button):
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Environment Variable</th>
+            <th>Spring Boot Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_ENABLED</code></td>
+            <td><code>opencrawling.connector.grpc-push.enabled</code></td>
+            <td><code>true</code></td>
+            <td>Enable or disable the embedded Netty gRPC Push server</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_PORT</code></td>
+            <td><code>opencrawling.connector.grpc-push.port</code></td>
+            <td><code>9096</code></td>
+            <td>Inbound TCP port for the gRPC Push listener</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_MAX_MESSAGE_SIZE_MB</code></td>
+            <td><code>opencrawling.connector.grpc-push.max-message-size-mb</code></td>
+            <td><code>64</code></td>
+            <td>Maximum inbound gRPC message frame size in MB</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_INLINE_THRESHOLD_KB</code></td>
+            <td><code>opencrawling.connector.grpc-push.inline-binary-threshold-kb</code></td>
+            <td><code>512</code></td>
+            <td>Payload threshold in KB before automatic Claim-Check offload</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TOKEN</code></td>
+            <td><code>opencrawling.connector.grpc-push.token</code></td>
+            <td><code>""</code></td>
+            <td>Optional Bearer token required in <code>authorization</code> metadata</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_REFLECTION_ENABLED</code></td>
+            <td><code>opencrawling.connector.grpc-push.reflection.enabled</code></td>
+            <td><code>true</code></td>
+            <td>Enable gRPC Server Reflection for <code>grpcurl</code> &amp; Postman</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TLS_ENABLED</code></td>
+            <td><code>opencrawling.connector.grpc-push.tls.enabled</code></td>
+            <td><code>false</code></td>
+            <td>Enable TLS / mTLS encryption on the gRPC listener</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TLS_CERT</code></td>
+            <td><code>opencrawling.connector.grpc-push.tls.cert-chain-path</code></td>
+            <td><code>""</code></td>
+            <td>Path to server X.509 certificate chain file (PEM)</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TLS_KEY</code></td>
+            <td><code>opencrawling.connector.grpc-push.tls.private-key-path</code></td>
+            <td><code>""</code></td>
+            <td>Path to server PKCS#8 private key file (PEM)</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TLS_TRUST_CERT</code></td>
+            <td><code>opencrawling.connector.grpc-push.tls.trust-cert-path</code></td>
+            <td><code>""</code></td>
+            <td>Path to trusted CA certificates for mTLS verification</td>
+          </tr>
+          <tr>
+            <td><code>OPENCRAWLING_GRPC_PUSH_TLS_CLIENT_AUTH</code></td>
+            <td><code>opencrawling.connector.grpc-push.tls.client-auth</code></td>
+            <td><code>NONE</code></td>
+            <td>mTLS policy: <code>NONE</code>, <code>OPTIONAL</code>, or <code>REQUIRE</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">9. </span>Automated Verification &amp; Decoupled Pipeline Testing</h2>
+      <p>
+        The gRPC Push Repository Connector is verified across both in-process unit/integration test suites and the full containerized decoupled stack:
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Unit &amp; In-Process gRPC Suite:</strong> Run <code>./scripts/test-grpc-push-connector.sh</code> to execute <code>GrpcPushConnectorTest</code>, <code>OisPushServiceInProcessTest</code>, and <code>RuntimePushDocumentDispatcherTest</code>—verifying Unary, Client-Streaming, and Bi-Directional RPCs, 512 KB Claim-Check offloading thresholds, Zero-Trust ACL translation, Bearer auth, W3C <code>traceparent</code> propagation, and synchronous Parquet/CSV/JSON report generation.</p>
+        </div>
+      </div>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Full Decoupled Docker Pipeline Test:</strong> Run <code>./scripts/test-grpc-push-decoupled.sh</code> (or <code>./run-integration-tests.sh grpc-push</code>) to spin up the complete multi-container stack, verify <code>Ping</code> and <code>/api/connectors/check</code>, assert <code>UNAUTHENTICATED</code> rejection without a Bearer token, push an authenticated <code>UPSERT</code> over port <code>9096</code> through Kafka + Claim-Check + Ollama + pgvector, verify the <code>exec-push-*</code> audit ledger in <code>/api/reports</code>, and confirm vector eviction via a gRPC <code>DELETE</code> tombstone.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Stream Real-Time Events into Enterprise RAG?</h3>
+        <p>Explore the OpenCrawling architecture in our live interactive simulator, read the complete gRPC Push Connector documentation on our Wiki, or star the repository on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/gRPC-Push-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read gRPC Push Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
