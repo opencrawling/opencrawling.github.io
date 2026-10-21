@@ -288,7 +288,7 @@
           </svg>
         </div>
         <h3>Secure Model Context Protocol (MCP) Server</h3>
-        <p>Exposes security-filtered similarity search and document retrieval tools directly to LLMs and AI agent frameworks using the <strong>Model Context Protocol (MCP)</strong>. Enforces user authentication policies (principals and roles) and ACL checks on the server-side to prevent prompt injection and unauthorized data leakage.</p>
+        <p>Built with <strong>Spring AI 2.0</strong> over Streamable HTTP (<code>/mcp</code>) and SSE (<code>/mcp/sse</code>). Employs the pluggable <code>McpVectorSearchBackend</code> SPI across <strong>all 8 target vector engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, and Luxir). Server-side <code>McpAclEvaluator</code> authoritatively evaluates Zero-Trust document ACLs with <strong>explicit deny precedence</strong>, dynamic role mapping, and integrated AIOps observability tools. <a href="mcp.html" class="learn-more-link">Explore MCP Server →</a></p>
       </div>
     </div>
   </section>
@@ -820,6 +820,21 @@ public class MyCustomRepositoryConnector implements RepositoryConnector {
 
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #FFF;">Core Engine &amp; Security</span>
+          <span class="blog-date">October 21, 2026</span>
+          <span class="blog-read-time">8 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html">Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server &amp; Defense-in-Depth Security Guard</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's Universal Secure Model Context Protocol (MCP) Server. Built on Spring AI 2.0, the pluggable <code>McpVectorSearchBackend</code> SPI supporting <strong>all 8 target vector engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, and Luxir), server-side <strong>Zero-Trust evaluation with explicit deny precedence</strong> (<code>McpAclEvaluator</code>), Streamable HTTP transport, and an automated 16-step decoupled integration test suite.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #FFF;">Connector Release</span>
           <span class="blog-date">October 19, 2026</span>

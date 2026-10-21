@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server & Defense-in-Depth Security Guard</title>
+  <meta name="description" content="Discover OpenCrawling's Universal Secure Model Context Protocol (MCP) Server. Built on Spring AI 2.0, McpVectorSearchBackend SPI supporting all 8 vector database engines, authoritative McpAclEvaluator with explicit deny precedence, Streamable HTTP, and decoupled integration testing.">
+  <meta name="keywords" content="model context protocol, mcp server, spring ai 2.0, zero-trust rag, acl evaluation, explicit deny precedence, pgvector, vespa, qdrant, milvus, opensearch, apache solr, luxir, streamable http, mcp-session-id, aiops observability, opencrawling">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html">
+  <meta property="og:title" content="Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server & Defense-in-Depth Security Guard">
+  <meta property="og:description" content="Discover OpenCrawling's Universal Secure Model Context Protocol (MCP) Server. Built on Spring AI 2.0, McpVectorSearchBackend SPI supporting all 8 vector database engines, authoritative McpAclEvaluator with explicit deny precedence, Streamable HTTP, and decoupled integration testing.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html">
+  <meta property="twitter:title" content="Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server & Defense-in-Depth Security Guard">
+  <meta property="twitter:description" content="Discover OpenCrawling's Universal Secure Model Context Protocol (MCP) Server. Built on Spring AI 2.0, McpVectorSearchBackend SPI supporting all 8 vector database engines, authoritative McpAclEvaluator with explicit deny precedence, Streamable HTTP, and decoupled integration testing.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server & Defense-in-Depth Security Guard",
+    "description": "Discover OpenCrawling's Universal Secure Model Context Protocol (MCP) Server. Built on Spring AI 2.0, McpVectorSearchBackend SPI supporting all 8 vector database engines, authoritative McpAclEvaluator with explicit deny precedence, Streamable HTTP, and decoupled integration testing.",
+    "datePublished": "2026-10-21",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-universal-mcp-server-and-zero-trust-defense-in-depth.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #C084FC, #818CF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #8B5CF6; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #C084FC; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #C084FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #DDD6FE; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(139,92,246,0.06); border-color: #8B5CF6; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(139,92,246,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #C084FC; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #8B5CF6; color: #DDD6FE; background: rgba(139,92,246,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.12); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #C084FC; }
+    .article-cta { background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #C084FC; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(139,92,246,0.1); color: #C084FC; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(139,92,246,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Core Engine &amp; Security</span>
+        <span class="blog-meta-date">October 21, 2026</span>
+        <span class="blog-meta-read">&bull; 8 min read</span>
+      </div>
+      <h1 class="blog-article-title">Zero-Trust AI Retrieval Across Any Vector Store: Announcing the Universal MCP Server &amp; Defense-in-Depth Security Guard</h1>
+      <p class="blog-article-lead">
+        When enterprise AI agents retrieve context from vector databases, cosine similarity alone is a security vulnerability. Today, we are unveiling the <strong>Universal OpenCrawling Secure MCP Server</strong>: powered by the <code>McpVectorSearchBackend</code> SPI across <strong>all 8 target vector engines</strong>, authoritative server-side <strong>Zero-Trust evaluation with explicit deny precedence</strong> (<code>McpAclEvaluator</code>), Spring AI 2.0 <strong>Streamable HTTP</strong> transport, and an automated 16-step decoupled integration test suite.
+      </p>
+    </header>
+
+    <hr class="blog-divider">
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Context Leak Dilemma in Enterprise RAG</h2>
+      <p>
+        In modern Retrieval-Augmented Generation (RAG), Large Language Models (LLMs) and autonomous AI agents rely on vector search tools to discover relevant domain knowledge. However, standard vector databases are fundamentally <strong>identity-blind</strong>: nearest-neighbor algorithms index high-dimensional embeddings and return the top-K closest chunks regardless of whether the querying user possesses read clearance.
+      </p>
+      <p>
+        In enterprise settings, this creates a catastrophic vulnerability: an employee asking an AI assistant a general operational question might unwittingly trigger the retrieval of unredacted payroll spreadsheets, executive M&amp;A memos, or restricted HR disciplinary files. Furthermore, enterprise infrastructures are rarely homogenous. While one team indexes documents into <strong>PostgreSQL (pgvector)</strong>, another leverages <strong>Vespa</strong> for BM25 hybrid ranking, <strong>Qdrant</strong> or <strong>Milvus</strong> for multi-million vector scale, <strong>OpenSearch</strong> for compliance audit integration, <strong>Apache Solr</strong> for enterprise search, or <strong>Luxir</strong> for ultra-low latency C++ search.
+      </p>
+      <p>
+        To solve this at enterprise scale, OpenCrawling has unified its Model Context Protocol implementation into a <strong>pluggable, storage-agnostic Zero-Trust gateway</strong> that authoritatively validates document Access Control Lists (ACLs) before any text enters an LLM's prompt context.
+      </p>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">OpenCrawling Zero-Trust Retrieval Architecture</div>
+        <div class="flow-nodes">
+          <div class="flow-node">AI Agent / LLM</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">/mcp (Streamable HTTP)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">McpVectorServer</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node accent">McpVectorSearchBackend SPI</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">8 Target Vector Stores</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">McpAclEvaluator (Explicit Deny)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Sanitized Context JSON</div>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>The <code>McpVectorSearchBackend</code> SPI Architecture</h2>
+      <p>
+        At the architectural core of this release is a clean Service Provider Interface (SPI): <code>McpVectorSearchBackend</code>. Decoupled from Spring AI's WebMVC and SSE transport controllers, this interface standardizes security-filtered vector search, document content retrieval, and source enumeration across all storage engines:
+      </p>
+
+      <pre><code>package org.opencrawling.runtime.mcp;
+
+public interface McpVectorSearchBackend {
+    String backendType();
+
+    List&lt;DocumentSearchResult&gt; secureVectorSearch(
+        String query, String userPrincipal, List&lt;String&gt; userRoles,
+        int maxResults, double minScore, Integer dimensions);
+
+    DocumentDetailsResult getDocumentContent(
+        String documentUri, String userPrincipal, List&lt;String&gt; userRoles,
+        Integer dimensions);
+
+    List&lt;Map&lt;String, Object&gt;&gt; listAccessibleSources(
+        String userPrincipal, List&lt;String&gt; userRoles, Integer dimensions);
+}</code></pre>
+
+      <p>
+        The runtime dynamically selects the active backend based on <code>spring.opencrawling.output.type</code>, giving developers and platform architects identical MCP tool signatures whether querying a local PostgreSQL development container or a production Vespa or Qdrant cluster.
+      </p>
+
+      <h2><span class="section-num">3. </span>Full Native Support for 8 Vector Engines</h2>
+      <p>
+        OpenCrawling ships native, optimized implementations of <code>McpVectorSearchBackend</code> for all 8 supported vector database stores, complete with on-the-fly query embedding generation via Ollama or OpenAI:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Vector Backend</th>
+            <th>Property Value</th>
+            <th>SPI Class</th>
+            <th>Query Search &amp; Pre-Filtering Mechanism</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>PostgreSQL (pgvector)</strong></td>
+            <td><code>pgvector</code></td>
+            <td><code>PgVectorMcpSearchBackend</code></td>
+            <td>Spring AI <code>PgVectorStore</code> cosine distance + <code>JdbcTemplate</code> JSONPath &amp; Claim-Check URI resolution</td>
+          </tr>
+          <tr>
+            <td><strong>Vespa</strong></td>
+            <td><code>vespa</code></td>
+            <td><code>VespaMcpSearchBackend</code></td>
+            <td>Native Vespa YQL (BM25 + vector hybrid fusion, pushdown <code>security_denied_read</code> exclusions)</td>
+          </tr>
+          <tr>
+            <td><strong>Qdrant</strong></td>
+            <td><code>qdrant</code></td>
+            <td><code>QdrantMcpSearchBackend</code></td>
+            <td><code>QdrantClient</code> (<code>searchAsync</code> + <code>scrollAsync</code> with tenant payload filter clauses)</td>
+          </tr>
+          <tr>
+            <td><strong>Milvus</strong></td>
+            <td><code>milvus</code></td>
+            <td><code>MilvusMcpSearchBackend</code></td>
+            <td><code>MilvusClientV2</code> (<code>SearchReq</code> with <code>FloatVec</code> + <code>QueryReq</code> for URIs and metadata)</td>
+          </tr>
+          <tr>
+            <td><strong>OpenSearch 2.x</strong></td>
+            <td><code>opensearch2</code></td>
+            <td><code>OpenSearch2McpSearchBackend</code></td>
+            <td><code>OpenSearchClient</code> (k-NN vector query + keyword term bool filters)</td>
+          </tr>
+          <tr>
+            <td><strong>OpenSearch 3.x</strong></td>
+            <td><code>opensearch3</code></td>
+            <td><code>OpenSearch3McpSearchBackend</code></td>
+            <td><code>OpenSearchClient</code> (k-NN vector query + keyword term bool filters)</td>
+          </tr>
+          <tr>
+            <td><strong>Apache Solr</strong></td>
+            <td><code>solr</code></td>
+            <td><code>SolrMcpSearchBackend</code></td>
+            <td><code>SolrClient</code> (<code>{!knn f=embeddings topK=...}</code> dense vector search via SolrJ 10)</td>
+          </tr>
+          <tr>
+            <td><strong>Luxir</strong></td>
+            <td><code>luxir</code></td>
+            <td><code>LuxirMcpSearchBackend</code></td>
+            <td><code>LuxirClient</code> (<code>POST /collections/{collection}/_search</code> with KNN payload)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">4. </span>Defense-in-Depth &amp; Explicit Deny Precedence (<code>McpAclEvaluator</code>)</h2>
+      <p>
+        Why isn't database-level pre-filtering alone sufficient? In real-world enterprise deployments, subtle differences in SQL JSON path operators, case sensitivity, or tokenization rules across disparate vector databases can lead to false-positive context leaks.
+      </p>
+      <p>
+        OpenCrawling enforces a strict <strong>two-tier defense-in-depth architecture</strong>:
+      </p>
+      <ol>
+        <li><strong>Database Pre-Filtering</strong>: Prunes the vast majority of non-candidate vectors at the storage layer.</li>
+        <li><strong>Authoritative In-Memory Post-Filtering (<code>McpAclEvaluator</code>)</strong>: Evaluates every single candidate hit against the caller's credentials in memory before returning data to the MCP client.</li>
+      </ol>
+
+      <div class="callout-box warning">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <p><strong>Explicit Deny Precedence:</strong> In enterprise security models (such as Active Directory SIDs, CMIS, or BPMN candidate groups), an explicit denial must always override any general read permission. In <code>McpAclEvaluator</code>, if a document chunk defines a deny rule matching the caller principal or any of their groups, access is <strong>instantly rejected</strong>, regardless of whether they belong to an authorized role or if the document is flagged as public.</p>
+        </div>
+      </div>
+
+      <p>
+        The evaluator transparently normalizes heterogeneous security representations:
+      </p>
+      <ul>
+        <li><strong>Structured OIS Security</strong>: Inspects <code>metadata["security"]</code> containing lists of <code>PermissionRule</code> objects (<code>identity</code>, <code>identityType</code>, and <code>access: "read"|"write"|"deny"</code>).</li>
+        <li><strong>Flattened Security Arrays</strong>: Inspects <code>security_allowed_read</code> and <code>security_denied_read</code> string arrays.</li>
+        <li><strong>Legacy ACL Strings</strong>: Evaluates legacy flat <code>acl</code> tokens (e.g. <code>finance</code>, <code>public</code>, or individual SIDs).</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Canonical Tools &amp; Backward-Compatible Extensions</h2>
+      <p>
+        The unified MCP server exposes three standard tools regardless of the backend:
+      </p>
+      <ul>
+        <li><code>secureVectorSearch(query, userPrincipal, userRoles, maxResults, minScore, dimensions)</code>: Performs natural language semantic search with identity verification.</li>
+        <li><code>getDocumentContent(documentUri, userPrincipal, userRoles, dimensions)</code>: Retrieves complete document text and metadata, verifying access rights and resolving Claim-Check URIs.</li>
+        <li><code>listAccessibleSources(userPrincipal, userRoles, dimensions)</code>: Discovers indexed repository documents accessible to the caller.</li>
+      </ul>
+
+      <h3>Vespa Backward Compatibility</h3>
+      <p>
+        For organizations running existing Vespa integrations, OpenCrawling provides <code>VespaMcpVectorServer</code>, a dedicated delegate that activates when <code>output.type=vespa</code>. It retains legacy tool names (<code>vespaSecureVectorSearch</code>, <code>vespaGetDocumentContent</code>, <code>vespaListAccessibleSources</code>) and supports Vespa rank profile selection (<code>hybrid</code>, <code>semantic</code>, <code>default</code>) while delegating internally to <code>VespaMcpSearchBackend</code>.
+      </p>
+
+      <h3>AIOps Observability MCP Tools</h3>
+      <p>
+        In addition to knowledge search, the server exposes system-level telemetry tools from <code>ObservabilityMcpTools</code>: <code>fetchJobTraces</code>, <code>getErrorLogs</code>, and <code>queryThroughputMetrics</code>. Connected AI Copilots can inspect live Virtual Thread stack traces and ingestion throughput without accessing sensitive document text.
+      </p>
+
+      <h2><span class="section-num">6. </span>Streamable HTTP &amp; SSE Transports</h2>
+      <p>
+        OpenCrawling adopts Spring AI 2.0's <strong>Streamable HTTP</strong> transport as its primary MCP protocol interface (<code>POST /mcp</code>), while maintaining full backward compatibility with Server-Sent Events (<code>/mcp/sse</code>).
+      </p>
+      <p>
+        During protocol negotiation, the client issues a JSON-RPC 2.0 <code>initialize</code> request. The server establishes an active session and returns a unique <code>Mcp-Session-Id</code> response header (e.g. <code>Mcp-Session-Id: 550e8400-e29b-41d4-a716-446655440000</code>). All subsequent requests (<code>notifications/initialized</code>, <code>tools/list</code>, <code>tools/call</code>) pass this session header.
+      </p>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#8505;&#65039;</div>
+        <div>
+          <p><strong>Streamable HTTP Readiness Behavior:</strong> Because Streamable HTTP strictly requires JSON-RPC POST payloads, a plain browser or cURL <code>GET</code> to <code>http://localhost:8080/mcp</code> returns <code>HTTP 400 Bad Request</code> or <code>405 Method Not Allowed</code>. OpenCrawling's readiness probes across all Docker Compose decoupled stacks now accept HTTP 400 as a valid healthy indicator.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">7. </span>Automated Decoupled Integration Test Suite (<code>test-mcp-decoupled.sh</code>)</h2>
+      <p>
+        To ensure enterprise reliability, OpenCrawling includes a dedicated decoupled integration test suite: <code>scripts/test-mcp-decoupled.sh</code>. It can be run directly or through the master test runner:
+      </p>
+
+      <pre><code># Run only MCP tests via keyword filter
+./run-integration-tests.sh mcp</code></pre>
+
+      <p>
+        The suite executes <strong>16 automated verification steps</strong> across a decoupled cluster:
+      </p>
+      <ol>
+        <li><strong>Cluster Boot</strong>: Boots PostgreSQL/pgvector, Redis, Ollama, Kafka, consumers, and <code>oc-mcp-server</code>.</li>
+        <li><strong>Health Probes</strong>: Asserts <code>ollama-model-puller</code> pulled <code>mxbai-embed-large</code> and MCP endpoint is ready.</li>
+        <li><strong>Protocol Handshake</strong>: Negotiates JSON-RPC 2.0 <code>initialize</code> and captures <code>Mcp-Session-Id</code>.</li>
+        <li><strong>Tool Introspection</strong>: Verifies <code>tools/list</code> schemas for search, retrieval, and AIOps tools.</li>
+        <li><strong>Live AIOps Tool Invocations</strong>: Executes <code>fetchJobTraces</code>, <code>getErrorLogs</code>, and <code>queryThroughputMetrics</code>.</li>
+        <li><strong>OIS Multi-ACL Ingestion</strong>: Ingests public, role-restricted, and explicit-deny documents through Kafka.</li>
+        <li><strong>Zero-Trust Verification</strong>: Proves public users see only public docs, and finance users see finance docs.</li>
+        <li><strong>Explicit Deny Assertion</strong>: Proves a user in <code>engineering</code> who also has the <code>contractors</code> role is <strong>completely blocked</strong> from restricted documents.</li>
+        <li><strong>Multi-Dimension Routing</strong>: Queries across dimension-specific tables (<code>vector_store_1024</code>).</li>
+        <li><strong>OIS Tombstone DELETE</strong>: Emits a <code>DELETE</code> tombstone and asserts vector eviction from MCP search results.</li>
+        <li><strong>In-Process Parity</strong>: Executes JUnit assertions covering all 8 backends and <code>McpAclEvaluator</code> (61/61 passing).</li>
+      </ol>
+
+      <h2><span class="section-num">8. </span>Connecting Claude Desktop, Cursor &amp; Agent Frameworks</h2>
+      <p>
+        Connecting your AI agent to OpenCrawling is instantaneous. For <strong>Claude Desktop</strong>, add the following to <code>claude_desktop_config.json</code>:
+      </p>
+
+      <pre><code>{
+  "mcpServers": {
+    "opencrawling-secure-knowledge": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/client-cli",
+        "sse",
+        "http://localhost:8080/mcp/sse"
+      ]
+    }
+  }
+}</code></pre>
+
+      <p>
+        For enterprise Python AI applications (LangChain, LlamaIndex, or AutoGen), connect over the Python <code>mcp</code> SDK:
+      </p>
+
+      <pre><code>import asyncio
+from mcp import ClientSession
+from mcp.client.sse import sse_client
+
+async def main():
+    async with sse_client("http://localhost:8080/mcp/sse") as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            
+            # Secure Zero-Trust vector retrieval
+            response = await session.call_tool(
+                "secureVectorSearch",
+                arguments={
+                    "query": "Fiscal strategy and quarterly projections",
+                    "userPrincipal": "alice@company.com",
+                    "userRoles": "finance,executive",
+                    "maxResults": 5
+                }
+            )
+            print("Search Results:", response.content)
+
+asyncio.run(main())</code></pre>
+
+      <div class="article-cta">
+        <h3>Deploy Zero-Trust Context Retrieval for Your Enterprise AI</h3>
+        <p>Explore the full interactive documentation on our website, read the Model Context Protocol guide on our Wiki, or deploy the decoupled Docker stack in minutes.</p>
+        <div class="cta-buttons">
+          <a href="../mcp.html" class="btn btn-primary">Visit MCP Server Page</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Model-Context-Protocol" target="_blank" rel="noopener" class="btn btn-outline">Read MCP Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 OpenCrawling Community. Licensed under the Apache License 2.0.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
