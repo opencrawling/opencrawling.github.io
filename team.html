@@ -565,9 +565,11 @@
       <nav class="main-nav" aria-label="Main Navigation">
         <ul>
           <li><a href="index.html#features">Features</a></li>
+          <li><a href="sdk.html">Java SDK</a></li>
           <li><a href="index.html#standard">Open Standard</a></li>
           <li><a href="index.html#getting-started">Quick Start</a></li>
           <li><a href="mcp.html">MCP Server</a></li>
+          <li><a href="observability.html">Observability</a></li>
           <li><a href="index.html#blog">Blog</a></li>
           <li><a href="comparison.html">Compare</a></li>
           <li><a href="team.html" class="active">Team</a></li>
@@ -1142,58 +1144,9 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Theme Toggle
-      const toggleBtn = document.getElementById('theme-toggle');
-      const html = document.documentElement;
-      
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-      applyTheme(initialTheme);
-
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-          const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          applyTheme(newTheme);
-        });
-      }
-
-      function applyTheme(theme) {
-        if (theme === 'dark') {
-          html.classList.remove('light');
-          html.classList.add('dark');
-          html.style.colorScheme = 'dark';
-        } else {
-          html.classList.remove('dark');
-          html.classList.add('light');
-          html.style.colorScheme = 'light';
-        }
-        localStorage.setItem('theme', theme);
-      }
-
-      // 2. Mobile Menu Toggle
-      const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
-      const header = document.querySelector('.site-header');
-      if (mobileToggleBtn && header) {
-        mobileToggleBtn.addEventListener('click', () => {
-          const isOpen = header.classList.contains('mobile-menu-open');
-          if (isOpen) {
-            header.classList.remove('mobile-menu-open');
-            document.body.classList.remove('mobile-menu-active');
-            document.documentElement.classList.remove('mobile-menu-active');
-            mobileToggleBtn.setAttribute('aria-expanded', 'false');
-          } else {
-            header.classList.add('mobile-menu-open');
-            document.body.classList.add('mobile-menu-active');
-            document.documentElement.classList.add('mobile-menu-active');
-            mobileToggleBtn.setAttribute('aria-expanded', 'true');
-          }
-        });
-      }
-
       // 3. Inner Card Tabs switching
       const tabContainers = document.querySelectorAll('.card-tabs');
       tabContainers.forEach(container => {

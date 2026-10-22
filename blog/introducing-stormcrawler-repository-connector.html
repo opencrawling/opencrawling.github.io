@@ -87,22 +87,43 @@
   <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
   <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
 
+  <!-- Header / Navigation -->
   <header class="site-header">
     <div class="header-container">
-      <a href="../" class="brand" id="nav-brand">
+      <a href="../index.html" class="brand" id="nav-brand">
         <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
         <span class="brand-name">OpenCrawling</span>
       </a>
+      
       <nav class="main-nav" aria-label="Main Navigation">
         <ul>
           <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
           <li><a href="../index.html#standard">Open Standard</a></li>
           <li><a href="../index.html#getting-started">Quick Start</a></li>
-          <li><a href="../index.html#simulator">Simulator</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
           <li><a href="../index.html#blog" class="active">Blog</a></li>
-          <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">GitHub</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../team.html">Team</a></li>
         </ul>
       </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -311,47 +332,21 @@ chmod +x scripts/test-stormcrawler-bolt.sh
     </article>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-brand">
-        <a href="../" class="brand">
-          <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
-          <span class="brand-name">OpenCrawling</span>
-        </a>
-        <p class="footer-tagline">Open standard enterprise data ingestion, security mapping, and vector search orchestration.</p>
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
       </div>
-      <div class="footer-links">
-        <div class="footer-column">
-          <h4>Navigation</h4>
-          <ul>
-            <li><a href="../index.html#features">Features</a></li>
-            <li><a href="../index.html#standard">Open Standard</a></li>
-            <li><a href="../index.html#simulator">Simulator</a></li>
-            <li><a href="../index.html#blog">Blog</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4>Ecosystem</h4>
-          <ul>
-            <li><a href="../sdk.html">Java Client SDK</a></li>
-            <li><a href="../mcp.html">Secure MCP Server</a></li>
-            <li><a href="../observability.html">AIOps Observability</a></li>
-            <li><a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener">OIS Specification</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4>Community</h4>
-          <ul>
-            <li><a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener">GitHub</a></li>
-            <li><a href="https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw" target="_blank" rel="noopener">Slack</a></li>
-            <li><a href="../contact.html">Contact Team</a></li>
-          </ul>
-        </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 OpenCrawling. Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener">Apache License 2.0</a>.</p>
     </div>
   </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
 </body>
 </html>
