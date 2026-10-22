@@ -1191,8 +1191,8 @@
         },
         'java-connectors': {
           repo: 'opencrawling/opencrawling',
-          cmd: 'git checkout -b feature/new-connector',
-          text: 'Repository Connector Interfaces are modeled using the `RepositoryConnector` Java SPI. You can build a new data crawler by extending this class, handling incremental scans using claim checks, and mapping folder attributes into standard metadata.'
+          cmd: 'mvn archetype:generate -DarchetypeGroupId=org.opencrawling.archetypes -DarchetypeArtifactId=opencrawling-archetype-repository-connector',
+          text: 'Custom connectors can be scaffolded in seconds using the official Maven Archetypes (`opencrawling-archetype-repository-connector`, `opencrawling-archetype-output-connector`, `opencrawling-archetype-transformation-connector`), complete with JUnit 5/Failsafe tests, Docker Compose overlays, and Admin UI integration.'
         },
         'java-mcp': {
           repo: 'opencrawling/opencrawling',

@@ -667,12 +667,13 @@
   <section id="getting-started" class="getting-started-section">
     <div class="section-header">
       <h2 class="section-title">Getting Started in 2 Minutes</h2>
-      <p class="section-subtitle">Follow these quick steps to get OpenCrawling up and running locally.</p>
+      <p class="section-subtitle">Follow these quick steps to deploy OpenCrawling locally, integrate via Maven, or scaffold custom connectors with the official Maven Archetypes.</p>
     </div>
 
     <div class="tabs-container glass">
       <div class="tabs-header">
         <button class="tab-btn active" data-tab="docker">Docker Compose</button>
+        <button class="tab-btn" data-tab="archetypes">Maven Archetypes</button>
         <button class="tab-btn" data-tab="maven">Maven Dependency</button>
         <button class="tab-btn" data-tab="connector">Custom Connector</button>
       </div>
@@ -706,11 +707,38 @@ docker compose -f docker-compose-decoupled.yml up -d
           </div>
         </div>
 
+        <!-- Maven Archetypes Tab -->
+        <div class="tab-pane" id="tab-archetypes">
+          <div class="code-wrapper">
+            <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
+            <pre><code class="language-bash"># Scaffold a ready-to-build custom connector with tests, Docker Compose overlay &amp; Admin UI integration
+# Available archetypes under org.opencrawling.archetypes:
+#   1. opencrawling-archetype-repository-connector      (Ingestion sources: CMS, APIs, DBs)
+#   2. opencrawling-archetype-output-connector          (Vector stores, Search engines, Sinks)
+#   3. opencrawling-archetype-transformation-connector  (Custom chunking, enrichment, redaction)
+
+mvn archetype:generate \
+  -DarchetypeGroupId=org.opencrawling.archetypes \
+  -DarchetypeArtifactId=opencrawling-archetype-repository-connector \
+  -DarchetypeVersion=1.0.0-SNAPSHOT \
+  -DgroupId=com.mycompany.connectors \
+  -DartifactId=my-repository-connector \
+  -Dversion=1.0.0-SNAPSHOT \
+  -DconnectorName=SampleRepositoryConnector
+
+# Build, run unit &amp; Failsafe integration tests (*Test.java &amp; *IT.java), and launch with Docker overlay:
+cd my-repository-connector
+mvn clean package
+docker compose -f docker/docker-compose.dist.yml -f docker/docker-compose.override.yml up -d
+mvn verify</code></pre>
+          </div>
+        </div>
+
         <!-- Maven Tab -->
         <div class="tab-pane" id="tab-maven">
           <div class="code-wrapper">
             <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
-            <pre><code class="language-xml">&lt;!-- Add core connector API to your spring boot application --&gt;
+            <pre><code class="language-xml">&lt;!-- Add core connector API to your Spring Boot application --&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
     &lt;artifactId&gt;oc-core&lt;/artifactId&gt;
@@ -730,25 +758,35 @@ docker compose -f docker-compose-decoupled.yml up -d
         <div class="tab-pane" id="tab-connector">
           <div class="code-wrapper">
             <button class="copy-code-btn" aria-label="Copy code block">Copy</button>
-            <pre><code class="language-java">// Implement RepositoryConnector interface to create custom sources
-public class MyCustomRepositoryConnector implements RepositoryConnector {
+            <pre><code class="language-java">// Tip: Scaffold this project automatically using the Maven Archetypes tab!
+// Implements RepositoryConnector (or OutputConnector / TransformationConnector) SPI
+@Component
+public class SampleRepositoryConnector implements RepositoryConnector {
+
+    private final SampleRepositoryConnectorConfiguration configuration;
+    private final SampleRepositoryConnectorFetcher fetcher;
+    private boolean connected = false;
 
     @Override
-    public void connect(Map&lt;String, String&gt; configParams) throws RepositoryConnectionException {
-        // Establish authentication with target repository
+    public String getName() {
+        return "SampleRepositoryConnector";
     }
 
     @Override
-    public void scanDocuments(DocumentProcessor processor, JobContext context) {
-        // Scan documents incrementally and dispatch to processor
-        for (Document doc : fetchNewDocuments()) {
-            processor.processDocument(
-                doc.getId(),
-                doc.getContentStream(),
-                doc.getMetadata(),
-                doc.getAcl() // Synchronize Access Control Lists!
-            );
-        }
+    public void connect() throws Exception {
+        // Initialize authenticated client session with target repository
+        this.connected = true;
+    }
+
+    @Override
+    public Flux&lt;RepositoryDocument&gt; scan(String basePath) {
+        // Stream documents reactively with metadata and Zero-Trust ACLs
+        return fetcher.fetchDocuments(basePath);
+    }
+
+    @Override
+    public ConnectorSchema getSchema(String basePath) {
+        return new ConnectorSchema(List.of());
     }
 }</code></pre>
           </div>
