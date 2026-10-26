@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland OpenArch via paged HXQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Outputs: Vector Stores & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
+    title: "Outputs: Vector Stores, Parquet Bridges & Migration Sinks",
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -91,7 +91,7 @@ const ARCH_DETAILS = {
   },
   mcp: {
     title: "Secure MCP Server (Spring AI)",
-    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
+    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP) across all 9 pluggable backends (including Hyland OpenArch via openarch_search and openarch_fetch_document). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
   },
   claimcheck: {
     title: "Claim Check Store (Apache Ozone & S3)",
@@ -154,6 +154,20 @@ function initArchHover() {
    3. Live Ingestion Simulator
    ========================================== */
 const SIMULATOR_DATA = {
+  openarch: {
+    files: [
+      { name: "openarch://default/7c1e2f8a-4b3d (SysFile: enterprise_msa_2026.pdf) [HXQL /api/query]", size: "3.1 MB", acls: ["group:legal:read", "user:elena.weber:write", "user:restricted_user:deny"] },
+      { name: "openarch://default/9a4d1e2b-8c7f (SysFile: q3_architecture_blueprint.docx) [SysHasEmbeddings]", size: "1.9 MB", acls: ["group:cloud-architects:read", "user:Administrator:admin"] },
+      { name: "openarch://default/4f8b2a1c-3d9e (SysFile: msa_annex_pricing.pdf) [Incremental sys_modified]", size: "840 KB", acls: ["group:procurement:read", "group:legal:write"] }
+    ],
+    logs: {
+      scan: "OpenArchRepositoryConnector triggered. Connecting to Hyland OpenArch REST API at http://openarch:8080 (Header: X-HXCS-Repository: default). Executing paged HXQL query 'SELECT * FROM SysFile' via POST /api/query...",
+      claimCheck: "Crawler harvested page batch via Java 25 StructuredTaskScope on virtual thread lane 'openarch-crawler-lane'. Streamed binaries from /api/download/{id} to ClaimCheckStore (Apache Ozone), mapped sys_acl ACEs to OIS SecurityConfig, and published openarch:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Extracted document text and OpenArch sys_* metadata via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed OpenArch document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
+      vector: "OpenArchStoreWriterConsumer buffered embedded chunks, serialized 1024-dim vectors into SNAPPY Apache Parquet (embedding.avsc / com.hyland.openarch.embeddings.avro.Embedding), and uploaded Parquet vector bridge + SysFile ACLs to Hyland OpenArch (/api/upload)."
+    }
+  },
   'grpc-push': {
     files: [
       { name: "grpc://push-job-1/contracts/enterprise_msa_2026.pdf [Unary PushDocument / mTLS]", size: "3.8 MB", acls: ["group:legal-counsel:read", "user:alice.smith:write", "user:external-contractor:deny"] },
@@ -510,7 +524,9 @@ function initSimulator() {
       // Step 9: Vector Store Output
       stationVector.classList.add('active');
       let vectorLog = simData.logs.vector;
-      if (destKey === 'seatunnel') {
+      if (destKey === 'openarch') {
+        vectorLog = "OpenArchStoreWriterConsumer buffered embedded chunks (parquetBatchThreshold), serialized 1024-dim vectors & provenance locations into SNAPPY Apache Parquet conforming to OpenArch 'embedding.avsc', uploaded blob via POST /api/upload, and synchronized SysFile + sys_acl permissions.";
+      } else if (destKey === 'seatunnel') {
         vectorLog = "SeaTunnelStoreWriterConsumer published OIS embedded chunks to fan-out Kafka topic ('seatunnel-ois-in'); Apache SeaTunnel Zeta cluster orchestrated parallel streaming and fanned out data to downstream sinks (ClickHouse, Milvus, Iceberg).";
       } else if (destKey === 'luxir') {
         vectorLog = "LuxirStoreWriterConsumer indexed document chunks, 1024-dim dense embeddings, dynamic text fields (text_t), and Zero-Trust ACL attributes into Luxir collection via POST /collections/opencrawling/_update.";

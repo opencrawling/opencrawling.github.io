@@ -289,7 +289,7 @@
           </svg>
         </div>
         <h3>Secure Model Context Protocol (MCP) Server</h3>
-        <p>Built with <strong>Spring AI 2.0</strong> over Streamable HTTP (<code>/mcp</code>) and SSE (<code>/mcp/sse</code>). Employs the pluggable <code>McpVectorSearchBackend</code> SPI across <strong>all 8 target vector engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, and Luxir). Server-side <code>McpAclEvaluator</code> authoritatively evaluates Zero-Trust document ACLs with <strong>explicit deny precedence</strong>, dynamic role mapping, and integrated AIOps observability tools. <a href="mcp.html" class="learn-more-link">Explore MCP Server →</a></p>
+        <p>Built with <strong>Spring AI 2.0</strong> over Streamable HTTP (<code>/mcp</code>) and SSE (<code>/mcp/sse</code>). Employs the pluggable <code>McpVectorSearchBackend</code> SPI across <strong>all 9 target vector &amp; search engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch). Server-side <code>McpAclEvaluator</code> authoritatively evaluates Zero-Trust document ACLs with <strong>explicit deny precedence</strong>, dynamic role mapping, and integrated AIOps observability tools. <a href="mcp.html" class="learn-more-link">Explore MCP Server →</a></p>
       </div>
     </div>
   </section>
@@ -356,17 +356,18 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="118" width="120" height="232" rx="10" class="node-bg" />
-            <text x="70" y="138" class="node-title">Sources</text>
-            <text x="70" y="156" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="174" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="192" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="210" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="228" class="node-sub">File System</text>
-            <text x="70" y="246" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="264" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="282" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="300" class="node-sub">Camunda BPMN⚡</text>
+            <rect x="10" y="110" width="120" height="246" rx="10" class="node-bg" />
+            <text x="70" y="130" class="node-title">Sources</text>
+            <text x="70" y="148" class="node-sub">Hyland OpenArch 🟣</text>
+            <text x="70" y="165" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="182" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="199" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="216" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="233" class="node-sub">File System</text>
+            <text x="70" y="250" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="267" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="284" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="301" class="node-sub">Camunda BPMN⚡</text>
             <text x="70" y="318" class="node-sub">StormCrawler🕷️</text>
           </g>
 
@@ -390,14 +391,15 @@
 
           <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
-            <rect x="640" y="140" width="150" height="155" rx="10" class="node-bg" />
-            <text x="715" y="162" class="node-title">Outputs &amp; Sinks</text>
-            <text x="715" y="180" class="node-sub">Ozone Migration 🗄️</text>
-            <text x="715" y="198" class="node-sub">SeaTunnel Fan-Out 🌊</text>
-            <text x="715" y="216" class="node-sub">Luxir / Solr 10 ✨</text>
-            <text x="715" y="234" class="node-sub">Vespa Engine 🚀</text>
-            <text x="715" y="252" class="node-sub">pgvector / Milvus</text>
-            <text x="715" y="270" class="node-sub">Qdrant / OpenSearch</text>
+            <rect x="640" y="132" width="150" height="170" rx="10" class="node-bg" />
+            <text x="715" y="154" class="node-title">Outputs &amp; Sinks</text>
+            <text x="715" y="172" class="node-sub">OpenArch Parquet 🟣</text>
+            <text x="715" y="190" class="node-sub">Ozone Migration 🗄️</text>
+            <text x="715" y="208" class="node-sub">SeaTunnel Fan-Out 🌊</text>
+            <text x="715" y="226" class="node-sub">Luxir / Solr 10 ✨</text>
+            <text x="715" y="244" class="node-sub">Vespa Engine 🚀</text>
+            <text x="715" y="262" class="node-sub">pgvector / Milvus</text>
+            <text x="715" y="280" class="node-sub">Qdrant / OpenSearch</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -558,7 +560,8 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
-            <option value="grpc-push" selected>gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
+            <option value="openarch" selected>Hyland OpenArch (HXQL &amp; Federated Repository)</option>
+            <option value="grpc-push">gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
             <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
             <option value="cmis">OASIS CMIS (ECM Repository)</option>
@@ -575,6 +578,7 @@
         <div class="sim-group">
           <label for="sim-destination">2. Select Vector Database / Output</label>
           <select id="sim-destination">
+            <option value="openarch" selected>Hyland OpenArch (Parquet Vector Bridge / embedding.avsc)</option>
             <option value="ozone">Apache Ozone (Migration Mode &amp; OIS Sidecars)</option>
             <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
             <option value="luxir">Luxir Hybrid Search Engine</option>
@@ -806,10 +810,11 @@ public class SampleRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Hyland OpenArch</strong>, <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
+          <span class="std-badge">🟣 Hyland OpenArch &amp; Parquet</span>
           <span class="std-badge">📡 gRPC Push Streaming</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
           <span class="std-badge">🏛️ Doxis &amp; CMIS Ready</span>
@@ -828,6 +833,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="openarch">Hyland OpenArch</button>
               <button class="schema-tab-btn" data-schema="grpc">gRPC Push</button>
               <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
               <button class="schema-tab-btn" data-schema="jdbc">JDBC Tabular</button>
@@ -859,6 +865,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
 
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); color: #FFF;">Connector &amp; Vector Bridge</span>
+          <span class="blog-date">October 26, 2026</span>
+          <span class="blog-read-time">9 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-hyland-openarch-integration.html">Bidirectional Cloud-Native Content &amp; Parquet Vector Bridging: Announcing the Hyland OpenArch Integration</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's bidirectional Hyland OpenArch integration (<strong>oc-openarch-repository-connector</strong> &amp; <strong>oc-openarch-output-connector</strong>). Featuring high-throughput paged HXQL source harvesting on Java 25 Virtual Threads, a native SNAPPY Apache Parquet Vector Bridge strictly conforming to OpenArch's <code>embedding.avsc</code> specification, lossless Zero-Trust <code>sys_acl</code> permission mapping, and dedicated Model Context Protocol (MCP) tools (<code>openarch_search</code> &amp; <code>openarch_fetch_document</code>).
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-hyland-openarch-integration.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #FFF;">Core Engine &amp; Security</span>
           <span class="blog-date">October 21, 2026</span>
@@ -1471,6 +1492,36 @@ public class SampleRepositoryConnector implements RepositoryConnector {
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
   "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        openarch: {
+          file: 'openarch-ois-document.json',
+          code: `{
+  "id": "openarch://default/7c1e2f8a-4b3d-4e5f-9a0b-1c2d3e4f5a6b",
+  "action": "UPSERT",
+  "source": {
+    "type": "openarch",
+    "instance": "http://openarch:8080",
+    "repositoryId": "default"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "claimCheckKey": "ofs://s3v/claims/openarch-7c1e2f8a.bin"
+  },
+  "metadata": {
+    "title": "enterprise_msa_2026.pdf",
+    "sys_primaryType": "SysFile",
+    "sys_mixinTypes": ["SysHasEmbeddings"],
+    "parquetSchema": "com.hyland.openarch.embeddings.avro.Embedding"
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "legal", "identityType": "group", "access": "read" },
+      { "identity": "elena.weber", "identityType": "user", "access": "write" },
+      { "identity": "restricted_user", "identityType": "user", "access": "deny" }
+    ]
+  }
 }`
         },
         grpc: {

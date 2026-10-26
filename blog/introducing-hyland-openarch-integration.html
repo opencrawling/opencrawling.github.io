@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bidirectional Cloud-Native Content & Parquet Vector Bridging: Announcing the Hyland OpenArch Integration</title>
+  <meta name="description" content="Discover OpenCrawling's bidirectional Hyland OpenArch integration: high-throughput source harvesting via paged HXQL and Java 25 Virtual Threads, Parquet Vector Bridge conforming to embedding.avsc, Zero-Trust sys_acl mapping, and native MCP search tools.">
+  <meta name="keywords" content="hyland openarch, openarch connector, hxql query, parquet vector bridge, embedding.avsc, sys_acl, sysHasEmbeddings, zero-trust rag, model context protocol, openarch_search, openarch_fetch_document, java 25 virtual threads, opencrawling">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-hyland-openarch-integration.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-hyland-openarch-integration.html">
+  <meta property="og:title" content="Bidirectional Cloud-Native Content & Parquet Vector Bridging: Announcing the Hyland OpenArch Integration">
+  <meta property="og:description" content="Discover OpenCrawling's bidirectional Hyland OpenArch integration: high-throughput source harvesting via paged HXQL and Java 25 Virtual Threads, Parquet Vector Bridge conforming to embedding.avsc, Zero-Trust sys_acl mapping, and native MCP search tools.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-hyland-openarch-integration.html">
+  <meta property="twitter:title" content="Bidirectional Cloud-Native Content & Parquet Vector Bridging: Announcing the Hyland OpenArch Integration">
+  <meta property="twitter:description" content="Discover OpenCrawling's bidirectional Hyland OpenArch integration: high-throughput source harvesting via paged HXQL and Java 25 Virtual Threads, Parquet Vector Bridge conforming to embedding.avsc, Zero-Trust sys_acl mapping, and native MCP search tools.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Bidirectional Cloud-Native Content & Parquet Vector Bridging: Announcing the Hyland OpenArch Integration",
+    "description": "Discover OpenCrawling's bidirectional Hyland OpenArch integration: high-throughput source harvesting via paged HXQL and Java 25 Virtual Threads, Parquet Vector Bridge conforming to embedding.avsc, Zero-Trust sys_acl mapping, and native MCP search tools.",
+    "datePublished": "2026-10-26",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-hyland-openarch-integration.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #6366F1, #8B5CF6); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #818CF8, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #6366F1; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #818CF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #818CF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C7D2FE; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(99,102,241,0.06); border-color: #6366F1; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(99,102,241,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #818CF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #6366F1; color: #C7D2FE; background: rgba(99,102,241,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.12); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #818CF8; }
+    .article-cta { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #818CF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(99,102,241,0.1); color: #818CF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(99,102,241,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Blog
+      </a>
+    </div>
+
+    <!-- Hero -->
+    <div class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector &amp; Vector Bridge</span>
+        <span class="blog-meta-date">October 26, 2026</span>
+        <span class="blog-meta-read">• 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Bidirectional Cloud-Native Content &amp; Parquet Vector Bridging: Announcing the Hyland OpenArch Integration</h1>
+      <p class="blog-article-lead">
+        Modern content services require more than one-way extraction. Today we are announcing OpenCrawling's comprehensive bidirectional integration with <strong>Hyland OpenArch</strong>—delivering high-throughput paged HXQL source harvesting on Java 25 Virtual Threads, a native SNAPPY Apache Parquet Vector Bridge conforming to OpenArch's <code>embedding.avsc</code> specification, lossless Zero-Trust <code>sys_acl</code> synchronization, and dedicated Model Context Protocol (MCP) tools.
+      </p>
+    </div>
+
+    <hr class="blog-divider">
+
+    <!-- Body -->
+    <div class="blog-article-body">
+
+      <h2><span class="section-num">01 /</span> Bridging Cloud-Native Content Services &amp; Enterprise AI</h2>
+      <p>
+        <strong>Hyland OpenArch</strong> represents the next generation of open-source, cloud-native content services. Built on Spring Boot, MongoDB, and OpenSearch, OpenArch combines a rich hierarchical document model (<code>SysFile</code>, <code>SysFolder</code>), a declarative query language (<strong>HXQL</strong>), fine-grained access control lists (<code>sys_acl</code>), and first-class vector embedding storage via the <code>SysHasEmbeddings</code> mixin and Apache Parquet ingestion pipelines.
+      </p>
+      <p>
+        Until now, enterprises adopting OpenArch faced two disconnected challenges:
+      </p>
+      <ul>
+        <li><strong>Harvesting OpenArch as a Knowledge Source</strong>: Extracting millions of documents, custom schemas, binary streams, and hierarchical ACLs from OpenArch into external vector stores (pgvector, Vespa, Milvus, Qdrant, OpenSearch, Solr, Luxir) or Apache Ozone lakes.</li>
+        <li><strong>Enriching &amp; Populating OpenArch as an AI Target</strong>: Migrating content from legacy ECM systems (Alfresco, Doxis 4, OASIS CMIS, FileSystem, BPMN engines) into OpenArch while simultaneously generating and attaching OpenArch-native Apache Parquet vector embeddings (<code>embedding.avsc</code>).</li>
+      </ul>
+      <p>
+        With the release of two new first-class modules—<code>oc-openarch-repository-connector</code> and <code>oc-openarch-output-connector</code>—alongside a dedicated <code>OpenArchMcpSearchBackend</code> in <code>oc-mcp-server</code>, OpenCrawling turns Hyland OpenArch into a fully bidirectional participant in the <strong>Open Ingestion Standard (OIS)</strong> ecosystem.
+      </p>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">Bidirectional Hyland OpenArch Architecture in OpenCrawling</div>
+        <div class="flow-nodes">
+          <div class="flow-node highlight">Hyland OpenArch<br><small>(HXQL /api/query)</small></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">OpenArchRepositoryConnector<br><small>(Java 25 Virtual Threads)</small></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node accent">OIS Pipeline<br><small>(Claim-Check + Tika 4 + Ollama)</small></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">OpenArchOutputConnector<br><small>(Parquet Vector Bridge)</small></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node highlight">Hyland OpenArch<br><small>(embedding.avsc + MCP)</small></div>
+        </div>
+      </div>
+
+      <h2><span class="section-num">02 /</span> Source Harvesting: Paged HXQL &amp; Java 25 Structured Concurrency</h2>
+      <p>
+        The <code>oc-openarch-repository-connector</code> module (<code>OpenArchRepositoryConnector</code>, registered as <code>OpenArch_Repository</code>) connects directly to Hyland OpenArch's REST API using the multi-tenant <code>X-HXCS-Repository</code> header and HTTP Basic Authentication. It supports two complementary crawl modes:
+      </p>
+      <ul>
+        <li><strong><code>QUERY</code> Mode (Default)</strong>: Executes arbitrary HXQL statements (defaulting to <code>SELECT * FROM SysFile</code>) via <code>POST /api/query</code>.</li>
+        <li><strong><code>FOLDER</code> Mode</strong>: Traverses a specific folder hierarchy starting at <code>rootFolderId</code> (<code>00000000-0000-0000-0000-000000000000</code> by default), automatically constructing scoped HXQL predicates for <code>sys_parentId</code> (single level) or <code>sys_AncestorIds</code> (recursive subtree traversal when <code>includeSubfolders=true</code>).</li>
+      </ul>
+
+      <h3>Cursor-Based Pagination &amp; Incremental Watermarks</h3>
+      <p>
+        Deep offset pagination degrades rapidly on multi-million-document repositories. <code>OpenArchRepositoryClient</code> natively tracks OpenArch's <code>nextSearchAfter</code> cursor arrays across page batches, falling back to numeric <code>offset</code> pagination only when needed. When <code>incremental=true</code> and <code>lastCrawlTimestamp</code> is configured, the connector automatically injects a <code>sys_modified &gt;= TIMESTAMP '...'</code> filter into the HXQL <code>WHERE</code> clause (preserving any <code>ORDER BY</code> clauses) so only modified documents are harvested.
+      </p>
+
+      <h3>Java 25 Virtual Threads &amp; Claim-Check Binary Streaming</h3>
+      <p>
+        Each page of OpenArch documents is processed concurrently inside a Java 25 <code>StructuredTaskScope.open()</code> block running on a dedicated named virtual thread factory (<code>openarch-crawler-lane</code>). Every virtual thread task is wrapped in <code>ObservabilityTask.observed(...)</code> so OpenTelemetry trace IDs and job MDC contexts propagate seamlessly across threads:
+      </p>
+      <pre><code>try (var scope = StructuredTaskScope.open()) {
+    for (Map&lt;String, Object&gt; doc : documents) {
+        scope.fork(ObservabilityTask.observed("openarch-process-doc", () -&gt; {
+            processDocument(doc, properties, isDryRun);
+            return null;
+        }));
+    }
+    scope.join();
+}</code></pre>
+      <p>
+        When <code>includeContentStream=true</code> and a document contains a <code>file_content</code> / <code>file:content</code> blob descriptor, the virtual thread streams the binary directly from <code>GET /api/download/{id}</code> into OpenCrawling's <code>ClaimCheckStore</code> (Apache Ozone or Local FS) without buffering large files in heap memory, emitting lightweight <code>openarch://&lt;repositoryId&gt;/&lt;docId&gt;</code> envelopes onto the <code>opencrawling-ingestion</code> Kafka topic.
+      </p>
+
+      <h2><span class="section-num">03 /</span> Output Connector &amp; The Native Parquet Vector Bridge</h2>
+      <p>
+        What makes the <code>oc-openarch-output-connector</code> module truly unique is its dual capability: it acts both as an <strong>Enterprise Content Services target</strong> (for repository-to-repository migration and ACL synchronization) and as a <strong>Parquet Vector Bridge</strong> that feeds Hyland OpenArch's native OpenSearch vector engine.
+      </p>
+
+      <h3>1. Document, Binary &amp; Mixin Upsert</h3>
+      <p>
+        When <code>OpenArchOutputConnector</code> indexes an OIS document (or receives raw streams), it:
+      </p>
+      <ol>
+        <li>Streams the binary payload to <code>POST /api/upload</code> (`multipart/form-data`), receiving an OpenArch blob key, digest, and length.</li>
+        <li>Constructs a <code>SysFile</code> document payload enriched with the <code>SysHasEmbeddings</code> mixin (<code>sys_mixinTypes: ["SysHasEmbeddings"]</code>), attaches the uploaded blob reference to <code>file:content</code>, translates the OIS security permissions into OpenArch <code>sys_acl</code> entries, and upserts the document at <code>POST /api/documents/{rootFolderId}?upsert=true</code>.</li>
+      </ol>
+
+      <h3>2. Conforming to OpenArch's <code>embedding.avsc</code> Parquet Specification</h3>
+      <p>
+        Hyland OpenArch ingests vector embeddings asynchronously via SNAPPY-compressed Apache Parquet files that strictly adhere to its internal Avro schema (<code>/schemas/embedding.avsc</code>, namespace <code>com.hyland.openarch.embeddings.avro.Embedding</code>).
+      </p>
+      <p>
+        OpenCrawling's <code>OpenArchParquetEmbeddingsWriter</code> serializes embedded chunks directly into this exact schema—including nested provenance location unions for text offsets, bounding boxes, media timestamps, and spreadsheet coordinates:
+      </p>
+      <pre><code>{
+  "type": "record",
+  "name": "Embedding",
+  "namespace": "com.hyland.openarch.embeddings.avro",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "type", "type": "string" },
+    { "name": "vector", "type": { "type": "array", "items": "double" } },
+    { "name": "text", "type": ["null", "string"], "default": null },
+    { "name": "blobref", "type": ["null", "string"], "default": null },
+    {
+      "name": "location",
+      "type": ["null", {
+        "type": "record",
+        "name": "Location",
+        "fields": [
+          { "name": "text", "type": ["null", "TextLocation"], "default": null },
+          { "name": "position", "type": ["null", "Position"], "default": null },
+          { "name": "timestamp", "type": ["null", "Timestamp"], "default": null },
+          { "name": "spreadsheet", "type": ["null", "SpreadsheetLocation"], "default": null }
+        ]
+      }],
+      "default": null
+    }
+  ]
+}</code></pre>
+
+      <div class="callout-box info">
+        <span class="callout-icon">🟣</span>
+        <p><strong>Decoupled Kafka Batching via <code>OpenArchStoreWriterConsumer</code>:</strong> In distributed deployments, <code>OpenArchStoreWriterConsumer</code> listens on the <code>opencrawling-embedded</code> Kafka topic, converts <code>float[]</code> vectors from Ollama/OpenAI into <code>double[]</code>, buffers chunks in memory up to <code>parquetBatchThreshold</code> (default <code>50</code>), and flushes consolidated SNAPPY Parquet files (<code>embeddings-batch-&lt;timestamp&gt;.parquet</code>) to OpenArch's <code>/api/upload</code> endpoint.</p>
+      </div>
+
+      <h2><span class="section-num">04 /</span> Bidirectional Zero-Trust ACL Mapping</h2>
+      <p>
+        Enterprise RAG cannot compromise on access controls. Both OpenArch connectors share a deterministic, lossless security translator (<code>OpenArchSecurityMapper</code>) that maps Hyland OpenArch's <code>sys_acl</code> Access Control Entries (ACEs) to and from OpenCrawling's Open Ingestion Standard (OIS) <code>SecurityConfig</code>:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>OpenArch <code>sys_acl</code> Permission</th>
+            <th><code>granted</code> Flag</th>
+            <th>OIS <code>SecurityConfig.Permission</code></th>
+            <th>Reverse Mapping (OIS → OpenArch)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Read</code>, <code>ReadProperties</code>, <code>ReadContent</code>, <code>ReadChildren</code>, <code>Browse</code></td>
+            <td><code>true</code></td>
+            <td><code>access: "read"</code></td>
+            <td><code>permission: "Read", granted: true</code></td>
+          </tr>
+          <tr>
+            <td><code>Write</code>, <code>ReadWrite</code>, <code>WriteProperties</code>, <code>WriteContent</code>, <code>AddChildren</code></td>
+            <td><code>true</code></td>
+            <td><code>access: "write"</code></td>
+            <td><code>permission: "ReadWrite", granted: true</code></td>
+          </tr>
+          <tr>
+            <td><code>Delete</code>, <code>DeleteChild</code></td>
+            <td><code>true</code></td>
+            <td><code>access: "delete"</code></td>
+            <td><code>permission: "Delete", granted: true</code></td>
+          </tr>
+          <tr>
+            <td><code>ManageSecurity</code>, <code>ManageLock</code>, <code>ManageRetention</code>, <code>Everything</code>, <code>All</code></td>
+            <td><code>true</code></td>
+            <td><code>access: "admin"</code></td>
+            <td><code>permission: "Everything", granted: true</code></td>
+          </tr>
+          <tr>
+            <td><em>Any permission</em></td>
+            <td><code>false</code></td>
+            <td><code>access: "deny"</code> (Explicit Deny Precedence)</td>
+            <td><code>permission: "Read", granted: false</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Principal types (<code>user</code> vs. <code>group</code>) are preserved across both directions, ensuring that downstream vector databases and OpenCrawling's authoritative <code>McpAclEvaluator</code> enforce explicit deny precedence and group inheritance identically to OpenArch.
+      </p>
+
+      <h2><span class="section-num">05 /</span> Universal MCP Server: 9th Backend &amp; Dedicated OpenArch Tools</h2>
+      <p>
+        With Hyland OpenArch added as the <strong>9th pluggable backend</strong> (<code>spring.opencrawling.output.type=openarch</code>) in <code>oc-mcp-server</code>, AI agents and Copilots (Claude Desktop, Cursor, Windsurf, Spring AI, Antigravity) can query OpenArch repositories over SSE and Streamable HTTP using two patterns:
+      </p>
+      <ul>
+        <li><strong>Canonical SPI Tools</strong>: <code>secureVectorSearch</code>, <code>getDocumentContent</code>, and <code>listAccessibleSources</code> automatically delegate to <code>OpenArchMcpSearchBackend</code>, embedding the user's natural-language query into a dense vector, calling OpenArch's <code>POST /api/query/embedding</code> endpoint, hydrating parent documents, and running <code>McpAclEvaluator.isAuthorized(...)</code> before returning any chunk.</li>
+        <li><strong>Dedicated OpenArch MCP Tools</strong>: Registered directly on <code>McpVectorServer</code> for direct repository interaction:
+          <ul>
+            <li><code>openarch_search(query, userPrincipal, userRoles, maxResults, minScore)</code>: Executes hybrid semantic + HXQL search against Hyland OpenArch with Zero-Trust caller ACL enforcement.</li>
+            <li><code>openarch_fetch_document(documentId, userPrincipal, userRoles)</code>: Fetches full document metadata and content by OpenArch UUID or <code>openarch://</code> URI after verifying caller read permissions.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2><span class="section-num">06 /</span> Configuration, Admin UI &amp; CLI</h2>
+      <p>
+        Configuring both the source and output connectors in <code>application.yml</code> takes only a few lines:
+      </p>
+      <pre><code>spring:
+  opencrawling:
+    # 1. Hyland OpenArch Source Repository Connector
+    connector:
+      openarch:
+        enabled: true
+        endpoint-url: http://localhost:9080
+        repository-id: default
+        username: Administrator
+        password: ${OPENARCH_PASSWORD:Administrator}
+        crawl-mode: QUERY
+        hxql-query: "SELECT * FROM SysFile"
+        batch-size: 100
+        include-acls: true
+        include-content-stream: true
+
+    # 2. Hyland OpenArch Output Connector &amp; Parquet Vector Bridge
+    output:
+      type: openarch
+      openarch:
+        enabled: true
+        endpoint-url: http://localhost:9080
+        repository-id: default
+        username: Administrator
+        password: ${OPENARCH_PASSWORD:Administrator}
+        root-folder-id: "00000000-0000-0000-0000-000000000000"
+        parquet-batch-threshold: 50
+        embeddings-type: mxbai-embed-large
+        dimensions: 1024
+        upsert: true
+        sync-acls: true
+        upload-binaries: true</code></pre>
+
+      <p>
+        We have also updated the <strong>React Admin UI</strong> (`ConnectorForm.tsx`) with dedicated Hyland OpenArch configuration forms and a live <em>"Test OpenArch Connectivity"</em> button, and enhanced the <strong>OpenCrawling CLI</strong> (`oc-cli`) with a new <code>test</code> subcommand alias:
+      </p>
+      <pre><code># Verify Hyland OpenArch connectivity from the CLI
+oc connector test OpenArch_Repository
+
+# Trigger an on-demand crawl job
+oc crawl start OpenArch_Repository</code></pre>
+
+      <div class="callout-box success">
+        <span class="callout-icon">✅</span>
+        <p><strong>End-to-End Integration Test Suites:</strong> You can validate both the in-process integration and the full multi-container decoupled Kafka + Ollama + OpenArch Parquet pipeline locally using <code>./scripts/test-openarch-integration.sh</code> and <code>./scripts/test-openarch-decoupled.sh</code> (powered by <code>oc-openarch-output-connector/docker/docker-compose-decoupled-with-openarch.yml</code>).</p>
+      </div>
+
+      <!-- CTA -->
+      <div class="article-cta">
+        <h3>Ready to Bridge Hyland OpenArch with Enterprise AI?</h3>
+        <p>Explore the Hyland OpenArch integration documentation in the OpenCrawling Wiki, test drive the Live Ingestion Simulator, or star the repository on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/OpenCrawling/opencrawling/wiki/Hyland-OpenArch-Integration" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read the Wiki Guide</a>
+          <a href="../index.html#simulator" class="btn btn-secondary">Try in Live Simulator</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

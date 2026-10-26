@@ -6,8 +6,8 @@
   <title>OpenCrawling® Secure MCP Server - Pluggable Zero-Trust Context Retrieval for AI Agents</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and the Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval with authoritative ACL filtering across 8 target vector engines.">
-  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, OpenSearch, Solr, Luxir, Streamable HTTP, OpenCrawling">
+  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and the Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval with authoritative ACL filtering across 9 target vector & search engines.">
+  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/mcp.html">
 
@@ -17,7 +17,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "OpenCrawling Secure MCP Server - Pluggable Zero-Trust Context Retrieval for AI Agents",
-    "description": "Discover the OpenCrawling Secure MCP Server built on Spring AI and Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval across 8 target vector databases.",
+    "description": "Discover the OpenCrawling Secure MCP Server built on Spring AI and Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval across 9 target vector and search databases.",
     "url": "https://opencrawling.org/mcp.html",
     "author": {
       "@type": "Organization",
@@ -35,14 +35,14 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://opencrawling.org/mcp.html">
   <meta property="og:title" content="OpenCrawling® Secure MCP Server - Pluggable Zero-Trust Context Retrieval">
-  <meta property="og:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP) across 8 target vector databases.">
+  <meta property="og:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP) across 9 target vector and search databases.">
   <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://opencrawling.org/mcp.html">
   <meta property="twitter:title" content="OpenCrawling® Secure MCP Server - Pluggable Zero-Trust Context Retrieval">
-  <meta property="twitter:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP) across 8 target vector databases.">
+  <meta property="twitter:description" content="Provide secure, ACL-filtered enterprise data retrieval to LLM agents using Spring AI and the Model Context Protocol (MCP) across 9 target vector and search databases.">
   <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
 
   <!-- SVG Favicon -->
@@ -601,7 +601,7 @@
         Pluggable Zero-Trust Context Retrieval
       </div>
       <h1>Secure Model Context Protocol (MCP) Server</h1>
-      <p>Give AI models and autonomous agents direct access to enterprise knowledge databases while authoritatively enforcing Zero-Trust Access Control Lists (ACLs) with explicit deny precedence across 8 target vector engines.</p>
+      <p>Give AI models and autonomous agents direct access to enterprise knowledge databases while authoritatively enforcing Zero-Trust Access Control Lists (ACLs) with explicit deny precedence across 9 target vector &amp; search engines.</p>
       
       <div class="mcp-hero-actions">
         <a href="https://github.com/OpenCrawling/opencrawling/wiki/Model-Context-Protocol" target="_blank" rel="noopener noreferrer" class="btn-primary">
@@ -621,8 +621,8 @@
         <div class="mcp-card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
         </div>
-        <h3>Pluggable 8 Vector Engines</h3>
-        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, and Luxir with query-time Ollama embedding generation.</p>
+        <h3>Pluggable 9 Vector &amp; Search Engines</h3>
+        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch with query-time Ollama embedding generation.</p>
       </div>
 
       <div class="mcp-card">
@@ -739,6 +739,13 @@
               <td><code>LuxirClient</code> (<code>POST /collections/{collection}/_search</code> with KNN payload)</td>
               <td>Ollama / Spring AI</td>
             </tr>
+            <tr>
+              <td><strong>Hyland OpenArch</strong></td>
+              <td><span class="store-badge">openarch</span></td>
+              <td><code>OpenArchMcpSearchBackend</code></td>
+              <td><code>OpenArchClient</code> (<code>POST /api/query/embedding</code> + <code>GET /api/documents/{id}</code> with <code>sys_acl</code> hydration)</td>
+              <td>Ollama / Spring AI</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -773,6 +780,7 @@ flowchart TD
         OS["OpenSearch 2.x & 3.x"]
         SOL["Apache Solr"]
         LUX["Luxir C++ Engine"]
+        OA["Hyland OpenArch"]
     end
 
     Agent <-->|"JSON-RPC 2.0 (Streamable HTTP / SSE)"| Transport
@@ -788,6 +796,7 @@ flowchart TD
     SPI --> OS
     SPI --> SOL
     SPI --> LUX
+    SPI --> OA
     PG --> Guard
     VES --> Guard
     QD --> Guard
@@ -795,6 +804,7 @@ flowchart TD
     OS --> Guard
     SOL --> Guard
     LUX --> Guard
+    OA --> Guard
     Guard -->|"Authorized Context JSON"| Transport
         </div>
       </div>
@@ -803,7 +813,7 @@ flowchart TD
     <!-- MCP Tools Specification Reference -->
     <section class="mcp-section">
       <h2 class="mcp-section-title">Exposed MCP Tools Specification</h2>
-      <p class="mcp-section-subtitle">The canonical knowledge retrieval, backward-compatible Vespa, and AIOps observability tools advertised via <code>tools/list</code>.</p>
+      <p class="mcp-section-subtitle">The canonical knowledge retrieval, Hyland OpenArch repository, backward-compatible Vespa, and AIOps observability tools advertised via <code>tools/list</code>.</p>
 
       <div class="tools-grid">
 
@@ -957,7 +967,18 @@ flowchart TD
           </table>
         </div>
 
-        <!-- Tool 4: Vespa Native Delegate -->
+        <!-- Tool 4: Hyland OpenArch Native Tools -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">openarch_search &amp; openarch_fetch_document</span>
+              <span class="tool-badge">Hyland OpenArch Native</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Dedicated tools for querying Hyland OpenArch directly: <code>openarch_search(query, userPrincipal, userRoles, maxResults, minScore)</code> executes semantic + HXQL search via <code>/api/query/embedding</code>, and <code>openarch_fetch_document(documentId, userPrincipal, userRoles)</code> retrieves full <code>SysFile</code> metadata &amp; text after evaluating <code>sys_acl</code> permissions.</p>
+        </div>
+
+        <!-- Tool 5: Vespa Native Delegate -->
         <div class="tool-spec-card">
           <div class="tool-header">
             <div class="tool-name-tag">
