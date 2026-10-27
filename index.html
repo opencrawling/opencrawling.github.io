@@ -356,19 +356,21 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="110" width="120" height="246" rx="10" class="node-bg" />
-            <text x="70" y="130" class="node-title">Sources</text>
-            <text x="70" y="148" class="node-sub">Hyland OpenArch 🟣</text>
-            <text x="70" y="165" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="182" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="199" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="216" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="233" class="node-sub">File System</text>
-            <text x="70" y="250" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="267" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="284" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="301" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="318" class="node-sub">StormCrawler🕷️</text>
+            <rect x="10" y="98" width="120" height="270" rx="10" class="node-bg" />
+            <text x="70" y="118" class="node-title">Sources</text>
+            <text x="70" y="136" class="node-sub">SharePoint Online 🌐</text>
+            <text x="70" y="152" class="node-sub">M-Files Vault 🗂️</text>
+            <text x="70" y="168" class="node-sub">Hyland OpenArch 🟣</text>
+            <text x="70" y="184" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="200" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="216" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="232" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="248" class="node-sub">File System</text>
+            <text x="70" y="264" class="node-sub">Alfresco ACS/APS</text>
+            <text x="70" y="280" class="node-sub">Apache Iceberg🧊</text>
+            <text x="70" y="296" class="node-sub">Flowable BPMN🔄</text>
+            <text x="70" y="312" class="node-sub">Camunda BPMN⚡</text>
+            <text x="70" y="328" class="node-sub">StormCrawler🕷️</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -560,7 +562,9 @@
         <div class="sim-group">
           <label for="sim-source">1. Select Content Source</label>
           <select id="sim-source">
-            <option value="openarch" selected>Hyland OpenArch (HXQL &amp; Federated Repository)</option>
+            <option value="sharepoint" selected>Microsoft SharePoint Online (Microsoft Graph v1.0)</option>
+            <option value="mfiles">M-Files Vault (MFWS REST &amp; VAF)</option>
+            <option value="openarch">Hyland OpenArch (HXQL &amp; Federated Repository)</option>
             <option value="grpc-push">gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
             <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
@@ -810,10 +814,11 @@ public class SampleRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Hyland OpenArch</strong>, <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Microsoft SharePoint Online</strong>, <strong>M-Files</strong>, <strong>Hyland OpenArch</strong>, <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Zero-Trust Security</span>
+          <span class="std-badge">🌐 SharePoint Online &amp; M-Files</span>
           <span class="std-badge">🟣 Hyland OpenArch &amp; Parquet</span>
           <span class="std-badge">📡 gRPC Push Streaming</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
@@ -833,6 +838,8 @@ public class SampleRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="sharepoint">SharePoint Online</button>
+              <button class="schema-tab-btn" data-schema="mfiles">M-Files</button>
               <button class="schema-tab-btn" data-schema="openarch">Hyland OpenArch</button>
               <button class="schema-tab-btn" data-schema="grpc">gRPC Push</button>
               <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
@@ -865,6 +872,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
 
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #0078D4, #06B6D4); color: #FFF;">Connector Release</span>
+          <span class="blog-date">October 27, 2026</span>
+          <span class="blog-read-time">9 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-sharepoint-repository-connector.html">Microsoft Graph v1.0 &amp; Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Microsoft SharePoint Online Repository Connector (<strong>oc-sharepoint-repository-connector</strong>). Built on Microsoft Graph v1.0 with Entra ID app-only <code>client_credentials</code> (<code>Sites.Selected</code> / <code>Sites.Read.All</code>), incremental <code>@odata.deltaLink</code> and permission-fingerprint <code>tree</code> crawl modes, custom list item columns (<code>sharepoint_field_*</code>), a shared <code>Retry-After</code> throttle gate across Java 25 Virtual Threads, fail-closed Zero-Trust ACL mapping (<code>SharePointSecurityMapper</code>), and a 6-tier verification suite with a 16-user RBAC oracle.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-sharepoint-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #0052CC, #3B82F6); color: #FFF;">Connector Release</span>
           <span class="blog-date">October 27, 2026</span>
@@ -1507,6 +1529,72 @@ public class SampleRepositoryConnector implements RepositoryConnector {
   "content": { "mimeType": "application/pdf", "text": "..." },
   "metadata": { "title": "Fiscal Strategy", "author": "..." },
   "security": { "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        sharepoint: {
+          file: 'sharepoint-ois-document.json',
+          code: `{
+  "id": "sharepoint://contoso.sharepoint.com,11111111-2222-3333,66666666-7777-8888/drives/b!drive123/items/01ABCDEF23456789",
+  "action": "UPSERT",
+  "source": {
+    "type": "sharepoint",
+    "instance": "https://graph.microsoft.com/v1.0",
+    "siteUrl": "https://contoso.sharepoint.com/sites/Engineering"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "claimCheckKey": "ofs://s3v/claims/sharepoint-01ABCDEF23456789.bin"
+  },
+  "metadata": {
+    "name": "Architecture-Decision-Record-012.pdf",
+    "title": "ADR 012 - Event Driven Ingestion",
+    "sharepoint.siteName": "Engineering",
+    "sharepoint.driveName": "Documents",
+    "sharepoint.path": "/Architecture/Architecture-Decision-Record-012.pdf",
+    "sharepoint.eTag": "\\"{D9B3F1E0-1234-4BCD-8EF0-112233445566},3\\"",
+    "sharepoint_field_Department": "Platform Engineering",
+    "sharepoint_field_Confidentiality": "Internal"
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "alice@contoso.com", "identityType": "user", "access": "read" },
+      { "identity": "dddd4444-eeee-5555-ffff-666666666666", "identityType": "group", "access": "read" },
+      { "identity": "sharepoint-group:contoso.sharepoint.com,11111111-2222-3333,66666666-7777-8888:7", "identityType": "group", "access": "read" }
+    ]
+  }
+}`
+        },
+        mfiles: {
+          file: 'mfiles-ois-document.json',
+          code: `{
+  "id": "mfiles://C0B3B52E-6512-4BD8-8F2B-2A8E9A349201/objects/0/48192",
+  "action": "UPSERT",
+  "source": {
+    "type": "mfiles",
+    "instance": "https://mfiles.example.com/REST",
+    "vaultGuid": "C0B3B52E-6512-4BD8-8F2B-2A8E9A349201"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "claimCheckKey": "ofs://s3v/claims/mfiles-48192-7.bin"
+  },
+  "metadata": {
+    "name": "Global Vendor NDA - Final Signed.pdf",
+    "mfiles.className": "Non-Disclosure Agreement",
+    "mfiles.version": "3",
+    "mfiles_prop_customer": "Cyberdyne Systems",
+    "mfiles_prop_contractValue": "150000",
+    "mfiles_prop_effectiveDate": "2026-05-01"
+  },
+  "security": {
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "identity": "mfiles:user:12", "identityType": "user", "access": "read" },
+      { "identity": "mfiles:group:5", "identityType": "group", "access": "read" },
+      { "identity": "mfiles:user:9", "identityType": "user", "access": "deny" }
+    ]
+  }
 }`
         },
         openarch: {

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft Graph v1.0 &amp; Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native Microsoft SharePoint Online Repository Connector (oc-sharepoint-repository-connector). Crawl document libraries via Microsoft Graph v1.0 delta and tree modes with Entra ID client_credentials, custom list item columns, shared Retry-After throttling gate, fail-closed Zero-Trust ACL mapping, Java 25 Virtual Threads, and 6-tier conformance &amp; RBAC oracle verification.">
+  <meta name="keywords" content="sharepoint online, sharepoint repository connector, microsoft graph v1.0, entra id, oauth2 client credentials, driveitem delta, zero-trust acls, sharepointsecuritymapper, java 25 virtual threads, structured task scope, open ingestion standard, enterprise rag, model context protocol">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-sharepoint-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-sharepoint-repository-connector.html">
+  <meta property="og:title" content="Microsoft Graph v1.0 &amp; Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native Microsoft SharePoint Online Repository Connector (oc-sharepoint-repository-connector). Crawl document libraries via Microsoft Graph v1.0 delta and tree modes with Entra ID client_credentials, custom list item columns, shared Retry-After throttling gate, fail-closed Zero-Trust ACL mapping, Java 25 Virtual Threads, and 6-tier conformance &amp; RBAC oracle verification.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-sharepoint-repository-connector.html">
+  <meta property="twitter:title" content="Microsoft Graph v1.0 &amp; Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Microsoft SharePoint Online Repository Connector (oc-sharepoint-repository-connector). Crawl document libraries via Microsoft Graph v1.0 delta and tree modes with Entra ID client_credentials, custom list item columns, shared Retry-After throttling gate, fail-closed Zero-Trust ACL mapping, Java 25 Virtual Threads, and 6-tier conformance &amp; RBAC oracle verification.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230078D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Microsoft Graph v1.0 & Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector",
+    "description": "Discover OpenCrawling's native Microsoft SharePoint Online Repository Connector (oc-sharepoint-repository-connector). Crawl document libraries via Microsoft Graph v1.0 delta and tree modes with Entra ID client_credentials, custom list item columns, shared Retry-After throttling gate, fail-closed Zero-Trust ACL mapping, Java 25 Virtual Threads, and 6-tier conformance & RBAC oracle verification.",
+    "datePublished": "2026-10-27",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-sharepoint-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #0078D4, #06B6D4); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #38BDF8, #06B6D4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #0078D4; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #38BDF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(0,120,212,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #7DD3FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,120,212,0.06); border-color: #0078D4; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #0078D4; color: #7DD3FC; background: rgba(0,120,212,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #38BDF8; }
+    .article-cta { background: rgba(0,120,212,0.06); border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #38BDF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(0,120,212,0.1); color: #38BDF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(56,189,248,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 27, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Microsoft Graph v1.0 &amp; Zero-Trust Enterprise RAG: Announcing the SharePoint Online Repository Connector</h1>
+      <p class="blog-article-lead">
+        Across the Fortune 500, <strong>Microsoft SharePoint Online</strong> is the backbone of collaborative enterprise documentation—housing architecture records, legal contracts, engineering specifications, and board policies. Today, we are thrilled to announce the official <strong>SharePoint Online Repository Connector (<code>oc-sharepoint-repository-connector</code>)</strong>! Crawl SharePoint Online document libraries via <strong>Microsoft Graph v1.0</strong> using least-privilege Entra ID app-only credentials (<code>Sites.Selected</code> or <code>Sites.Read.All</code>), track incremental changes via <code>@odata.deltaLink</code> and permission-fingerprint tree scans, extract custom SharePoint list item columns (<code>sharepoint_field_*</code>), coordinate concurrent Java 25 Virtual Threads through a shared <code>Retry-After</code> throttle gate, and enforce fail-closed Zero-Trust permissions across every vector store and MCP agent. 🌐🔒
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">SharePoint Online &amp; Microsoft Graph v1.0 Enterprise Ingestion Pipeline</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Microsoft Entra ID + Graph v1.0 (/delta &amp; /permissions)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">SharePointRepositoryConnector (Shared Throttle Gate)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Pre-Signed Download + TempFileInputStream</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Claim-Check Store (Ozone / S3)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">OIS Document + SharePointSecurityMapper</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Stores &amp; Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Why SharePoint Online Needs a Fail-Closed, Graph-Native RAG Connector</h2>
+      <p>
+        Connecting <strong>Microsoft SharePoint Online</strong> to an enterprise Retrieval-Augmented Generation (RAG) pipeline requires far more than listing files in a drive. Production SharePoint tenants expose subtle security, throttling, and synchronization challenges that naive scripts fail to handle safely:
+      </p>
+      <ul>
+        <li><strong>Complex Multi-Facet Permissions:</strong> A single SharePoint file can be shared simultaneously with individual Microsoft Entra users (exposed via <code>user.email</code> or claims like <code>i:0#.f|membership|alice@contoso.com</code>), Entra security and M365 groups (<code>c:0t.c|tenant|&lt;guid&gt;</code>), site-local SharePoint groups (<code>siteGroup</code>, e.g., <em>Engineering Members</em>), specific-people sharing links, organization-wide links, and anonymous links.</li>
+        <li><strong>Display Name Spoofing &amp; Broad-Grant Over-Exposure:</strong> Treating human display names or unmapped organization/anonymous sharing links as principals can leak confidential files across the entire tenant. Every principal must be anchored to an immutable identity (UPN/email, Entra object GUID, or site-qualified group ID) and fail closed by default.</li>
+        <li><strong>Permission-Only Changes vs. Least-Privilege Scopes:</strong> Microsoft Graph's <code>driveItem/delta</code> feed only reports permission-only changes when the caller holds <code>Sites.FullControl.All</code>. Enterprises running with least-privilege <code>Sites.Selected</code> or <code>Sites.Read.All</code> need a way to detect and reconcile ACL changes without re-downloading unchanged file content.</li>
+        <li><strong>Tenant-Wide Graph Throttling &amp; Token Leakage:</strong> Flooding Microsoft Graph from concurrent worker threads without a shared <code>Retry-After</code> gate triggers cascading <code>429 Too Many Requests</code> throttling, while forwarding Graph bearer tokens to pre-authenticated CDN download URLs violates security best practices.</li>
+      </ul>
+
+      <p>
+        The new <code>oc-sharepoint-repository-connector</code> was engineered on Java 25 and the OpenCrawling SPI to address every one of these requirements—backed by a 6-tier verification suite including official Microsoft Graph docs conformance, OpenAPI schema validation, Microsoft Dev Proxy chaos injection, and an independent 16-user RBAC oracle.
+      </p>
+
+      <h2><span class="section-num">2. </span>Entra ID App-Only Authentication &amp; Site / Library Discovery</h2>
+      <p>
+        <code>GraphClient</code> authenticates against Microsoft Entra ID (<code>https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token</code>) using the OAuth 2.0 <code>client_credentials</code> grant for <code>https://graph.microsoft.com/.default</code>. It supports both tenant-wide <code>Sites.Read.All</code> and least-privilege <code>Sites.Selected</code> application permissions, caches the bearer token in memory, refreshes it proactively before expiry, and re-acquires it automatically once on HTTP <code>401</code>.
+      </p>
+      <p>
+        Target sites can be specified either by their human-friendly SharePoint URL (<code>site-url</code>, e.g., <code>https://contoso.sharepoint.com/sites/Engineering</code>, resolved via <code>GET /sites/{hostname}:/{server-relative-path}</code>) or by their composite Graph Site ID (<code>site-id</code>). By default, the connector discovers and crawls every <code>documentLibrary</code> drive on the site, or filters to specific libraries via <code>drive-ids</code> or <code>drive-names</code> (e.g., <code>Documents</code>, <code>Policies</code>).
+      </p>
+
+      <h2><span class="section-num">3. </span>Two Complementary Crawl Modes: <code>delta</code> and <code>tree</code></h2>
+      <p>
+        <code>SharePointRepositoryConnector</code> provides two crawl modes via <code>crawl-mode</code>, backed by persistent per-drive state in <code>SharePointCrawlState</code> (<code>data/sharepoint-state/</code>):
+      </p>
+
+      <h3>1. Incremental Delta Crawl (<code>delta</code>, default)</h3>
+      <p>
+        Walks <code>GET /drives/{driveId}/root/delta</code> across <code>@odata.nextLink</code> pages and persists the final <code>@odata.deltaLink</code> together with each file's <code>eTag</code>, path, and SHA-256 permission fingerprint:
+      </p>
+      <ul>
+        <li><strong>New or Modified Files:</strong> Emitted as OIS <code>action: "UPSERT"</code> documents (and skipped when both <code>eTag</code> and the permission fingerprint match the stored state).</li>
+        <li><strong>Cascading Folder &amp; File Deletions:</strong> Items carrying a <code>deleted</code> facet or <code>@removed</code> emit OIS <code>action: "DELETE"</code> tombstones. When a folder is deleted, the connector cascades <code>DELETE</code> tombstones to every file previously recorded under that folder path.</li>
+        <li><strong>Moves &amp; Renames Without Redundant Downloads:</strong> When a file or parent folder is moved or renamed without content or ACL changes, tracked paths are updated without re-downloading binaries.</li>
+        <li><strong><code>410 Gone</code> Expired Delta Token Recovery:</strong> If a delta token expires, the connector follows the <code>Location</code> header (or restarts from <code>/root/delta</code>), reconciles all live items against stored state, emits <code>UPSERT</code> only for changed items, and emits <code>DELETE</code> tombstones for items that disappeared while the token was expired.</li>
+      </ul>
+
+      <h3>2. Folder Tree Traversal &amp; Permission-Only Reconciliation (<code>tree</code>)</h3>
+      <p>
+        Traverses <code>GET /drives/{driveId}/root/children</code> (or <code>/root:/{path}:/children</code> when <code>root-folder-path</code> is set), recursing into subfolders when <code>recursive: true</code>. When combined with <code>incremental-enabled: true</code>, <code>tree</code> mode compares each file's current <code>eTag</code> and SHA-256 permission fingerprint against stored state—re-emitting files whose permissions changed even when their <code>eTag</code> did not, and emitting <code>DELETE</code> tombstones for vanished files.
+      </p>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <p><strong>Least-Privilege Permission Reconciliation:</strong> Because Microsoft Graph delta only surfaces permission-only changes to apps holding <code>Sites.FullControl.All</code>, teams running with least-privilege <code>Sites.Read.All</code> or <code>Sites.Selected</code> can run frequent <code>delta</code> crawls for fast content sync and schedule a periodic incremental <code>tree</code> crawl to reconcile permission-only updates without re-indexing unchanged files.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">4. </span>SharePoint List Item Columns &amp; Secure Pre-Signed Downloads</h2>
+      <p>
+        When <code>include-custom-fields: true</code> (default) is enabled, <code>SharePointDocumentBuilder</code> fetches <code>GET /drives/{driveId}/items/{itemId}/listItem?$expand=fields</code> and maps custom SharePoint columns into OIS metadata under <code>sharepoint_field_&lt;InternalName&gt;</code> (configurable via <code>field-prefix</code>). Complex person, lookup, and managed-metadata fields are automatically reduced to their clean display labels, while internal SharePoint system properties (<code>@odata.*</code>, <code>_UIVersionString</code>, <code>DocIcon</code>, <code>Edit</code>) are stripped.
+      </p>
+      <p>
+        For binary content (<code>include-content: true</code>), <code>GraphClient</code> streams bytes from the pre-authenticated <code>@microsoft.graph.downloadUrl</code> <strong>without forwarding the Microsoft Graph <code>Authorization: Bearer</code> header</strong> (falling back to <code>GET /drives/{driveId}/items/{itemId}/content</code> <code>302</code> redirect if the pre-signed URL has expired). Content is spooled to a size-capped temporary file (<code>TempFileInputStream</code>, bounded by <code>max-file-size-bytes</code>, default 50 MB) that deletes itself on stream close, and handed to the OpenCrawling Claim-Check store (Apache Ozone / S3) and Apache Tika 4.
+      </p>
+
+      <h2><span class="section-num">5. </span>Fail-Closed Zero-Trust Security Mapping (<code>SharePointSecurityMapper</code>)</h2>
+      <p>
+        For every crawled file (<code>include-acls: true</code>), <code>SharePointSecurityMapper</code> evaluates <code>GET /drives/{driveId}/items/{itemId}/permissions</code> on a strict <strong>fail-closed</strong> basis. Only roles that grant content read access (<code>read</code>, <code>write</code>, <code>owner</code>, <code>sp.full control</code>, <code>sp.contribute</code>, <code>sp.read</code>) are accepted; metadata-only or custom roles such as <code>sp.restricted view</code> are ignored:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Graph Permission Facet</th>
+            <th>Emitted OIS Principal (<code>identity</code>)</th>
+            <th><code>identityType</code></th>
+            <th>Security Behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Person</strong> (<code>grantedToV2.user</code> / <code>siteUser</code>)</td>
+            <td>Lower-case email/UPN (from <code>user.email</code> or <code>i:0#.f|membership|&lt;upn&gt;</code>) <strong>and</strong> Entra object ID (<code>user.id</code>)</td>
+            <td><code>user</code></td>
+            <td>Display names and numeric <code>siteUser.id</code> are <strong>never</strong> used as principals</td>
+          </tr>
+          <tr>
+            <td><strong>Entra Security / M365 Group</strong> (<code>grantedToV2.group</code> or claim <code>c:0t.c|tenant|&lt;guid&gt;</code>)</td>
+            <td>Entra group object ID (<code>&lt;guid&gt;</code>)</td>
+            <td><code>group</code></td>
+            <td>Matches Entra group GUIDs in user JWT <code>groups</code> claims</td>
+          </tr>
+          <tr>
+            <td><strong>SharePoint Site Group</strong> (<code>grantedToV2.siteGroup</code>)</td>
+            <td><code>sharepoint-group:&lt;siteId&gt;:&lt;siteGroup.id&gt;</code></td>
+            <td><code>group</code></td>
+            <td>Site-qualified so numeric site group IDs never collide across sites</td>
+          </tr>
+          <tr>
+            <td><strong>Specific-People Link</strong> (<code>link.scope = "users"</code>)</td>
+            <td>Each recipient in <code>grantedToIdentitiesV2</code></td>
+            <td><code>user</code> / <code>group</code></td>
+            <td>Grants access strictly to listed link recipients</td>
+          </tr>
+          <tr>
+            <td><strong>Broad Access Grants</strong> (<em>Everyone</em>, <em>Everyone except external</em>, <code>organization</code> / <code>anonymous</code> links)</td>
+            <td>Configured <code>*-identity</code> property</td>
+            <td>*(as configured)*</td>
+            <td><strong>Ignored by default (fail-closed)</strong> unless explicitly mapped</td>
+          </tr>
+          <tr>
+            <td><strong>Empty / Unreadable Permissions</strong></td>
+            <td><code>fallback-principals</code> or nobody</td>
+            <td>—</td>
+            <td><strong>Never marked public by default</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">6. </span>Shared Throttling Gate &amp; Java 25 Structured Concurrency</h2>
+      <p>
+        Drive items are enriched concurrently using Java 25 <code>StructuredTaskScope.open()</code> and <code>ObservabilityTask.observed(...)</code>, bounded by a configurable <code>Semaphore</code> (<code>parallelism</code>, default <code>4</code>). Every request carries Microsoft's recommended ISV <code>User-Agent</code> header (<code>ISV|OpenCrawling|OpenCrawling-SharePoint-Connector/1.0</code>) and a per-request <code>client-request-id</code> UUID.
+      </p>
+      <p>
+        Crucially, all concurrent Virtual Thread workers share a <strong>single coordinated throttle gate</strong> inside <code>GraphClient</code>: when any request receives HTTP <code>429 Too Many Requests</code>, <code>503 Service Unavailable</code>, or <code>504 Gateway Timeout</code>, <strong>all workers pause</strong> until the server's <code>Retry-After</code> window (with a 1-second floor) has elapsed before retrying with exponential backoff and jitter. Server errors (<code>500</code>, <code>502</code>, <code>507</code>) fail the item so the <code>@odata.deltaLink</code> never advances past an unindexed file.
+      </p>
+
+      <h2><span class="section-num">7. </span>Sample OIS Document Payload</h2>
+      <pre><code>{
+  "id": "sharepoint://contoso.sharepoint.com,11111111-2222-3333-4444-555555555555,66666666-7777-8888-9999-000000000000/drives/b!drive123/items/01ABCDEF23456789",
+  "action": "UPSERT",
+  "acl": "alice@contoso.com,aaaa1111-bbbb-2222-cccc-333333333333,dddd4444-eeee-5555-ffff-666666666666,sharepoint-group:contoso.sharepoint.com,11111111-2222-3333-4444-555555555555,66666666-7777-8888-9999-000000000000:7",
+  "metadata": {
+    "name": ["Architecture-Decision-Record-012.pdf"],
+    "title": ["ADR 012 - Event Driven Ingestion"],
+    "mimeType": ["application/pdf"],
+    "sharepoint.siteId": ["contoso.sharepoint.com,11111111-2222-3333-4444-555555555555,66666666-7777-8888-9999-000000000000"],
+    "sharepoint.siteName": ["Engineering"],
+    "sharepoint.driveId": ["b!drive123"],
+    "sharepoint.driveName": ["Documents"],
+    "sharepoint.itemId": ["01ABCDEF23456789"],
+    "sharepoint.path": ["/Architecture/Architecture-Decision-Record-012.pdf"],
+    "sharepoint.eTag": ["\"{D9B3F1E0-1234-4BCD-8EF0-112233445566},3\""],
+    "sharepoint.quickXorHash": ["aGVsbG8gd29ybGQ="],
+    "sharepoint_identity_users": ["alice@contoso.com", "aaaa1111-bbbb-2222-cccc-333333333333"],
+    "sharepoint_identity_groups": [
+      "dddd4444-eeee-5555-ffff-666666666666",
+      "sharepoint-group:contoso.sharepoint.com,11111111-2222-3333-4444-555555555555,66666666-7777-8888-9999-000000000000:7"
+    ],
+    "sharepoint_field_Title": ["ADR 012 - Event Driven Ingestion"],
+    "sharepoint_field_Department": ["Platform Engineering"],
+    "sharepoint_field_Confidentiality": ["Internal"],
+    "sharepoint_field_ReviewStatus": ["Approved"]
+  },
+  "security": {
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "alice@contoso.com", "identityType": "user", "access": "read" },
+      { "identity": "aaaa1111-bbbb-2222-cccc-333333333333", "identityType": "user", "access": "read" },
+      { "identity": "dddd4444-eeee-5555-ffff-666666666666", "identityType": "group", "access": "read" },
+      { "identity": "sharepoint-group:contoso.sharepoint.com,11111111-2222-3333-4444-555555555555,66666666-7777-8888-9999-000000000000:7", "identityType": "group", "access": "read" }
+    ]
+  }
+}</code></pre>
+
+      <h2><span class="section-num">8. </span>6-Tier Verification: OpenAPI Conformance, Dev Proxy Chaos &amp; 16-User RBAC Oracle</h2>
+      <p>
+        To verify production fidelity without requiring a live Microsoft 365 tenant in CI, the connector ships with a 6-tier verification suite:
+      </p>
+      <pre><code># 1. Unit, MockWebServer &amp; verbatim Microsoft Graph documentation examples
+$ mvn test -pl oc-sharepoint-repository-connector -am
+
+# 2. Stateful Graph v1.0 Mock + Microsoft OpenAPI schema &amp; docs conformance
+$ ./scripts/test-sharepoint-repository-connector.sh
+
+# 3. Microsoft Dev Proxy chaos &amp; Retry-After throttling test (50% error rate)
+$ ./scripts/test-sharepoint-devproxy.sh
+
+# 4. Independent mock-graph-server + 16-user RBAC oracle comparison (144 access checks)
+$ ./scripts/test-sharepoint-independent-mock.sh
+
+# 5. Full decoupled Docker Compose pipeline (Kafka + Tika + Ollama + pgvector + Secure MCP)
+$ ./scripts/test-sharepoint-decoupled.sh</code></pre>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Zero False Allows, Zero False Denies:</strong> In <code>test-sharepoint-independent-mock.sh</code>, <code>compare_acl_oracle.py</code> evaluates 16 distinct user personas across 9 SharePoint files (144 authorization decisions) against an independent SharePoint RBAC oracle—confirming 100% agreement with <code>McpAclEvaluator</code>.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Connect SharePoint Online to Enterprise RAG?</h3>
+        <p>Explore the SharePoint Online Repository Connector documentation on the OpenCrawling Wiki, test drive the interactive simulator, or star the project on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/OpenCrawling/opencrawling/wiki/SharePoint-Online-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read SharePoint Wiki Guide</a>
+          <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>

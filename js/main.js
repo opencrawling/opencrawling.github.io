@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland OpenArch via paged HXQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, SharePoint, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, relational records, process variables, workflow attachments, and extracts native Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -212,16 +212,30 @@ const SIMULATOR_DATA = {
   },
   sharepoint: {
     files: [
-      { name: "hr_salary_reviews_2026.xlsx", size: "3.4 MB", acls: ["HR-Admins:Read", "Exec-Board:Read"] },
-      { name: "technical_blueprint_v4.docx", size: "12.8 MB", acls: ["Dev-Group:Read", "Architects:Read"] },
-      { name: "partner_agreement_draft.pdf", size: "1.1 MB", acls: ["Legal-Team:ReadWrite"] }
+      { name: "sharepoint://contoso.sharepoint.com,.../drives/b!drive123/items/01ABCDEF (Architecture-Decision-Record-012.pdf) [Graph /delta]", size: "482 KB", acls: ["user:alice@contoso.com:read", "group:dddd4444-eeee-5555-ffff-666666666666:read", "group:sharepoint-group:contoso.sharepoint.com,...:7:read"] },
+      { name: "sharepoint://contoso.sharepoint.com,.../drives/b!drive123/items/01SPEC99 (Cloud_Security_Spec_2026.docx) [listItem/fields]", size: "2.4 MB", acls: ["user:bob@contoso.com:read", "group:aaaa9999-bbbb-8888-cccc-777777777777:read"] },
+      { name: "sharepoint://contoso.sharepoint.com,.../drives/b!drive123/items/01OLD404 (Deprecated_Runbook_v1.pdf) [DELETE Tombstone]", size: "0 B", acls: ["group:dddd4444-eeee-5555-ffff-666666666666:read"] }
     ],
     logs: {
-      scan: "SharePoint Crawler triggered. Requesting graph deltas, resolving folder permission SIDs...",
-      claimCheck: "Crawler published IngestionMessage to Kafka 'opencrawling-ingestion' containing claim check URI reference.",
-      tika: "IngestionConsumer fetched reference. Read Excel/Word binary from storage, parsed text via Apache Tika, split into token chunks, published ChunkMessages to 'opencrawling-chunks'.",
-      ollama: "EmbeddingConsumer consumed chunks. Dispatched batches to local Ollama server (mxbai-embed-large). Generated 1024-dimension vectors, published to 'opencrawling-embedded'.",
-      vector: "VectorStoreWriterConsumer consumed embedded chunks. Stored vectors, metadata attributes, and ACL tokens into pgvector."
+      scan: "SharePointRepositoryConnector triggered. Authenticated with Microsoft Entra ID via OAuth 2.0 client_credentials (scope: https://graph.microsoft.com/.default, User-Agent: ISV|OpenCrawling|OpenCrawling-SharePoint-Connector/1.0). Resolved site 'https://contoso.sharepoint.com/sites/Engineering' and walking GET /drives/{driveId}/root/delta...",
+      claimCheck: "Crawler processed delta page via Java 25 StructuredTaskScope and shared Retry-After throttle gate. Streamed file bytes from pre-authenticated @microsoft.graph.downloadUrl (no Bearer token forwarded) to TempFileInputStream / ClaimCheckStore, extracted sharepoint_field_* listItem columns, mapped fail-closed Entra & siteGroup ACLs via SharePointSecurityMapper, persisted @odata.deltaLink, and published OIS UPSERT & DELETE tombstones to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Parsed PDF & DOCX binaries in isolated child JVMs via Apache Tika 4 PipesForkParser, preserved sharepoint_field_Department and sharepoint_field_Confidentiality metadata, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed SharePoint Online chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors stamped with Entra user UPNs, group object GUIDs, and site-qualified SharePoint group IDs; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted SharePoint Online embeddings, sharepoint_field_* metadata, and Zero-Trust ACL principals into vector store; purged deleted delta tombstone (01OLD404) from index."
+    }
+  },
+  mfiles: {
+    files: [
+      { name: "mfiles://C0B3B52E-.../objects/0/48192 (Global Vendor NDA - Final Signed.pdf) [SFD / v3]", size: "1.48 MB", acls: ["user:mfiles:user:12:read", "group:mfiles:group:5:read", "user:mfiles:user:9:deny"] },
+      { name: "mfiles://C0B3B52E-.../objects/0/48193/files/11 (MSA_2026_Exhibit_A.docx) [MFD Child / parentId: 48193]", size: "920 KB", acls: ["group:mfiles:group:5:read"] },
+      { name: "mfiles://C0B3B52E-.../objects/0/48150 [DELETE Tombstone / d=include]", size: "0 B", acls: ["group:mfiles:group:5:read"] }
+    ],
+    logs: {
+      scan: "MFilesRepositoryConnector triggered. Authenticated against MFWS REST API (/server/authenticationtokens) for vault {C0B3B52E-6512-4BD8-8F2B-2A8E9A349201}. Executing class search with recursive last-modified time-window splitting (p21>= / p21<=) where MoreResults=true...",
+      claimCheck: "Crawler enriched object batch via Java 25 StructuredTaskScope in a single MFWS session. Normalized typed MFDataType properties (mfiles_prop_*), intersected active ACL components fail-closed via MFilesSecurityMapper, spooled SFD & MFD files to TempFileInputStream / ClaimCheckStore, and published OIS UPSERT & DELETE tombstones to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim references. Extracted text via Apache Tika 4 PipesForkParser, preserved mfiles.parentId multi-file lineage and mfiles_prop_* metadata, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed M-Files chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension embeddings with Zero-Trust allow/deny rules; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted M-Files vectors, typed property metadata, and Zero-Trust ACLs into target vector store; purged deleted object tombstone (48150) and cleanly closed MFWS session (DELETE /session)."
     }
   },
   s3: {
