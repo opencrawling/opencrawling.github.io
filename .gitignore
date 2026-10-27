@@ -1,0 +1,11 @@
+# Eclipse / MyEclipse
+.project
+.classpath
+.settings/
+
+# macOS / OS metadata
+.DS_Store
+Thumbs.db
+
+# Node dependencies
+node_modules/
