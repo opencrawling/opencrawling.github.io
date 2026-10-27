@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metadata-Driven Knowledge Work Automation Meets Enterprise RAG: Announcing the M-Files Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native M-Files Repository Connector (oc-mfiles-repository-connector). Ingest M-Files vaults via MFWS REST API and Vault Application Framework (VAF), with recursive time-window splitting, single- and multi-file document lineage, typed property normalization, fail-closed Zero-Trust ACL component intersection, Java 25 Virtual Threads, and incremental tombstone synchronization.">
+  <meta name="keywords" content="m-files, mfiles repository connector, mfws rest api, vault application framework, vaf, knowledge work automation, metadata-driven ecm, multi-file documents, zero-trust acls, java 25 virtual threads, structured task scope, open ingestion standard, enterprise rag, model context protocol">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-mfiles-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-mfiles-repository-connector.html">
+  <meta property="og:title" content="Metadata-Driven Knowledge Work Automation Meets Enterprise RAG: Announcing the M-Files Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native M-Files Repository Connector (oc-mfiles-repository-connector). Ingest M-Files vaults via MFWS REST API and Vault Application Framework (VAF), with recursive time-window splitting, single- and multi-file document lineage, typed property normalization, fail-closed Zero-Trust ACL component intersection, Java 25 Virtual Threads, and incremental tombstone synchronization.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-mfiles-repository-connector.html">
+  <meta property="twitter:title" content="Metadata-Driven Knowledge Work Automation Meets Enterprise RAG: Announcing the M-Files Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native M-Files Repository Connector (oc-mfiles-repository-connector). Ingest M-Files vaults via MFWS REST API and Vault Application Framework (VAF), with recursive time-window splitting, single- and multi-file document lineage, typed property normalization, fail-closed Zero-Trust ACL component intersection, Java 25 Virtual Threads, and incremental tombstone synchronization.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230052CC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cpolyline points='10 9 9 9 8 9'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Metadata-Driven Knowledge Work Automation Meets Enterprise RAG: Announcing the M-Files Repository Connector",
+    "description": "Discover OpenCrawling's native M-Files Repository Connector (oc-mfiles-repository-connector). Ingest M-Files vaults via MFWS REST API and Vault Application Framework (VAF), with recursive time-window splitting, single- and multi-file document lineage, typed property normalization, fail-closed Zero-Trust ACL component intersection, Java 25 Virtual Threads, and incremental tombstone synchronization.",
+    "datePublished": "2026-10-27",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-mfiles-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #0052CC, #3B82F6); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #60A5FA, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #2563EB; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #60A5FA; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #60A5FA; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(37,99,235,0.12); border: 1px solid rgba(59,130,246,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #93C5FD; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(37,99,235,0.06); border-color: #2563EB; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #60A5FA; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #2563EB; color: #93C5FD; background: rgba(37,99,235,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #7DD3FC; background: rgba(56,189,248,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #60A5FA; }
+    .article-cta { background: rgba(37,99,235,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #60A5FA; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(37,99,235,0.1); color: #60A5FA; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(59,130,246,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 27, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Metadata-Driven Knowledge Work Automation Meets Enterprise RAG: Announcing the M-Files Repository Connector</h1>
+      <p class="blog-article-lead">
+        Across legal, accounting, life sciences, engineering, and financial services, <strong>M-Files</strong> empowers enterprises with metadata-driven Knowledge Work Automation—organizing critical content by <em>what</em> it is rather than <em>where</em> it is stored. Today, we are thrilled to announce the official <strong>M-Files Repository Connector (<code>oc-mfiles-repository-connector</code>)</strong>! Crawl M-Files vaults via the <strong>M-Files Web Service (MFWS) REST API</strong> and <strong>Vault Application Framework (VAF)</strong> change feeds, overcome search truncation with recursive binary time-window splitting, preserve Single-File and Multi-File Document (MFD) lineage, normalize typed <code>MFDataType</code> properties, and enforce fail-closed Zero-Trust ACL component intersections across every vector store and MCP agent. 🚀🗂️
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">M-Files MFWS &amp; VAF Enterprise Ingestion Pipeline Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">M-Files Vault (MFWS /REST &amp; VAF)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">MFilesRepositoryConnector (Time-Window Splitter)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Java 25 StructuredTaskScope + TempFileInputStream</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Claim-Check Store (Ozone / S3)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">OIS Document + Fail-Closed ACL Intersection</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Stores &amp; Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Why Metadata-Driven ECM Needs Purpose-Built RAG Ingestion</h2>
+      <p>
+        Unlike traditional folder-centric content repositories, <strong>M-Files</strong> organizes enterprise knowledge around rich object graphs—linking Documents, Customers, Projects, Matters, and Workflows through typed property definitions (<code>PropertyDef</code>) and dynamic views. Bridging an M-Files vault to an enterprise Retrieval-Augmented Generation (RAG) pipeline presents unique architectural challenges:
+      </p>
+      <ul>
+        <li><strong>Truncation Without Offset Pagination:</strong> The M-Files Web Service (MFWS) REST API caps search results at <code>limit</code> (e.g., 500 objects) and provides no offset parameter. Naive crawlers silently lose every document beyond the first page when <code>MoreResults: true</code> is returned.</li>
+        <li><strong>Multi-File Document Bundles (MFD):</strong> In M-Files, a single logical object—such as a Master Services Agreement—can hold multiple constituent binary files (the main contract, signed schedules, and technical exhibits). Flattening or dropping child files breaks retrieval fidelity.</li>
+        <li><strong>Multi-Component Access Control Lists:</strong> Effective object permissions in M-Files combine a <code>CustomComponent</code> with zero or more <code>AutomaticComponents</code> driven by workflow states or Named ACLs, alongside metadata-driven pseudo-users (e.g., "Project Manager"). A security mapper must intersect active components restrictively and fail closed.</li>
+        <li><strong>ManifoldCF Migration Continuity:</strong> Enterprises migrating from Apache ManifoldCF need drop-in compatibility with existing <code>mfiles:user:&lt;id&gt;</code> and <code>mfiles:group:&lt;id&gt;</code> permission tokens as well as custom Vault Application Framework (VAF) indexer endpoints.</li>
+      </ul>
+
+      <p>
+        The new <code>oc-mfiles-repository-connector</code> was engineered from the ground up on the OpenCrawling SPI and Java 25 to solve each of these requirements natively while emitting standardized <strong>Open Ingestion Standard (OIS)</strong> documents and deletion tombstones.
+      </p>
+
+      <div class="callout-box warning">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div>
+          <p><strong>Licence &amp; Session Policy:</strong> The connector requires a licensed, running M-Files Server (or M-Files Cloud vault) with the M-Files Web Service (REST API) enabled and an account with read access to the vault. OpenCrawling does not include M-Files or any M-Files licence. Each crawl scan holds <strong>one MFWS session</strong> and always terminates it cleanly via <code>DELETE /session</code> (automatically falling back to <code>POST /session?_method=DELETE</code> when IIS blocks HTTP <code>DELETE</code>).</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>Native MFWS Client, Triple Authentication &amp; Host Pinning</h2>
+      <p>
+        At the transport layer, <code>MFilesClient</code> communicates directly with <code>&lt;server&gt;/REST</code> over native Java 25 <code>HttpClient</code> with zero heavyweight SDK dependencies. It supports three authentication modes configured via <code>auth-type</code>:
+      </p>
+      <ul>
+        <li><strong>Vault Authentication Token (<code>token</code>, default):</strong> Exchanges credentials, optional Windows <code>Domain</code>, <code>VaultGuid</code>, and a per-scan <code>SessionID</code> at <code>POST /server/authenticationtokens</code> for an <code>X-Authentication</code> token. Empty credentials are rejected upfront because M-Files otherwise issues an anonymous token that fails every subsequent vault call.</li>
+        <li><strong>Header Basic Auth (<code>basic</code>):</strong> Sends <code>X-Username</code> (formatted as <code>DOMAIN\username</code> when a domain is configured), <code>X-Password</code>, and <code>X-Vault</code> headers.</li>
+        <li><strong>OAuth 2.0 / Microsoft Entra ID (<code>oauth2</code>):</strong> Sends <code>Authorization: Bearer &lt;token&gt;</code> and <code>X-Vault</code> using either a pre-issued bearer token or an automated client-credentials grant (<code>MFilesOAuth2TokenSource</code>) that refreshes tokens proactively before expiry.</li>
+      </ul>
+      <p>
+        If a session token expires mid-crawl (<code>HTTP 401</code> or <code>403</code>), <code>MFilesClient</code> automatically re-authenticates once and retries the request. Transient rate limits (<code>HTTP 429</code>) and gateway errors (<code>502</code>&ndash;<code>504</code>) are retried with exponential backoff. Furthermore, when following file download URLs supplied by VAF payloads, the client enforces <strong>strict host pinning</strong> so authentication headers are never forwarded to external hosts.
+      </p>
+
+      <h2><span class="section-num">3. </span>Four Crawl Modes &amp; Recursive Binary Time-Window Splitting</h2>
+      <p>
+        Enterprises organize M-Files vaults in different ways, so <code>MFilesRepositoryConnector</code> provides four distinct crawl modes via <code>crawl-mode</code>:
+      </p>
+
+      <h3>1. Class &amp; Condition Search (<code>search</code>, default) &amp; All Objects (<code>all_objects</code>)</h3>
+      <p>
+        Queries <code>GET /objects</code> per configured class (<code>class-ids</code>, passed as <code>p100=&lt;id&gt;</code>), restricted to <code>object-type</code> (<code>0</code> = Document, or <code>-1</code> to crawl all object types) and optional MFWS search conditions (<code>search-query</code>, such as <code>p1020=5&amp;q=contract</code>, or plain text for quick search). Setting <code>crawl-mode: all_objects</code> crawls the entire vault without class or query restrictions.
+      </p>
+
+      <h3>2. Recursive View Traversal (<code>view</code>)</h3>
+      <p>
+        Traverses a configured M-Files view (<code>view-id</code>, e.g., <code>101</code> or <code>v101/L5</code>) via <code>GET /views/&lt;path&gt;/items</code>, recursively descending into sub-views, lookup/text property folders, and traditional folders up to depth 32. Because an object can appear under multiple property folders in a view, the connector tracks visited object keys and emits each object exactly once.
+      </p>
+
+      <h3>3. Vault Application Framework Change Feed (<code>vaf</code>)</h3>
+      <p>
+        Consumes the change feed (<code>&lt;vaf-base-path&gt;/changes?since=&lt;cursor&gt;</code>) and normalized object endpoint (<code>&lt;vaf-base-path&gt;/object/{objType}/{objId}/{version}/normalized</code>) of an M-Files VAF application—matching the protocol used by the Apache ManifoldCF M-Files connector—where effective permissions (including metadata-driven pseudo-users) are resolved server-side inside the vault.
+      </p>
+
+      <h3>Overcoming the MFWS Truncation Limit with Recursive Time-Window Splitting</h3>
+      <p>
+        Because MFWS truncates <code>GET /objects</code> responses at <code>limit</code> (<code>batch-size</code>, default <code>500</code>) and offers no offset pagination, how do you guarantee 100% recall across millions of vault objects?
+      </p>
+      <p>
+        Whenever a search returns <code>MoreResults: true</code>, <code>MFilesRepositoryConnector</code> automatically switches to <strong>recursive last-modified time-window splitting</strong> using MFWS property <code>21</code> (<code>LastModified</code>, <code>p21&gt;=</code> and <code>p21&lt;=</code>). Starting from the lower bound (<code>modified-after</code>, the incremental watermark, or <code>1970-01-01T00:00:00Z</code>) up to the scan start timestamp, the connector recursively bisects time intervals in half until every sub-window returns <code>MoreResults: false</code>, deduplicating objects that fall on window boundaries.
+      </p>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <p><strong>Ad-Hoc Scan Path Overrides:</strong> Passing a custom job <code>scan-path</code> overrides the configured selection for that run without touching the incremental state file—paths starting with <code>v&lt;digits&gt;</code> (e.g., <code>v101/L5</code>) crawl that view, while MFWS conditions containing <code>=</code> or plain text execute an ad-hoc search.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">4. </span>Single-File, Multi-File (MFD), Non-File Objects &amp; Version Modes</h2>
+      <p>
+        <code>MFilesDocumentBuilder</code> maps every M-Files object type and attachment topology into clean, canonical OIS URIs:
+      </p>
+      <ul>
+        <li><strong>Single-File Documents (SFD):</strong> Emitted as a single OIS document under <code>mfiles://&lt;vaultGuid&gt;/objects/&lt;type&gt;/&lt;id&gt;</code> with its binary stream attached.</li>
+        <li><strong>Multi-File Documents (MFD):</strong> Every constituent file is emitted as its own first-class OIS document under <code>mfiles://&lt;vaultGuid&gt;/objects/&lt;type&gt;/&lt;id&gt;/files/&lt;fileId&gt;</code>, stamping <code>mfiles.parentId</code> with the parent object URI (<code>mfiles://&lt;vaultGuid&gt;/objects/&lt;type&gt;/&lt;id&gt;</code>). Master agreements and every attached exhibit become independently searchable while retaining parent-child lineage.</li>
+        <li><strong>Non-File Objects:</strong> Metadata-only objects (such as Customers, Vendors, or Projects when crawling non-document object types) are indexed with their full set of normalized properties.</li>
+        <li><strong>Version Control (<code>version-mode</code>):</strong> In <code>latest_only</code> mode (default), objects use versionless stable URIs so new revisions cleanly replace older ones in downstream vector stores. In <code>all_versions</code> mode, the connector traverses <code>GET /objects/{type}/{id}/history</code> and emits prior versions under <code>.../versions/&lt;n&gt;</code> (and <code>.../versions/&lt;n&gt;/files/&lt;fileId&gt;</code>).</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Typed Property Normalization (<code>MFilesValues</code>)</h2>
+      <p>
+        At connection time, the connector loads the vault's property definitions from <code>GET /structure/properties</code>. For each object, <code>MFilesValues</code> normalizes every property value according to its <code>MFDataType</code> under <code>&lt;property-prefix&gt;&lt;camelCaseName&gt;</code> (default prefix: <code>mfiles_prop_</code>):
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>M-Files <code>MFDataType</code></th>
+            <th>Example Raw MFWS Input</th>
+            <th>Normalized OIS Metadata Value</th>
+            <th>OIS Metadata Key Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Date (5)</code></td>
+            <td><code>2026-05-01T00:00:00Z</code></td>
+            <td><code>2026-05-01</code> (ISO local date)</td>
+            <td><code>mfiles_prop_effectiveDate</code></td>
+          </tr>
+          <tr>
+            <td><code>Timestamp (7)</code></td>
+            <td><code>2026-09-27T17:20:00+02:00</code></td>
+            <td><code>2026-09-27T15:20:00Z</code> (UTC instant)</td>
+            <td><code>mfiles_prop_signedAt</code></td>
+          </tr>
+          <tr>
+            <td><code>Integer (2)</code>, <code>Integer64 (11)</code>, <code>Floating (3)</code></td>
+            <td><code>150000.00</code></td>
+            <td><code>150000</code> (stripped trailing zeroes)</td>
+            <td><code>mfiles_prop_contractValue</code></td>
+          </tr>
+          <tr>
+            <td><code>Boolean (8)</code></td>
+            <td><code>true</code> / <code>1</code></td>
+            <td><code>true</code> / <code>false</code></td>
+            <td><code>mfiles_prop_autoRenew</code></td>
+          </tr>
+          <tr>
+            <td><code>Lookup (9)</code></td>
+            <td><code>{"Item": 5, "DisplayValue": "Cyberdyne Systems"}</code></td>
+            <td><code>Cyberdyne Systems</code> + ID <code>5</code></td>
+            <td><code>mfiles_prop_customer</code> &amp; <code>mfiles_prop_customer_id</code></td>
+          </tr>
+          <tr>
+            <td><code>MultiSelectLookup (10)</code></td>
+            <td>Array of <code>Lookup</code> items</td>
+            <td>All non-deleted display values &amp; IDs</td>
+            <td><code>mfiles_prop_tags</code> &amp; <code>mfiles_prop_tags_id</code></td>
+          </tr>
+          <tr>
+            <td><code>Text (1)</code>, <code>MultiLineText (13)</code>, <code>Time (6)</code></td>
+            <td>String value</td>
+            <td>Trimmed string value</td>
+            <td><code>mfiles_prop_notes</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">6. </span>Fail-Closed Zero-Trust Security &amp; Restrictive Component Intersection</h2>
+      <p>
+        In an enterprise RAG system, security cannot be an afterthought. <code>MFilesSecurityMapper</code> evaluates object permissions from <code>GET /objects/{type}/{id}/{version}/permissions</code> (or VAF <code>aclTokens</code> / <code>denyTokens</code>) on a strict <strong>fail-closed</strong> basis:
+      </p>
+      <ul>
+        <li><strong>Restrictive Component Intersection:</strong> An M-Files object's effective <code>AccessControlList</code> contains a <code>CustomComponent</code> and zero or more active <code>AutomaticComponents</code> (contributed by workflow states or Named ACLs). Because M-Files combines components restrictively, <code>MFilesSecurityMapper</code> grants <code>read</code> access to an identity <strong>only if every active component allows it</strong>.</li>
+        <li><strong>Explicit Deny Precedence &amp; Verified Numeric Codes:</strong> On live M-Files servers, <code>ReadPermission: 1</code> (or <code>"Allow"</code>, or bit 1 of <code>AccessFlags</code>) grants read access. Any other numeric <code>ReadPermission</code> code or <code>"Deny"</code> is mapped to an explicit OIS <code>access: "deny"</code> rule—ensuring unverified codes can only restrict access, never widen it.</li>
+        <li><strong>Safe Handling of Metadata Pseudo-Users:</strong> Metadata-driven entries (flagged <code>IsPsudoUser: true</code> or <code>HasConcreteUserOrGruopID: false</code>, such as "Project manager") cannot be resolved to concrete user IDs over plain MFWS. Rather than guessing, the connector grants nothing for pseudo-users in MFWS mode and resolves them 1-to-1 when run in <code>vaf</code> mode.</li>
+        <li><strong>Token or Name Principals &amp; Multi-Vault Qualification:</strong> Emit principals as ManifoldCF-compatible tokens (<code>mfiles:user:&lt;id&gt;</code>, <code>mfiles:group:&lt;id&gt;</code>) or set <code>principal-format: name</code> to resolve account and group names via built-in value lists <code>6</code> (Users) and <code>16</code> (User Groups). Enable <code>qualify-principals: true</code> to prefix identities with <code>&lt;vaultGuid&gt;/</code> so per-vault IDs never collide in shared multi-vault vector indexes.</li>
+        <li><strong>Deny-by-Default Fallbacks:</strong> If permissions are unreadable (e.g., HTTP 404), the connector applies configured <code>fallback-principals</code> or an empty ACL—documents are <strong>never</strong> marked public by accident.</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Java 25 Virtual Threads, <code>TempFileInputStream</code> &amp; Incremental Tombstones</h2>
+      <p>
+        High-throughput vault ingestion combines concurrent I/O with strict resource hygiene:
+      </p>
+      <ul>
+        <li><strong>Java 25 Structured Concurrency:</strong> Object batches are enriched concurrently using <code>StructuredTaskScope.open()</code> and <code>ObservabilityTask.observed(...)</code>, bounded by a configurable <code>Semaphore</code> (<code>parallelism</code>, default <code>4</code>) so W3C OpenTelemetry traces and MDC context propagate cleanly across virtual threads without overwhelming the M-Files server.</li>
+        <li><strong>Zero Disk Leaks with <code>TempFileInputStream</code>:</strong> Binary file streams downloaded from <code>GET /objects/{type}/{id}/{version}/files/{fileId}/content</code> are spooled to size-capped temporary files (<code>max-file-size-bytes</code>, default 50 MB). The moment Apache Tika 4 or the Claim-Check store (Apache Ozone / S3) closes the stream, <code>TempFileInputStream</code> immediately deletes the temporary file.</li>
+        <li><strong>Incremental Watermarks &amp; Multi-File Lineage Pruning (<code>MFilesCrawlState</code>):</strong> When <code>incremental-enabled: true</code> is set, the connector persists per-vault, per-scope watermarks (with a configurable <code>clock-skew-seconds</code> overlap, default 300s) and tracks every emitted document/file URI per object in <code>data/mfiles-state/</code>.</li>
+      </ul>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Granular Deletion Tombstones:</strong> By querying MFWS with <code>d=include</code> and comparing current file attachments against <code>MFilesCrawlState</code>, OpenCrawling emits OIS <code>action: "DELETE"</code> tombstones both when an entire object is deleted in M-Files <em>and</em> when an individual file is removed from a Multi-File Document! Downstream vector stores automatically purge the stale chunks.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">8. </span>Sample OIS Document &amp; Tombstone Payloads</h2>
+      <p>
+        Below is a real example of an ingested M-Files NDA document mapped to an OIS <code>UPSERT</code> payload, complete with normalized properties and Zero-Trust permissions:
+      </p>
+
+      <pre><code>{
+  "id": "mfiles://C0B3B52E-6512-4BD8-8F2B-2A8E9A349201/objects/0/48192",
+  "action": "UPSERT",
+  "acl": "mfiles:user:12,mfiles:group:5",
+  "metadata": {
+    "name": ["Global Vendor NDA - Final Signed.pdf"],
+    "title": ["Global Vendor NDA - Final Signed"],
+    "mimeType": ["application/pdf"],
+    "mfiles.vaultGuid": ["C0B3B52E-6512-4BD8-8F2B-2A8E9A349201"],
+    "mfiles.vaultName": ["Contracts"],
+    "mfiles.objType": ["0"],
+    "mfiles.objId": ["48192"],
+    "mfiles.version": ["3"],
+    "mfiles.isLatestVersion": ["true"],
+    "mfiles.title": ["Global Vendor NDA - Final Signed"],
+    "mfiles.classId": ["14"],
+    "mfiles.className": ["Non-Disclosure Agreement"],
+    "mfiles.singleFile": ["true"],
+    "mfiles.fileCount": ["1"],
+    "mfiles.fileId": ["7"],
+    "mfiles.fileName": ["Global Vendor NDA - Final Signed.pdf"],
+    "mfiles.fileSize": ["1482910"],
+    "mfiles.created": ["2026-04-10T10:30:00Z"],
+    "mfiles.createdBy": ["sarah.connor"],
+    "mfiles.lastModified": ["2026-09-27T15:20:00Z"],
+    "mfiles.lastModifiedBy": ["alex.vance"],
+    "mfiles.state": ["Approved"],
+    "mfiles_identity_users": ["mfiles:user:12"],
+    "mfiles_identity_groups": ["mfiles:group:5"],
+    "mfiles_prop_customer": ["Cyberdyne Systems"],
+    "mfiles_prop_customer_id": ["5"],
+    "mfiles_prop_contractValue": ["150000"],
+    "mfiles_prop_effectiveDate": ["2026-05-01"],
+    "mfiles_prop_tags": ["Legal", "Vendor"]
+  },
+  "security": {
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "identity": "mfiles:user:12", "identityType": "user", "access": "read" },
+      { "identity": "mfiles:group:5", "identityType": "group", "access": "read" },
+      { "identity": "mfiles:user:9", "identityType": "user", "access": "deny" }
+    ]
+  }
+}</code></pre>
+
+      <p>
+        And when an object or attached file is deleted in the vault, the connector dispatches a lightweight OIS <code>DELETE</code> tombstone:
+      </p>
+
+      <pre><code>{
+  "id": "mfiles://C0B3B52E-6512-4BD8-8F2B-2A8E9A349201/objects/0/48192",
+  "action": "DELETE",
+  "metadata": {
+    "mfiles.vaultGuid": ["C0B3B52E-6512-4BD8-8F2B-2A8E9A349201"],
+    "mfiles.objType": ["0"],
+    "mfiles.objId": ["48192"],
+    "mfiles.status": ["DELETED"]
+  }
+}</code></pre>
+
+      <h2><span class="section-num">9. </span>Configuration, CLI Diagnostics &amp; 9-Step Decoupled Verification</h2>
+      <p>
+        Configure the M-Files Repository Connector via Spring Boot properties (<code>spring.opencrawling.connector.mfiles.*</code>), Admin UI (<code>oc-admin-ui</code>), or <code>connectors.json</code>:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Spring Property (<code>spring.opencrawling.connector.mfiles.*</code>)</th>
+            <th><code>connectors.json</code> Key</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>url</code></td>
+            <td><code>url</code></td>
+            <td><code>http://localhost/REST</code></td>
+            <td>MFWS base URL, including <code>/REST</code></td>
+          </tr>
+          <tr>
+            <td><code>vault-guid</code></td>
+            <td><code>vaultGuid</code></td>
+            <td>—</td>
+            <td><strong>Required.</strong> Target vault GUID (with or without braces)</td>
+          </tr>
+          <tr>
+            <td><code>auth-type</code></td>
+            <td><code>authType</code></td>
+            <td><code>token</code></td>
+            <td>Authentication mode: <code>token</code>, <code>basic</code>, or <code>oauth2</code></td>
+          </tr>
+          <tr>
+            <td><code>username</code> / <code>password</code> / <code>domain</code></td>
+            <td><code>username</code> / <code>password</code> / <code>domain</code></td>
+            <td>—</td>
+            <td>Credentials for <code>token</code> and <code>basic</code> auth</td>
+          </tr>
+          <tr>
+            <td><code>crawl-mode</code></td>
+            <td><code>crawlMode</code></td>
+            <td><code>search</code></td>
+            <td>Mode: <code>search</code>, <code>view</code>, <code>all_objects</code>, or <code>vaf</code></td>
+          </tr>
+          <tr>
+            <td><code>object-type</code> / <code>class-ids</code></td>
+            <td><code>objectType</code> / <code>classIds</code></td>
+            <td><code>0</code> / empty</td>
+            <td>Object type ID (<code>0</code> = Document, <code>-1</code> = all) and optional class ID filter</td>
+          </tr>
+          <tr>
+            <td><code>version-mode</code></td>
+            <td><code>versionMode</code></td>
+            <td><code>latest_only</code></td>
+            <td><code>latest_only</code> or <code>all_versions</code></td>
+          </tr>
+          <tr>
+            <td><code>principal-format</code> / <code>qualify-principals</code></td>
+            <td><code>principalFormat</code> / <code>qualifyPrincipals</code></td>
+            <td><code>token</code> / <code>false</code></td>
+            <td><code>token</code> (<code>mfiles:user:&lt;id&gt;</code>) or <code>name</code>; optional <code>&lt;vaultGuid&gt;/</code> prefix</td>
+          </tr>
+          <tr>
+            <td><code>incremental-enabled</code> / <code>emit-deletes</code></td>
+            <td><code>incrementalEnabled</code> / <code>emitDeletes</code></td>
+            <td><code>false</code> / <code>true</code></td>
+            <td>Track watermarks in <code>data/mfiles-state</code> and emit <code>DELETE</code> tombstones</td>
+          </tr>
+          <tr>
+            <td><code>batch-size</code> / <code>parallelism</code></td>
+            <td><code>batchSize</code> / <code>parallelism</code></td>
+            <td><code>500</code> / <code>4</code></td>
+            <td>MFWS search limit and concurrent Java 25 Virtual Thread workers</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>End-to-End Verification with the Stateful MFWS Mock &amp; Secure MCP Server</h3>
+      <p>
+        We ship a comprehensive test suite including a stateful Python MFWS emulator (<code>oc-mfiles-repository-connector/mfiles-mock/mfws_mock.py</code>) that serves a deterministic generated vault with real PDF, DOCX, and TXT files, multi-component ACLs, and live mutation endpoints:
+      </p>
+      <pre><code># 1. Verify vault connectivity via OpenCrawling CLI
+$ oc connector check --name mfiles-vault --type repository
+
+# 2. Run standalone unit + MockWebServer + stateful MFWS mock tests
+$ ./scripts/test-mfiles-repository-connector.sh
+
+# 3. Run the 9-step full decoupled Docker Compose pipeline (Kafka, pgvector, Ollama, Secure MCP Server)
+$ ./scripts/test-mfiles-decoupled.sh</code></pre>
+
+      <p>
+        The 9-step decoupled test script (<code>test-mfiles-decoupled.sh</code>) boots the complete microservice topology, reconciles indexed chunks against the mock vault's ground truth (<code>/mock/stats</code>), verifies Zero-Trust ACL component intersection and explicit deny rules through the <strong>Secure MCP Server</strong> (<code>secureVectorSearch</code>, <code>getDocumentContent</code>, and <code>listAccessibleSources</code> over Streamable HTTP <code>/mcp</code>), triggers live vault mutations (removing an exhibit from a multi-file document, deleting a document, and adding a new NDA), and confirms that an incremental crawl updates <code>pgvector</code> and purges deleted chunks via tombstones.
+      </p>
+
+      <div class="article-cta">
+        <h3>Ready to Connect M-Files to Enterprise RAG?</h3>
+        <p>Explore the M-Files Repository Connector documentation on the OpenCrawling Wiki, test drive the interactive simulator, or star the project on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/OpenCrawling/opencrawling/wiki/M-Files-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read M-Files Wiki Guide</a>
+          <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
