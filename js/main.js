@@ -661,6 +661,29 @@ function initCodeCopy() {
       });
     });
   });
+
+  // Hero terminal copy button
+  const heroCopyBtn = document.getElementById('hero-copy-btn');
+  if (heroCopyBtn) {
+    heroCopyBtn.addEventListener('click', () => {
+      const runCmd = "curl -LO https://github.com/OpenCrawling/opencrawling/releases/latest/download/docker-compose-decoupled-dockerhub.yml && docker compose -f docker-compose-decoupled-dockerhub.yml up -d";
+      navigator.clipboard.writeText(runCmd).then(() => {
+        const textSpan = heroCopyBtn.querySelector('span');
+        const origText = textSpan ? textSpan.textContent : "Copy";
+        if (textSpan) textSpan.textContent = "Copied!";
+        heroCopyBtn.style.color = "var(--success-color)";
+        heroCopyBtn.style.borderColor = "var(--success-color)";
+        
+        setTimeout(() => {
+          if (textSpan) textSpan.textContent = origText;
+          heroCopyBtn.style.color = "var(--text-muted)";
+          heroCopyBtn.style.borderColor = "rgba(255, 255, 255, 0.12)";
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    });
+  }
 }
 
 /* ==========================================

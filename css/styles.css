@@ -488,7 +488,7 @@
   /* Terminal Card component */
   .terminal-card {
     width: 100%;
-    max-width: 500px;
+    max-width: 550px;
     background: #090D16;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
@@ -509,8 +509,16 @@
     padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .terminal-header-left,
+  .terminal-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   
   .terminal-header .dot {
@@ -524,9 +532,43 @@
   .terminal-header .dot.green { background: #10B981; }
   
   .terminal-title {
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
     font-size: 0.75rem;
     color: var(--text-muted);
+  }
+
+  .terminal-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(6, 182, 212, 0.12);
+    color: var(--cyan-color);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .terminal-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+  }
+
+  .terminal-copy-btn:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
   }
   
   .terminal-body {

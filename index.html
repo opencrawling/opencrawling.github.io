@@ -150,22 +150,33 @@
       <div class="hero-visual">
         <div class="terminal-card">
           <div class="terminal-header">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-            <span class="terminal-title">bash - docker-setup</span>
+            <div class="terminal-header-left">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span class="terminal-title">docker-compose-decoupled-dockerhub.yml</span>
+            </div>
+            <div class="terminal-header-right">
+              <span class="terminal-badge">Docker Hub</span>
+              <button class="terminal-copy-btn" id="hero-copy-btn" title="Copy Docker Compose command" aria-label="Copy Docker Compose command">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Copy</span>
+              </button>
+            </div>
           </div>
           <div class="terminal-body">
-            <p class="line comment"># Spin up PostgreSQL + pgvector, Redis, Ollama, Kafka</p>
-            <p class="line"><span class="cmd">git clone</span> https://github.com/OpenCrawling/opencrawling.git</p>
-            <p class="line"><span class="cmd">cd</span> opencrawling</p>
-            <p class="line"><span class="cmd">docker compose</span> up -d</p>
-            <p class="line output">Creating network "opencrawling_default" ... Created</p>
-            <p class="line output">Creating container opencrawling-postgres  ... Running</p>
-            <p class="line output">Creating container opencrawling-redis     ... Running</p>
-            <p class="line output">Creating container opencrawling-kafka     ... Running</p>
-            <p class="line output">Creating container opencrawling-ollama    ... Running</p>
-            <p class="line success">✔ All services started successfully on local ports.</p>
+            <p class="line comment"># 1. Download pre-built Docker Hub stack (no compilation needed)</p>
+            <p class="line"><span class="cmd">curl</span> -LO https://github.com/OpenCrawling/opencrawling/releases/latest/download/docker-compose-decoupled-dockerhub.yml</p>
+            <p class="line comment"># 2. Launch the complete decoupled platform &amp; backing engines</p>
+            <p class="line"><span class="cmd">docker compose</span> -f docker-compose-decoupled-dockerhub.yml up -d</p>
+            <p class="line output">✔ Network opencrawling-network                  Created</p>
+            <p class="line output">✔ Container postgres-vector-decoupled           Running</p>
+            <p class="line output">✔ Container redis-stack-decoupled, kafka        Running</p>
+            <p class="line output">✔ Container ollama-decoupled (mxbai-embed)       Running</p>
+            <p class="line output">✔ Container oc-crawler-service, oc-ingestion    Running</p>
+            <p class="line output">✔ Container oc-embedding-consumer, oc-writer    Running</p>
+            <p class="line output">✔ Container oc-mcp-server (:8080), oc-admin-ui (:3000) Running</p>
+            <p class="line success">✔ Decoupled platform running at http://localhost:3000</p>
           </div>
         </div>
       </div>
