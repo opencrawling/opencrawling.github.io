@@ -1,0 +1,87 @@
+#
+# Copyright © 2026 the original author or authors (piergiorgio@apache.org)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+services:
+  opencrawling-backend:
+    image: opencrawling/oc-mcp-server:latest
+    container_name: opencrawling-backend
+    ports:
+      - "8080:8080"
+      - "9095:9095"
+      - "9096:9096"
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis-stack
+      - SPRING_DATA_REDIS_PASSWORD=redis_password
+      - SPRING_AI_OLLAMA_BASE_URL=http://ollama:11434
+      - SPRING_AI_VECTORSTORE_PGVECTOR_URL=jdbc:postgresql://postgres-vector:5432/opencrawling
+      - SPRING_AI_VECTORSTORE_PGVECTOR_USERNAME=opencrawling
+      - SPRING_AI_VECTORSTORE_PGVECTOR_PASSWORD=opencrawling_password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9094
+      - SPRING_OPENCRAWLING_CLAIM_CHECK_OZONE_S3_ENDPOINT=http://s3g:9878
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - OPENCRAWLING_OBSERVABILITY_ENABLED=true
+      - OPENCRAWLING_OBSERVABILITY_SAMPLING_PROBABILITY=1.0
+      - OPENCRAWLING_INGEST_OIS_TOKEN=${OPENCRAWLING_INGEST_OIS_TOKEN:-}
+      - OPENCRAWLING_GRPC_PUSH_ENABLED=${OPENCRAWLING_GRPC_PUSH_ENABLED:-true}
+      - OPENCRAWLING_GRPC_PUSH_PORT=${OPENCRAWLING_GRPC_PUSH_PORT:-9096}
+      - OPENCRAWLING_GRPC_PUSH_TOKEN=${OPENCRAWLING_GRPC_PUSH_TOKEN:-}
+      - OPENCRAWLING_TIKA_FORK_ENABLED=true
+      - OPENCRAWLING_TIKA_TIMEOUT_MS=30000
+      - OPENCRAWLING_TIKA_JVM_ARGS=-Xmx512m
+      - SPRING_OPENCRAWLING_REPORTING_LOCAL_DIR=/data/reports
+    volumes:
+      - opencrawling-reportsdata:/data/reports
+    networks:
+      - opencrawling-network
+    restart: unless-stopped
+
+  opencrawling-embedding:
+    image: opencrawling/oc-embedding-consumer:latest
+    container_name: opencrawling-embedding
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9094
+      - SPRING_AI_OLLAMA_BASE_URL=http://ollama:11434
+      - SPRING_AI_OPENAI_API_KEY=mock-key
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
+      - OPENCRAWLING_OBSERVABILITY_ENABLED=true
+      - OPENCRAWLING_OBSERVABILITY_SAMPLING_PROBABILITY=1.0
+    depends_on:
+      - opencrawling-backend
+    networks:
+      - opencrawling-network
+    restart: unless-stopped
+
+  opencrawling-frontend:
+    image: opencrawling/oc-admin-ui:latest
+    container_name: opencrawling-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - opencrawling-backend
+    networks:
+      - opencrawling-network
+    restart: unless-stopped
+
+networks:
+  opencrawling-network:
+    name: opencrawling-network
+    external: true
+
+volumes:
+  opencrawling-reportsdata:
+    name: opencrawling-reportsdata

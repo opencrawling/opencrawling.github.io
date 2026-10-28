@@ -666,7 +666,7 @@ function initCodeCopy() {
   const heroCopyBtn = document.getElementById('hero-copy-btn');
   if (heroCopyBtn) {
     heroCopyBtn.addEventListener('click', () => {
-      const runCmd = "curl -LO https://github.com/OpenCrawling/opencrawling/releases/latest/download/docker-compose-decoupled-dockerhub.yml && docker compose -f docker-compose-decoupled-dockerhub.yml up -d";
+      const runCmd = "curl -LO https://raw.githubusercontent.com/OpenCrawling/opencrawling/main/docker-compose-decoupled-dockerhub.yml && docker compose -f docker-compose-decoupled-dockerhub.yml up -d";
       navigator.clipboard.writeText(runCmd).then(() => {
         const textSpan = heroCopyBtn.querySelector('span');
         const origText = textSpan ? textSpan.textContent : "Copy";
