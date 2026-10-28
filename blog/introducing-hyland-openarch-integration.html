@@ -44,16 +44,16 @@
     .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #818CF8, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
     .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #6366F1; padding-left: 1.25rem; margin-bottom: 2.5rem; }
     .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
-    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: var(--text-color); margin-top: 2.5rem; margin-bottom: 1rem; }
     .blog-article-body h2 .section-num { color: #818CF8; font-size: 1rem; }
     .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #818CF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
     .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
     .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
     .blog-article-body li { margin-bottom: 0.5rem; }
-    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
-    .blog-article-body code { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C7D2FE; }
-    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
-    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .blog-article-body strong { color: var(--text-color); font-weight: 600; }
+    .blog-article-body code { background: var(--code-bg, rgba(99,102,241,0.08)); border: 1px solid var(--code-border, rgba(99,102,241,0.25)); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; font-weight: 500; color: var(--code-color, #3730A3); }
+    .blog-article-body pre { background: var(--code-pre-bg, #090D16); border: 1px solid var(--code-pre-border, rgba(255,255,255,0.08)); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: var(--code-pre-text, #F8FAFC); font-size: 0.875rem; line-height: 1.7; font-weight: 400; }
     .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
     .callout-box.info { background: rgba(99,102,241,0.06); border-color: #6366F1; }
     .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
