@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI &amp; Search Ingestion</title>
+  <meta name="description" content="Announcing OpenCrawling 1.0.4: the first official general availability release of the open-source enterprise data ingestion and security mapping framework. Built on Java 25 Virtual Threads, Spring Boot 4.1.1, Apache Tika 4, Kafka streaming, Redis/Ozone claim check, 20+ enterprise connectors, Zero-Trust ACL synchronization, Model Context Protocol (MCP) server, distribution ZIP packages, and Homebrew CLI.">
+  <meta name="keywords" content="opencrawling 1.0.4, official release, enterprise ingestion, open ingestion standard, ois, zero-trust rag, java 25 virtual threads, spring boot 4, apache tika 4, apache kafka, redis claim check, model context protocol, mcp server, sharepoint online, m-files, hyland openarch, alfresco, doxis, cmis, solr 10, opensearch, qdrant, milvus, vespa, distribution zip, homebrew tap">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/announcing-opencrawling-1-0-4-first-official-release.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/announcing-opencrawling-1-0-4-first-official-release.html">
+  <meta property="og:title" content="OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI &amp; Search Ingestion">
+  <meta property="og:description" content="Announcing OpenCrawling 1.0.4: the first official general availability release of the open-source enterprise data ingestion and security mapping framework. Built on Java 25 Virtual Threads, Spring Boot 4.1.1, Apache Tika 4, Kafka streaming, Redis/Ozone claim check, 20+ enterprise connectors, Zero-Trust ACL synchronization, Model Context Protocol (MCP) server, distribution ZIP packages, and Homebrew CLI.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/announcing-opencrawling-1-0-4-first-official-release.html">
+  <meta property="twitter:title" content="OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI &amp; Search Ingestion">
+  <meta property="twitter:description" content="Announcing OpenCrawling 1.0.4: the first official general availability release of the open-source enterprise data ingestion and security mapping framework. Built on Java 25 Virtual Threads, Spring Boot 4.1.1, Apache Tika 4, Kafka streaming, Redis/Ozone claim check, 20+ enterprise connectors, Zero-Trust ACL synchronization, Model Context Protocol (MCP) server, distribution ZIP packages, and Homebrew CLI.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310B981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI & Search Ingestion",
+    "description": "Announcing OpenCrawling 1.0.4: the first official general availability release of the open-source enterprise data ingestion and security mapping framework. Built on Java 25 Virtual Threads, Spring Boot 4.1.1, Apache Tika 4, Kafka streaming, Redis/Ozone claim check, 20+ enterprise connectors, Zero-Trust ACL synchronization, Model Context Protocol (MCP) server, distribution ZIP packages, and Homebrew CLI.",
+    "datePublished": "2026-10-29",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/announcing-opencrawling-1-0-4-first-official-release.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.95rem; border-radius: 99px; background: linear-gradient(135deg, #10B981, #6366F1); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 15px rgba(16, 185, 129, 0.35); }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2.1rem, 5vw, 3.1rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #34D399, #818CF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.18rem; line-height: 1.85; color: var(--text-secondary); border-left: 3px solid #10B981; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.65rem; font-weight: 700; color: #F1F5F9; margin-top: 2.75rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .blog-article-body h2 .section-num { color: #34D399; font-size: 1.05rem; font-family: var(--font-mono); }
+    .blog-article-body h3 { font-size: 1.2rem; font-weight: 600; color: #818CF8; margin-top: 2rem; margin-bottom: 0.85rem; }
+    .blog-article-body p { font-size: 1.02rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(99,102,241,0.12); border: 1px solid rgba(129,140,248,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #A5B4FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(99,102,241,0.06); border-color: #6366F1; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.08); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: #34D399; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.65rem 1rem; font-size: 0.82rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #10B981; color: #6EE7B7; background: rgba(16,185,129,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #6366F1; color: #C7D2FE; background: rgba(99,102,241,0.12); font-weight: 600; }
+    .flow-node.cyan { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.12); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #34D399; }
+    .article-cta { background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(99,102,241,0.08)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 2.25rem; margin-top: 3.5rem; text-align: center; }
+    .article-cta h3 { font-size: 1.35rem; font-weight: 700; color: #F1F5F9; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.75rem; font-size: 1rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.88rem; }
+    .config-table th { background: rgba(99,102,241,0.12); color: #C7D2FE; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(99,102,241,0.25); }
+    .config-table td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin: 2rem 0; }
+    .stat-card { background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.25rem; text-align: center; }
+    .stat-number { font-size: 2rem; font-weight: 800; color: #34D399; font-family: var(--font-heading); margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Official Release &bull; v1.0.4</span>
+        <span class="blog-meta-date">October 29, 2026</span>
+        <span class="blog-meta-read">&bull; 11 min read</span>
+      </div>
+      <h1 class="blog-article-title">OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI &amp; Search Ingestion</h1>
+      <p class="blog-article-lead">
+        Today marks a monumental milestone for open-source enterprise intelligence: we are proud to announce the <strong>first official general availability release: OpenCrawling 1.0.4</strong>! Engineered from the ground up on <strong>Java 25 (Virtual Threads / Project Loom)</strong>, <strong>Spring Boot 4.1.1</strong>, and the <strong>Open Ingestion Standard (OIS)</strong>, version 1.0.4 brings a unified, crash-resilient, Zero-Trust pipeline bridging siloed enterprise repositories directly to AI vector stores, search clusters, and LLM agent frameworks without compromising document access controls.
+      </p>
+    </header>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">20+</div>
+        <div class="stat-label">Production Connectors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Java 25</div>
+        <div class="stat-label">Virtual Threads Core</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Zero-Trust</div>
+        <div class="stat-label">Fail-Closed ACL Security</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Open Source (Apache 2.0)</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">01</span> The Enterprise AI Ingestion Crisis &amp; The OpenCrawling Mission</h2>
+      <p>
+        Across enterprises worldwide, AI initiatives face an urgent bottleneck. While large language models (LLMs) and vector retrieval technologies have matured rapidly, the data pipelines feeding them remain fragile, fragmented, and insecure. Enterprise knowledge is trapped across heterogeneous repositories—ranging from modern Microsoft SharePoint Online libraries and M-Files vaults, to legacy ECM platforms like Alfresco, Doxis, and CMIS archives, relational databases, and Apache Iceberg analytical data lakes.
+      </p>
+      <p>
+        Existing ingestion tools force enterprises into an unacceptable compromise: either write brittle, proprietary point-to-point scripts that drop security permissions, or run monolithic crawlers that collapse under multi-gigabyte files and leak restricted intellectual property into vector indexes where any employee or LLM agent can retrieve it.
+      </p>
+      <p>
+        <strong>OpenCrawling was born to solve this crisis.</strong> Guided by the vendor-neutral <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener">Open Ingestion Standard (OIS)</a>, OpenCrawling establishes a modern, distributed, memory-safe ingestion engine. It treats <strong>Access Control Lists (ACLs)</strong> as immutable, first-class citizens, decouples heavy binary parsing from vector generation, and delivers native LLM integration through the <strong>Model Context Protocol (MCP)</strong>.
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>First Official GA Release:</strong> OpenCrawling 1.0.4 represents the stabilization of the core API, complete multi-service Docker Compose topologies, self-contained Distribution ZIP packages for Bare-Metal and VM environments, a standalone CLI with Homebrew distribution, and comprehensive integration testing across enterprise repositories.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">02</span> Core Architectural Pillars: Java 25, Kafka &amp; Isolated Tika 4</h2>
+      <p>
+        At the heart of OpenCrawling 1.0.4 is a distributed, event-driven streaming architecture designed for extreme throughput, fault isolation, and horizontal scale:
+      </p>
+
+      <!-- Architecture Diagram -->
+      <div class="arch-flow-diagram">
+        <div class="flow-title">OpenCrawling 1.0.4 Decoupled Enterprise Pipeline</div>
+        <div class="flow-nodes">
+          <div class="flow-node highlight">Repository Connectors<br><small>SharePoint, M-Files, OpenArch, CMIS...</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-node accent">Kafka (raw-docs)<br><small>+ Redis / Ozone Claim-Check</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-node highlight">Tika 4 Ingestion<br><small>PipesForkParser Worker Pool</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-node accent">Kafka (extracted-docs)<br><small>Structured OIS JSON</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-node cyan">Embedding Service<br><small>Spring AI / Ollama / OpenAI</small></div>
+          <span class="flow-arrow">&rarr;</span>
+          <div class="flow-node highlight">Target Writers<br><small>Solr 10, OpenSearch, Milvus, Qdrant, Vespa</small></div>
+        </div>
+      </div>
+
+      <h3>1. Java 25 &amp; Virtual Threads (Project Loom) Everywhere</h3>
+      <p>
+        OpenCrawling leverages Java 25 Virtual Threads throughout the entire runtime. Instead of managing complex reactive callback chains or risking operating system thread exhaustion under heavy I/O, every document fetch, HTTP request, database call, and vector transmission runs on a dedicated virtual thread. Using structured concurrency scopes (<code>StructuredTaskScope</code>), crawlers achieve tens of thousands of concurrent operations with negligible memory overhead and native stack traces.
+      </p>
+
+      <h3>2. Isolated Apache Tika 4 Text Extraction via <code>PipesForkParser</code></h3>
+      <p>
+        Extracting text from arbitrary enterprise binaries (corrupted PDFs, complex DOCX documents, macro-enabled spreadsheets, massive compressed archives) has historically been the primary cause of crawler crashes due to memory leaks, native library segfaults, or CPU infinite loops.
+      </p>
+      <p>
+        In OpenCrawling 1.0.4, document parsing is completely isolated using Apache Tika 4's <code>PipesForkParser</code>. Each parsing task executes in a sandboxed, memory-bounded child JVM process governed by strict timeouts. If a malicious or poisoned document triggers an out-of-memory error or process crash, only the ephemeral child process terminates—the parent ingestion service logs the error, emits an audit event, and continues processing without downtime.
+      </p>
+
+      <h3>3. Claim-Check Pattern with Redis Stack &amp; Apache Ozone</h3>
+      <p>
+        Message brokers are optimized for high-volume, low-latency streaming—not multi-megabyte binary payloads. OpenCrawling implements the <strong>Claim-Check Pattern</strong>:
+      </p>
+      <ul>
+        <li>When a repository connector discovers a binary payload, the raw bytes are streamed directly into an enterprise object store (<strong>Apache Ozone S3 / Native RPC</strong> or <strong>Redis Stack</strong>).</li>
+        <li>A lightweight <strong>OIS Claim-Check Token</strong> containing payload reference URIs, SHA-256 integrity digests, and metadata is published to Apache Kafka.</li>
+        <li>Downstream consumer workers retrieve the binary payload on-demand only when extraction is executed, keeping Kafka topic throughput blazing fast and broker memory lean.</li>
+      </ul>
+
+      <h2><span class="section-num">03</span> Comprehensive Connector Ecosystem at Launch</h2>
+      <p>
+        OpenCrawling 1.0.4 ships with an expansive matrix of enterprise-grade connectors, each featuring native Zero-Trust security mapping, deterministic chunking, and incremental synchronization:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Repository Connector</th>
+            <th>Protocol / Underlying API</th>
+            <th>Security &amp; Sync Highlights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Microsoft SharePoint Online</strong></td>
+            <td>Microsoft Graph API v1.0, Entra ID</td>
+            <td>Incremental <code>@odata.deltaLink</code>, permission-fingerprint tree mode, fail-closed <code>SharePointSecurityMapper</code>, shared <code>Retry-After</code> throttle gate.</td>
+          </tr>
+          <tr>
+            <td><strong>M-Files</strong></td>
+            <td>M-Files Web Service (MFWS) &amp; VAF</td>
+            <td>Recursive last-modified time-window splitting, Single &amp; Multi-File Document (MFD) lineage, typed <code>MFDataType</code> property normalization, incremental tombstones.</td>
+          </tr>
+          <tr>
+            <td><strong>Hyland OpenArch</strong></td>
+            <td>OpenArch REST, paged HXQL</td>
+            <td>High-throughput HXQL source harvesting on Java 25 Virtual Threads, lossless <code>sys_acl</code> synchronization, bidirectional Parquet vector export.</td>
+          </tr>
+          <tr>
+            <td><strong>Alfresco Content &amp; Process Services</strong></td>
+            <td>Alfresco REST API &amp; Collocated DB</td>
+            <td>Full repository crawling, collocated database security pattern for workflow attachments in Alfresco Process Services (APS).</td>
+          </tr>
+          <tr>
+            <td><strong>Doxis 4</strong></td>
+            <td>Doxis REST &amp; CSB Client</td>
+            <td>Enterprise ECM document harvesting, metadata mapping, and access authorization bridge.</td>
+          </tr>
+          <tr>
+            <td><strong>OASIS CMIS 1.1</strong></td>
+            <td>Apache Chemistry OpenCMIS</td>
+            <td>Standardized CMIS query and navigation crawling across compliant enterprise repositories (IBM FileNet, OpenText, etc.).</td>
+          </tr>
+          <tr>
+            <td><strong>Flowable &amp; Camunda BPMN</strong></td>
+            <td>REST API &amp; Collocated DB</td>
+            <td>Process engine document harvesting, task attachments, process instance variables, and role-based ACLs.</td>
+          </tr>
+          <tr>
+            <td><strong>Apache Iceberg</strong></td>
+            <td>Iceberg Table API &amp; REST Catalog</td>
+            <td>Lakehouse table harvesting, incremental partition snapshot tracking, and Parquet data extraction.</td>
+          </tr>
+          <tr>
+            <td><strong>JDBC Connector</strong></td>
+            <td>Standard JDBC Drivers</td>
+            <td>Universal relational database ingestion with configurable incremental timestamp / ID tracking across PostgreSQL, MySQL, Oracle, and SQL Server.</td>
+          </tr>
+          <tr>
+            <td><strong>Apache StormCrawler Bolt</strong></td>
+            <td>Apache Storm / StormCrawler</td>
+            <td>Large-scale web crawling bolt integration, reporting fetched text, status events, and tombstone deletions.</td>
+          </tr>
+          <tr>
+            <td><strong>gRPC Push Connector</strong></td>
+            <td>Protobuf &amp; gRPC Gateway</td>
+            <td>Ultra-low-latency real-time push gateway for edge devices, webhook ingestion, and internal microservice event streaming.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Target Output &amp; Vector Store Connectors</h3>
+      <p>
+        On the target indexing side, OpenCrawling 1.0.4 provides robust, production-tested output connectors:
+      </p>
+      <ul>
+        <li><strong>PostgreSQL / PGVector:</strong> Relational metadata storage paired with <code>pgvector</code> similarity search and SQL-level ACL filtering.</li>
+        <li><strong>Apache Solr 10:</strong> Native Solr 10 Output Connector with Dense Vector indexing (HNSW) and hybrid lexical + semantic retrieval.</li>
+        <li><strong>OpenSearch 2 &amp; OpenSearch 3:</strong> Output connectors featuring k-NN vector search, filtered queries, and cluster security integration.</li>
+        <li><strong>Milvus &amp; Zilliz Cloud:</strong> High-scale vector database connector with <code>AUTOINDEX</code> automation and masked credential protection in the Admin UI.</li>
+        <li><strong>Qdrant:</strong> Production vector search engine output connector with payload filtering.</li>
+        <li><strong>Vespa:</strong> High-throughput search and recommendation engine output connector.</li>
+        <li><strong>Apache SeaTunnel:</strong> Distributed data integration connector to route documents to dozens of big data ecosystems.</li>
+        <li><strong>Apache Ozone Output Connector:</strong> High-throughput <em>Migration Mode</em> streaming raw binaries and sidecar <code>.ois.json</code> manifests bit-for-bit to Apache Ozone.</li>
+        <li><strong>Hyland OpenArch Parquet Vector Bridge:</strong> SNAPPY Apache Parquet vector bridge conforming strictly to OpenArch's <code>embedding.avsc</code> schema.</li>
+      </ul>
+
+      <h2><span class="section-num">04</span> Zero-Trust Security &amp; The Model Context Protocol (MCP)</h2>
+      <p>
+        The most perilous vulnerability in enterprise AI deployments is <strong>knowledge leakage</strong>. When internal documents are converted to vector embeddings and stored in a shared database without authorization controls, any employee or AI agent querying the index can access confidential financial reports, executive memos, or HR records.
+      </p>
+      <p>
+        OpenCrawling enforces a strict <strong>Fail-Closed Zero-Trust Architecture</strong>:
+      </p>
+      <ol>
+        <li><strong>Lossless ACL Ingestion:</strong> Every connector captures fine-grained access control lists—explicit users, Active Directory / Entra ID security groups, and inheritance flags—and normalizes them into the OIS security schema.</li>
+        <li><strong>Deterministic Chunk Lineage:</strong> Document chunks inherit parent document permissions with deterministic, hash-based chunk IDs, ensuring that updates or deletions at the source automatically invalidate downstream vector chunks.</li>
+        <li><strong>Universal Secure MCP Server (<code>oc-mcp-server</code>):</strong> OpenCrawling embeds a native Model Context Protocol server exposing tools such as <code>secure_vector_search</code>, <code>openarch_search</code>, and <code>openarch_fetch_document</code> directly to LLM environments like Claude Desktop, Cursor, ChatGPT, and enterprise autonomous agents.</li>
+      </ol>
+
+      <pre><code>// Example: OpenCrawling Zero-Trust OIS Document Manifest
+{
+  "oisVersion": "1.0.0",
+  "documentId": "sp-sec-2026-audit-report",
+  "sourceUri": "https://company.sharepoint.com/sites/legal/Audits/2026.pdf",
+  "title": "Confidential Security Audit Report 2026",
+  "mimeType": "application/pdf",
+  "security": {
+    "inheritanceEnabled": false,
+    "allowEntities": [
+      "user:auditor@company.com",
+      "group:SECURITY_COMPLIANCE_DIRECTORS"
+    ],
+    "denyEntities": [
+      "group:EXTERNAL_CONTRACTORS"
+    ]
+  },
+  "metadata": {
+    "classification": "TOP_SECRET",
+    "retentionYears": 7
+  }
+}</code></pre>
+
+      <p>
+        When an AI agent invokes <code>secure_vector_search</code>, the MCP server evaluates the caller's verified identity tokens against the stored ACLs before returning candidate chunks. If the caller lacks authorization, the chunk is filtered out at the vector database level—it is never passed into the LLM context.
+      </p>
+
+      <h2><span class="section-num">05</span> Developer &amp; Operator Experience</h2>
+      <p>
+        OpenCrawling 1.0.4 delivers a developer experience designed for rapid adoption, straightforward automation, and effortless day-2 operations:
+      </p>
+
+      <h3>1. OpenAPI 3.1 &amp; Embedded Swagger UI</h3>
+      <p>
+        Full OpenAPI 3.1 specification compliance with rich interactive documentation available out-of-the-box at <code>http://localhost:8080/swagger-ui.html</code>. Explore endpoints, test crawler job dispatches, introspect connector configurations, and generate SDK clients in any programming language.
+      </p>
+
+      <h3>2. OpenCrawling CLI (<code>oc-cli</code>) &amp; Homebrew Tap</h3>
+      <p>
+        Operators can control OpenCrawling from the terminal, bastion hosts, or CI/CD pipelines using our Picocli-powered CLI. Install it instantly on macOS and Linux via our official Homebrew tap:
+      </p>
+      <pre><code># Install OpenCrawling CLI via Homebrew
+brew tap opencrawling/tap
+brew install oc-cli
+
+# Test connectivity to a repository connector
+oc connector test SharePoint_Online
+
+# Start an on-demand crawl job
+oc crawl start SharePoint_Online
+
+# Inspect cluster health and active workers
+oc status</code></pre>
+
+      <h3>3. Official Java Client SDK &amp; Maven Connector Archetypes</h3>
+      <p>
+        Developers building custom integrations can take advantage of the official <strong>Java Client SDK</strong> (<code>oc-java-client-sdk</code>), which provides type-safe clients for managing crawler jobs and submitting OIS documents.
+      </p>
+      <p>
+        To create custom plugins, developers can generate complete, production-ready Maven projects in seconds using our official archetypes:
+      </p>
+      <pre><code>mvn archetype:generate \
+  -DarchetypeGroupId=org.opencrawling \
+  -DarchetypeArtifactId=opencrawling-archetype-repository-connector \
+  -DarchetypeVersion=1.0.4 \
+  -DgroupId=com.mycompany.ingestion \
+  -DartifactId=custom-repository-connector \
+  -Dversion=1.0.0-SNAPSHOT</code></pre>
+
+      <h3>4. Modern React 19 Admin UI &amp; Lakehouse Audit Ledger</h3>
+      <p>
+        Version 1.0.4 includes a responsive, dark/light theme React 19 + Vite web console featuring live connectivity testing buttons, visual crawl pipeline monitoring, and credential masking.
+      </p>
+      <p>
+        For governance and compliance, an embedded <strong>DuckDB Lakehouse Audit Reporting</strong> engine allows operators to run SQL analytical queries directly over historical ingestion events, error rates, and security classifications without installing external data warehouses.
+      </p>
+
+      <h2><span class="section-num">06</span> Flexible Deployment: Containers, Bare-Metal &amp; VMs</h2>
+      <p>
+        Recognizing that many regulated enterprise environments, defense organizations, and air-gapped data centers prohibit container runtimes (Docker, Podman, Kubernetes), OpenCrawling 1.0.4 provides <strong>first-class support for both containerized and container-free environments</strong>:
+      </p>
+
+      <h3>Container Deployments (Docker Hub &amp; GHCR)</h3>
+      <p>
+        Official multi-arch container images are published on Docker Hub (<code>opencrawling/*</code>) and GitHub Packages (<code>ghcr.io/opencrawling/*</code>). Spin up the complete decoupled production stack with a single command:
+      </p>
+      <pre><code># Launch full decoupled stack (Kafka, Redis, Postgres, Ollama, Runtime, Embedding, UI)
+docker compose -f docker-compose-decoupled-dockerhub.yml up -d</code></pre>
+
+      <h3>Self-Contained Distribution ZIP Packages (Bare-Metal &amp; VMs)</h3>
+      <p>
+        For native deployments across Linux (RHEL, Ubuntu, Debian, SLES), Windows Server, and macOS, OpenCrawling publishes <strong>5 self-contained Distribution ZIP archives</strong> with every release:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Distribution Archive</th>
+            <th>Approx. Size</th>
+            <th>Target Deployment Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>opencrawling-platform-dist-1.0.4.zip</code></td>
+            <td>~745 MB</td>
+            <td>Master bundle: All-in-One single VM or enterprise golden provisioning image.</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling-runtime-dist-1.0.4.zip</code></td>
+            <td>~459 MB</td>
+            <td>Runtime, crawler worker, ingestion consumer, and control plane nodes.</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling-embedding-service-dist-1.0.4.zip</code></td>
+            <td>~192 MB</td>
+            <td>Stateless embedding worker VMs with Spring AI vectorization models.</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling-admin-ui-dist-1.0.4.zip</code></td>
+            <td>~275 KB</td>
+            <td>Frontend static bundle for Nginx, Apache HTTP Server, or Windows IIS reverse proxies.</td>
+          </tr>
+          <tr>
+            <td><code>opencrawling-cli-dist-1.0.4.zip</code></td>
+            <td>~91 MB</td>
+            <td>Standalone CLI archive with <code>bin/oc</code> (Linux/macOS) and <code>bin/oc.bat</code> (Windows) wrappers.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Every distribution archive includes native startup wrappers (<code>.sh</code> and <code>.bat</code>), production configuration templates, pre-configured <code>systemd</code> service units, and SHA-256 cryptographic checksums for compliance verification.
+      </p>
+
+      <h2><span class="section-num">07</span> Quick Start: Up and Running in 3 Minutes</h2>
+      <p>
+        Getting started with OpenCrawling 1.0.4 takes less than three minutes:
+      </p>
+      <pre><code># 1. Download the decoupled production Docker Compose definition
+curl -O https://opencrawling.org/docker-compose-decoupled-dockerhub.yml
+
+# 2. Start the full decoupled infrastructure and application stack
+docker compose -f docker-compose-decoupled-dockerhub.yml up -d
+
+# 3. Access the services:
+# • React Admin UI:       http://localhost:8080/
+# • OpenAPI / Swagger UI:   http://localhost:8080/swagger-ui.html
+# • Secure MCP Server:      http://localhost:8080/mcp
+# • gRPC Gateway:           localhost:9095 &amp; localhost:9096</code></pre>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#128640;</div>
+        <div>
+          <p><strong>Prefer Bare-Metal or VM Installation?</strong> Review our comprehensive <a href="https://github.com/OpenCrawling/opencrawling/wiki/VM-and-Bare-Metal-Distribution-Installation" target="_blank" rel="noopener">VM &amp; Bare-Metal Distribution ZIP Installation Guide</a> to configure systemd services, offline dependencies, and Java 25 runtime environments.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">08</span> Community, Acknowledgments &amp; What's Next</h2>
+      <p>
+        The 1.0.4 GA milestone is the collective achievement of a passionate community of open-source engineers, enterprise architects, and search and AI specialists. We extend our deepest gratitude to everyone who filed bug reports, participated in roadmap discussions, and contributed code.
+      </p>
+      <p>
+        Special thanks to our core contributors and new community members who contributed to this release:
+      </p>
+      <ul>
+        <li><strong>@OpenPj (Piergiorgio Lucidi)</strong> for lead architecture, the Open Ingestion Standard, Java 25 virtual threading, and core connector design.</li>
+        <li><strong>@simonhearne</strong> for the Milvus Output Connector, Zilliz Cloud AUTOINDEX integration, and admin security fixes.</li>
+        <li><strong>@michaelcizmar</strong> for the Qdrant Output Connector and enterprise vector search architecture.</li>
+        <li><strong>@textercabaceira (Luís Cabaceira)</strong> for the SharePoint Online, M-Files, and Doxis 4 repository connectors, the Vespa output connector, and the ManifoldCF migrator.</li>
+        <li><strong>@dpol1 (Davide Polato)</strong> for StormCrawler Bolt text extraction and deletion wiring, stable chunk ID hashing, and HTTP OIS job endpoints.</li>
+        <li><strong>@mkjsix</strong> for developer experience, build workflows, and documentation improvements.</li>
+      </ul>
+      <p>
+        Looking ahead on our 2026/2027 roadmap, we are working on expanded multi-modal embedding pipelines (audio, video, OCR image chunking), native Kubernetes Operator integration, and Apache Software Foundation incubation preparations.
+      </p>
+
+      <!-- CTA Box -->
+      <div class="article-cta">
+        <h3>Experience OpenCrawling 1.0.4 Today</h3>
+        <p>Explore the full source code on GitHub, review the installation documentation, or test drive our interactive in-browser ingestion simulator.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/OpenCrawling/opencrawling/releases/tag/v1.0.4" target="_blank" rel="noopener" class="btn btn-primary">Download Release 1.0.4 &rarr;</a>
+          <a href="../index.html#getting-started" class="btn btn-secondary">Quick Start Guide</a>
+          <a href="../index.html#simulator" class="btn btn-secondary">Try Live Simulator</a>
+          <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-secondary">Star on GitHub ⭐</a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>

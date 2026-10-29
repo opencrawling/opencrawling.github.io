@@ -740,10 +740,10 @@ docker compose -f docker-compose-decoupled.yml up -d
 mvn archetype:generate \
   -DarchetypeGroupId=org.opencrawling.archetypes \
   -DarchetypeArtifactId=opencrawling-archetype-repository-connector \
-  -DarchetypeVersion=1.0.0-SNAPSHOT \
+  -DarchetypeVersion=1.0.4 \
   -DgroupId=com.mycompany.connectors \
   -DartifactId=my-repository-connector \
-  -Dversion=1.0.0-SNAPSHOT \
+  -Dversion=1.0.4 \
   -DconnectorName=SampleRepositoryConnector
 
 # Build, run unit &amp; Failsafe integration tests (*Test.java &amp; *IT.java), and launch with Docker overlay:
@@ -762,14 +762,14 @@ mvn verify</code></pre>
 &lt;dependency&gt;
     &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
     &lt;artifactId&gt;oc-core&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;1.0.4&lt;/version&gt;
 &lt;/dependency&gt;
 
 &lt;!-- Include FileSystem Repository Connector if required --&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;org.opencrawling&lt;/groupId&gt;
     &lt;artifactId&gt;oc-filesystem-repository-connector&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;1.0.4&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
           </div>
         </div>
@@ -883,6 +883,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
 
     <div class="blog-grid">
       <article class="blog-card glass featured-blog-card">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #10B981, #6366F1); color: #FFF;">Official Release</span>
+          <span class="blog-date">October 29, 2026</span>
+          <span class="blog-read-time">11 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/announcing-opencrawling-1-0-4-first-official-release.html">OpenCrawling 1.0.4 Released: The First Official General Availability Milestone for Enterprise AI &amp; Search Ingestion</a></h3>
+        <p class="blog-excerpt">
+          We are thrilled to announce the first official general availability (GA) release of <strong>OpenCrawling 1.0.4</strong>! Built from the ground up on <strong>Java 25 Virtual Threads</strong>, <strong>Spring Boot 4.1.1</strong>, and the <strong>Open Ingestion Standard (OIS)</strong>, version 1.0.4 delivers an enterprise-grade, Zero-Trust pipeline with 20+ connectors (SharePoint, M-Files, OpenArch, Alfresco, CMIS, Iceberg, Solr 10, OpenSearch, Milvus, Qdrant, Vespa), decoupled Kafka streaming, sandboxed Apache Tika 4 text extraction, native Model Context Protocol (MCP) server for LLMs, self-contained Distribution ZIPs for bare-metal &amp; VMs, and Homebrew CLI distribution.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/announcing-opencrawling-1-0-4-first-official-release.html" class="card-link">Read Announcement &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #0078D4, #06B6D4); color: #FFF;">Connector Release</span>
           <span class="blog-date">October 27, 2026</span>
@@ -1434,6 +1449,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
         </p>
         <div class="blog-card-footer">
           <a href="blog/shaping-the-ingestion-roadmap.html" class="card-link">Read Article &rarr;</a>
+        </div>
       </article>
 
       <article class="blog-card glass">
