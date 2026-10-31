@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentum REST Services, DQL Keyset Paging &amp; Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native OpenText Documentum Repository Connector (oc-documentum-repository-connector). Crawl repositories through Documentum REST Services and DQL with keyset cursor pagination, Java 25 Virtual Threads, single and repeating custom type attributes, primary content streams or preferred renditions, fail-closed Zero-Trust permission mapping, ACL i_vstamp tracking, moved folder detection, and comprehensive verification against the OpenAPI-conforming DCTM REST mock.">
+  <meta name="keywords" content="documentum, opentext documentum, dctm-rest, documentum rest services, dql, keyset cursor pagination, enterprise content management, ecm, zero-trust acls, documentumsecuritymapper, java 25 virtual threads, structured task scope, open ingestion standard, enterprise rag, model context protocol">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-documentum-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-documentum-repository-connector.html">
+  <meta property="og:title" content="Documentum REST Services, DQL Keyset Paging &amp; Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native OpenText Documentum Repository Connector (oc-documentum-repository-connector). Crawl repositories through Documentum REST Services and DQL with keyset cursor pagination, Java 25 Virtual Threads, single and repeating custom type attributes, primary content streams or preferred renditions, fail-closed Zero-Trust permission mapping, ACL i_vstamp tracking, moved folder detection, and comprehensive verification against the OpenAPI-conforming DCTM REST mock.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-documentum-repository-connector.html">
+  <meta property="twitter:title" content="Documentum REST Services, DQL Keyset Paging &amp; Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native OpenText Documentum Repository Connector (oc-documentum-repository-connector). Crawl repositories through Documentum REST Services and DQL with keyset cursor pagination, Java 25 Virtual Threads, single and repeating custom type attributes, primary content streams or preferred renditions, fail-closed Zero-Trust permission mapping, ACL i_vstamp tracking, moved folder detection, and comprehensive verification against the OpenAPI-conforming DCTM REST mock.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231A2B6D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cpolyline points='10 9 9 9 8 9'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Documentum REST Services, DQL Keyset Paging & Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector",
+    "description": "Discover OpenCrawling's native OpenText Documentum Repository Connector (oc-documentum-repository-connector). Crawl repositories through Documentum REST Services and DQL with keyset cursor pagination, Java 25 Virtual Threads, single and repeating custom type attributes, primary content streams or preferred renditions, fail-closed Zero-Trust permission mapping, ACL i_vstamp tracking, moved folder detection, and comprehensive verification against the OpenAPI-conforming DCTM REST mock.",
+    "datePublished": "2026-10-31",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-documentum-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #1A2B6D, #3B82F6); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #60A5FA, #93C5FD); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #3B82F6; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #60A5FA; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #60A5FA; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(59,130,246,0.12); border: 1px solid rgba(96,165,250,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #93C5FD; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(59,130,246,0.06); border-color: #3B82F6; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(96,165,250,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #60A5FA; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #3B82F6; color: #93C5FD; background: rgba(59,130,246,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #60A5FA; }
+    .article-cta { background: rgba(59,130,246,0.06); border: 1px solid rgba(96,165,250,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #60A5FA; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(59,130,246,0.1); color: #60A5FA; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(96,165,250,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">October 31, 2026</span>
+        <span class="blog-meta-read">&bull; 10 min read</span>
+      </div>
+      <h1 class="blog-article-title">Documentum REST Services, DQL Keyset Paging &amp; Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector</h1>
+      <p class="blog-article-lead">
+        Across regulated life sciences, aerospace, financial institutions, and global government agencies, <strong>OpenText Documentum</strong> remains the mission-critical system of record for highly sensitive documents—from clinical trial dossiers and standard operating procedures to classified technical filings and financial audits. Today, we are proud to introduce the official <strong>OpenText Documentum Repository Connector (<code>oc-documentum-repository-connector</code>)</strong>! Ingest Documentum repositories through <strong>Documentum REST Services (<code>/dctm-rest</code>)</strong> with zero proprietary DFC dependencies, page high-volume DQL feeds reliably with keyset cursor pagination, adapt to server date literal time zones automatically, extract custom type attributes and renditions, enforce fail-closed Zero-Trust ACLs with explicit-deny precedence, and detect deletions through reconciliation or the audit trail. 📄🔒
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">OpenText Documentum REST &amp; DQL Enterprise Ingestion Pipeline</div>
+      <div class="flow-nodes">
+        <div class="flow-node">OpenText Documentum REST (/dctm-rest)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">DocumentumRepositoryConnector (Keyset Cursor &amp; Probed TimeZone)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">LOCAL Enclosure Download + TempFileInputStream</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Claim-Check Store (Ozone / S3)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">OIS Document + DocumentumSecurityMapper</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Stores &amp; Secure MCP Server</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Why Documentum Ingestion Demands Deep Domain Rigor</h2>
+      <p>
+        Building Retrieval-Augmented Generation (RAG) and semantic search architectures over <strong>OpenText Documentum Content Server</strong> presents specialized protocol and security challenges that generic crawlers completely overlook:
+      </p>
+      <ul>
+        <li><strong>Subtle Multi-Entry Permission Logic:</strong> Documentum determines user access by evaluating multiple entries in a permission set (<code>dm_acl</code>): direct accessors, group memberships, <code>dm_owner</code>, <code>dm_group</code>, and <code>dm_world</code>. Access permits (0) grant rights, but access restrictions (3) strictly take rights away. Required groups (6) and required group sets (7) enforce an AND-conjunction across groups. Any RAG mapping that ignores restrictions or mishandles required groups exposes restricted corporate data to unauthorized LLM queries.</li>
+        <li><strong>ACL Changes Do Not Bump Document Timestamps:</strong> In Documentum, modifying a permission set changes neither <code>r_modify_date</code> nor <code>i_vstamp</code> of the sysobjects that reference that ACL. Incremental crawlers that rely solely on document modification watermarks miss permission updates indefinitely, leaving vector stores with stale, leaking security rules.</li>
+        <li><strong>Offset Paging Drift in Live Repositories:</strong> Running paged DQL queries with traditional page numbers (<code>page=1, 2, 3...</code>) re-executes the query on the server. If documents are saved or checked in during a crawl, page offsets shift dynamically, causing documents to be skipped or repeated.</li>
+        <li><strong>Time Zone Mismatches in DQL Date Literals:</strong> While Documentum REST Services return dates in ISO 8601 with timezone offsets, Content Server interprets DQL <code>DATE('...')</code> literals strictly in its local server time zone. A discrepancy between client and server time zones silently shifts watermarks by hours, causing entire batches of newly modified documents to be missed without any error.</li>
+        <li><strong>Credential Containment:</strong> Content metadata can point to external Accelerated Content Server (ACS) or Branch Office Caching Services (BOCS) URLs. Forwarding Documentum REST credentials or OTDS bearer tokens to third-party hosts violates security boundaries.</li>
+      </ul>
+
+      <p>
+        The new <code>oc-documentum-repository-connector</code> is built from the ground up on Java 25, Spring Boot, and the Open Ingestion Standard (OIS) to solve each of these domain nuances natively.
+      </p>
+
+      <div class="callout-box info">
+        <span class="callout-icon">ℹ️</span>
+        <p><strong>Licensing &amp; Prerequisites:</strong> OpenCrawling includes neither OpenText Documentum nor any OpenText license. The connector interacts strictly with your existing, licensed Documentum Content Server deployment through Documentum REST Services. It is strictly <strong>read-only</strong> (issuing GET requests exclusively).</p>
+      </div>
+
+      <h2><span class="section-num">2. </span>Zero Proprietary Dependencies &amp; Standards-Based REST Protocol</h2>
+      <p>
+        Unlike legacy tools that require bundling proprietary Documentum Foundation Classes (DFC) jars, native libraries, or licensed installer packages, <code>oc-documentum-repository-connector</code> connects purely over HTTP using standard <strong>Java 25 <code>HttpClient</code></strong> and Jackson.
+      </p>
+      <p>
+        Every request carries <code>Accept: application/vnd.emc.documentum+json</code>, executing queries through the repository's native <code>dql</code> link template (<code>GET /repositories/{repo}?dql=...&amp;page=...&amp;items-per-page=...</code>) and downloading content streams from <code>LOCAL</code> enclosures on the REST server itself.
+      </p>
+      <p>
+        Authentication is fully configurable:
+      </p>
+      <ul>
+        <li><code>auth-type: basic</code>: Authenticates with username and password, or passes a Documentum session ticket (<code>DM_TICKET=...</code>) directly as the password.</li>
+        <li><code>auth-type: oauth2</code>: Client-credentials grant against OpenText Directory Services (OTDS) or another OAuth2 identity provider (<code>oauth2.token-url</code>, <code>oauth2.client-id</code>, <code>oauth2.client-secret</code>). Tokens are cached with expiry margins and proactively renewed upon HTTP <code>401 Unauthorized</code>.</li>
+        <li><code>auth-type: bearer</code>: Direct pre-issued bearer access token (<code>oauth2.access-token</code>).</li>
+      </ul>
+
+      <p>
+        To protect enterprise credentials, <code>DocumentumClient</code> verifies download URLs: content links naming a proxy's host are redirected safely to the configured URL, while any link targeting an external ACS or BOCS host is rejected with <code>FOREIGN_LINK</code>, ensuring credentials never leave the REST gateway.
+      </p>
+
+      <h2><span class="section-num">3. </span>Keyset Cursor Paging &amp; Server Time Zone Probing</h2>
+      <p>
+        To eliminate offset paging drift, every DQL listing query is ordered by <code>r_modify_date, r_object_id</code> and paged using a <strong>keyset cursor</strong>:
+      </p>
+      <pre><code>SELECT r_object_id, i_chronicle_id, r_object_type, r_modify_date, i_vstamp,
+       acl_domain, acl_name, owner_name, group_name
+FROM dm_document
+WHERE (r_modify_date &gt; t OR (r_modify_date = t AND r_object_id &gt; id))
+ORDER BY r_modify_date, r_object_id</code></pre>
+      <p>
+        Because Documentum's <code>r_modify_date</code> has one-second precision, the combined cursor condition guarantees that even if hundreds of documents share the exact same timestamp, every document is processed without gaps or duplicates.
+      </p>
+
+      <h3>Server Date Literal Probing</h3>
+      <p>
+        On startup, <code>connectionInfo()</code> queries <code>dm_cabinet</code> to inspect a known cabinet's modification date, formats that date into a DQL literal, and executes a probe query to confirm that Content Server interprets the literal in the exact same time zone. If a mismatch is detected (e.g. Content Server runs in CET but client assumed UTC), the connector halts with a clear error rather than crawling with a skewed watermark.
+      </p>
+
+      <h2><span class="section-num">4. </span>Fail-Closed Zero-Trust Security Mapping</h2>
+      <p>
+        Documentum permission sets (<code>dm_acl</code>) are resolved and mapped by <code>DocumentumSecurityMapper</code> according to Documentum's native security evaluation:
+      </p>
+      <ul>
+        <li><strong>Basic Permits:</strong> Access permits (<code>r_permit_type = 0</code>) with level $\ge 3$ (READ, RELATE, VERSION, WRITE, DELETE) map to OIS <code>read</code> grants for that accessor. Access permits below READ (NONE, BROWSE) grant nothing.</li>
+        <li><strong>Access Restrictions (Deny Precedence):</strong> Access restrictions (<code>r_permit_type = 3</code>) with level $\le 3$ map to OIS <code>deny</code> rules. In OpenCrawling, <strong>deny unconditionally wins</strong> over grants, mirroring Documentum's restriction behavior.</li>
+        <li><strong>Dynamic Owner &amp; Group:</strong> <code>dm_owner</code> dynamically resolves to the document's <code>owner_name</code> (user or group), and <code>dm_group</code> resolves to <code>group_name</code>.</li>
+        <li><strong>World Identity:</strong> <code>dm_world</code> maps to the configured group identity (default <code>dm_world</code>) or to <code>public</code> when <code>world-public: true</code>. A restriction on <code>dm_world</code> leaves only fallback principals.</li>
+        <li><strong>Required Groups &amp; Sets (AND Conjunction):</strong> Required groups (permit type 6) and required group sets (permit type 7) enforce an AND-conjunction that standard OIS security cannot express without leakage. Documents with required groups are excluded by default (<code>required-group-documents: exclude</code>) or mapped to fallback principals.</li>
+        <li><strong>Login Domain Collision Prevention:</strong> With <code>principal-format: login</code>, user identities resolve to <code>user_login_name</code>. If multiple users across different <code>user_login_domain</code> instances share the same login name, the connector detects the ambiguity and refuses to grant permissions, preventing cross-domain authorization leakage.</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Incremental Watermarks, ACL Version Tracking &amp; Deletions</h2>
+      <p>
+        The connector persists incremental progress atomically in <code>DocumentumCrawlState</code> (<code>data/documentum-state/</code>):
+      </p>
+      <ul>
+        <li><strong>Watermark &amp; Skip-Unchanged:</strong> Incremental runs scan <code>r_modify_date &gt;= &lt;watermark&gt;</code>. Documents whose version, <code>i_vstamp</code>, and permission fingerprint match the saved state are skipped immediately.</li>
+        <li><strong>ACL <code>i_vstamp</code> Tracking:</strong> The connector tracks the version stamp (<code>i_vstamp</code>) of every permission set in use. If an administrator edits an ACL, the next incremental crawl detects the change and re-checks all documents bound to that ACL.</li>
+        <li><strong>Moved Folder Detection:</strong> In <code>folder</code> mode, folders modified since the watermark are re-listed in full, ensuring moved documents receive updated <code>documentum.folderPath</code> metadata.</li>
+        <li><strong>Deletion Tracking:</strong>
+          <ul>
+            <li><code>reconcile</code> (default): Conducts an ID sweep of the crawl scope, compares against previously known documents, and emits OIS <code>DELETE</code> tombstones for vanished items.</li>
+            <li><code>audit</code>: Queries <code>dm_audittrail</code> events (<code>dm_destroy</code>, <code>dm_prune</code>) with a 26-hour safety lookback against timezone and daylight saving drift.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Configuration Reference</h2>
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.connector.documentum.url</code></td>
+            <td><code>http://localhost:8080/dctm-rest</code></td>
+            <td>Documentum REST Services context URL</td>
+          </tr>
+          <tr>
+            <td><code>repository-name</code></td>
+            <td><em>(Required)</em></td>
+            <td>Target repository (docbase) name</td>
+          </tr>
+          <tr>
+            <td><code>auth-type</code></td>
+            <td><code>basic</code></td>
+            <td><code>basic</code>, <code>oauth2</code>, or <code>bearer</code></td>
+          </tr>
+          <tr>
+            <td><code>crawl-mode</code></td>
+            <td><code>dql</code></td>
+            <td><code>dql</code> or <code>folder</code></td>
+          </tr>
+          <tr>
+            <td><code>object-types</code></td>
+            <td><code>dm_document</code></td>
+            <td>Comma-separated object types to crawl (subtypes included)</td>
+          </tr>
+          <tr>
+            <td><code>version-mode</code></td>
+            <td><code>current_only</code></td>
+            <td><code>current_only</code>, <code>latest_major</code>, or <code>all_versions</code></td>
+          </tr>
+          <tr>
+            <td><code>prefer-rendition</code></td>
+            <td>—</td>
+            <td>Format name (e.g. <code>pdf</code>) preferred over primary content</td>
+          </tr>
+          <tr>
+            <td><code>include-acls</code></td>
+            <td><code>true</code></td>
+            <td>Map Documentum permission sets to OIS Zero-Trust ACLs</td>
+          </tr>
+          <tr>
+            <td><code>deletion-tracking</code></td>
+            <td><code>reconcile</code></td>
+            <td><code>reconcile</code>, <code>audit</code>, or <code>none</code></td>
+          </tr>
+          <tr>
+            <td><code>batch-size</code></td>
+            <td><code>100</code></td>
+            <td>Rows per DQL page (1 to 1000)</td>
+          </tr>
+          <tr>
+            <td><code>parallelism</code></td>
+            <td><code>4</code></td>
+            <td>Concurrent virtual threads downloading documents</td>
+          </tr>
+          <tr>
+            <td><code>state-directory</code></td>
+            <td><code>data/documentum-state</code></td>
+            <td>Persistent directory for incremental state JSON</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Sample <code>application.yml</code></h3>
+      <pre><code class="language-yaml">spring:
+  opencrawling:
+    connector:
+      type: documentum
+      documentum:
+        url: "https://documentum.company.com/dctm-rest"
+        repository-name: "corp_repo"
+        auth-type: "basic"
+        username: "dctm_crawler"
+        password: "${DOCUMENTUM_PASSWORD}"
+        crawl-mode: "folder"
+        root-cabinet-path: "/Regulatory/Submissions"
+        object-types: "my_submission"
+        where: "a_status = 'Approved'"
+        version-mode: "current_only"
+        prefer-rendition: "pdf"
+        deletion-tracking: "reconcile"
+        batch-size: 100
+        parallelism: 4</code></pre>
+
+      <h2><span class="section-num">7. </span>Tested Against the OpenAPI-Conforming DCTM Mock</h2>
+      <p>
+        Because no public container images exist for Documentum, the connector was verified using the **DCTM REST mock** (<code>oc-documentum-repository-connector/documentum-mock</code>)—an emulator implementing REST 16.7 responses, DQL query execution, and Documentum permission evaluation:
+      </p>
+      <ul>
+        <li><strong>OpenAPI Spec Conformance:</strong> <code>check_spec.py</code> validates every mock endpoint against OpenText's published Documentum REST OpenAPI document.</li>
+        <li><strong>OpenText Python Client Validation:</strong> Unmodified <code>documentum-rest-client-python</code> passes navigation, link traversal, object retrieval, and downloads against the mock.</li>
+        <li><strong>Standalone &amp; Decoupled Integration Suites:</strong> Tested with <code>scripts/test-documentum-repository-connector.sh</code> across both eastern (+02:00) and western (-05:00 with 5-row page caps) time zones, and verified end-to-end via <code>scripts/test-documentum-decoupled.sh</code> with Kafka, Claim-Check store, pgvector, and the Secure MCP Server.</li>
+      </ul>
+
+      <div class="article-cta">
+        <h3>Ready to Ingest OpenText Documentum into Your Enterprise AI Pipeline?</h3>
+        <p>Explore the official documentation, run the integration test suites, or launch a decoupled pipeline in minutes.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/OpenCrawling/opencrawling/wiki/Documentum-Repository-Connector" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Read Documentum Wiki Guide</a>
+          <a href="https://github.com/OpenCrawling/opencrawling" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Star on GitHub</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCrawling. Apache-2.0 Licensed. Built for Zero-Trust Enterprise AI &amp; Ingestion.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
