@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -180,6 +180,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer retrieved claim-check streams. Extracted document text and FileNet custom property definitions via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed FileNet document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted FileNet embeddings, custom document properties, and Zero-Trust ACL SIDs into the vector destination."
+    }
+  },
+  documentum: {
+    files: [
+      { name: "documentum://corp_repo/documents/090277b680000101 (standard_operating_procedure_gxp.pdf) [DQL /dctm-rest]", size: "3.4 MB", acls: ["group:qa_auditors:read", "user:rcosta:read", "group:contractors:deny"] },
+      { name: "documentum://corp_repo/documents/090277b680000102 (regulatory_submission_dossier.pdf) [preferRendition: pdf]", size: "5.8 MB", acls: ["group:regulatory_affairs:read", "user:mallory:read"] },
+      { name: "documentum://corp_repo/documents/090277b680000103 (clinical_trial_protocol_amendment.docx) [Incremental r_modify_date]", size: "1.2 MB", acls: ["group:clinical_ops:read", "group:biometrics:read"] }
+    ],
+    logs: {
+      scan: "DocumentumRepositoryConnector triggered. Authenticating with OpenText Documentum via REST Services at https://dctm:8443/dctm-rest/repositories/corp_repo. Keyset cursor query running over dm_document (ORDER BY r_modify_date, r_object_id)...",
+      claimCheck: "Crawler harvested document page via Java 25 Virtual Threads. Streamed LOCAL enclosure binaries to ClaimCheckStore, resolved dm_acl permissions with explicit-deny precedence and required-group exclusion, and published documentum:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Extracted document text, custom type attributes (documentum_attr_*), and folder paths via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Documentum document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted Documentum embeddings, custom attributes, and Zero-Trust ACL SIDs into the vector destination."
     }
   },
   'grpc-push': {

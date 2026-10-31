@@ -367,22 +367,23 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="98" width="120" height="264" rx="10" class="node-bg" />
-            <text x="70" y="117" class="node-title">Sources</text>
-            <text x="70" y="134" class="node-sub">SharePoint Online 🌐</text>
-            <text x="70" y="150" class="node-sub">M-Files Vault 🗂️</text>
-            <text x="70" y="166" class="node-sub">Hyland OpenArch 🟣</text>
-            <text x="70" y="182" class="node-sub">IBM FileNet P8 🏢</text>
-            <text x="70" y="198" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="214" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="230" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="246" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="262" class="node-sub">Alfresco ACS/APS 📂</text>
-            <text x="70" y="278" class="node-sub">Apache Iceberg 🧊</text>
-            <text x="70" y="294" class="node-sub">Flowable BPMN 🔄</text>
-            <text x="70" y="310" class="node-sub">Camunda BPMN ⚡</text>
-            <text x="70" y="326" class="node-sub">StormCrawler 🕷️</text>
-            <text x="70" y="342" class="node-sub">File System 📁</text>
+            <rect x="10" y="88" width="120" height="284" rx="10" class="node-bg" />
+            <text x="70" y="106" class="node-title">Sources</text>
+            <text x="70" y="122" class="node-sub">SharePoint Online 🌐</text>
+            <text x="70" y="138" class="node-sub">M-Files Vault 🗂️</text>
+            <text x="70" y="154" class="node-sub">Hyland OpenArch 🟣</text>
+            <text x="70" y="170" class="node-sub">IBM FileNet P8 🏢</text>
+            <text x="70" y="186" class="node-sub">Documentum REST 📄</text>
+            <text x="70" y="202" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="218" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="234" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="250" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="266" class="node-sub">Alfresco ACS/APS 📂</text>
+            <text x="70" y="282" class="node-sub">Apache Iceberg 🧊</text>
+            <text x="70" y="298" class="node-sub">Flowable BPMN 🔄</text>
+            <text x="70" y="314" class="node-sub">Camunda BPMN ⚡</text>
+            <text x="70" y="330" class="node-sub">StormCrawler 🕷️</text>
+            <text x="70" y="346" class="node-sub">File System 📁</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -579,6 +580,7 @@
             <option value="mfiles">M-Files Vault (MFWS REST &amp; VAF)</option>
             <option value="openarch">Hyland OpenArch (HXQL &amp; Federated Repository)</option>
             <option value="filenet">IBM FileNet P8 (Content Services GraphQL / CSGQL)</option>
+            <option value="documentum">OpenText Documentum (REST Services / DQL)</option>
             <option value="grpc-push">gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
             <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
@@ -855,6 +857,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
               <button class="schema-tab-btn" data-schema="sharepoint">SharePoint Online</button>
               <button class="schema-tab-btn" data-schema="mfiles">M-Files</button>
+              <button class="schema-tab-btn" data-schema="documentum">Documentum</button>
               <button class="schema-tab-btn" data-schema="openarch">Hyland OpenArch</button>
               <button class="schema-tab-btn" data-schema="grpc">gRPC Push</button>
               <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
@@ -898,6 +901,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
         </p>
         <div class="blog-card-footer">
           <a href="blog/announcing-opencrawling-1-0-4-first-official-release.html" class="card-link">Read Announcement &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #1A2B6D, #3B82F6); color: #FFF;">Connector Release</span>
+          <span class="blog-date">October 31, 2026</span>
+          <span class="blog-read-time">10 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-documentum-repository-connector.html">Documentum REST Services, DQL Keyset Paging &amp; Zero-Trust Enterprise RAG: Announcing the OpenText Documentum Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native OpenText Documentum Repository Connector (<strong>oc-documentum-repository-connector</strong>). Built on Documentum REST Services and DQL with keyset cursor pagination, Java 25 Virtual Threads, single and repeating custom type attributes, primary content streams or preferred renditions (e.g. PDF), fail-closed Zero-Trust permission mapping (<code>DocumentumSecurityMapper</code>) with deny precedence and required-group exclusion, ACL version stamp (<code>i_vstamp</code>) tracking, moved folder detection, and comprehensive verification against the OpenAPI-conforming DCTM REST mock.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-documentum-repository-connector.html" class="card-link">Read Article &rarr;</a>
         </div>
       </article>
 
@@ -1624,6 +1642,44 @@ public class SampleRepositoryConnector implements RepositoryConnector {
       { "identity": "mfiles:user:12", "identityType": "user", "access": "read" },
       { "identity": "mfiles:group:5", "identityType": "group", "access": "read" },
       { "identity": "mfiles:user:9", "identityType": "user", "access": "deny" }
+    ]
+  }
+}`
+        },
+        documentum: {
+          file: 'documentum-ois-document.json',
+          code: `{
+  "id": "documentum://corp_repo/documents/090277b680000101",
+  "action": "UPSERT",
+  "source": {
+    "type": "documentum",
+    "instance": "https://documentum.company.com/dctm-rest",
+    "repository": "corp_repo"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "claimCheckKey": "ofs://s3v/claims/documentum-090277b680000101.bin"
+  },
+  "metadata": {
+    "name": "Standard-Operating-Procedure-GxP.pdf",
+    "title": "SOP 402 - Regulatory Submission Workflow",
+    "documentum.repository": "corp_repo",
+    "documentum.objectId": "090277b680000101",
+    "documentum.chronicleId": "090277b680000101",
+    "documentum.type": "sop_document",
+    "documentum.versionLabel": "1.0",
+    "documentum.isCurrentVersion": "true",
+    "documentum.folderPath": ["/Regulatory/Submissions/SOPs"],
+    "documentum.indexedFormat": "pdf",
+    "documentum_attr_regulatory_region": "EMA",
+    "documentum_attr_compliance_level": "GxP-Critical"
+  },
+  "security": {
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "identity": "rcosta", "identityType": "user", "access": "read" },
+      { "identity": "qa_auditors", "identityType": "group", "access": "read" },
+      { "identity": "contractors", "identityType": "group", "access": "deny" }
     ]
   }
 }`
