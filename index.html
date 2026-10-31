@@ -289,8 +289,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
           </svg>
         </div>
-        <h3>Enterprise Migration Mode &amp; Apache Ozone</h3>
-        <p>Run high-throughput bulk content migrations with <strong>bit-for-bit fidelity</strong> directly into <strong>Apache Ozone</strong>. Bypasses text extraction, narrativization, chunking, and vector embedding to maximize transfer rates, generating Open Ingestion Standard (OIS) <strong>Zero-Trust metadata sidecars (<code>.ois.json</code>)</strong> with SHA-256 hashes and source ACLs.</p>
+        <h3>Enterprise Migration Mode (Apache Ozone &amp; Amazon S3)</h3>
+        <p>Run high-throughput bulk content migrations with <strong>bit-for-bit fidelity</strong> directly into <strong>Apache Ozone</strong> and <strong>Amazon S3</strong>. Bypasses text extraction, narrativization, chunking, and vector embedding to maximize transfer rates, generating Open Ingestion Standard (OIS) <strong>Zero-Trust metadata sidecars (<code>.ois.json</code>)</strong> with SHA-256 hashes, source ACLs, and multi-vendor storage presets.</p>
       </div>
 
       <div class="feature-card full-width">
@@ -358,7 +358,7 @@
           <path class="flow-line line-dashed" d="M495,270 L495,320" />
 
           <!-- Security below Vector Writer (dashed) -->
-          <path class="flow-line line-dashed" d="M760,270 L760,320" />
+          <path class="flow-line line-dashed" d="M760,302 L760,320" />
 
           <!-- Dynamic Ingestion Particles -->
           <circle id="anim-particle-1" r="5" fill="#7C3AED" filter="url(#glow-effect)" />
@@ -367,21 +367,22 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="98" width="120" height="270" rx="10" class="node-bg" />
-            <text x="70" y="118" class="node-title">Sources</text>
-            <text x="70" y="136" class="node-sub">SharePoint Online 🌐</text>
-            <text x="70" y="152" class="node-sub">M-Files Vault 🗂️</text>
-            <text x="70" y="168" class="node-sub">Hyland OpenArch 🟣</text>
-            <text x="70" y="184" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="200" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="216" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="232" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="248" class="node-sub">File System</text>
-            <text x="70" y="264" class="node-sub">Alfresco ACS/APS</text>
-            <text x="70" y="280" class="node-sub">Apache Iceberg🧊</text>
-            <text x="70" y="296" class="node-sub">Flowable BPMN🔄</text>
-            <text x="70" y="312" class="node-sub">Camunda BPMN⚡</text>
-            <text x="70" y="328" class="node-sub">StormCrawler🕷️</text>
+            <rect x="10" y="98" width="120" height="264" rx="10" class="node-bg" />
+            <text x="70" y="117" class="node-title">Sources</text>
+            <text x="70" y="134" class="node-sub">SharePoint Online 🌐</text>
+            <text x="70" y="150" class="node-sub">M-Files Vault 🗂️</text>
+            <text x="70" y="166" class="node-sub">Hyland OpenArch 🟣</text>
+            <text x="70" y="182" class="node-sub">IBM FileNet P8 🏢</text>
+            <text x="70" y="198" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="214" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="230" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="246" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="262" class="node-sub">Alfresco ACS/APS 📂</text>
+            <text x="70" y="278" class="node-sub">Apache Iceberg 🧊</text>
+            <text x="70" y="294" class="node-sub">Flowable BPMN 🔄</text>
+            <text x="70" y="310" class="node-sub">Camunda BPMN ⚡</text>
+            <text x="70" y="326" class="node-sub">StormCrawler 🕷️</text>
+            <text x="70" y="342" class="node-sub">File System 📁</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -405,14 +406,15 @@
           <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
             <rect x="640" y="132" width="150" height="170" rx="10" class="node-bg" />
-            <text x="715" y="154" class="node-title">Outputs &amp; Sinks</text>
-            <text x="715" y="172" class="node-sub">OpenArch Parquet 🟣</text>
-            <text x="715" y="190" class="node-sub">Ozone Migration 🗄️</text>
-            <text x="715" y="208" class="node-sub">SeaTunnel Fan-Out 🌊</text>
-            <text x="715" y="226" class="node-sub">Luxir / Solr 10 ✨</text>
-            <text x="715" y="244" class="node-sub">Vespa Engine 🚀</text>
-            <text x="715" y="262" class="node-sub">pgvector / Milvus</text>
-            <text x="715" y="280" class="node-sub">Qdrant / OpenSearch</text>
+            <text x="715" y="152" class="node-title">Outputs &amp; Sinks</text>
+            <text x="715" y="169" class="node-sub">OpenArch Parquet 🟣</text>
+            <text x="715" y="185" class="node-sub">AWS S3 Migration ☁️</text>
+            <text x="715" y="201" class="node-sub">Ozone Migration 🗄️</text>
+            <text x="715" y="217" class="node-sub">SeaTunnel Fan-Out 🌊</text>
+            <text x="715" y="233" class="node-sub">Luxir / Solr 10 ✨</text>
+            <text x="715" y="249" class="node-sub">Vespa Engine 🚀</text>
+            <text x="715" y="265" class="node-sub">pgvector / Milvus</text>
+            <text x="715" y="281" class="node-sub">Qdrant / OpenSearch</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -576,6 +578,7 @@
             <option value="sharepoint" selected>Microsoft SharePoint Online (Microsoft Graph v1.0)</option>
             <option value="mfiles">M-Files Vault (MFWS REST &amp; VAF)</option>
             <option value="openarch">Hyland OpenArch (HXQL &amp; Federated Repository)</option>
+            <option value="filenet">IBM FileNet P8 (Content Services GraphQL / CSGQL)</option>
             <option value="grpc-push">gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
             <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
@@ -594,6 +597,7 @@
           <label for="sim-destination">2. Select Vector Database / Output</label>
           <select id="sim-destination">
             <option value="openarch" selected>Hyland OpenArch (Parquet Vector Bridge / embedding.avsc)</option>
+            <option value="s3">Amazon S3 (Migration Mode &amp; OIS Sidecars)</option>
             <option value="ozone">Apache Ozone (Migration Mode &amp; OIS Sidecars)</option>
             <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
             <option value="luxir">Luxir Hybrid Search Engine</option>

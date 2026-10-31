@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -67,7 +67,7 @@ const ARCH_DETAILS = {
   },
   outputs: {
     title: "Outputs: Vector Stores, Parquet Bridges & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -166,6 +166,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer retrieved claim-check streams. Extracted document text and OpenArch sys_* metadata via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed OpenArch document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
       vector: "OpenArchStoreWriterConsumer buffered embedded chunks, serialized 1024-dim vectors into SNAPPY Apache Parquet (embedding.avsc / com.hyland.openarch.embeddings.avro.Embedding), and uploaded Parquet vector bridge + SysFile ACLs to Hyland OpenArch (/api/upload)."
+    }
+  },
+  filenet: {
+    files: [
+      { name: "filenet://default/Document/{10A2B3C4-D5E6-7F8A-9B0C-1D2E3F4A5B6C} (master_services_agreement.pdf) [CSGQL /content-services/graphql]", size: "4.2 MB", acls: ["group:Legal:read", "user:john.doe:write", "group:Contractors:deny"] },
+      { name: "filenet://default/Document/{98FEDCBA-0123-4567-89AB-CDEF01234567} (annual_audit_report_2026.docx) [ActiveMarkingFilter bypassed]", size: "2.1 MB", acls: ["group:Compliance:read", "user:Administrator:admin"] },
+      { name: "filenet://default/Document/{55443322-1100-AABB-CCDD-EEFF00112233} (quarterly_tax_filing.pdf) [Incremental dateCreated]", size: "910 KB", acls: ["group:Finance:read", "group:Executive:read"] }
+    ],
+    logs: {
+      scan: "FileNetRepositoryConnector triggered. Authenticating with IBM FileNet P8 via Content Services GraphQL API (CSGQL) endpoint at https://filenet:9443/content-services/graphql. Executing GraphQL paged query across Document classes with ActiveMarkingFilter...",
+      claimCheck: "Crawler harvested document batch via Java 25 Virtual Threads. Streamed binary content streams to ClaimCheckStore, extracted Content Services accessControlList (ACEs) mapped to OIS SecurityConfig with explicit-deny precedence, and published filenet:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Extracted document text and FileNet custom property definitions via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed FileNet document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted FileNet embeddings, custom document properties, and Zero-Trust ACL SIDs into the vector destination."
     }
   },
   'grpc-push': {
@@ -463,8 +477,9 @@ function initSimulator() {
     // Clear logs and print start message
     logsContainer.innerHTML = "";
     addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
-    if (destKey === 'ozone') {
-      addLog(`[MIGRATION] Pipeline execution mode set to [MIGRATION]. Text extraction, narrativization, chunking, and embedding will be bypassed.`, "warn");
+    if (destKey === 'ozone' || destKey === 's3') {
+      const destLabel = destKey === 's3' ? 'Amazon S3' : 'Apache Ozone';
+      addLog(`[MIGRATION] Pipeline execution mode set to [MIGRATION] for ${destLabel}. Text extraction, narrativization, chunking, and embedding will be bypassed.`, "warn");
     } else if (embedReplicas > 1) {
       addLog(`[INFO] oc-embedding-service scaled to ${embedReplicas} replicas. Kafka will distribute partitions automatically.`, "info");
     }
@@ -490,17 +505,19 @@ function initSimulator() {
       addLog(`[KAFKA] ${simData.logs.claimCheck}`, "info");
       await sleep(1000);
 
-      if (destKey === 'ozone') {
+      if (destKey === 'ozone' || destKey === 's3') {
+        const destTitle = destKey === 's3' ? 'Amazon S3' : 'Apache Ozone';
+        const destUri = destKey === 's3' ? 's3://opencrawling-migration-bucket/...' : 'ofs://opencrawling/migration/...';
         // MIGRATION MODE FAST-PATH: Bypasses Tika Text Extraction & Embedding Service!
         addLog(`[MIGRATION] Migration Mode active (pipelineMode=migration). Bypassing Apache Tika text extraction, narrativization, chunking, and embedding generation.`, "warn");
         await sleep(700);
 
         stationVector.classList.add('active');
-        addLog(`[PROCESS] Ozone Migration Writer: Streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit directly into Apache Ozone (ofs://opencrawling/migration/...).`, "process");
+        addLog(`[PROCESS] ${destTitle} Migration Writer: Streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit directly into ${destTitle} (${destUri}).`, "process");
         await sleep(900);
-        addLog(`[SECURITY] Ozone Migration Writer: Emitted Open Ingestion Standard (OIS) Zero-Trust metadata sidecar '${file.name}.ois.json' with cryptographic SHA-256 and SIDs: [${file.acls.join(', ')}].`, "info");
+        addLog(`[SECURITY] ${destTitle} Migration Writer: Emitted Open Ingestion Standard (OIS) Zero-Trust metadata sidecar '${file.name}.ois.json' with cryptographic SHA-256 and SIDs: [${file.acls.join(', ')}].`, "info");
         await sleep(700);
-        addLog(`[SUCCESS] Stored pristine binary and Zero-Trust OIS sidecar into Apache Ozone successfully.`, "success");
+        addLog(`[SUCCESS] Stored pristine binary and Zero-Trust OIS sidecar into ${destTitle} successfully.`, "success");
         await sleep(1000);
 
         // Reset pipeline state for next document, leaving Crawler active
