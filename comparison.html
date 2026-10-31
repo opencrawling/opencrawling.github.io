@@ -897,7 +897,7 @@
       <div class="pillar-mini-card">
         <div class="pillar-mini-top">
           <span class="pillar-mini-icon">🛡️</span>
-          <span class="pillar-mini-tag">Tika 4.1</span>
+          <span class="pillar-mini-tag">Tika 4.2</span>
         </div>
         <div class="pillar-mini-title">PipesForkParser</div>
         <div class="pillar-mini-desc">Process-isolated child JVMs with watchdog timeouts prevent poison-pill crashes.</div>
@@ -963,7 +963,7 @@
           </div>
           <div class="duel-metric">
             <span class="duel-metric-label">Extraction, AI &amp; Vector Readiness</span>
-            <span class="duel-metric-val" id="duel-oc-ai">Apache Tika 4.1 PipesForkParser, Auto-Narrativization Copilot (Mustache), decoupled oc-embedding-service, and 9+ vector/migration sinks.</span>
+            <span class="duel-metric-val" id="duel-oc-ai">Apache Tika 4.2 PipesForkParser, Auto-Narrativization Copilot (Mustache), decoupled oc-embedding-service, and 9+ vector/migration sinks.</span>
           </div>
           <div class="duel-metric">
             <span class="duel-metric-label">Auditability &amp; Dev Tooling</span>
@@ -1120,7 +1120,7 @@
               <span class="feature-sub">Poison-pill PDF/Office isolation</span>
             </td>
             <td class="highlight-col">
-              <span class="check-icon">✓</span> <strong>Apache Tika 4.1 <code>PipesForkParser</code></strong><br>
+              <span class="check-icon">✓</span> <strong>Apache Tika 4.2 <code>PipesForkParser</code></strong><br>
               <small>Process-isolated child JVMs with watchdog timeouts, heap caps &amp; Zip Slip defense</small>
             </td>
             <td><span class="cross-icon">✗</span> <strong>In-Process Python Loaders</strong><br><small>Corrupt PDFs or OOMs can crash the worker process</small></td>
@@ -1264,7 +1264,7 @@
         <ul>
           <li><strong>Hybrid Pull + gRPC Push</strong>: Combine scheduled repository crawlers with sub-millisecond HTTP/2 Protobuf v3 gRPC Push streaming (<code>oc-grpc-push-connector</code>).</li>
           <li><strong>End-to-End Zero-Trust ACLs</strong>: Preserves allow/deny SIDs and multi-tenant boundaries from SharePoint Online, M-Files, Doxis, CMIS, Alfresco, JDBC, and gRPC directly into vector queries and the Secure MCP Server.</li>
-          <li><strong>Crash-Resilient &amp; Scalable</strong>: Isolates parsing in Apache Tika 4.1 <code>PipesForkParser</code> child JVMs, offloads binaries to Apache Ozone (<code>ofs://</code>), and scales embedding workers horizontally via Kafka.</li>
+          <li><strong>Crash-Resilient &amp; Scalable</strong>: Isolates parsing in Apache Tika 4.2 <code>PipesForkParser</code> child JVMs, offloads binaries to Apache Ozone (<code>ofs://</code>), and scales embedding workers horizontally via Kafka.</li>
           <li><strong>Lakehouse Audit &amp; OpenAPI 3.1</strong>: Generates ZSTD Parquet ledgers queryable via embedded DuckDB SQL, and exports OpenAPI 3.1 specs directly as LLM tool definitions via <code>oc openapi tools</code>.</li>
         </ul>
       </article>
@@ -1452,7 +1452,7 @@
         <span class="result-badge badge-oc" id="result-badge">OpenCrawling Recommended</span>
         <h3 class="result-title" id="result-title">🚀 OpenCrawling Decoupled RAG Pipeline is your ideal match!</h3>
         <p class="result-text" id="result-text">
-          Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.1 <code>PipesForkParser</code>, decoupled <code>oc-embedding-service</code>, and Secure MCP Server are purpose-built for this exact stack.
+          Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.2 <code>PipesForkParser</code>, decoupled <code>oc-embedding-service</code>, and Secure MCP Server are purpose-built for this exact stack.
         </p>
         <div class="result-cli-hint" id="result-cli-hint">$ docker compose -f docker-compose-decoupled.yml up -d &amp;&amp; oc openapi status</div>
       </div>
@@ -1512,7 +1512,7 @@
           tag: "Tabular ELT & Dataflow • ELv2 / SaaS",
           transport: "High-throughput batch and CDC replication for structured tables (Airbyte/Fivetran) or visual flow routing (NiFi), without native OIS document chunking pipelines.",
           security: "Replicates database schemas and credentials at the connection level, but drops file-level allow/deny ACLs and folder permission inheritance.",
-          ai: "Moves raw columns into data warehouses without Apache Tika 4.1 process-isolated binary extraction or Spring AI Mustache narrative synthesis.",
+          ai: "Moves raw columns into data warehouses without Apache Tika 4.2 process-isolated binary extraction or Spring AI Mustache narrative synthesis.",
           audit: "Tracks table sync state and row counts, but lacks per-document cryptographic SHA-256 sidecars and RAG chunk/vector telemetry.",
           verdict: "<strong>Synergy Verdict:</strong> For existing NiFi or CDC pipelines, stream events directly into OpenCrawling's <strong>gRPC Push Connector</strong> (port <code>9096</code>), or use OpenCrawling's <strong>Apache SeaTunnel Output Connector</strong> to fan out OIS chunks and vectors to 100+ data sinks."
         },
@@ -1648,7 +1648,7 @@
               resBadge.className = "result-badge badge-oc";
               resBadge.textContent = "OpenCrawling JDBC + Auto-Narrativization Copilot";
               resTitle.textContent = "🧬 OpenCrawling JDBC Connector + Spring AI Copilot!";
-              resText.textContent = "For relational databases containing structured rows alongside PDF/Office BLOB columns, OpenCrawling's JDBC Repository Connector pairs with the Auto-Narrativization Copilot to synthesize natural-language Mustache narratives for tabular rows while streaming binary BLOBs through Apache Tika 4.1 PipesForkParser.";
+              resText.textContent = "For relational databases containing structured rows alongside PDF/Office BLOB columns, OpenCrawling's JDBC Repository Connector pairs with the Auto-Narrativization Copilot to synthesize natural-language Mustache narratives for tabular rows while streaming binary BLOBs through Apache Tika 4.2 PipesForkParser.";
               resCliHint.textContent = "$ oc copilot generate --connector-id 1 && oc jobs trigger 1";
             } else if (target === "saas") {
               resBadge.className = "result-badge badge-mcf";
@@ -1672,13 +1672,13 @@
               resBadge.className = "result-badge badge-oc";
               resBadge.textContent = "OpenCrawling + LangChain / LlamaIndex";
               resTitle.textContent = "🦜 Pair OpenCrawling with LangChain / LlamaIndex via MCP!";
-              resText.textContent = "For rapid prototyping on small public files, LangChain or LlamaIndex in-memory loaders are easy to start with. As soon as you scale to production volumes or need crash-resilient Tika 4.1 extraction, Kafka decoupling, and OpenAPI/MCP agent tools, run OpenCrawling underneath your agent framework.";
+              resText.textContent = "For rapid prototyping on small public files, LangChain or LlamaIndex in-memory loaders are easy to start with. As soon as you scale to production volumes or need crash-resilient Tika 4.2 extraction, Kafka decoupling, and OpenAPI/MCP agent tools, run OpenCrawling underneath your agent framework.";
               resCliHint.textContent = "$ oc openapi tools --provider mcp -o opencrawling-mcp-tools.json";
             } else {
               resBadge.className = "result-badge badge-oc";
               resBadge.textContent = "OpenCrawling Recommended";
               resTitle.textContent = "🚀 OpenCrawling Decoupled RAG Pipeline is your ideal match!";
-              resText.textContent = "Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.1 PipesForkParser, decoupled oc-embedding-service, and Secure MCP Server are purpose-built for this stack.";
+              resText.textContent = "Your architecture requires ingesting enterprise repositories into a Vector Store while enforcing Zero-Trust document ACLs and maintaining a Lakehouse Parquet/DuckDB audit ledger. OpenCrawling's Java 25 Virtual Thread crawlers, Apache Tika 4.2 PipesForkParser, decoupled oc-embedding-service, and Secure MCP Server are purpose-built for this stack.";
               resCliHint.textContent = "$ docker compose -f docker-compose-decoupled.yml up -d && oc openapi status";
             }
 
