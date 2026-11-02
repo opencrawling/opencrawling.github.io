@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise ECM Replatforming & Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector</title>
+  <meta name="description" content="Discover OpenCrawling's new Alfresco Content Services Output Connector (oc-alfresco-output-connector). Built for high-throughput enterprise Migration Mode, bit-for-bit binary streaming via native REST API v1, automatic hierarchical cm:folder path preservation, Zero-Trust ACL synchronization with Java 25 StructuredTaskScope pre-flight authority auditing, automatic missing authority Gap Ledger reporting, OIS lifecycle tombstones into the Alfresco Trashcan, and lightweight noindex container operation.">
+  <meta name="keywords" content="alfresco output connector, oc-alfresco-output-connector, alfresco content services, acs 26.1, migration mode, enterprise replatforming, ecm migration, open ingestion standard, zero-trust acls, authority validator, gap ledger, java 25, structured concurrency, kafka, claim check, alfresco trashcan, solr6, noindex">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-alfresco-output-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-alfresco-output-connector.html">
+  <meta property="og:title" content="Enterprise ECM Replatforming & Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector">
+  <meta property="og:description" content="Discover OpenCrawling's new Alfresco Content Services Output Connector (oc-alfresco-output-connector). Built for high-throughput enterprise Migration Mode, bit-for-bit binary streaming via native REST API v1, automatic hierarchical cm:folder path preservation, Zero-Trust ACL synchronization with Java 25 StructuredTaskScope pre-flight authority auditing, automatic missing authority Gap Ledger reporting, OIS lifecycle tombstones into the Alfresco Trashcan, and lightweight noindex container operation.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-alfresco-output-connector.html">
+  <meta property="twitter:title" content="Enterprise ECM Replatforming & Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's new Alfresco Content Services Output Connector (oc-alfresco-output-connector). Built for high-throughput enterprise Migration Mode, bit-for-bit binary streaming via native REST API v1, automatic hierarchical cm:folder path preservation, Zero-Trust ACL synchronization with Java 25 StructuredTaskScope pre-flight authority auditing, automatic missing authority Gap Ledger reporting, OIS lifecycle tombstones into the Alfresco Trashcan, and lightweight noindex container operation.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23DC2626' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/%3E%3Cpolyline points='3.27 6.96 12 12.01 20.73 6.96'/%3E%3Cline x1='12' y1='22.08' x2='12' y2='12'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Enterprise ECM Replatforming & Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector",
+    "description": "Discover OpenCrawling's new Alfresco Content Services Output Connector (oc-alfresco-output-connector). Built for high-throughput enterprise Migration Mode, bit-for-bit binary streaming via native REST API v1, automatic hierarchical cm:folder path preservation, Zero-Trust ACL synchronization with Java 25 StructuredTaskScope pre-flight authority auditing, automatic missing authority Gap Ledger reporting, OIS lifecycle tombstones into the Alfresco Trashcan, and lightweight noindex container operation.",
+    "datePublished": "2026-11-02",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-alfresco-output-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 820px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #DC2626, #EF4444); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #F87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #EF4444; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #F87171; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #F87171; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #FCA5A5; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(239,68,68,0.06); border-color: #EF4444; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.05); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #F87171; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #EF4444; color: #FCA5A5; background: rgba(239,68,68,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #DC2626; color: #FECACA; background: rgba(220,38,38,0.1); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #F87171; }
+    .article-cta { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #F87171; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(239,68,68,0.1); color: #F87171; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(239,68,68,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Enterprise Migration</span>
+        <span class="blog-meta-date">November 2, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Enterprise ECM Replatforming & Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector</h1>
+      <p class="blog-article-lead">
+        Consolidating enterprise content from legacy silos—such as IBM FileNet P8, OpenText Documentum, Microsoft SharePoint, or network file systems—into a unified target repository like <strong>Alfresco Content Services (ACS)</strong> is one of the most critical challenges facing enterprise IT. Migrations cannot compromise: they require <strong>bit-for-bit binary fidelity</strong>, automatic recreation of hierarchical folder structures (<code>cm:folder</code>), synchronization of metadata properties and aspects, strict Zero-Trust Access Control List (ACL) replication, pre-flight authority validation against target directories, and automated audit reporting. Today, we are proud to introduce the brand new <strong>Alfresco Content Services Output Connector (<code>oc-alfresco-output-connector</code>)</strong> operating strictly in <strong>Migration Mode</strong>! 🚀
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Decoupled Alfresco Migration Mode Architecture</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Source ECM (FileNet / Documentum / SharePoint / FS)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Crawler (Parallel Virtual Thread Lanes)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Claim Check Store (S3 / MinIO)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Kafka Topic (opencrawling-documents)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">AlfrescoMigrationWriterConsumer</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Alfresco ACS REST API v1 (/nodes)</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Enterprise Replatforming Challenge</h2>
+      <p>
+        While OpenCrawling’s primary RAG mode parses documents via Apache Tika, splits them into semantic chunks, and calculates high-dimensional vector embeddings, <strong>content migration demands a completely different approach</strong>.
+      </p>
+      <p>
+        When enterprises migrate tens of millions of records into Alfresco Content Services:
+      </p>
+      <ul>
+        <li><strong>Original Binaries Must Remain Pristine</strong>: CAD models, signed PDF contracts with cryptographic certificates, TIFF archives, and high-resolution media must be transferred bit-for-bit without alteration.</li>
+        <li><strong>Hierarchies Must Be Maintained</strong>: Source folder trees must be seamlessly translated into Alfresco <code>cm:folder</code> nodes without duplicating intermediate folders or causing race conditions.</li>
+        <li><strong>Security &amp; Permissions Must Be Preserved</strong>: Access control rules from the source must be translated into Alfresco's native permission model (<code>Consumer</code>, <code>Contributor</code>, <code>Collaborator</code>, <code>Coordinator</code>).</li>
+        <li><strong>Missing Authorities Must Not Crash Bulk Ingestion</strong>: In legacy systems, orphaned users or decommissioned Active Directory groups frequently linger on documents. If sent directly to Alfresco, the REST API rejects the entire payload with HTTP <code>400 Bad Request</code> or <code>404 Not Found</code>.</li>
+      </ul>
+      <p>
+        The <code>oc-alfresco-output-connector</code> was built from the ground up to address each of these challenges with enterprise precision.
+      </p>
+
+      <h2><span class="section-num">2. </span>Migration Mode Fast-Path: Zero Compute Overhead</h2>
+      <p>
+        Operating strictly under <code>opencrawling.pipeline.mode=migration</code> (or per-job <code>pipelineMode: migration</code>), the connector completely bypasses the resource-intensive AI vectorization pipeline:
+      </p>
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Pipeline Stage</th>
+            <th>RAG Mode (Default)</th>
+            <th>Alfresco Migration Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Apache Tika Text Extraction</strong></td>
+            <td>Executed in isolated child JVMs</td>
+            <td><strong>Bypassed completely (0 CPU cycles)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Auto-Narrativization Copilot</strong></td>
+            <td>Mustache template rendering</td>
+            <td><strong>Bypassed completely</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Token Chunking &amp; Splitting</strong></td>
+            <td>TokenTextSplitter execution</td>
+            <td><strong>Bypassed completely</strong></td>
+          </tr>
+          <tr>
+            <td><strong>AI Vector Embeddings</strong></td>
+            <td>Ollama / OpenAI / HuggingFace</td>
+            <td><strong>Bypassed completely</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Payload Target</strong></td>
+            <td>Vector databases &amp; search engines</td>
+            <td><strong>Alfresco Content Services REST API v1</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#128737;</div>
+        <div>
+          <p><strong>Strict Fail-Fast Protection:</strong> Attempting to run a job targeting the Alfresco output connector in RAG mode is rejected immediately with HTTP <code>409 Conflict</code> (<code>"AlfrescoOutputConnector only supports MIGRATION mode"</code>), protecting operators from accidental misconfigurations.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">3. </span>Hierarchical Path Preservation (cm:folder) &amp; Conflict Handling</h2>
+      <p>
+        The connector features an intelligent path resolution engine that evaluates the <code>relativePath</code> or <code>relative_path</code> metadata emitted by repository connectors (e.g. FileSystem, FileNet, SharePoint):
+      </p>
+      <ul>
+        <li><strong><code>HIERARCHICAL</code> (Default)</strong>: Progressively inspects each segment of a nested document path (such as <code>MigratedContent/v1/Legal/2026/Contracts</code>). It checks whether intermediate <code>cm:folder</code> nodes exist via <code>/nodes/{parentId}/children</code> and automatically provisions missing parent directories. Resolved node IDs are cached in memory to eliminate redundant REST lookups.</li>
+        <li><strong><code>FLAT</code></strong>: Ingests all documents directly into the base target folder defined by <code>targetParentNodeId</code> (e.g. <code>-root-</code>) and <code>targetPathPrefix</code>.</li>
+      </ul>
+
+      <h3>Duplicate Conflict Resolution</h3>
+      <p>
+        When a node with the same name already exists in the target folder, the connector handles it according to <code>conflictStrategy</code>:
+      </p>
+      <ul>
+        <li><strong><code>OVERWRITE</code> (Default)</strong>: Replaces the binary stream via <code>PUT /nodes/{nodeId}/content</code> and updates properties in-place. If versioning is enabled (<code>cm:versionable</code> aspect), Alfresco automatically increments the document version.</li>
+        <li><strong><code>AUTO_RENAME</code></strong>: Generates a timestamp-disambiguated filename before creation to avoid naming collisions.</li>
+        <li><strong><code>FAIL</code></strong>: Aborts the upload of the duplicate and logs an error in the migration ledger.</li>
+      </ul>
+
+      <h2><span class="section-num">4. </span>Zero-Trust Security &amp; Pre-Flight Authority Auditing</h2>
+      <p>
+        One of the most innovative features of the new connector is the <strong><code>AlfrescoAuthorityValidator</code></strong>.
+      </p>
+      <p>
+        Built on <strong>Java 25 Structured Concurrency (<code>StructuredTaskScope</code>)</strong> and thread-safe caching, the validator audits user and group authorities against target Alfresco endpoints (<code>/people/{id}</code> and <code>/groups/{id}</code>) to guarantee that only valid principals are submitted in permission payloads.
+      </p>
+
+      <h3>Authority Validation Modes</h3>
+      <ul>
+        <li><strong><code>IN_FLIGHT</code> (Default)</strong>: Validates authorities on the fly during document ingestion. Results are cached in a thread-safe <code>ConcurrentHashMap</code> so that repeated users/groups across millions of documents incur zero additional network round-trips.</li>
+        <li><strong><code>PRE_FLIGHT</code></strong>: Executes a parallel pre-crawl audit across all distinct authorities using <code>StructuredTaskScope</code> before content ingestion begins.</li>
+        <li><strong><code>BOTH</code></strong>: Combines pre-flight discovery with in-flight verification for dynamically discovered identities.</li>
+        <li><strong><code>DISABLED</code></strong>: Directly submits ACEs without pre-validation.</li>
+      </ul>
+
+      <h3>Built-in Authorities &amp; Role Mapping</h3>
+      <p>
+        Standard Alfresco system authorities are recognized natively without issuing REST calls:
+        <code>GROUP_EVERYONE</code>, <code>EVERYONE</code>, <code>GUEST</code>, <code>ROLE_ANONYMOUS</code>, <code>ROLE_AUTHENTICATED</code>, <code>ROLE_ADMINISTRATOR</code>, <code>ADMIN</code>.
+      </p>
+      <p>
+        OIS permissions are mapped to Alfresco roles:
+      </p>
+      <ul>
+        <li><code>read</code> &rarr; <code>Consumer</code></li>
+        <li><code>write</code> &rarr; <code>Contributor</code> / <code>Editor</code></li>
+        <li><code>delete</code> &rarr; <code>Collaborator</code></li>
+        <li><code>admin</code> / <code>full_control</code> &rarr; <code>Coordinator</code></li>
+      </ul>
+
+      <h3>The Missing Authority Gap Ledger Report</h3>
+      <p>
+        When <code>missingAuthorityAction=SKIP</code> (default), missing authorities are omitted from the node's permissions so valid ACEs are successfully applied, and the gap is captured in an audit ledger. At the conclusion of the migration, a structured JSON gap report is exported:
+      </p>
+      <pre><code>{
+  "timestamp": "2026-11-02T22:00:00.000Z",
+  "targetUrl": "http://localhost:8081/alfresco",
+  "missingAuthoritiesCount": 2,
+  "missingAuthorities": [
+    {
+      "authority": "retired_contractor",
+      "identityType": "user",
+      "firstEncounteredNode": "doc-legal-001",
+      "timestamp": "2026-11-02T22:00:01.120Z"
+    },
+    {
+      "authority": "GROUP_LEGACY_FINANCE",
+      "identityType": "group",
+      "firstEncounteredNode": "doc-fin-042",
+      "timestamp": "2026-11-02T22:00:02.450Z"
+    }
+  ]
+}</code></pre>
+
+      <h2><span class="section-num">5. </span>Document Lifecycle Actions &amp; Trashcan Tombstones</h2>
+      <p>
+        Open Ingestion Standard (OIS) document lifecycle actions are fully supported:
+      </p>
+      <ul>
+        <li><strong><code>UPSERT</code></strong>: Streams binary from Claim Check storage, creates or updates <code>cm:content</code>, sets properties, and synchronizes permissions.</li>
+        <li><strong><code>DELETE</code></strong>: Resolved via <code>tombstoneAction</code>:
+          <ul>
+            <li><strong><code>MOVE_TO_TRASH</code> (Default)</strong>: Calls <code>DELETE /nodes/{nodeId}?permanent=false</code>. Moves the document to the Alfresco Trashcan, preserving audit trails and enabling administrative recovery.</li>
+            <li><strong><code>PERMANENT_DELETE</code></strong>: Calls <code>DELETE /nodes/{nodeId}?permanent=true</code> to purge the document permanently.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Lightweight Search Engine Tuning: noindex by Default</h2>
+      <p>
+        In high-throughput bulk migrations, indexing every document into Apache Solr simultaneously introduces substantial I/O overhead and memory contention. Furthermore, all migration writes and folder lookups execute directly against Alfresco's relational database (PostgreSQL)—meaning <strong>no search queries are required during ingestion</strong>.
+      </p>
+      <p>
+        In the decoupled Compose stack (<code>docker-compose-decoupled-with-alfresco.yml</code>):
+      </p>
+      <ul>
+        <li>Alfresco ACS defaults to <code>-Dindex.subsystem.name=noindex</code>.</li>
+        <li>Eliminates <code>UnknownHostException: solr6</code> connection retries and log spam.</li>
+        <li>Reduces Alfresco container startup time from ~90s down to <strong>~25–30s</strong>.</li>
+        <li>Saves ~2 GB RAM on the test/target host.</li>
+      </ul>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#128161;</div>
+        <div>
+          <p><strong>Enabling Solr 6 on Demand:</strong> If full-text search indexing is needed on the target Alfresco instance, simply activate the preconfigured <code>solr6</code> container using Docker Compose profiles:</p>
+          <pre><code>export ALFRESCO_INDEX_SUBSYSTEM=solr6
+docker compose -f oc-alfresco-output-connector/docker/docker-compose-decoupled-with-alfresco.yml --profile search up -d</code></pre>
+        </div>
+      </div>
+
+      <h2><span class="section-num">7. </span>Configuration Reference</h2>
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.url</code></td>
+            <td><code>http://localhost:8081/alfresco</code></td>
+            <td>Target Alfresco Content Services base REST API URL</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.username</code></td>
+            <td><code>admin</code></td>
+            <td>Admin / service account username</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.password</code></td>
+            <td><code>admin</code></td>
+            <td>Admin / service account password</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.target-parent-node-id</code></td>
+            <td><code>-root-</code></td>
+            <td>Starting folder node UUID or alias (<code>-root-</code>, <code>-my-</code>, <code>-shared-</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.target-path-prefix</code></td>
+            <td><code>""</code></td>
+            <td>Base folder path prefix (e.g. <code>MigratedContent/v1</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.path-strategy</code></td>
+            <td><code>HIERARCHICAL</code></td>
+            <td>Folder layout: <code>HIERARCHICAL</code> or <code>FLAT</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.conflict-strategy</code></td>
+            <td><code>OVERWRITE</code></td>
+            <td>Collision handling: <code>OVERWRITE</code>, <code>AUTO_RENAME</code>, or <code>FAIL</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.sync-permissions</code></td>
+            <td><code>true</code></td>
+            <td>Replicate Zero-Trust ACLs to target node permissions</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.default-permission-role</code></td>
+            <td><code>Consumer</code></td>
+            <td>Fallback role when access level is unspecified</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.tombstone-action</code></td>
+            <td><code>MOVE_TO_TRASH</code></td>
+            <td>Delete lifecycle: <code>MOVE_TO_TRASH</code> or <code>PERMANENT_DELETE</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.validate-authorities</code></td>
+            <td><code>true</code></td>
+            <td>Enable authority existence validation prior to applying permissions</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.authority-validation-mode</code></td>
+            <td><code>IN_FLIGHT</code></td>
+            <td>Validation timing: <code>IN_FLIGHT</code>, <code>PRE_FLIGHT</code>, <code>BOTH</code>, <code>DISABLED</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.missing-authority-action</code></td>
+            <td><code>SKIP</code></td>
+            <td>Action on missing authority: <code>SKIP</code> (omits ACE) or <code>FAIL</code> (aborts document)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.alfresco.parallelism</code></td>
+            <td><code>4</code></td>
+            <td>Concurrent writer threads for streaming content into Alfresco</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">8. </span>Automated Verification &amp; Testing</h2>
+      <p>
+        The complete decoupled migration lifecycle is validated via automated test scripts in the repository:
+      </p>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Unit Test Suite:</strong> Run <code>mvn test -pl oc-alfresco-output-connector</code> to verify REST client error handling, authority audit caching, and writer consumer event processing.</p>
+        </div>
+      </div>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#9989;</div>
+        <div>
+          <p><strong>Decoupled Pipeline Test:</strong> Run <code>./scripts/test-alfresco-migration-decoupled.sh</code> to test containerized Alfresco ACS 26.1.0, MinIO Claim Check store, Kafka streaming, nested folder hierarchy preservation, bit-for-bit binary validation, Zero-Trust ACL checks, and Trashcan tombstones.</p>
+        </div>
+      </div>
+
+      <div class="article-cta">
+        <h3>Ready to Power Your Alfresco Replatforming?</h3>
+        <p>Explore the Alfresco Output Connector in our live interactive simulator, consult the detailed documentation on our Wiki, or clone the repository on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Simulator</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Alfresco-Content-Services-Output-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read Alfresco Output Wiki Guide</a>
+          <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener" class="btn btn-outline">Star on GitHub ⭐</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>

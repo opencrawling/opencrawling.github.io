@@ -406,16 +406,17 @@
 
           <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
-            <rect x="640" y="132" width="150" height="170" rx="10" class="node-bg" />
-            <text x="715" y="152" class="node-title">Outputs &amp; Sinks</text>
-            <text x="715" y="169" class="node-sub">OpenArch Parquet 🟣</text>
-            <text x="715" y="185" class="node-sub">AWS S3 Migration ☁️</text>
-            <text x="715" y="201" class="node-sub">Ozone Migration 🗄️</text>
-            <text x="715" y="217" class="node-sub">SeaTunnel Fan-Out 🌊</text>
-            <text x="715" y="233" class="node-sub">Luxir / Solr 10 ✨</text>
-            <text x="715" y="249" class="node-sub">Vespa Engine 🚀</text>
-            <text x="715" y="265" class="node-sub">pgvector / Milvus</text>
-            <text x="715" y="281" class="node-sub">Qdrant / OpenSearch</text>
+            <rect x="640" y="122" width="150" height="188" rx="10" class="node-bg" />
+            <text x="715" y="140" class="node-title">Outputs &amp; Sinks</text>
+            <text x="715" y="156" class="node-sub">Alfresco Migration 🌿</text>
+            <text x="715" y="172" class="node-sub">OpenArch Parquet 🟣</text>
+            <text x="715" y="188" class="node-sub">AWS S3 Migration ☁️</text>
+            <text x="715" y="204" class="node-sub">Ozone Migration 🗄️</text>
+            <text x="715" y="220" class="node-sub">SeaTunnel Fan-Out 🌊</text>
+            <text x="715" y="236" class="node-sub">Luxir / Solr 10 ✨</text>
+            <text x="715" y="252" class="node-sub">Vespa Engine 🚀</text>
+            <text x="715" y="268" class="node-sub">pgvector / Milvus</text>
+            <text x="715" y="284" class="node-sub">Qdrant / OpenSearch</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -599,6 +600,7 @@
           <label for="sim-destination">2. Select Vector Database / Output</label>
           <select id="sim-destination">
             <option value="openarch" selected>Hyland OpenArch (Parquet Vector Bridge / embedding.avsc)</option>
+            <option value="alfresco">Alfresco Content Services (Migration Mode / REST v1)</option>
             <option value="s3">Amazon S3 (Migration Mode &amp; OIS Sidecars)</option>
             <option value="ozone">Apache Ozone (Migration Mode &amp; OIS Sidecars)</option>
             <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
@@ -901,6 +903,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
         </p>
         <div class="blog-card-footer">
           <a href="blog/announcing-opencrawling-1-0-4-first-official-release.html" class="card-link">Read Announcement &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #DC2626, #EF4444); color: #FFF;">Connector Release</span>
+          <span class="blog-date">November 2, 2026</span>
+          <span class="blog-read-time">9 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-alfresco-output-connector.html">Enterprise ECM Replatforming &amp; Zero-Trust Ingestion: Announcing the Alfresco Content Services Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Alfresco Content Services Output Connector (<strong>oc-alfresco-output-connector</strong>). Built for high-throughput <strong>Migration Mode</strong> data liberation, bit-for-bit binary streaming directly from the Claim Check Store via native REST API v1, automatic hierarchical <code>cm:folder</code> parent path preservation, Zero-Trust ACL synchronization with Java 25 <code>StructuredTaskScope</code> pre-flight authority auditing, automatic missing authority Gap Ledger reporting, OIS lifecycle tombstones into the Alfresco Trashcan, and lightweight <code>noindex</code> container operation.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-alfresco-output-connector.html" class="card-link">Read Article &rarr;</a>
         </div>
       </article>
 

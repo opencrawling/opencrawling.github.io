@@ -67,7 +67,7 @@ const ARCH_DETAILS = {
   },
   outputs: {
     title: "Outputs: Vector Stores, Parquet Bridges & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G) while bypassing text extraction and vectorization."
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -491,8 +491,8 @@ function initSimulator() {
     // Clear logs and print start message
     logsContainer.innerHTML = "";
     addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
-    if (destKey === 'ozone' || destKey === 's3') {
-      const destLabel = destKey === 's3' ? 'Amazon S3' : 'Apache Ozone';
+    if (destKey === 'ozone' || destKey === 's3' || destKey === 'alfresco') {
+      const destLabel = destKey === 's3' ? 'Amazon S3' : (destKey === 'alfresco' ? 'Alfresco Content Services' : 'Apache Ozone');
       addLog(`[MIGRATION] Pipeline execution mode set to [MIGRATION] for ${destLabel}. Text extraction, narrativization, chunking, and embedding will be bypassed.`, "warn");
     } else if (embedReplicas > 1) {
       addLog(`[INFO] oc-embedding-service scaled to ${embedReplicas} replicas. Kafka will distribute partitions automatically.`, "info");
@@ -519,19 +519,27 @@ function initSimulator() {
       addLog(`[KAFKA] ${simData.logs.claimCheck}`, "info");
       await sleep(1000);
 
-      if (destKey === 'ozone' || destKey === 's3') {
-        const destTitle = destKey === 's3' ? 'Amazon S3' : 'Apache Ozone';
-        const destUri = destKey === 's3' ? 's3://opencrawling-migration-bucket/...' : 'ofs://opencrawling/migration/...';
+      if (destKey === 'ozone' || destKey === 's3' || destKey === 'alfresco') {
+        const destTitle = destKey === 's3' ? 'Amazon S3' : (destKey === 'alfresco' ? 'Alfresco Content Services' : 'Apache Ozone');
+        const destUri = destKey === 's3' ? 's3://opencrawling-migration-bucket/...' : (destKey === 'alfresco' ? 'http://alfresco:8081/alfresco/api/-default-/public/alfresco/versions/1/nodes' : 'ofs://opencrawling/migration/...');
         // MIGRATION MODE FAST-PATH: Bypasses Tika Text Extraction & Embedding Service!
         addLog(`[MIGRATION] Migration Mode active (pipelineMode=migration). Bypassing Apache Tika text extraction, narrativization, chunking, and embedding generation.`, "warn");
         await sleep(700);
 
         stationVector.classList.add('active');
-        addLog(`[PROCESS] ${destTitle} Migration Writer: Streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit directly into ${destTitle} (${destUri}).`, "process");
-        await sleep(900);
-        addLog(`[SECURITY] ${destTitle} Migration Writer: Emitted Open Ingestion Standard (OIS) Zero-Trust metadata sidecar '${file.name}.ois.json' with cryptographic SHA-256 and SIDs: [${file.acls.join(', ')}].`, "info");
-        await sleep(700);
-        addLog(`[SUCCESS] Stored pristine binary and Zero-Trust OIS sidecar into ${destTitle} successfully.`, "success");
+        if (destKey === 'alfresco') {
+          addLog(`[PROCESS] Alfresco Migration Writer: Resolving hierarchical parent folder structure (cm:folder) and streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit via REST API v1.`, "process");
+          await sleep(900);
+          addLog(`[SECURITY] Alfresco Authority Validator: Verified target users and groups via Java 25 StructuredTaskScope. Synchronized native locallySet ACEs [${file.acls.join(', ')}] with fallback to Consumer role. Missing authorities tracked in Gap Ledger.`, "info");
+          await sleep(700);
+          addLog(`[SUCCESS] Created cm:content node and synchronized Zero-Trust permissions in Alfresco Content Services successfully.`, "success");
+        } else {
+          addLog(`[PROCESS] ${destTitle} Migration Writer: Streaming pristine binary for '${file.name}' (${file.size}) bit-for-bit directly into ${destTitle} (${destUri}).`, "process");
+          await sleep(900);
+          addLog(`[SECURITY] ${destTitle} Migration Writer: Emitted Open Ingestion Standard (OIS) Zero-Trust metadata sidecar '${file.name}.ois.json' with cryptographic SHA-256 and SIDs: [${file.acls.join(', ')}].`, "info");
+          await sleep(700);
+          addLog(`[SUCCESS] Stored pristine binary and Zero-Trust OIS sidecar into ${destTitle} successfully.`, "success");
+        }
         await sleep(1000);
 
         // Reset pipeline state for next document, leaving Crawler active
