@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -373,6 +373,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer fetched content streams from Apache Ozone port 9878 via Claim Check URIs. Parsed binary with Apache Tika, generated 1024-token chunks, published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed Ozone document chunks. Dispatched batches to Ollama (mxbai-embed-large). Generated 1024-dim vectors, published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted Ozone embeddings and security ACL tokens to vector database."
+    }
+  },
+  web: {
+    files: [
+      { name: "web:a8f3b1... (https://docs.opencrawling.org/getting-started.html) [Depth: 1, canonical: ok]", size: "45.2 KB", acls: ["public"] },
+      { name: "web:c4d9e2... (https://docs.opencrawling.org/whitepaper-2026.pdf) [MIME: application/pdf]", size: "2.4 MB", acls: ["public"] },
+      { name: "web:7e1a0b... (https://intranet.corp.internal/handbook.html) [SSRF Guard: allowlisted, Static ACL]", size: "88.1 KB", acls: ["group:engineering-staff:read"] }
+    ],
+    logs: {
+      scan: "WebRepositoryConnector triggered on Java 25 Virtual Threads ('web-crawl-job-1'). Connecting to seed 'https://docs.opencrawling.org/' and initializing HostRegistry politeness gate (delay: 1000ms)...",
+      claimCheck: "WebCrawler evaluated RFC 9309 robots.txt (crawler-commons) and discovered sitemaps. Validated target IPs via SsrfGuard (blocking RFC 1918 / loopback / cloud metadata 169.254.169.254 on all redirect hops), extracted links with Jsoup, and emitted reactive RepositoryDocument stream with backpressure demand.",
+      tika: "IngestionConsumer received web documents. Parsed HTML, PDF, and Office streams in process-isolated Tika 4 PipesForkParser, normalized metadata (web_host, web_canonical_url, web_depth), and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed web chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors stamped with Zero-Trust security keys; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted web page embeddings, canonical URLs, anchor text, and ACL keys into target vector store."
     }
   },
   stormcrawler: {
