@@ -367,23 +367,24 @@
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="88" width="120" height="284" rx="10" class="node-bg" />
-            <text x="70" y="106" class="node-title">Sources</text>
-            <text x="70" y="122" class="node-sub">SharePoint Online 🌐</text>
-            <text x="70" y="138" class="node-sub">M-Files Vault 🗂️</text>
-            <text x="70" y="154" class="node-sub">Hyland OpenArch 🟣</text>
-            <text x="70" y="170" class="node-sub">IBM FileNet P8 🏢</text>
-            <text x="70" y="186" class="node-sub">Documentum REST 📄</text>
-            <text x="70" y="202" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="218" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="234" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="250" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="266" class="node-sub">Alfresco ACS/APS 📂</text>
-            <text x="70" y="282" class="node-sub">Apache Iceberg 🧊</text>
-            <text x="70" y="298" class="node-sub">Flowable BPMN 🔄</text>
-            <text x="70" y="314" class="node-sub">Camunda BPMN ⚡</text>
-            <text x="70" y="330" class="node-sub">StormCrawler 🕷️</text>
-            <text x="70" y="346" class="node-sub">File System 📁</text>
+            <rect x="10" y="82" width="120" height="298" rx="10" class="node-bg" />
+            <text x="70" y="100" class="node-title">Sources</text>
+            <text x="70" y="116" class="node-sub">SharePoint Online 🌐</text>
+            <text x="70" y="132" class="node-sub">M-Files Vault 🗂️</text>
+            <text x="70" y="148" class="node-sub">Hyland OpenArch 🟣</text>
+            <text x="70" y="164" class="node-sub">IBM FileNet P8 🏢</text>
+            <text x="70" y="180" class="node-sub">Documentum REST 📄</text>
+            <text x="70" y="196" class="node-sub">gRPC Push Stream 📡</text>
+            <text x="70" y="212" class="node-sub">Doxis ECM 🏛️</text>
+            <text x="70" y="228" class="node-sub">Relational (JDBC) 🗄️</text>
+            <text x="70" y="244" class="node-sub">OASIS CMIS 📑</text>
+            <text x="70" y="260" class="node-sub">Alfresco ACS/APS 📂</text>
+            <text x="70" y="276" class="node-sub">Apache Iceberg 🧊</text>
+            <text x="70" y="292" class="node-sub">Flowable BPMN 🔄</text>
+            <text x="70" y="308" class="node-sub">Camunda BPMN ⚡</text>
+            <text x="70" y="324" class="node-sub">Web Crawler 🕸️</text>
+            <text x="70" y="340" class="node-sub">StormCrawler 🕷️</text>
+            <text x="70" y="356" class="node-sub">File System 📁</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
@@ -592,6 +593,7 @@
             <option value="flowable">Flowable BPMN (Historic Workflow Instances)</option>
             <option value="camunda">Camunda BPMN (Historic Workflow Instances)</option>
             <option value="iceberg">Apache Iceberg (Data Lakehouse)</option>
+            <option value="web">Web Crawler (In-Process Embedded / SSRF Guard)</option>
             <option value="stormcrawler">Apache StormCrawler (Distributed Web Crawler)</option>
           </select>
         </div>
@@ -903,6 +905,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
         </p>
         <div class="blog-card-footer">
           <a href="blog/announcing-opencrawling-1-0-4-first-official-release.html" class="card-link">Read Announcement &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #059669, #10B981); color: #FFF;">Connector Release</span>
+          <span class="blog-date">November 5, 2026</span>
+          <span class="blog-read-time">8 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-web-repository-connector.html">Embedded Web Crawling, Politeness &amp; Zero-Trust SSRF Defense: Announcing the Web Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native in-process Web Repository Connector (<strong>oc-web-repository-connector</strong>). Built on <strong>Java 25 Virtual Threads</strong> with zero external cluster dependencies, it delivers RFC 9309 <code>robots.txt</code> compliance (<code>crawler-commons</code>), automatic sitemap discovery, runtime-wide host politeness delays, anti-spider-trap guards with linear-time RE2/J pattern matching, and a strict enterprise <strong>SSRF Guard</strong> with DNS rebinding protection and Zero-Trust ACL mapping.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-web-repository-connector.html" class="card-link">Read Article &rarr;</a>
         </div>
       </article>
 

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embedded Web Crawling, Politeness & Zero-Trust SSRF Defense: Announcing the Web Repository Connector - OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native in-process Web Repository Connector (oc-web-repository-connector). Built on Java 25 Virtual Threads with RFC 9309 robots.txt compliance, automatic sitemap discovery, runtime-wide host politeness, anti-spider-trap guards, and strict enterprise SSRF defense with DNS rebinding protection.">
+  <meta name="keywords" content="web crawler, web repository connector, opencrawling, java 25, virtual threads, ssrf protection, robots.txt, sitemaps, jsoup, crawler-commons, re2j, enterprise rag, zero trust security">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-web-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-web-repository-connector.html">
+  <meta property="og:title" content="Embedded Web Crawling, Politeness & Zero-Trust SSRF Defense: Announcing the Web Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native in-process Web Repository Connector (oc-web-repository-connector). Built on Java 25 Virtual Threads with RFC 9309 robots.txt compliance, runtime-wide host politeness, anti-spider-trap guards, and strict enterprise SSRF defense.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-web-repository-connector.html">
+  <meta property="twitter:title" content="Embedded Web Crawling, Politeness & Zero-Trust SSRF Defense: Announcing the Web Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native in-process Web Repository Connector (oc-web-repository-connector). Built on Java 25 Virtual Threads with RFC 9309 robots.txt compliance, runtime-wide host politeness, anti-spider-trap guards, and strict enterprise SSRF defense.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ADD8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Embedded Web Crawling, Politeness & Zero-Trust SSRF Defense: Announcing the Web Repository Connector",
+    "description": "Discover OpenCrawling's native in-process Web Repository Connector (oc-web-repository-connector). Built on Java 25 Virtual Threads with RFC 9309 robots.txt compliance, runtime-wide host politeness, anti-spider-trap guards, and strict enterprise SSRF defense with DNS rebinding protection.",
+    "datePublished": "2026-11-05",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-web-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #059669, #10B981); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #34D399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #10B981; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #34D399; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #34D399; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #6EE7B7; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,173,216,0.05); border-color: #00ADD8; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.05); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #34D399; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #10B981; color: #A7F3D0; background: rgba(16,185,129,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #34D399; }
+    .article-cta { background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #34D399; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(16,185,129,0.08); color: #34D399; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(16,185,129,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2rem; }
+    @media (max-width: 680px) { .comparison-grid { grid-template-columns: 1fr; } }
+    .comp-card { background: #0A0F1D; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.5rem; }
+    .comp-card.active { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.03); }
+    .comp-card h4 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #F1F5F9; }
+    .comp-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">November 5, 2026</span>
+        <span class="blog-meta-read">&bull; 8 min read</span>
+      </div>
+      <h1 class="blog-article-title">Embedded Web Crawling, Politeness & Zero-Trust SSRF Defense: Announcing the Web Repository Connector</h1>
+      <p class="blog-article-lead">
+        OpenCrawling introduces <code>oc-web-repository-connector</code>: a lightweight, in-process web and intranet crawler powered by <strong>Java 25 Virtual Threads</strong>. Featuring RFC 9309 <code>robots.txt</code> compliance, runtime-wide host politeness delays, linear-time anti-spider-trap guards, and a strict enterprise <strong>SSRF Guard</strong> with DNS rebinding protection, it delivers effortless web ingestion for documentation portals, corporate knowledge bases, and private intranets without requiring an external cluster.
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">In-Process Web Crawling &amp; Ingestion Flow</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Seed URLs &amp; Sitemaps</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">HostRegistry (Politeness Gate)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">HttpFetcher + SsrfGuard</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">HtmlPageParser (Jsoup)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Reactive Flux (Backpressure)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Claim-Check &amp; Tika 4</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Vector Database</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>The Right Tool for Web Ingestion in Enterprise AI</h2>
+      <p>
+        Retrieval-Augmented Generation (RAG) and semantic search architectures frequently need to ingest web-accessible content: technical documentation portals (MkDocs, Docusaurus, Sphinx), internal developer hubs, Confluence pages, regulatory filings, and corporate intranets.
+      </p>
+      <p>
+        While OpenCrawling already provides a distributed web crawler through our <code>oc-stormcrawler-repository-connector</code> (running on Apache Storm clusters for web-scale crawling across millions of URLs), many teams simply need to crawl a few thousand pages per job without provisioning, supervising, and maintaining an external distributed compute cluster.
+      </p>
+      <p>
+        The brand-new <strong>Web Repository Connector (<code>oc-web-repository-connector</code>)</strong> is designed specifically for this sweet spot: it runs completely embedded within the OpenCrawling runtime, requires <strong>zero external infrastructure</strong>, and leverages <strong>Java 25 Virtual Threads</strong> to achieve high concurrency while strictly adhering to web etiquette and enterprise security policies.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comp-card active">
+          <h4>🌐 Web Repository Connector (In-Process)</h4>
+          <p><strong>Target:</strong> Documentation sites, product portals, corporate intranets, knowledge bases (up to tens of thousands of pages).<br>
+          <strong>Architecture:</strong> In-process Java 25 Virtual Threads, zero extra infrastructure, built-in SSRF Guard, shared runtime politeness gate.</p>
+        </div>
+        <div class="comp-card">
+          <h4>🕷️ StormCrawler Connector (Distributed)</h4>
+          <p><strong>Target:</strong> Massive, continuous web crawling (millions of pages, multi-tenant internet crawling).<br>
+          <strong>Architecture:</strong> Distributed Apache Storm 3.1.0 cluster, external worker bolts, Nimbus REST API orchestration.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>RFC 9309 Robots.txt &amp; Automatic Sitemap Discovery</h2>
+      <p>
+        Web etiquette is non-negotiable for enterprise crawlers. The connector integrates <strong>crawler-commons 1.5</strong> to enforce full compliance with <strong>RFC 9309</strong> (the standard for robots exclusion):
+      </p>
+      <ul>
+        <li><strong>Robots.txt Evaluation:</strong> Fetches and parses <code>robots.txt</code> per host, accurately evaluating <code>User-agent:</code>, <code>Disallow:</code>, and <code>Allow:</code> rules before requesting any page.</li>
+        <li><strong>Crawl-delay Respect:</strong> Honors <code>Crawl-delay</code> directives issued by webmasters, dynamically raising the request interval up to a configurable ceiling (<code>maxCrawlDelayMs</code>).</li>
+        <li><strong>Sitemap Ingestion:</strong> Automatically extracts <code>Sitemap:</code> lines declared inside <code>robots.txt</code>, and allows operators to supply explicit sitemap URLs (<code>sitemapUrls</code>).</li>
+        <li><strong>Page-Level Directives:</strong> Honors <code>&lt;meta name="robots" content="noindex, nofollow"&gt;</code> and HTTP <code>X-Robots-Tag</code> headers, preventing indexing of unindexed pages while respecting link traversal limits.</li>
+      </ul>
+
+      <h2><span class="section-num">3. </span>Runtime-Wide Politeness: The Shared HostRegistry</h2>
+      <p>
+        In enterprise deployments where multiple crawl jobs might run concurrently (or alongside other automated tasks), multiple workers targeting the same domain could accidentally trigger rate limiters or cause denial of service.
+      </p>
+      <p>
+        The Web Repository Connector solves this through a runtime-wide singleton <strong><code>HostRegistry</code></strong>. Every active crawl job in the JVM shares this registry. When any job requests a URL on <code>docs.example.com</code>, the host gate ensures that at least <code>delayMs</code> (default 1000ms, or the host's <code>Crawl-delay</code>) has elapsed since the last request to that same host, across all jobs.
+      </p>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#8505;&#65039;</div>
+        <div>
+          <p><strong>Virtual Threads &amp; Structured Concurrency:</strong> Crawl workers run on lightweight Java 25 Virtual Threads (<code>Thread.ofVirtual()</code>). Waiting for host politeness delays does not block underlying OS threads, allowing dozens of concurrent domain crawls with minimal memory footprint.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">4. </span>Spider Trap Prevention &amp; Linear-Time Filtering</h2>
+      <p>
+        Web crawlers inevitably encounter "spider traps": dynamically generated calendar paths, infinite redirect chains, session-ID loops, or deeply nested directories. The connector incorporates defensive guards:
+      </p>
+      <ul>
+        <li><strong>Depth &amp; Hop Limits:</strong> Restricts link exploration to <code>maxDepth</code> link hops from the seed (default 3, configurable from 0 to 50).</li>
+        <li><strong>Trap Caps:</strong> Rejects URLs exceeding <code>maxUrlLength</code> (2048 characters), query parameter counts exceeding <code>maxQueryParams</code> (32), or repeated directory segments (<code>maxRepeatedSegments: 3</code>).</li>
+        <li><strong>ReDoS-Free Regex Filtering:</strong> URL inclusion (<code>includePatterns</code>) and exclusion (<code>excludePatterns</code>) are compiled with Google's <strong>RE2/J</strong> engine, guaranteeing linear-time execution and safeguarding the runtime against catastrophic backtracking attacks.</li>
+        <li><strong>Query Parameter Normalization:</strong> Automatically strips tracking tokens (<code>utm_*</code>, <code>fbclid</code>, <code>gclid</code>, <code>msclkid</code>, session IDs like <code>jsessionid</code>, <code>phpsessid</code>, <code>sid</code>) and sorts remaining query parameters for canonical consistency.</li>
+        <li><strong>Content Deduplication:</strong> Follows <code>rel="canonical"</code> link elements and calculates cryptographic SHA-256 body hashes to skip duplicate pages.</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Enterprise SSRF Guard with DNS Rebinding Protection</h2>
+      <p>
+        Allowing a web crawler to fetch arbitrary URLs in an enterprise environment presents serious security risks: malicious users or manipulated links could trick the crawler into hitting internal network services (Server-Side Request Forgery - SSRF), such as Kubernetes control planes, internal databases, or cloud instance metadata endpoints (e.g., AWS/GCP <code>169.254.169.254</code>).
+      </p>
+      <p>
+        The Web Repository Connector implements a deep defense layer via <strong><code>SsrfGuard</code></strong>:
+      </p>
+
+      <div class="callout-box warning">
+        <div class="callout-icon">&#128737;&#65039;</div>
+        <div>
+          <p><strong>Fail-Closed SSRF Defense:</strong> By default, all connections to loopback (<code>127.0.0.0/8</code>, <code>::1</code>), RFC 1918 private subnets (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>), link-local addresses (<code>169.254.0.0/16</code>), cloud metadata (<code>169.254.169.254</code>), and IPv6 unique-local addresses (<code>fc00::/7</code>) are <strong>strictly blocked</strong>.</p>
+        </div>
+      </div>
+
+      <p>
+        Crucially, <code>SsrfGuard</code> validates target IP addresses <strong>at DNS resolution time</strong> using a custom Apache HttpClient 5 <code>DnsResolver</code>. It inspects every resolved IP before establishing a TCP socket connection, and repeats this check on <strong>every redirect hop</strong>, effectively neutralizing DNS rebinding attacks.
+      </p>
+      <p>
+        For crawling internal corporate intranets, operators can set <code>allowPrivateNetworks: true</code> accompanied by an explicit <strong><code>privateAllowlist</code></strong> specifying approved hostnames (e.g. <code>intranet.corp.internal</code>, <code>.corp.local</code>) or CIDR blocks (e.g. <code>10.50.0.0/16</code>).
+      </p>
+
+      <h2><span class="section-num">6. </span>Zero-Trust Security &amp; Reactive Backpressure</h2>
+      <p>
+        Like all OpenCrawling connectors, the Web Repository Connector natively participates in the Zero-Trust security model:
+      </p>
+      <ul>
+        <li><strong>ACL Modes:</strong> Supports <code>PUBLIC</code> (default for public documentation) and <code>STATIC</code> mode (attaching user or group read keys such as <code>group:engineering-staff</code> to all documents).</li>
+        <li><strong>Accidental Exposure Protection:</strong> When <code>allowPrivateNetworks: true</code> is enabled, setting <code>aclMode: PUBLIC</code> fails validation unless the administrator explicitly provides <code>confirmPublicExposure: true</code>, preventing accidental public exposure of internal intranet documents.</li>
+        <li><strong>Reactive Backpressure:</strong> Emits a reactive <code>Flux&lt;RepositoryDocument&gt;</code> backed by a thread-safe <code>Semaphore</code> demand controller. Virtual crawling threads automatically pause when downstream Tika extraction, Ollama embeddings, or vector database writes fall behind.</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Configuration &amp; Job Examples</h2>
+      <p>
+        Settings can be specified at the job level (in <code>crawlSpec</code> JSON), at the connector level, or as Spring properties:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>Spring Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>seeds</code></td>
+            <td><code>spring.opencrawling.connector.web.seeds</code></td>
+            <td><em>(Job path)</em></td>
+            <td>Start URLs for the crawl run</td>
+          </tr>
+          <tr>
+            <td><code>maxDepth</code></td>
+            <td><code>spring.opencrawling.connector.web.max-depth</code></td>
+            <td><code>3</code></td>
+            <td>Link hops from seed URLs (0 to 50)</td>
+          </tr>
+          <tr>
+            <td><code>maxPages</code></td>
+            <td><code>spring.opencrawling.connector.web.max-pages</code></td>
+            <td><code>1000</code></td>
+            <td>Maximum page requests executed per run</td>
+          </tr>
+          <tr>
+            <td><code>delayMs</code></td>
+            <td><code>spring.opencrawling.connector.web.delay-ms</code></td>
+            <td><code>1000</code></td>
+            <td>Minimum wait time between requests to same host (ms)</td>
+          </tr>
+          <tr>
+            <td><code>scope</code></td>
+            <td><code>spring.opencrawling.connector.web.scope</code></td>
+            <td><code>DOMAIN</code></td>
+            <td>Crawl boundary: <code>HOST</code>, <code>DOMAIN</code>, <code>PREFIX</code>, or <code>ANY</code></td>
+          </tr>
+          <tr>
+            <td><code>respectRobots</code></td>
+            <td><code>spring.opencrawling.connector.web.respect-robots</code></td>
+            <td><code>true</code></td>
+            <td>Honors RFC 9309 robots.txt rules and crawl-delay</td>
+          </tr>
+          <tr>
+            <td><code>allowPrivateNetworks</code></td>
+            <td><code>spring.opencrawling.connector.web.allow-private-networks</code></td>
+            <td><code>false</code></td>
+            <td>Permits crawling private intranet subnets</td>
+          </tr>
+          <tr>
+            <td><code>privateAllowlist</code></td>
+            <td><code>spring.opencrawling.connector.web.private-allowlist</code></td>
+            <td><em>none</em></td>
+            <td>Permitted hostnames or CIDRs when private crawling is enabled</td>
+          </tr>
+          <tr>
+            <td><code>aclMode</code></td>
+            <td><code>spring.opencrawling.connector.web.acl-mode</code></td>
+            <td><code>PUBLIC</code></td>
+            <td>Security ACL mode: <code>PUBLIC</code> or <code>STATIC</code></td>
+          </tr>
+          <tr>
+            <td><code>maxThreads</code></td>
+            <td><code>spring.opencrawling.connector.web.max-threads</code></td>
+            <td><code>16</code></td>
+            <td>Concurrent virtual threads allocated per crawl run</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Example Job: Public Documentation Crawl</h3>
+      <pre><code>{
+  "name": "Product Documentation Crawl",
+  "repositoryConnector": "WebCrawler",
+  "outputConnector": "PGVector_Output",
+  "path": "https://docs.opencrawling.org/",
+  "crawlSpec": {
+    "maxDepth": 4,
+    "maxPages": 5000,
+    "delayMs": 1000,
+    "scope": "PREFIX",
+    "includePatterns": ["^/docs/"],
+    "excludePatterns": ["\\.(png|jpe?g|gif|svg|webp|css|js)$"],
+    "discoverSitemaps": true
+  }
+}</code></pre>
+
+      <h3>Example Job: Authenticated Intranet Portal Crawl</h3>
+      <pre><code>{
+  "name": "Corporate Engineering Wiki",
+  "repositoryConnector": "WebCrawler",
+  "outputConnector": "PGVector_Output",
+  "path": "https://wiki.corp.internal/",
+  "crawlSpec": {
+    "maxDepth": 5,
+    "maxPages": 10000,
+    "allowPrivateNetworks": true,
+    "privateAllowlist": ["wiki.corp.internal", "10.50.0.0/16"],
+    "aclMode": "STATIC",
+    "aclIdentity": "group:engineering-staff",
+    "maxThreads": 8
+  }
+}</code></pre>
+
+      <div class="article-cta">
+        <h3>Experience In-Process Web Ingestion Today</h3>
+        <p>Try the Web Repository Connector in the live browser simulator, or read the complete architectural guide on our Wiki.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Ingestion Simulator &rarr;</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Web-Repository-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read Web Connector Wiki Guide &#128214;</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
