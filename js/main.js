@@ -778,7 +778,7 @@ function initSvgAnimation() {
     // Particle 1 (Violet) - Sources → Ingestion Core → Kafka
     if (progress < 0.18) {
       const segProgress = progress / 0.18;
-      const x = 130 + (220 - 130) * segProgress;
+      const x = 190 + (240 - 190) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
@@ -786,7 +786,7 @@ function initSvgAnimation() {
       p1.setAttribute('opacity', 0); // inside Core (Tika extraction & splitting)
     } else if (progress >= 0.28 && progress < 0.46) {
       const segProgress = (progress - 0.28) / 0.18;
-      const x = 370 + (430 - 370) * segProgress;
+      const x = 380 + (430 - 380) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
@@ -797,16 +797,16 @@ function initSvgAnimation() {
     // Particle 3 (Amber) - Kafka → oc-embedding-service (up) → back to Kafka (down)
     if (progress >= 0.48 && progress < 0.63) {
       const segProgress = (progress - 0.48) / 0.15;
-      const y = 190 - (190 - 90) * segProgress;
-      p3.setAttribute('cx', 490);
+      const y = 175 - (175 - 125) * segProgress;
+      p3.setAttribute('cx', 475);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
     } else if (progress >= 0.63 && progress < 0.73) {
       p3.setAttribute('opacity', 0); // computing vectors in oc-embedding-service
     } else if (progress >= 0.73 && progress < 0.88) {
       const segProgress = (progress - 0.73) / 0.15;
-      const y = 90 + (190 - 90) * segProgress;
-      p3.setAttribute('cx', 540);
+      const y = 125 + (175 - 125) * segProgress;
+      p3.setAttribute('cx', 535);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
     } else {
@@ -816,7 +816,7 @@ function initSvgAnimation() {
     // Particle 2 (Cyan) - Kafka → Vector Writer
     if (progress >= 0.88 && progress < 1.0) {
       const segProgress = (progress - 0.88) / 0.12;
-      const x = 560 + (640 - 560) * segProgress;
+      const x = 570 + (620 - 570) * segProgress;
       p2.setAttribute('cx', x);
       p2.setAttribute('cy', 230);
       p2.setAttribute('opacity', 1);
