@@ -778,7 +778,7 @@ function initSvgAnimation() {
     // Particle 1 (Violet) - Sources → Ingestion Core → Kafka
     if (progress < 0.18) {
       const segProgress = progress / 0.18;
-      const x = 190 + (240 - 190) * segProgress;
+      const x = 285 + (335 - 285) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
@@ -786,7 +786,7 @@ function initSvgAnimation() {
       p1.setAttribute('opacity', 0); // inside Core (Tika extraction & splitting)
     } else if (progress >= 0.28 && progress < 0.46) {
       const segProgress = (progress - 0.28) / 0.18;
-      const x = 380 + (430 - 380) * segProgress;
+      const x = 475 + (525 - 475) * segProgress;
       p1.setAttribute('cx', x);
       p1.setAttribute('cy', 230);
       p1.setAttribute('opacity', 1);
@@ -798,7 +798,7 @@ function initSvgAnimation() {
     if (progress >= 0.48 && progress < 0.63) {
       const segProgress = (progress - 0.48) / 0.15;
       const y = 175 - (175 - 125) * segProgress;
-      p3.setAttribute('cx', 475);
+      p3.setAttribute('cx', 570);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
     } else if (progress >= 0.63 && progress < 0.73) {
@@ -806,7 +806,7 @@ function initSvgAnimation() {
     } else if (progress >= 0.73 && progress < 0.88) {
       const segProgress = (progress - 0.73) / 0.15;
       const y = 125 + (175 - 125) * segProgress;
-      p3.setAttribute('cx', 535);
+      p3.setAttribute('cx', 630);
       p3.setAttribute('cy', y);
       p3.setAttribute('opacity', 1);
     } else {
@@ -816,7 +816,7 @@ function initSvgAnimation() {
     // Particle 2 (Cyan) - Kafka → Vector Writer
     if (progress >= 0.88 && progress < 1.0) {
       const segProgress = (progress - 0.88) / 0.12;
-      const x = 570 + (620 - 570) * segProgress;
+      const x = 665 + (725 - 665) * segProgress;
       p2.setAttribute('cx', x);
       p2.setAttribute('cy', 230);
       p2.setAttribute('opacity', 1);
