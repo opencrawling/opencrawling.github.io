@@ -315,7 +315,7 @@
     <div class="architecture-container">
       <div class="arch-visual">
         <!-- SVG diagram with glowing paths & interactive points -->
-        <svg id="arch-svg" viewBox="0 0 900 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg id="arch-svg" viewBox="0 0 960 460" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#7C3AED" />
@@ -330,147 +330,191 @@
               <stop offset="100%" stop-color="#FCD34D" />
             </linearGradient>
             <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feGaussianBlur stdDeviation="5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
+            <!-- Flow Arrow Markers -->
+            <marker id="arrow-violet" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#C084FC" />
+            </marker>
+            <marker id="arrow-cyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#22D3EE" />
+            </marker>
+            <marker id="arrow-amber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#F59E0B" />
+            </marker>
+            <marker id="arrow-muted" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 7 5 L 0 8.5 z" fill="#64748B" />
+            </marker>
           </defs>
 
           <!-- Main horizontal flow lines -->
-          <path class="flow-line line-active" d="M130,230 L220,230" />
-          <path class="flow-line line-active" d="M370,230 L430,230" />
-          <path class="flow-line line-active" d="M560,230 L640,230" />
+          <path class="flow-line line-active" d="M190,230 L234,230" marker-end="url(#arrow-violet)" />
+          <path class="flow-line line-active" d="M380,230 L424,230" marker-end="url(#arrow-cyan)" />
+          <path class="flow-line line-active" d="M570,230 L614,230" marker-end="url(#arrow-cyan)" />
 
           <!-- Kafka to Embedding Service (up) -->
-          <path class="flow-line line-active" d="M490,190 L490,130" />
+          <path class="flow-line line-active" d="M475,175 L475,131" marker-end="url(#arrow-amber)" />
           <!-- Embedding Service back to Kafka (down) -->
-          <path class="flow-line line-active" d="M540,130 L540,190" />
+          <path class="flow-line line-active" d="M535,125 L535,169" marker-end="url(#arrow-cyan)" />
 
           <!-- Admin UI to Core (dashed) -->
-          <path class="flow-line line-dashed" d="M295,185 L295,140" />
+          <path class="flow-line line-dashed" d="M310,120 L310,169" marker-end="url(#arrow-muted)" />
 
           <!-- Core to Claim Check Store (down, dashed) -->
-          <path class="flow-line line-dashed" d="M295,275 L295,320" />
+          <path class="flow-line line-dashed" d="M310,285 L310,334" marker-end="url(#arrow-muted)" />
 
-          <!-- Vector Writer to MCP (up, dashed) -->
-          <path class="flow-line line-dashed" d="M810,190 L810,140" />
+          <!-- Outputs to MCP (up, dashed) -->
+          <path class="flow-line line-dashed" d="M800,165 L825,125" marker-end="url(#arrow-muted)" />
 
           <!-- DB below Kafka (dashed) -->
-          <path class="flow-line line-dashed" d="M495,270 L495,320" />
+          <path class="flow-line line-dashed" d="M500,285 L500,334" marker-end="url(#arrow-muted)" />
 
-          <!-- Security below Vector Writer (dashed) -->
-          <path class="flow-line line-dashed" d="M760,302 L760,320" />
+          <!-- Security below Outputs (dashed) -->
+          <path class="flow-line line-dashed" d="M710,330 L710,354" marker-end="url(#arrow-muted)" />
 
           <!-- Dynamic Ingestion Particles -->
-          <circle id="anim-particle-1" r="5" fill="#7C3AED" filter="url(#glow-effect)" />
-          <circle id="anim-particle-2" r="5" fill="#06B6D4" filter="url(#glow-effect)" />
+          <circle id="anim-particle-1" r="5" fill="#C084FC" filter="url(#glow-effect)" />
+          <circle id="anim-particle-2" r="5" fill="#22D3EE" filter="url(#glow-effect)" />
           <circle id="anim-particle-3" r="5" fill="#F59E0B" filter="url(#glow-effect)" />
 
           <!-- Node 1: Sources -->
           <g class="node-group" data-node="sources">
-            <rect x="10" y="78" width="120" height="304" rx="10" class="node-bg" />
-            <text x="70" y="96" class="node-title">Sources</text>
-            <text x="70" y="112" class="node-sub">SharePoint Online 🌐</text>
-            <text x="70" y="128" class="node-sub">M-Files Vault 🗂️</text>
-            <text x="70" y="144" class="node-sub">Hyland CIC (HXP) ☁️</text>
-            <text x="70" y="160" class="node-sub">Hyland OpenArch 🟣</text>
-            <text x="70" y="176" class="node-sub">IBM FileNet P8 🏢</text>
-            <text x="70" y="192" class="node-sub">Documentum REST 📄</text>
-            <text x="70" y="208" class="node-sub">gRPC Push Stream 📡</text>
-            <text x="70" y="224" class="node-sub">Doxis ECM 🏛️</text>
-            <text x="70" y="240" class="node-sub">Relational (JDBC) 🗄️</text>
-            <text x="70" y="256" class="node-sub">OASIS CMIS 📑</text>
-            <text x="70" y="272" class="node-sub">Alfresco ACS/APS 📂</text>
-            <text x="70" y="288" class="node-sub">Apache Iceberg 🧊</text>
-            <text x="70" y="304" class="node-sub">Flowable BPMN 🔄</text>
-            <text x="70" y="320" class="node-sub">Camunda BPMN ⚡</text>
-            <text x="70" y="336" class="node-sub">Web Crawler 🕸️</text>
-            <text x="70" y="352" class="node-sub">StormCrawler 🕷️</text>
-            <text x="70" y="368" class="node-sub">File System 📁</text>
+            <rect x="10" y="75" width="180" height="310" rx="12" class="node-bg" />
+            <text x="100" y="97" class="node-title">Content Sources</text>
+            <text x="100" y="112" class="node-desc" style="fill:#A5B4FC; font-weight:600;">17 Repository Connectors</text>
+            <line x1="22" y1="120" x2="178" y2="120" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+            
+            <!-- Column 1: Cloud & ECM -->
+            <text x="22" y="136" class="node-category-header">CLOUD &amp; ECM</text>
+            <text x="22" y="153" class="node-sub">☁️ Hyland CIC</text>
+            <text x="22" y="171" class="node-sub">🟣 OpenArch</text>
+            <text x="22" y="189" class="node-sub">🌐 SharePoint</text>
+            <text x="22" y="207" class="node-sub">🗂️ M-Files Vault</text>
+            <text x="22" y="225" class="node-sub">🏢 IBM FileNet</text>
+            <text x="22" y="243" class="node-sub">📄 Documentum</text>
+            <text x="22" y="261" class="node-sub">📂 Alfresco ACS</text>
+            <text x="22" y="279" class="node-sub">🏛️ Doxis 4 ECM</text>
+            <text x="22" y="297" class="node-sub">📑 OASIS CMIS</text>
+
+            <!-- Column 2: Data & Workflows -->
+            <text x="104" y="136" class="node-category-header">DATA &amp; BPMN</text>
+            <text x="104" y="153" class="node-sub">🗄️ Relational JDBC</text>
+            <text x="104" y="171" class="node-sub">🧊 Apache Iceberg</text>
+            <text x="104" y="189" class="node-sub">📡 gRPC Push</text>
+            <text x="104" y="207" class="node-sub">📁 File System</text>
+            <text x="104" y="225" class="node-sub">🔄 Flowable BPMN</text>
+            <text x="104" y="243" class="node-sub">⚡ Camunda BPMN</text>
+            <text x="104" y="261" class="node-sub">💼 Alfresco APS</text>
+            <text x="104" y="279" class="node-sub">🕸️ Web Crawler</text>
+            <text x="104" y="297" class="node-sub">🕷️ StormCrawler</text>
+
+            <!-- Bottom feature pill -->
+            <rect x="22" y="348" width="156" height="24" rx="12" fill="rgba(124,58,237,0.12)" stroke="rgba(168,85,247,0.3)" />
+            <text x="100" y="364" class="node-desc" style="fill:#D8B4FE; font-weight:600;">⚡ Java 25 Virtual Threads</text>
           </g>
 
           <!-- Node 2: Ingestion Core -->
           <g class="node-group" data-node="core">
-            <rect x="220" y="185" width="150" height="90" rx="10" class="node-bg accent" />
-            <text x="295" y="212" class="node-title accent-text">Ingestion Core</text>
-            <text x="295" y="233" class="node-desc">Tika Extractor</text>
-            <text x="295" y="250" class="node-desc">Token Splitter</text>
-            <text x="295" y="265" class="node-desc">Publish Chunks</text>
+            <rect x="240" y="175" width="140" height="110" rx="12" class="node-bg accent" />
+            <text x="310" y="202" class="node-title accent-text">Ingestion Core</text>
+            <text x="310" y="217" class="node-desc" style="fill:#C084FC;">oc-core coordinator</text>
+            <text x="310" y="238" class="node-desc">⚙️ Tika 4 (Pipes Fork)</text>
+            <text x="310" y="254" class="node-desc">✂️ Token Splitter</text>
+            <text x="310" y="270" class="node-desc">📨 Publish OIS Chunks</text>
           </g>
 
           <!-- Node 3: Apache Kafka -->
           <g class="node-group" data-node="kafka">
-            <rect x="430" y="185" width="130" height="90" rx="10" class="node-bg cyan" />
-            <text x="495" y="212" class="node-title cyan-text">Apache Kafka</text>
-            <text x="495" y="233" class="node-desc">Ingestion Topic</text>
-            <text x="495" y="250" class="node-desc">Chunks Topic</text>
-            <text x="495" y="265" class="node-desc">Embedded Topic</text>
+            <rect x="430" y="175" width="140" height="110" rx="12" class="node-bg cyan" />
+            <text x="500" y="202" class="node-title cyan-text">Apache Kafka</text>
+            <text x="500" y="217" class="node-desc" style="fill:#67E8F9;">Decoupled Streaming</text>
+            <text x="500" y="238" class="node-desc">📬 opencrawling-ingestion</text>
+            <text x="500" y="254" class="node-desc">📦 opencrawling-chunks</text>
+            <text x="500" y="270" class="node-desc">🧠 opencrawling-embedded</text>
           </g>
 
           <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
-            <rect x="640" y="122" width="150" height="186" rx="10" class="node-bg" />
-            <text x="715" y="138" class="node-title">Outputs &amp; Sinks</text>
-            <text x="715" y="153" class="node-sub">Hyland CIC Archival ☁️</text>
-            <text x="715" y="168" class="node-sub">Alfresco Migration 🌿</text>
-            <text x="715" y="183" class="node-sub">OpenArch Parquet 🟣</text>
-            <text x="715" y="198" class="node-sub">AWS S3 Migration ☁️</text>
-            <text x="715" y="213" class="node-sub">Ozone Migration 🗄️</text>
-            <text x="715" y="228" class="node-sub">SeaTunnel Fan-Out 🌊</text>
-            <text x="715" y="243" class="node-sub">Luxir / Solr 10 ✨</text>
-            <text x="715" y="258" class="node-sub">Vespa Engine 🚀</text>
-            <text x="715" y="273" class="node-sub">pgvector / Milvus</text>
-            <text x="715" y="288" class="node-sub">Qdrant / OpenSearch</text>
+            <rect x="620" y="125" width="180" height="205" rx="12" class="node-bg" />
+            <text x="710" y="145" class="node-title">Outputs &amp; Sinks</text>
+            <text x="710" y="159" class="node-desc" style="fill:#7DD3FC; font-weight:600;">RAG &amp; Enterprise Archival</text>
+            <line x1="632" y1="166" x2="788" y2="166" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+            
+            <!-- Column 1: Vector RAG -->
+            <text x="632" y="180" class="node-category-header">VECTOR &amp; RAG</text>
+            <text x="632" y="196" class="node-sub">🐘 pgvector</text>
+            <text x="632" y="212" class="node-sub">🎯 Milvus</text>
+            <text x="632" y="228" class="node-sub">⚡ Qdrant</text>
+            <text x="632" y="244" class="node-sub">🚀 Vespa Engine</text>
+            <text x="632" y="260" class="node-sub">✨ Solr 10</text>
+            <text x="632" y="276" class="node-sub">🔍 OpenSearch</text>
+            <text x="632" y="292" class="node-sub">💎 Luxir Search</text>
+
+            <!-- Column 2: Archival & Migration -->
+            <text x="714" y="180" class="node-category-header">ARCHIVE &amp; MIGRATION</text>
+            <text x="714" y="196" class="node-sub">☁️ Hyland CIC</text>
+            <text x="714" y="212" class="node-sub">🟣 OpenArch</text>
+            <text x="714" y="228" class="node-sub">🌊 SeaTunnel</text>
+            <text x="714" y="244" class="node-sub">🌿 Alfresco ACS</text>
+            <text x="714" y="260" class="node-sub">☁️ AWS S3</text>
+            <text x="714" y="276" class="node-sub">🗄️ Apache Ozone</text>
+
+            <!-- Bottom ACL tag -->
+            <rect x="632" y="303" width="156" height="20" rx="10" fill="rgba(6,182,212,0.12)" stroke="rgba(34,211,238,0.3)" />
+            <text x="710" y="317" class="node-desc" style="fill:#67E8F9; font-weight:600;">🔒 Zero-Trust OIS ACLs</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
           <g class="node-group" data-node="ui">
-            <rect x="228" y="65" width="134" height="70" rx="8" class="node-bg border-only" />
-            <text x="295" y="95" class="node-title-small">Admin React UI</text>
-            <text x="295" y="115" class="node-desc">oc-admin-ui</text>
+            <rect x="240" y="45" width="140" height="75" rx="8" class="node-bg border-only" />
+            <text x="310" y="73" class="node-title-small">Admin React UI</text>
+            <text x="310" y="91" class="node-desc">oc-admin-ui</text>
+            <text x="310" y="105" class="node-desc" style="fill:#64748B;">Telemetry &amp; Config</text>
           </g>
 
-          <!-- Node 6: oc-embedding-service (Top Center — NEW DECOUPLED SERVICE) -->
+          <!-- Node 6: oc-embedding-service (Top Center — Scale-Out Service) -->
           <g class="node-group" data-node="embedding">
-            <rect x="428" y="50" width="164" height="80" rx="8" class="node-bg embed-accent" />
-            <text x="510" y="75" class="node-title embed-text">oc-embedding-service</text>
-            <text x="510" y="95" class="node-desc">EmbeddingConsumer</text>
-            <text x="510" y="111" class="node-desc">EmbeddingModelFactory</text>
+            <rect x="420" y="40" width="160" height="85" rx="8" class="node-bg embed-accent" />
+            <text x="500" y="66" class="node-title embed-text">oc-embedding-service</text>
+            <text x="500" y="85" class="node-desc">EmbeddingConsumer</text>
+            <text x="500" y="101" class="node-desc" style="fill:#FCD34D;">Ollama / OpenAI / HuggingFace</text>
+            <!-- Scale-out badge -->
+            <rect x="536" y="44" width="40" height="18" rx="9" fill="#F59E0B" opacity="0.95"/>
+            <text x="556" y="57" text-anchor="middle" fill="#0F172A" font-size="9.5" font-weight="700">×N Scale</text>
           </g>
 
           <!-- Node 7: Secure MCP Server (Top Right) -->
           <g class="node-group" data-node="mcp">
-            <rect x="762" y="65" width="128" height="70" rx="8" class="node-bg border-only" />
-            <text x="826" y="93" class="node-title-small">Secure MCP Server</text>
-            <text x="826" y="113" class="node-desc">Model Context Protocol</text>
+            <rect x="815" y="50" width="135" height="75" rx="8" class="node-bg border-only" />
+            <text x="882" y="77" class="node-title-small">Secure MCP Server</text>
+            <text x="882" y="95" class="node-desc">Model Context Protocol</text>
+            <text x="882" y="110" class="node-desc" style="fill:#64748B;">McpAclEvaluator</text>
           </g>
 
           <!-- Node 8: PostgreSQL / Redis (Bottom Center) -->
           <g class="node-group" data-node="db">
-            <rect x="432" y="320" width="130" height="80" rx="8" class="node-bg border-only" />
-            <text x="497" y="350" class="node-title-small">PostgreSQL / Redis</text>
-            <text x="497" y="370" class="node-desc">Job Status Cache</text>
-            <text x="497" y="385" class="node-desc">Metadata State</text>
+            <rect x="430" y="340" width="140" height="80" rx="8" class="node-bg border-only" />
+            <text x="500" y="367" class="node-title-small">PostgreSQL / Redis</text>
+            <text x="500" y="386" class="node-desc">Job Status Cache</text>
+            <text x="500" y="401" class="node-desc" style="fill:#64748B;">DuckDB Audit Reports</text>
           </g>
 
           <!-- Node 9: Authority Service (Bottom Right) -->
           <g class="node-group" data-node="security">
-            <rect x="710" y="320" width="120" height="80" rx="8" class="node-bg border-only" />
-            <text x="770" y="350" class="node-title-small">Authority Service</text>
-            <text x="770" y="370" class="node-desc">Access Filters</text>
-            <text x="770" y="385" class="node-desc">ACL Mapping</text>
+            <rect x="640" y="360" width="140" height="80" rx="8" class="node-bg border-only" />
+            <text x="710" y="387" class="node-title-small">Authority Service</text>
+            <text x="710" y="406" class="node-desc">OpenFGA ReBAC Gate</text>
+            <text x="710" y="421" class="node-desc" style="fill:#64748B;">Zero-Trust ACL Mapping</text>
           </g>
 
           <!-- Node 10: Claim Check Store (Bottom Left) -->
           <g class="node-group" data-node="claimcheck">
-            <rect x="225" y="320" width="140" height="80" rx="8" class="node-bg border-only" />
-            <text x="295" y="348" class="node-title-small">Claim Check Store</text>
-            <text x="295" y="368" class="node-desc">Ozone Native (ofs RPC)</text>
-            <text x="295" y="385" class="node-desc">Ozone S3 Gateway (s3g)</text>
+            <rect x="235" y="340" width="150" height="80" rx="8" class="node-bg border-only" />
+            <text x="310" y="367" class="node-title-small">Claim Check Store</text>
+            <text x="310" y="386" class="node-desc">Ozone Native (ofs RPC)</text>
+            <text x="310" y="401" class="node-desc" style="fill:#64748B;">Ozone S3G &amp; AWS S3</text>
           </g>
-
-          <!-- Scale-out badge on embedding service -->
-          <rect x="548" y="54" width="38" height="18" rx="9" fill="#F59E0B" opacity="0.9"/>
-          <text x="567" y="67" text-anchor="middle" fill="#1a1a2e" font-size="9" font-weight="700">×N</text>
         </svg>
       </div>
       
