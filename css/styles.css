@@ -737,7 +737,7 @@
   /* SVG Architectures styles */
   #arch-svg {
     width: 100%;
-    min-width: 700px;
+    min-width: 760px;
     height: auto;
     display: block;
   }
@@ -848,7 +848,7 @@
   
   .node-sub {
     font-family: var(--font-body);
-    font-size: 10.5px;
+    font-size: 10px;
     fill: #E2E8F0;
   }
 
