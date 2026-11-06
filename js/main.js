@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland Content Innovation Cloud via HXP REST & OAuth2, Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core)",
@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Outputs: Vector Stores, Parquet Bridges & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
+    title: "Outputs: Vector Stores, Parquet Bridges, HXP Archival & Migration Sinks",
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -154,6 +154,20 @@ function initArchHover() {
    3. Live Ingestion Simulator
    ========================================== */
 const SIMULATOR_DATA = {
+  'hyland-cic': {
+    files: [
+      { name: "hxp://documents/e4a1b2c3-d4e5 (Vendor_Master_Agreement_2026.pdf) [HXP Content REST API]", size: "3.7 MB", acls: ["tenant-enterprise-01/group:finance:read", "tenant-enterprise-01/user:jane.doe:write", "tenant-enterprise-01/user:external_contractor:deny"] },
+      { name: "hxp://documents/f8b9c0d1-e2f3 (Quarterly_Financial_Audit.docx) [Pre-Crawl Discovery /explore]", size: "2.3 MB", acls: ["tenant-enterprise-01/group:auditors:read", "tenant-enterprise-01/user:cfo:read"] },
+      { name: "hxp://documents/a1b2c3d4-e5f6 (Obsolete_Policy_2025.pdf) [DELETE Tombstone / DocumentAction.DELETE]", size: "0 B", acls: ["tenant-enterprise-01/group:compliance:read"] }
+    ],
+    logs: {
+      scan: "HylandCicRepositoryConnector triggered. Authenticating via Hyland IdP OAuth2 client_credentials at https://identity.hylandcloud.com/connect/token. Exploring folder hierarchy and document items at https://api.content.hylandcloud.com/api/content/folders (tenantId: tenant-enterprise-01)...",
+      claimCheck: "Crawler traversed folder tree and executed pre-crawl dry-run estimation via Java 25 Virtual Threads. Streamed binary payloads from /api/content/documents/{id}/content to ClaimCheckStore, mapped HXP ACEs to OIS SecurityConfig with tenant qualification and explicit-deny precedence, and published hxp:// URIs to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Extracted document text and custom HXP metadata attributes via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed HXP document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with tenant-qualified Zero-Trust ACL SIDs; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted Hyland CIC embeddings, document attributes, and Zero-Trust ACL SIDs into the vector destination; purged DELETE tombstone (Obsolete_Policy_2025.pdf) from the index."
+    }
+  },
   openarch: {
     files: [
       { name: "openarch://default/7c1e2f8a-4b3d (SysFile: enterprise_msa_2026.pdf) [HXQL /api/query]", size: "3.1 MB", acls: ["group:legal:read", "user:elena.weber:write", "user:restricted_user:deny"] },
@@ -591,7 +605,9 @@ function initSimulator() {
       // Step 9: Vector Store Output
       stationVector.classList.add('active');
       let vectorLog = simData.logs.vector;
-      if (destKey === 'openarch') {
+      if (destKey === 'hyland-cic') {
+        vectorLog = "HylandCicOutputConnector resolved target HXP folder ('/Enterprise_Ingestion/Automated_Archive'), streamed multipart document upload with metadata properties to POST /api/content/documents (conflictResolution=create-version), and synchronized tenant-aware Zero-Trust security.";
+      } else if (destKey === 'openarch') {
         vectorLog = "OpenArchStoreWriterConsumer buffered embedded chunks (parquetBatchThreshold), serialized 1024-dim vectors & provenance locations into SNAPPY Apache Parquet conforming to OpenArch 'embedding.avsc', uploaded blob via POST /api/upload, and synchronized SysFile + sys_acl permissions.";
       } else if (destKey === 'seatunnel') {
         vectorLog = "SeaTunnelStoreWriterConsumer published OIS embedded chunks to fan-out Kafka topic ('seatunnel-ois-in'); Apache SeaTunnel Zeta cluster orchestrated parallel streaming and fanned out data to downstream sinks (ClickHouse, Milvus, Iceberg).";
@@ -606,8 +622,13 @@ function initSimulator() {
       } else if (destKey === 'milvus') {
         vectorLog = "MilvusWriterConsumer inserted vectors, entity metadata, and security tokens into Milvus standalone collection.";
       }
-      addLog(`[PROCESS] Vector Writer (${destName}): ${vectorLog}`, "process");
-      addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into ${destName} successfully.`, "success");
+      if (destKey === 'hyland-cic') {
+        addLog(`[PROCESS] HXP Output Connector: ${vectorLog}`, "process");
+        addLog(`[SUCCESS] Ingested, versioned, and archived document '${file.name}' into Hyland Content Innovation Cloud successfully.`, "success");
+      } else {
+        addLog(`[PROCESS] Vector Writer (${destName}): ${vectorLog}`, "process");
+        addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into ${destName} successfully.`, "success");
+      }
       await sleep(1000);
       
       // Reset pipeline state for next document, leaving Crawler active
