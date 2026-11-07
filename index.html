@@ -877,28 +877,30 @@ public class SampleRepositoryConnector implements RepositoryConnector {
   <section id="standard" class="standard-section">
     <div class="section-header">
       <h2 class="section-title">Open Ingestion Standard (OIS)</h2>
-      <p class="section-subtitle">A cross-platform specification for secure enterprise data exchange, document lifecycle operations, and configuration.</p>
+      <p class="section-subtitle">A vendor-neutral specification for Zero-Trust AI/RAG ingestion, Cloud Lakehouse sidecar migration (<code>.ois.json</code>), and agentic data logistics.</p>
     </div>
 
     <div class="standard-container glass">
       <div class="standard-text-content">
-        <h3>The Ingestion Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in and security permission leaks. The <strong>OIS specification</strong> standardizes document payloads, metadata repositories, workflow processes, and full document lifecycles—now featuring native support for <strong>UPSERT &amp; DELETE tombstones</strong> to automatically purge removed documents from downstream vector stores, alongside <strong>Microsoft SharePoint Online</strong>, <strong>M-Files</strong>, <strong>Hyland OpenArch</strong>, <strong>gRPC Push</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>BPMN</strong> integrations.</p>
+        <h3>The Ingestion &amp; Migration Manifesto</h3>
+        <p>Enterprise data pipelines suffer from proprietary lock-in, unredacted PII in embeddings, and access-control leaks. The <strong>OIS specification</strong> standardizes streaming document payloads and persistent <strong>Cloud/Lakehouse Sidecar Envelopes (<code>&lt;key&gt;.ois.json</code>)</strong> with <code>SHA-256</code> integrity—now featuring normative <strong><code>FAIL_CLOSED</code> Security &amp; ReBAC tuples</strong>, in-flight <strong>Pre-Embedding PII Governance (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>)</strong>, <strong>Agentic Job Triggers</strong> with <strong>OAuth 2.0 RFC 8693 Delegated Provenance (<code>onBehalfOf</code> / <code>actorAgent</code>)</strong>, real-time <strong>BPMN 2.0 Transition Events</strong>, and <strong>UPSERT &amp; DELETE tombstones</strong> across <strong>SharePoint Online</strong>, <strong>M-Files</strong>, <strong>Documentum</strong>, <strong>Hyland OpenArch</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>Apache Ozone / S3</strong>.</p>
         
         <div class="standard-badges">
-          <span class="std-badge">🔒 Zero-Trust Security</span>
-          <span class="std-badge">🌐 SharePoint Online &amp; M-Files</span>
-          <span class="std-badge">🟣 Hyland OpenArch &amp; Parquet</span>
-          <span class="std-badge">📡 gRPC Push Streaming</span>
+          <span class="std-badge">🔒 Fail-Closed ACL &amp; ReBAC</span>
+          <span class="std-badge">📦 .ois.json Cloud Sidecars</span>
+          <span class="std-badge">🤖 Agentic Triggers &amp; RFC 8693</span>
+          <span class="std-badge">🛡️ Pre-Embedding PII Gate</span>
+          <span class="std-badge">⚡ BPMN Real-Time Events</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
-          <span class="std-badge">🏛️ Doxis &amp; CMIS Ready</span>
-          <span class="std-badge">🔌 Vendor-Neutral</span>
-          <span class="std-badge">⚙️ Event-Decoupled</span>
+          <span class="std-badge">🌐 SharePoint, M-Files &amp; Documentum</span>
+          <span class="std-badge">🟣 Hyland OpenArch &amp; Doxis</span>
+          <span class="std-badge">🏛️ OASIS TC Proposal</span>
         </div>
 
-        <div class="standard-actions">
+        <div class="standard-actions" style="flex-wrap: wrap;">
           <a href="https://github.com/OpenCrawling/open-ingestion-standard" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read Manifesto</a>
           <a href="https://github.com/OpenCrawling/open-ingestion-standard/tree/master/schemas" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Explore Schemas</a>
+          <a href="https://github.com/OpenCrawling/open-ingestion-standard/blob/master/OASIS-PROPOSAL.md" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">OASIS TC Proposal</a>
         </div>
       </div>
 
@@ -907,6 +909,8 @@ public class SampleRepositoryConnector implements RepositoryConnector {
           <div class="schema-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
               <button class="schema-tab-btn active" data-schema="standard">Document</button>
+              <button class="schema-tab-btn" data-schema="sidecar">Cloud Sidecar (.ois.json)</button>
+              <button class="schema-tab-btn" data-schema="agenticJob">Agentic Job</button>
               <button class="schema-tab-btn" data-schema="sharepoint">SharePoint Online</button>
               <button class="schema-tab-btn" data-schema="mfiles">M-Files</button>
               <button class="schema-tab-btn" data-schema="documentum">Documentum</button>
@@ -924,9 +928,9 @@ public class SampleRepositoryConnector implements RepositoryConnector {
   "id": "doc-554032-sp",
   "action": "UPSERT",
   "source": { "type": "sharepoint", "instance": "..." },
-  "content": { "mimeType": "application/pdf", "text": "..." },
-  "metadata": { "title": "Fiscal Strategy", "author": "..." },
-  "security": { "inheritanceEnabled": true, "permissions": [] }
+  "content": { "mimeType": "application/pdf", "sidecarUri": "ofs://.../doc.pdf.ois.json", "sha256": "..." },
+  "metadata": { "title": "Fiscal Strategy", "ois:governance": { "decision": "REDACT", "redacted": true } },
+  "security": { "evaluationPolicy": "FAIL_CLOSED", "inheritanceEnabled": true, "permissions": [] }
 }</code></pre>
         </div>
       </div>
@@ -1672,9 +1676,100 @@ public class SampleRepositoryConnector implements RepositoryConnector {
   "id": "doc-554032-sp",
   "action": "UPSERT",
   "source": { "type": "sharepoint", "instance": "..." },
-  "content": { "mimeType": "application/pdf", "text": "..." },
-  "metadata": { "title": "Fiscal Strategy", "author": "..." },
-  "security": { "inheritanceEnabled": true, "permissions": [] }
+  "content": { "mimeType": "application/pdf", "sidecarUri": "ofs://.../doc.pdf.ois.json", "sha256": "..." },
+  "metadata": { "title": "Fiscal Strategy", "ois:governance": { "decision": "REDACT", "redacted": true } },
+  "security": { "evaluationPolicy": "FAIL_CLOSED", "inheritanceEnabled": true, "permissions": [] }
+}`
+        },
+        sidecar: {
+          file: 'sample-document-sidecar-migration.json',
+          code: `{
+  "id": "doc-889120-cmis-ozone",
+  "action": "UPSERT",
+  "source": {
+    "type": "cmis",
+    "instance": "https://alfresco.company.com/alfresco/api/-default-/public/cmis/versions/1.1/atom"
+  },
+  "content": {
+    "mimeType": "application/pdf",
+    "text": "Q3 M&A Due Diligence Summary for Project Titan. Contact: [REDACTED]",
+    "claimCheckUri": "ofs://ozone-cluster/enterprise-lake/ma-vault/q3/project-titan.pdf",
+    "sidecarUri": "ofs://ozone-cluster/enterprise-lake/ma-vault/q3/project-titan.pdf.ois.json",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sizeBytes": 2485910
+  },
+  "metadata": {
+    "title": "Project Titan - Q3 M&A Due Diligence",
+    "cmis:objectId": "workspace://SpacesStore/889120-titan-dd",
+    "ois:provenance": {
+      "jobId": "job-agentic-ma-migration-042",
+      "triggeredBy": "mcp-agent",
+      "onBehalfOf": "alice.martin@company.com",
+      "actorAgent": "spiffe://company.com/agent/migration-copilot"
+    },
+    "ois:governance": {
+      "decision": "REDACT",
+      "redacted": true,
+      "redactionCategories": ["EMAIL", "PHONE", "IBAN"],
+      "policyId": "eu-ai-act-pii-gate-v1"
+    }
+  },
+  "security": {
+    "evaluationPolicy": "FAIL_CLOSED",
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "GROUP_MA_DEAL_TEAM", "identityType": "cmis-group", "access": "read" },
+      { "identity": "GROUP_EXTERNAL_CONTRACTORS", "identityType": "cmis-group", "access": "deny" }
+    ],
+    "relationships": [
+      { "user": "group:ma-deal-team#member", "relation": "viewer", "object": "document:doc-889120-cmis-ozone" }
+    ]
+  }
+}`
+        },
+        agenticJob: {
+          file: 'sample-job-agentic-migration.json',
+          code: `{
+  "version": "ois/v1alpha1",
+  "metadata": {
+    "name": "agentic-cmis-to-ozone-ma-migration",
+    "owner": "enterprise-architecture-team"
+  },
+  "spec": {
+    "trigger": {
+      "mode": "AGENTIC",
+      "dryRun": false,
+      "idempotencyKey": "ma-q3-migration-2026-10-15-001",
+      "requiresApproval": true,
+      "delegatedIdentity": {
+        "onBehalfOf": "alice.martin@company.com",
+        "actorAgent": "spiffe://company.com/agent/migration-copilot",
+        "scopes": ["ois:discover", "ois:migrate:write"]
+      },
+      "scopeOverrides": {
+        "folderPaths": ["/Sites/corporate-development/documentLibrary/Q3-MA"],
+        "maxDocuments": 500
+      }
+    },
+    "connector": {
+      "type": "cmis-source",
+      "config": { "repositoryId": "-default-", "authentication": { "type": "oauth2-on-behalf-of" } }
+    },
+    "pipeline": {
+      "governance": {
+        "enabled": true,
+        "defaultAction": "REDACT",
+        "failClosed": true,
+        "piiRedaction": { "enabled": true, "categories": ["EMAIL", "SSN", "IBAN"] }
+      }
+    },
+    "output": {
+      "type": "ozone",
+      "sidecarEnabled": true,
+      "verifySha256": true,
+      "config": { "volume": "enterprise-lake", "bucket": "ma-vault", "keyPrefix": "q3/" }
+    }
+  }
 }`
         },
         sharepoint: {
@@ -1941,18 +2036,31 @@ public class SampleRepositoryConnector implements RepositoryConnector {
 }`
         },
         bpmn: {
-          file: 'bpmn-workflow-definition.json',
+          file: 'sample-document-bpmn2.json',
           code: `{
-  "id": "process-hire-01",
-  "source": { "type": "bpmn-workflow", "engine": "Camunda" },
-  "bpmn": {
-    "processId": "hiring_workflow",
-    "tasks": [
-      { "id": "task_resume_review", "name": "Review Resume", "type": "userTask" },
-      { "id": "task_background_check", "name": "Background Check", "type": "serviceTask" }
-    ],
-    "flows": [
-      { "from": "task_resume_review", "to": "task_background_check" }
+  "id": "workflow-proc-88371-finance",
+  "action": "UPSERT",
+  "source": { "type": "bpmn2", "instance": "https://bpms.company.com/engine-rest" },
+  "metadata": {
+    "bpmn:processInstanceId": "proc-88371-finance",
+    "bpmn:processDefinitionKey": "invoice-approval",
+    "bpmn:status": "ACTIVE",
+    "bpmn:transitionEvent": {
+      "eventType": "TASK_ASSIGNED",
+      "timestamp": "2026-10-15T09:12:00Z",
+      "previousStatus": "DRAFT",
+      "newStatus": "IN_REVIEW"
+    },
+    "bpmn:activeTasks": [
+      { "taskId": "task-55291", "taskName": "Review Invoice", "assignee": "jsmith", "candidateGroups": ["Finance-Admins"] }
+    ]
+  },
+  "security": {
+    "evaluationPolicy": "FAIL_CLOSED",
+    "inheritanceEnabled": false,
+    "permissions": [
+      { "identity": "Finance-Admins", "identityType": "bpmn-candidate-group", "access": "read" },
+      { "identity": "jsmith", "identityType": "bpmn-assignee", "access": "read" }
     ]
   }
 }`
