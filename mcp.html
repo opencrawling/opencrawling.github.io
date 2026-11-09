@@ -7,7 +7,7 @@
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and the Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval with authoritative ACL filtering across 9 target vector & search engines.">
-  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
+  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, Elasticsearch, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/mcp.html">
 
@@ -621,8 +621,8 @@
         <div class="mcp-card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
         </div>
-        <h3>Pluggable 9 Vector &amp; Search Engines</h3>
-        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch with query-time Ollama embedding generation.</p>
+        <h3>Pluggable 10 Vector &amp; Search Engines</h3>
+        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, Elasticsearch 8.x/9.x, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch with query-time Ollama embedding generation.</p>
       </div>
 
       <div class="mcp-card">
@@ -712,6 +712,13 @@
               <td>Ollama / Spring AI</td>
             </tr>
             <tr>
+              <td><strong>Elasticsearch 8.x / 9.x</strong></td>
+              <td><span class="store-badge">elasticsearch</span></td>
+              <td><code>ElasticsearchMcpSearchBackend</code></td>
+              <td><code>ElasticsearchClient</code> (top-level kNN <code>dense_vector</code> search + <code>security_read_keys</code> filter pushdown)</td>
+              <td>Ollama / Spring AI</td>
+            </tr>
+            <tr>
               <td><strong>OpenSearch 2.x</strong></td>
               <td><span class="store-badge">opensearch2</span></td>
               <td><code>OpenSearch2McpSearchBackend</code></td>
@@ -777,6 +784,7 @@ flowchart TD
         VES["Vespa Engine"]
         QD["Qdrant"]
         MIL["Milvus"]
+        ES["Elasticsearch 8.x & 9.x"]
         OS["OpenSearch 2.x & 3.x"]
         SOL["Apache Solr"]
         LUX["Luxir C++ Engine"]
@@ -793,6 +801,7 @@ flowchart TD
     SPI --> VES
     SPI --> QD
     SPI --> MIL
+    SPI --> ES
     SPI --> OS
     SPI --> SOL
     SPI --> LUX
@@ -801,6 +810,7 @@ flowchart TD
     VES --> Guard
     QD --> Guard
     MIL --> Guard
+    ES --> Guard
     OS --> Guard
     SOL --> Guard
     LUX --> Guard
@@ -1274,6 +1284,7 @@ curl -X POST http://localhost:8080/mcp \
             <pre><code># Boot any decoupled vector database stack (includes oc-mcp-server + Ollama):
 docker compose -f oc-milvus-output-connector/docker/docker-compose-decoupled-with-milvus.yml up -d
 docker compose -f oc-qdrant-output-connector/docker/docker-compose-decoupled-with-qdrant.yml up -d
+docker compose -f oc-elasticsearch-output-connector/docker/docker-compose-decoupled-with-elasticsearch.yml up -d
 docker compose -f oc-opensearch3-output-connector/docker/docker-compose-decoupled-with-opensearch.yml up -d
 docker compose -f oc-vespa-output-connector/docker/docker-compose-decoupled-with-vespa.yml up -d
 

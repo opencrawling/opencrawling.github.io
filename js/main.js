@@ -67,7 +67,7 @@ const ARCH_DETAILS = {
   },
   outputs: {
     title: "Outputs: Vector Stores, Parquet Bridges, HXP Archival & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, or OpenSearch. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, Elasticsearch 8.x/9.x, or OpenSearch 2.x/3.x. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -91,7 +91,7 @@ const ARCH_DETAILS = {
   },
   mcp: {
     title: "Secure MCP Server (Spring AI)",
-    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP) across all 9 pluggable backends (including Hyland OpenArch via openarch_search and openarch_fetch_document). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
+    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP) across all 10 pluggable backends (including Hyland OpenArch via openarch_search and openarch_fetch_document). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
   },
   claimcheck: {
     title: "Claim Check Store (Apache Ozone & S3)",
@@ -615,6 +615,8 @@ function initSimulator() {
         vectorLog = "LuxirStoreWriterConsumer indexed document chunks, 1024-dim dense embeddings, dynamic text fields (text_t), and Zero-Trust ACL attributes into Luxir collection via POST /collections/opencrawling/_update.";
       } else if (destKey === 'solr') {
         vectorLog = "SolrStoreWriterConsumer stored dense vectors, dynamic fields, and ACL tokens into Apache Solr 10 collection via SolrJ HTTP client.";
+      } else if (destKey === 'elasticsearch') {
+        vectorLog = "ElasticsearchStoreWriterConsumer indexed document chunks, 1024-dim dense_vector embeddings (HNSW / int8_hnsw), normalized security_read_keys, and Zero-Trust ACL attributes into Elasticsearch 8.x/9.x index ('enterprise_kb') via Elastic Java API Client (Rest5Client), and purged stale trailing chunks.";
       } else if (destKey === 'vespa') {
         vectorLog = "VespaWriterConsumer fed document chunks with tensor embeddings and ACL tokens to Vespa via vespa-feed-client.";
       } else if (destKey === 'qdrant') {
