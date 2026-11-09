@@ -300,7 +300,7 @@
           </svg>
         </div>
         <h3>Secure Model Context Protocol (MCP) Server</h3>
-        <p>Built with <strong>Spring AI 2.0.2</strong> over Streamable HTTP (<code>/mcp</code>) and SSE (<code>/mcp/sse</code>). Employs the pluggable <code>McpVectorSearchBackend</code> SPI across <strong>all 9 target vector &amp; search engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch). Server-side <code>McpAclEvaluator</code> authoritatively evaluates Zero-Trust document ACLs with <strong>explicit deny precedence</strong>, dynamic role mapping, and integrated AIOps observability tools. <a href="mcp.html" class="learn-more-link">Explore MCP Server →</a></p>
+        <p>Built with <strong>Spring AI 2.0.2</strong> over Streamable HTTP (<code>/mcp</code>) and SSE (<code>/mcp/sse</code>). Employs the pluggable <code>McpVectorSearchBackend</code> SPI across <strong>all 10 target vector &amp; search engines</strong> (PostgreSQL/pgvector, Vespa, Qdrant, Milvus, Elasticsearch 8.x/9.x, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch). Server-side <code>McpAclEvaluator</code> authoritatively evaluates Zero-Trust document ACLs with <strong>explicit deny precedence</strong>, dynamic role mapping, and integrated AIOps observability tools. <a href="mcp.html" class="learn-more-link">Explore MCP Server →</a></p>
       </div>
     </div>
   </section>
@@ -371,7 +371,7 @@
           <path class="flow-line line-dashed" d="M595,285 L595,334" marker-end="url(#arrow-muted)" />
 
           <!-- Security below Outputs (dashed) -->
-          <path class="flow-line line-dashed" d="M862,330 L862,354" marker-end="url(#arrow-muted)" />
+          <path class="flow-line line-dashed" d="M862,334 L862,354" marker-end="url(#arrow-muted)" />
 
           <!-- Dynamic Ingestion Particles -->
           <circle id="anim-particle-1" r="5" fill="#C084FC" filter="url(#glow-effect)" />
@@ -436,33 +436,34 @@
 
           <!-- Node 4: Outputs & Sinks -->
           <g class="node-group" data-node="outputs">
-            <rect x="725" y="125" width="275" height="205" rx="12" class="node-bg" />
-            <text x="862" y="145" class="node-title">Outputs &amp; Sinks</text>
-            <text x="862" y="159" class="node-desc" style="fill:#7DD3FC; font-weight:600;">RAG &amp; Enterprise Archival</text>
-            <line x1="737" y1="166" x2="988" y2="166" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+            <rect x="725" y="113" width="275" height="221" rx="12" class="node-bg" />
+            <text x="862" y="133" class="node-title">Outputs &amp; Sinks</text>
+            <text x="862" y="147" class="node-desc" style="fill:#7DD3FC; font-weight:600;">RAG &amp; Enterprise Archival</text>
+            <line x1="737" y1="154" x2="988" y2="154" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
             
             <!-- Column 1: Vector RAG -->
-            <text x="737" y="180" class="node-category-header">VECTOR &amp; RAG</text>
-            <text x="737" y="196" class="node-sub">🐘 pgvector</text>
-            <text x="737" y="212" class="node-sub">🎯 Milvus</text>
-            <text x="737" y="228" class="node-sub">⚡ Qdrant</text>
-            <text x="737" y="244" class="node-sub">🚀 Vespa Engine</text>
-            <text x="737" y="260" class="node-sub">✨ Solr 10</text>
-            <text x="737" y="276" class="node-sub">🔍 OpenSearch</text>
-            <text x="737" y="292" class="node-sub">💎 Luxir Search</text>
+            <text x="737" y="168" class="node-category-header">VECTOR &amp; RAG</text>
+            <text x="737" y="184" class="node-sub">🐘 pgvector</text>
+            <text x="737" y="200" class="node-sub">🎯 Milvus</text>
+            <text x="737" y="216" class="node-sub">⚡ Qdrant</text>
+            <text x="737" y="232" class="node-sub">🚀 Vespa Engine</text>
+            <text x="737" y="248" class="node-sub">✨ Solr 10</text>
+            <text x="737" y="264" class="node-sub">🔎 Elasticsearch</text>
+            <text x="737" y="280" class="node-sub">🔍 OpenSearch</text>
+            <text x="737" y="296" class="node-sub">💎 Luxir Search</text>
 
             <!-- Column 2: Archival & Migration -->
-            <text x="863" y="180" class="node-category-header">ARCHIVE &amp; MIGRATION</text>
-            <text x="863" y="196" class="node-sub">☁️ Hyland CIC</text>
-            <text x="863" y="212" class="node-sub">🟣 OpenArch</text>
-            <text x="863" y="228" class="node-sub">🌊 SeaTunnel</text>
-            <text x="863" y="244" class="node-sub">🌿 Alfresco ACS</text>
-            <text x="863" y="260" class="node-sub">☁️ AWS S3</text>
-            <text x="863" y="276" class="node-sub">🗄️ Apache Ozone</text>
+            <text x="863" y="168" class="node-category-header">ARCHIVE &amp; MIGRATION</text>
+            <text x="863" y="184" class="node-sub">☁️ Hyland CIC</text>
+            <text x="863" y="200" class="node-sub">🟣 OpenArch</text>
+            <text x="863" y="216" class="node-sub">🌊 SeaTunnel</text>
+            <text x="863" y="232" class="node-sub">🌿 Alfresco ACS</text>
+            <text x="863" y="248" class="node-sub">☁️ AWS S3</text>
+            <text x="863" y="264" class="node-sub">🗄️ Apache Ozone</text>
 
             <!-- Bottom ACL tag -->
-            <rect x="757" y="303" width="210" height="20" rx="10" fill="rgba(6,182,212,0.12)" stroke="rgba(34,211,238,0.3)" />
-            <text x="862" y="317" class="node-desc" style="fill:#67E8F9; font-weight:600;">🔒 Zero-Trust OIS ACLs</text>
+            <rect x="757" y="306" width="210" height="20" rx="10" fill="rgba(6,182,212,0.12)" stroke="rgba(34,211,238,0.3)" />
+            <text x="862" y="320" class="node-desc" style="fill:#67E8F9; font-weight:600;">🔒 Zero-Trust OIS ACLs</text>
           </g>
 
           <!-- Node 5: Admin React UI (Top Center-Left) -->
@@ -660,6 +661,7 @@
             <option value="qdrant">Qdrant Vector Database</option>
             <option value="vespa">Vespa Search Engine</option>
             <option value="solr">Apache Solr 10 Vector Store</option>
+            <option value="elasticsearch">Elasticsearch 8.x / 9.x (Dense Vector &amp; Quantized HNSW)</option>
             <option value="opensearch">OpenSearch 2.x / 3.x</option>
           </select>
         </div>
@@ -957,6 +959,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
         </p>
         <div class="blog-card-footer">
           <a href="blog/announcing-opencrawling-1-0-4-first-official-release.html" class="card-link">Read Announcement &rarr;</a>
+        </div>
+      </article>
+
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #D97706, #F59E0B); color: #FFF;">Connector Release</span>
+          <span class="blog-date">November 9, 2026</span>
+          <span class="blog-read-time">9 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-elasticsearch-output-connector.html">Dense Vector Search, Quantized HNSW &amp; Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x &amp; 9.x Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Elasticsearch 8.x &amp; 9.x Output Connector (<strong>oc-elasticsearch-output-connector</strong>). Built on the official <strong>Elastic Java API Client 9.4 (<code>Rest5Client</code>)</strong>, it delivers automatic <code>dense_vector</code> index provisioning, scalar and binary HNSW quantization (<code>int8_hnsw</code>, <code>int4_hnsw</code>, <code>bbq_hnsw</code>), automatic shrink-chunk purging on re-crawls, Elastic Cloud API key &amp; CA fingerprint TLS authentication, and Zero-Trust MCP kNN read-key pre-filtering.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-elasticsearch-output-connector.html" class="card-link">Read Article &rarr;</a>
         </div>
       </article>
 

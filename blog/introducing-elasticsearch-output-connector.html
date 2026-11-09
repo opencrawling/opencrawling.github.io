@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector - OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector index provisioning, quantized HNSW (int8_hnsw, int4_hnsw, bbq_hnsw), shrink-chunk purging, CA fingerprint TLS, and Zero-Trust MCP kNN pre-filtering.">
+  <meta name="keywords" content="elasticsearch, elasticsearch 8, elasticsearch 9, oc-elasticsearch-output-connector, dense_vector, hnsw, int8_hnsw, bbq_hnsw, vector quantization, opencrawling, java 25, rest5client, enterprise rag, mcp server, zero-trust security">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html">
+  <meta property="og:title" content="Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector provisioning, quantized HNSW, and Zero-Trust MCP kNN search.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html">
+  <meta property="twitter:title" content="Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector provisioning, quantized HNSW, and Zero-Trust MCP kNN search.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector",
+    "description": "Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector index provisioning, quantized HNSW (int8_hnsw, int4_hnsw, bbq_hnsw), shrink-chunk purging, CA fingerprint TLS, and Zero-Trust MCP kNN pre-filtering.",
+    "datePublished": "2026-11-09",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #D97706, #F59E0B); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #FBBF24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #F59E0B; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #FBBF24; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #FBBF24; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #FCD34D; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(0,173,216,0.05); border-color: #00ADD8; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.05); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #FBBF24; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #F59E0B; color: #FDE68A; background: rgba(245,158,11,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #FBBF24; }
+    .article-cta { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #FBBF24; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(245,158,11,0.08); color: #FBBF24; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(245,158,11,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2rem; }
+    @media (max-width: 680px) { .comparison-grid { grid-template-columns: 1fr; } }
+    .comp-card { background: #0A0F1D; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.5rem; }
+    .comp-card.active { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.03); }
+    .comp-card h4 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #F1F5F9; }
+    .comp-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Enterprise Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">November 9, 2026</span>
+        <span class="blog-meta-read">&bull; 9 min read</span>
+      </div>
+      <h1 class="blog-article-title">Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector</h1>
+      <p class="blog-article-lead">
+        OpenCrawling introduces <code>oc-elasticsearch-output-connector</code>: a native output connector and Model Context Protocol (MCP) search backend for <strong>Elasticsearch 8.x and 9.x</strong>. Built on the official <strong>Elastic Java API Client 9.4 (<code>Rest5Client</code>)</strong>, it delivers automatic <code>dense_vector</code> index provisioning, scalar and binary HNSW quantization (<code>int8_hnsw</code>, <code>int4_hnsw</code>, <code>bbq_hnsw</code>), automatic shrink-chunk cleanup on re-crawls, Elastic Cloud API key and CA fingerprint TLS authentication, and Zero-Trust kNN read-key pre-filtering.
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Decoupled Ingestion &amp; Zero-Trust MCP Retrieval on Elasticsearch 8.x / 9.x</div>
+      <div class="flow-nodes">
+        <div class="flow-node">17 Repository Crawlers</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Kafka (opencrawling-embedded)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">ElasticsearchStoreWriterConsumer</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">Elasticsearch 8.x / 9.x (dense_vector)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">ElasticsearchMcpSearchBackend + Access Gate</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Bridging Enterprise Repositories to Elasticsearch 8.x &amp; 9.x</h2>
+      <p>
+        Elasticsearch powers search and analytics across thousands of enterprises worldwide—from self-managed on-premises clusters to Elastic Cloud and Elastic Cloud Serverless deployments. With modern <code>dense_vector</code> HNSW indexing, scalar quantization, and Better Binary Quantization (<code>bbq_hnsw</code>), Elasticsearch has evolved into a high-performance vector database for Retrieval-Augmented Generation (RAG) and agentic AI workflows.
+      </p>
+      <p>
+        Until now, OpenCrawling offered dedicated output connectors for OpenSearch 2.x and 3.x alongside Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, and Luxir. With the release of <strong><code>oc-elasticsearch-output-connector</code></strong>, teams running <strong>Elasticsearch 8.x or 9.x</strong> can stream documents, precomputed embeddings, and normalized Zero-Trust Access Control Lists (ACLs) directly into Elasticsearch—and expose them immediately to AI agents through the <strong>OpenCrawling Secure MCP Server</strong>.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comp-card active">
+          <h4>🔎 Direct &amp; Decoupled Ingestion</h4>
+          <p><strong>Monolithic &amp; Kafka Ready:</strong> Supports both direct in-process extraction/chunking (<code>ElasticsearchOutputConnector</code>) and horizontally scaled Kafka streaming (<code>ElasticsearchStoreWriterConsumer</code>) with automatic shrink-chunk cleanup.</p>
+        </div>
+        <div class="comp-card active">
+          <h4>🛡️ Zero-Trust kNN Search</h4>
+          <p><strong>Defense-in-Depth MCP Backend:</strong> Pushes caller read keys (<code>security_read_keys</code>) and explicit deny exclusions directly into Elasticsearch's top-level <code>knn.filter</code>, followed by authoritative server-side verification in <code>DocumentAccessGate</code>.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>Unified Elastic 8.x &amp; 9.x Support via Rest5Client</h2>
+      <p>
+        The connector is built on the official <strong>Elastic Java API Client 9.4.x</strong> (<code>co.elastic.clients:elasticsearch-java</code>) backed by the modern <strong><code>Rest5Client</code></strong> (Apache HttpClient 5 transport), aligning cleanly with Spring Boot 4 and Java 25 without legacy REST client dependencies.
+      </p>
+      <p>
+        To allow a single runtime binary to talk to both <strong>Elasticsearch 8.x</strong> and <strong>Elasticsearch 9.x</strong> clusters out of the box, <code>ElasticsearchClientFactory</code> negotiates the REST API version header via <code>spring.opencrawling.output.elasticsearch.compatible-with</code> (default <code>8</code>):
+      </p>
+      <ul>
+        <li><strong><code>compatible-with: 8</code> (Default):</strong> Attaches <code>Accept: application/vnd.elasticsearch+json; compatible-with=8</code> and matching <code>Content-Type</code> headers, verified against both Elasticsearch 8.19+ and Elasticsearch 9.4+ clusters.</li>
+        <li><strong><code>compatible-with: 9</code>:</strong> Uses native 9.x media headers for 9.x-only clusters.</li>
+        <li><strong><code>compatible-with: 0</code>:</strong> Leaves headers at the underlying client transport default.</li>
+      </ul>
+
+      <h2><span class="section-num">3. </span>Automatic <code>dense_vector</code> Index Provisioning &amp; Quantization</h2>
+      <p>
+        On startup, <code>ElasticsearchIndexInitializer</code> verifies whether the target index (default <code>enterprise_kb</code>) exists, retrying up to 30 times (with a 3-second interval) so multi-container Docker Compose and Kubernetes deployments can boot concurrently without race conditions. If another worker creates the index simultaneously, <code>resource_already_exists_exception</code> is treated as a clean success.
+      </p>
+      <p>
+        When creating the index, OpenCrawling configures a strict, RAG-optimized mapping with <code>date_detection: false</code>—ensuring that arbitrary string metadata fields that happen to look like dates in one document never cause mapping rejections in subsequent documents:
+      </p>
+
+      <pre tabindex="0"><code>{
+  "mappings": {
+    "date_detection": false,
+    "properties": {
+      "id":                     { "type": "keyword" },
+      "document_id":            { "type": "keyword" },
+      "text":                   { "type": "text" },
+      "uri":                    { "type": "keyword" },
+      "acl":                    { "type": "keyword" },
+      "last_modified":          { "type": "date", "ignore_malformed": true },
+      "security_inheritance":   { "type": "boolean" },
+      "security_allowed_read":  { "type": "keyword" },
+      "security_denied_read":   { "type": "keyword" },
+      "security_read_keys":     { "type": "keyword" },
+      "embeddings": {
+        "type": "dense_vector",
+        "dims": 1024,
+        "index": true,
+        "similarity": "cosine",
+        "index_options": {
+          "type": "hnsw"
+        }
+      }
+    }
+  }
+}</code></pre>
+
+      <div class="callout-box tip">
+        <div class="callout-icon">&#9889;</div>
+        <div>
+          <p><strong>First-Class HNSW Vector Quantization:</strong> You can cut memory consumption by ~75% (or more) on large vector corpora by setting <code>spring.opencrawling.output.elasticsearch.index-type</code> to <code>INT8_HNSW</code>, <code>INT4_HNSW</code>, or Elasticsearch's <strong>Better Binary Quantization (<code>BBQ_HNSW</code>)</strong>, or use exact brute-force scoring with <code>FLAT</code> / <code>INT8_FLAT</code>.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">4. </span>Lifecycle Integrity: Deterministic Chunks, Shrink Purge &amp; Tombstones</h2>
+      <p>
+        Enterprise documents are living artifacts: policies are revised, pages are shortened, permissions are tightened, and obsolete files are deleted. If an ingestion pipeline merely appends or overwrites chunks by index without cleaning up trailing chunks, a shortened document leaves "ghost chunks" in the vector store carrying outdated text and stale ACLs.
+      </p>
+      <p>
+        <code>oc-elasticsearch-output-connector</code> prevents ghost chunks across both execution paths:
+      </p>
+      <ul>
+        <li><strong>Deterministic Chunk IDs:</strong> Every chunk is indexed under <code>{documentId}#chunk-{index}</code>, making re-crawls idempotent.</li>
+        <li><strong>Shrink Purge in Decoupled Kafka Mode:</strong> When <code>ElasticsearchStoreWriterConsumer</code> processes chunk <code>0</code> of an updated document, it inspects <code>total_chunks</code> and executes a targeted <code>delete_by_query</code> removing any existing chunk for that <code>document_id</code> where <code>chunk_index &gt;= total_chunks</code>.</li>
+        <li><strong>Atomic Replace in Direct Mode:</strong> <code>ElasticsearchOutputConnector</code> purges prior chunks for the document before streaming new batches (chunked by <code>bulk-batch-size</code>, default <code>500</code>), inspecting per-item bulk statuses so partial failures are never ignored.</li>
+        <li><strong>OIS Delete Tombstones:</strong> When a repository emits a <code>DocumentAction.DELETE</code> tombstone, all chunks matching <code>document_id</code> or <code>id</code> are immediately purged with <code>conflicts=proceed</code>.</li>
+      </ul>
+
+      <h2><span class="section-num">5. </span>Zero-Trust kNN Pre-Filtering &amp; MCP Server Integration</h2>
+      <p>
+        When `spring.opencrawling.output.type=elasticsearch` is active, <strong><code>ElasticsearchMcpSearchBackend</code></strong> powers the canonical Model Context Protocol (MCP) tools (<code>secureVectorSearch</code>, <code>getDocumentContent</code>, and <code>listAccessibleSources</code>).
+      </p>
+      <p>
+        Every indexed chunk stores normalized <strong>read keys</strong> (<code>security_read_keys</code>) computed by <code>ReadKeys.forAllowed(effectiveAcl)</code>:
+      </p>
+      <ul>
+        <li><code>user:Alice</code> &rarr; <code>u:alice</code></li>
+        <li><code>group:Finance</code> &rarr; <code>g:finance</code></li>
+        <li>Bare <code>finance</code> &rarr; both <code>u:finance</code> and <code>g:finance</code></li>
+        <li>Public documents &rarr; <code>public</code></li>
+      </ul>
+      <p>
+        In <code>metadata</code> and <code>shadow</code> authorization modes, <code>ElasticsearchAclQueries.readableBy(userPrincipal, userRoles)</code> pushes the caller's read keys (`ReadKeys.forCaller`) and explicit deny exclusions directly into Elasticsearch's top-level <code>knn.filter</code> clause:
+      </p>
+
+      <pre tabindex="0"><code>{
+  "size": 15,
+  "_source": { "excludes": ["embeddings"] },
+  "knn": {
+    "field": "embeddings",
+    "query_vector": [0.0214, -0.0418, ...],
+    "k": 15,
+    "num_candidates": 100,
+    "filter": {
+      "bool": {
+        "filter": [
+          { "terms": { "security_read_keys": ["public", "u:alice", "g:finance"] } }
+        ],
+        "must_not": [
+          { "terms": { "security_denied_read": ["alice", "user:alice", "finance", "group:finance"] } }
+        ]
+      }
+    }
+  }
+}</code></pre>
+
+      <div class="callout-box info">
+        <div class="callout-icon">&#128274;</div>
+        <div>
+          <p><strong>Two-Layer Defense-in-Depth &amp; OpenFGA ReBAC Support:</strong> Even after Elasticsearch pre-filters the kNN candidate window, every returned hit passes through OpenCrawling's unified <code>DocumentAccessGate</code>. In <code>intersection</code> and <code>openfga</code> modes, store pre-filtering is automatically bypassed and the candidate window is widened so OpenFGA can evaluate real-time relationship tuples without re-indexing.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">6. </span>Elastic Cloud API Keys, Basic Auth &amp; CA Fingerprint TLS</h2>
+      <p>
+        Whether you connect to a local development container, a self-managed TLS cluster with auto-generated certificates, or Elastic Cloud Serverless, <code>ElasticsearchClientFactory</code> supports flexible authentication and transport security:
+      </p>
+      <ul>
+        <li><strong>API Key Authentication:</strong> Set <code>spring.opencrawling.output.elasticsearch.api-key</code> to your Base64-encoded Elastic API key (<code>ApiKey &lt;base64&gt;</code> header). Takes precedence over basic auth.</li>
+        <li><strong>HTTP Basic Authentication:</strong> Set <code>username</code> (default <code>elastic</code>) and <code>password</code>.</li>
+        <li><strong>CA Certificate Fingerprint Pinning:</strong> Elasticsearch 8+ and 9+ clusters generate a self-signed root CA on first boot. Instead of copying JKS/PKCS12 files across containers, simply pass the 64-character SHA-256 hex fingerprint via <code>ssl.ca-fingerprint</code>—the client verifies the issuer certificate in the chain against the pinned digest automatically.</li>
+        <li><strong>PKCS12 / JKS Truststore:</strong> Alternatively, configure <code>ssl.trust-store-path</code>, <code>ssl.trust-store-password</code>, and <code>ssl.trust-store-type</code>.</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Configuration Reference</h2>
+      <p>
+        All settings are bound under <code>spring.opencrawling.output.elasticsearch.*</code> (and configurable through the React Admin UI when <code>spring.opencrawling.output.type=elasticsearch</code>):
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.uris</code></td>
+            <td><code>http://localhost:9200</code></td>
+            <td>Comma-separated URLs of Elasticsearch nodes</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.username</code></td>
+            <td><code>elastic</code></td>
+            <td>Basic authentication username (used when <code>password</code> is non-empty and <code>api-key</code> is blank)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.password</code></td>
+            <td><em>(empty)</em></td>
+            <td>Basic authentication password</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.api-key</code></td>
+            <td><em>(empty)</em></td>
+            <td>Base64 API key for Elastic Cloud / Serverless (supersedes basic auth)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.index-name</code></td>
+            <td><code>enterprise_kb</code></td>
+            <td>Target index where document chunks and vectors are stored</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.dimensions</code></td>
+            <td><code>1024</code></td>
+            <td><code>dense_vector</code> dimension count (must match embedding model)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.similarity</code></td>
+            <td><code>COSINE</code></td>
+            <td>Vector similarity metric: <code>COSINE</code>, <code>DOT_PRODUCT</code>, <code>L2_NORM</code>, or <code>MAX_INNER_PRODUCT</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.index-type</code></td>
+            <td><code>HNSW</code></td>
+            <td>ANN index type: <code>HNSW</code>, <code>INT8_HNSW</code>, <code>INT4_HNSW</code>, <code>BBQ_HNSW</code>, <code>FLAT</code>, or <code>INT8_FLAT</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.bulk-batch-size</code></td>
+            <td><code>500</code></td>
+            <td>Maximum chunks sent in a single bulk indexing request</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.create-index</code></td>
+            <td><code>true</code></td>
+            <td>Automatically provisions the index and mapping on startup if missing</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.compatible-with</code></td>
+            <td><code>8</code></td>
+            <td>REST API compatibility version (<code>8</code> works with 8.x &amp; 9.x, <code>9</code> for 9.x-only, <code>0</code> for client default)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.ssl.ca-fingerprint</code></td>
+            <td><em>(empty)</em></td>
+            <td>64-char SHA-256 hex fingerprint of the cluster CA certificate</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.elasticsearch.ssl.trust-store-path</code></td>
+            <td><em>(empty)</em></td>
+            <td>Filesystem path to PKCS12 or JKS truststore for HTTPS nodes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">8. </span>Testing &amp; Decoupled Docker Compose Stack</h2>
+      <p>
+        The Elasticsearch Output Connector ships with comprehensive automated verification:
+      </p>
+      <ul>
+        <li><strong>Unit &amp; Testcontainers Integration Suite:</strong> 34 unit tests plus 21 Testcontainers integration tests running against both <strong>Elasticsearch 8.19.20</strong> (<code>Elasticsearch8OutputConnectorIT</code>) and <strong>Elasticsearch 9.4.3</strong> (<code>Elasticsearch9OutputConnectorIT</code>), verifying index creation, kNN read-key pre-filtering, explicit deny enforcement, re-crawl shrink purge, and tombstone deletions.</li>
+        <li><strong>18-Step End-to-End Decoupled Pipeline Test:</strong> A complete multi-container stack (<code>oc-elasticsearch-output-connector/docker/docker-compose-decoupled-with-elasticsearch.yml</code>) with Elasticsearch 8.19.20, Apache Kafka, Apache Ozone Claim-Check Store, Redis, Ollama (<code>mxbai-embed-large</code>), and all OpenCrawling microservices, verified end-to-end including MCP <code>secureVectorSearch</code> and OIS <code>DELETE</code> tombstone propagation:</li>
+      </ul>
+
+      <pre tabindex="0"><code># Run unit &amp; Testcontainers integration tests against ES 8.19 &amp; ES 9.4
+./scripts/test-elasticsearch-connector.sh --with-it
+
+# Run the full 18-step decoupled pipeline + MCP verification suite
+./scripts/test-elasticsearch-decoupled.sh</code></pre>
+
+      <div class="article-cta">
+        <h3>Stream Enterprise Knowledge into Elasticsearch 8.x &amp; 9.x</h3>
+        <p>Try the new Elasticsearch Output Connector in our interactive browser simulator, or explore the source code on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Ingestion Simulator &rarr;</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Connectors" target="_blank" rel="noopener" class="btn btn-outline">Read Connectors Wiki Guide &#128214;</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo" width="32" height="32">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
