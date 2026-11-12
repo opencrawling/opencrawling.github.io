@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenCrawling® Secure MCP Server - Pluggable Zero-Trust Context Retrieval for AI Agents</title>
+  <title>OpenCrawling® Secure MCP Server - Zero-Trust Data Provider Agent &amp; Active Ingestion Engine</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and the Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval with authoritative ACL filtering across 9 target vector & search engines.">
-  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Enterprise RAG, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, Elasticsearch, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
+  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and Model Context Protocol (MCP) to provide a Zero-Trust Data Provider Agent, active dynamic crawling, repository tree discovery, OIS lakehouse sidecar inspection, and authoritative ACL filtering across 10 target vector &amp; search engines.">
+  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Data Provider Agent, Active Ingestion, Enterprise RAG, Dynamic Jobs, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, Elasticsearch, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/mcp.html">
 
@@ -361,6 +361,69 @@
       border: 1px solid rgba(168, 85, 247, 0.3);
     }
 
+    .tool-badge-dynamic {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tool-badge-discovery {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .tool-badge-sidecar {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .mcp-announcement-banner {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .mcp-announcement-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-color), var(--cyan-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+    }
+
+    .mcp-announcement-content h4 {
+      font-size: 1.1rem;
+      color: var(--text-color);
+      margin-bottom: 0.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .mcp-announcement-content p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .mcp-announcement-content a {
+      color: var(--cyan-color);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .params-table {
       width: 100%;
       border-collapse: collapse;
@@ -615,7 +678,18 @@
       </div>
     </section>
 
-    <!-- Key Capabilities Grid (6 Pillars) -->
+    <!-- New Announcement Banner: Zero-Trust Data Provider Agent -->
+    <div class="mcp-announcement-banner">
+      <div class="mcp-announcement-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      </div>
+      <div class="mcp-announcement-content">
+        <h4>New Milestone: Zero-Trust Data Provider Agent &amp; AI-Driven Active Ingestion Engine</h4>
+        <p>OpenCrawling expands beyond passive retrieval! Autonomous AI agents can now actively explore repositories, trigger targeted dynamic crawls, inspect OIS Lakehouse sidecars, and execute pre-embedding governance. Authored and architected by core contributor <strong>Luis Cabaceira</strong>. <a href="blog/zero-trust-data-provider-agent-and-active-ingestion.html">Read the full architectural deep dive &rarr;</a></p>
+      </div>
+    </div>
+
+    <!-- Key Capabilities Grid (8 Pillars) -->
     <div class="mcp-grid">
       <div class="mcp-card">
         <div class="mcp-card-icon">
@@ -663,6 +737,22 @@
         </div>
         <h3>Multi-Dimension Vector Routing</h3>
         <p>Dynamically routes queries across dimension-specific index collections (<code>384</code> for lightweight local models, <code>768</code> for nomic, and <code>1024</code> for mxbai-embed-large) with claim-check URI resolution.</p>
+      </div>
+
+      <div class="mcp-card">
+        <div class="mcp-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </div>
+        <h3>AI-Driven Active Ingestion</h3>
+        <p>Autonomous LLM agents can dynamically trigger on-demand crawls and inject single documents (<code>DynamicJobMcpTools</code>) with Virtual Threads, idempotency keys, pre-flight request validation, and real-time execution ledgers.</p>
+      </div>
+
+      <div class="mcp-card">
+        <div class="mcp-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <h3>Repository Discovery &amp; OIS Sidecars</h3>
+        <p>Explore source trees without pulling binaries (<code>DiscoveryMcpTools</code>) and query lakehouse metadata sidecars (<code>SidecarMcpTools</code>) with cryptographic hashes, provenance lineage, and Zero-Trust tenant boundaries.</p>
       </div>
     </div>
 
@@ -760,62 +850,78 @@
 
     <!-- Architecture Section -->
     <section id="mcp-architecture" class="mcp-section">
-      <h2 class="mcp-section-title">Zero-Trust Retrieval Architecture</h2>
-      <p class="mcp-section-subtitle">How OpenCrawling intercepts AI requests, translates queries across pluggable backends, and authoritatively re-evaluates ACLs before returning context.</p>
+      <h2 class="mcp-section-title">Zero-Trust Data Provider Agent &amp; Active Ingestion Architecture</h2>
+      <p class="mcp-section-subtitle">How OpenCrawling intercepts AI requests, executes on-demand crawling, explores content hierarchies, queries OIS sidecars, translates queries across pluggable backends, and authoritatively re-evaluates ACLs before returning context.</p>
 
       <div class="mermaid-box">
         <div class="mermaid">
 flowchart TD
     subgraph Client["AI Agent & LLM Client Boundary"]
         Agent["AI Agent / LLM Client (Claude Desktop, Cursor, Antigravity)"]
+        CallerAuth["Bearer JWT / RFC 8693 Identity Delegation"]
     end
 
-    subgraph Runtime["OpenCrawling Runtime (oc-mcp-server)"]
+    subgraph Runtime["OpenCrawling Runtime (Zero-Trust Data Provider Agent)"]
         Transport["MCP Transport Layer (/mcp Streamable HTTP & /mcp/sse)"]
-        Server["McpVectorServer (Canonical Tools)"]
-        VServer["VespaMcpVectorServer (Vespa Backward-Compat Delegate)"]
-        AIOps["ObservabilityMcpTools (AIOps Telemetry Tools)"]
-        SPI["McpVectorSearchBackend (Pluggable SPI Architecture)"]
+        
+        subgraph ToolSuite["Exposed MCP Tool Suites"]
+            Server["McpVectorServer (Knowledge Retrieval)"]
+            DynTools["DynamicJobMcpTools (Active Ingestion & Crawl)"]
+            DiscTools["DiscoveryMcpTools (Hierarchy Discovery & Dry-Run)"]
+            SidecarTools["SidecarMcpTools (OIS Sidecars & Lineage)"]
+            AIOps["ObservabilityMcpTools (AIOps Telemetry Tools)"]
+        end
+
         Guard["McpAclEvaluator (Zero-Trust Guard & Explicit Deny)"]
+        GovGate["In-Flight Governance Gate (ALLOW / REDACT / DROP)"]
+        SPI["McpVectorSearchBackend (Pluggable SPI Architecture)"]
+        ExecEngine["Dynamic Job Service (Java 25 Virtual Threads)"]
     end
 
-    subgraph Backends["Pluggable Vector Databases Layer"]
-        PG["PostgreSQL (pgvector)"]
-        VES["Vespa Engine"]
-        QD["Qdrant"]
-        MIL["Milvus"]
-        ES["Elasticsearch 8.x & 9.x"]
-        OS["OpenSearch 2.x & 3.x"]
-        SOL["Apache Solr"]
-        LUX["Luxir C++ Engine"]
-        OA["Hyland OpenArch"]
+    subgraph Backends["Storage, Search & Lakehouse Layer"]
+        subgraph VectorStores["Pluggable Vector Databases"]
+            PG["PostgreSQL (pgvector)"]
+            VES["Vespa Engine"]
+            QD["Qdrant"]
+            MIL["Milvus"]
+            ES["Elasticsearch 8.x/9.x"]
+            OS["OpenSearch 2.x/3.x"]
+            SOL["Apache Solr"]
+            LUX["Luxir C++ Engine"]
+            OA["Hyland OpenArch"]
+        end
+
+        subgraph Connectors["20+ Repository Connectors"]
+            Repos["SharePoint / Alfresco / CMIS / Documentum / Web / M-Files"]
+        end
+
+        subgraph SidecarStores["OIS Lakehouse & Object Stores"]
+            Lake["Apache Iceberg / AWS S3 / Ozone (OIS Sidecars)"]
+        end
     end
 
     Agent <-->|"JSON-RPC 2.0 (Streamable HTTP / SSE)"| Transport
+    Agent -.->|"Delegated Principal & Actor Claims"| CallerAuth
+    CallerAuth --> Transport
     Transport --> Server
-    Transport --> VServer
+    Transport --> DynTools
+    Transport --> DiscTools
+    Transport --> SidecarTools
     Transport --> AIOps
+
     Server --> SPI
-    VServer --> VES
-    SPI --> PG
-    SPI --> VES
-    SPI --> QD
-    SPI --> MIL
-    SPI --> ES
-    SPI --> OS
-    SPI --> SOL
-    SPI --> LUX
-    SPI --> OA
-    PG --> Guard
-    VES --> Guard
-    QD --> Guard
-    MIL --> Guard
-    ES --> Guard
-    OS --> Guard
-    SOL --> Guard
-    LUX --> Guard
-    OA --> Guard
+    SPI --> VectorStores
+    VectorStores --> Guard
     Guard -->|"Authorized Context JSON"| Transport
+
+    DynTools --> ExecEngine
+    ExecEngine --> Repos
+    Repos --> GovGate
+    GovGate -->|"Sanitized / Masked Stream"| ExecEngine
+    ExecEngine --> SPI
+
+    DiscTools --> Repos
+    SidecarTools --> Lake
         </div>
       </div>
     </section>
@@ -823,7 +929,7 @@ flowchart TD
     <!-- MCP Tools Specification Reference -->
     <section class="mcp-section">
       <h2 class="mcp-section-title">Exposed MCP Tools Specification</h2>
-      <p class="mcp-section-subtitle">The canonical knowledge retrieval, Hyland OpenArch repository, backward-compatible Vespa, and AIOps observability tools advertised via <code>tools/list</code>.</p>
+      <p class="mcp-section-subtitle">The complete suite of tools advertised via <code>tools/list</code> across canonical knowledge retrieval, active dynamic crawling, repository tree discovery, OIS lakehouse sidecars, and AIOps observability.</p>
 
       <div class="tools-grid">
 
@@ -997,6 +1103,312 @@ flowchart TD
             </div>
           </div>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Active when <code>output.type=vespa</code>. Executes hybrid BM25 + dense vector ranking directly against Vespa YQL, pushing explicit <code>security_denied_read</code> exclusions into the search query. Also preserves <code>vespaGetDocumentContent</code> and <code>vespaListAccessibleSources</code>.</p>
+        </div>
+
+        <!-- Tool 6: triggerDynamicJob -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">triggerDynamicJob</span>
+              <span class="tool-badge tool-badge-dynamic">Active Ingestion</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Triggers an ad-hoc, asynchronous crawling job on a registered repository connector (SharePoint, Alfresco, CMIS, Web, Documentum, OpenArch) within the caller's authorized scope. Operates on Java 25 Virtual Threads, enforces strict tenant boundaries, and records execution provenance.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">connector</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Name of the registered repository connector (e.g. <code>sharepoint-prod</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">start</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Folder id or path to crawl; connector root when omitted.</td>
+              </tr>
+              <tr>
+                <td class="param-name">name</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Descriptive label for tracking in the job ledger.</td>
+              </tr>
+              <tr>
+                <td class="param-name">validateOnly</td>
+                <td>Boolean</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Pre-flight check only: validates scopes &amp; caller ACLs without starting ingestion.</td>
+              </tr>
+              <tr>
+                <td class="param-name">chunkSize</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Token chunk size override within administrator-set bounds (default: 800).</td>
+              </tr>
+              <tr>
+                <td class="param-name">idempotencyKey</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Deduplication key preventing duplicate agent runs on retries.</td>
+              </tr>
+              <tr>
+                <td class="param-name">correlationId</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>External workflow ID logged in the audit ledger.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 7: ingestDocument & removeDeletedDocument -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">ingestDocument &amp; removeDeletedDocument</span>
+              <span class="tool-badge tool-badge-dynamic">Active Ingestion</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Granular single-document synchronization. <code>ingestDocument(connector, document, chunkSize, ...)</code> immediately ingests, sanitizes through pre-embedding governance, and vectorizes an individual document by its repository sourceId. <code>removeDeletedDocument(connector, document, correlationId)</code> issues an authoritative OIS lifecycle tombstone delete once purged at the source.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">connector</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Target registered repository connector name.</td>
+              </tr>
+              <tr>
+                <td class="param-name">document</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Document identifier in the source repository (sourceId).</td>
+              </tr>
+              <tr>
+                <td class="param-name">chunkSize</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Custom chunk size in tokens for embedding segmentation.</td>
+              </tr>
+              <tr>
+                <td class="param-name">idempotencyKey</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Deduplication token returning the active job if repeated.</td>
+              </tr>
+              <tr>
+                <td class="param-name">correlationId</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Caller transaction ID for traceability.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 8: Dynamic Job Management -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">getDynamicJobStatus, listDynamicJobs &amp; stopDynamicJob</span>
+              <span class="tool-badge tool-badge-dynamic">Job Lifecycle</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Lifecycle supervision for agent-triggered crawls. <code>getDynamicJobStatus(jobId)</code> tracks running state, documents processed, and throughput metrics. <code>listDynamicJobs()</code> returns all active and recent jobs initiated by the verified caller. <code>stopDynamicJob(jobId)</code> terminates execution before processing the next document boundary.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">jobId</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Unique job identifier returned by <code>triggerDynamicJob</code> (required for get/stop).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 9: listRepositoryConnectors & exploreRepositoryTree -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">listRepositoryConnectors &amp; exploreRepositoryTree</span>
+              <span class="tool-badge tool-badge-discovery">Repository Discovery</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Zero-Trust tree navigation without content indexing. <code>listRepositoryConnectors</code> returns registered ECM/Web sources. <code>exploreRepositoryTree</code> performs breadth-first hierarchy listing from a root folder, authoritatively pruning unreadable branches so AI models only observe files permitted by source ACLs.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">connector</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Repository connector name (required for <code>exploreRepositoryTree</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">start</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Folder ID or path to start traversal from; root when omitted.</td>
+              </tr>
+              <tr>
+                <td class="param-name">depth</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Listing levels below start (default: 1 = immediate children).</td>
+              </tr>
+              <tr>
+                <td class="param-name">maxNodes</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Maximum hierarchy nodes returned before truncation.</td>
+              </tr>
+              <tr>
+                <td class="param-name">includeDocuments</td>
+                <td>Boolean</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Whether to enumerate documents as well as subfolders (default: true).</td>
+              </tr>
+              <tr>
+                <td class="param-name">userPrincipal / userRoles</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Asserted caller identity (ignored when verified via Bearer JWT).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 10: queryRepositoryDryRun -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">queryRepositoryDryRun</span>
+              <span class="tool-badge tool-badge-discovery">Discovery &amp; Dry-Run</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Simulates a crawl before ingesting. Evaluates a folder path or native read query (e.g. CMIS SQL, DQL, or site filter) against live source permissions, returning expected document count bounds and sample metadata without downloading binaries or burning embedding quotas.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">connector</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Name of the registered repository connector.</td>
+              </tr>
+              <tr>
+                <td class="param-name">scope</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Target folder path or read query string (e.g. <code>SELECT * FROM cmis:document</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">sampleSize</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Number of representative document samples to return (default: 5).</td>
+              </tr>
+              <tr>
+                <td class="param-name">maxScan</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Upper evaluation scan limit before returning a lower-bound count.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 11: SidecarMcpTools -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">listSidecarStores &amp; readOisSidecars</span>
+              <span class="tool-badge tool-badge-sidecar">OIS Sidecars &amp; Lineage</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Lakehouse sidecar and provenance inspection. <code>listSidecarStores</code> lists registered Apache Iceberg, AWS S3, and Apache Ozone sidecar destinations. <code>readOisSidecars(connector, prefix, limit, cursor)</code> paginates Open Ingestion Standard metadata sidecars (<code>*.ois.json</code>) to inspect cryptographic checksums, MIME types, and governance audits without pulling raw document payloads.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">connector</td>
+                <td>String</td>
+                <td><span class="req-badge req-yes">Yes</span></td>
+                <td>Name of the registered object store or Iceberg connector.</td>
+              </tr>
+              <tr>
+                <td class="param-name">prefix</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Storage key prefix (e.g. <code>legal/contracts/2026/</code>).</td>
+              </tr>
+              <tr>
+                <td class="param-name">limit</td>
+                <td>Integer</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Page size limit for sidecar records returned.</td>
+              </tr>
+              <tr>
+                <td class="param-name">cursor</td>
+                <td>String</td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Continuation cursor token from a previous page.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <!-- Tool 5: AIOps Observability Tools -->

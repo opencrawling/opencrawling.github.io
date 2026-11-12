@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Trust Data Provider Agent & Active Ingestion: Powering Enterprise Multi-Agent Systems with OpenCrawling - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Discover how OpenCrawling evolves into a Zero-Trust Data Provider Agent and AI-Driven Active Ingestion Engine for Enterprise Multi-Agent Systems (MAS). Architected and implemented by Luis Cabaceira (#203), combining Model Context Protocol (MCP), dynamic on-demand crawling, in-flight pre-embedding governance, real-time BPM transitions, and delegated RFC 8693 identity.">
+  <meta name="keywords" content="Zero-Trust Data Provider Agent, Active Ingestion, Multi-Agent Systems, Model Context Protocol, MCP, Spring AI, Luis Cabaceira, OpenCrawling, Issue 203, GovernanceGate, Pre-Embedding Governance, Flowable, Camunda 8, Alfresco, OIS, Open Ingestion Standard, ReBAC, OAuth 2.0 RFC 8693">
+  <meta name="author" content="Piergiorgio Lucidi & OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/zero-trust-data-provider-agent-and-active-ingestion.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/zero-trust-data-provider-agent-and-active-ingestion.html">
+  <meta property="og:title" content="Zero-Trust Data Provider Agent & Active Ingestion: Powering Enterprise Multi-Agent Systems with OpenCrawling">
+  <meta property="og:description" content="OpenCrawling expands beyond passive ETL into an authoritative, identity-aware Data Provider Agent for autonomous multi-agent swarms. Major milestone delivered by Luis Cabaceira (#203).">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/zero-trust-data-provider-agent-and-active-ingestion.html">
+  <meta property="twitter:title" content="Zero-Trust Data Provider Agent & Active Ingestion: Powering Enterprise Multi-Agent Systems with OpenCrawling">
+  <meta property="twitter:description" content="OpenCrawling expands beyond passive ETL into an authoritative, identity-aware Data Provider Agent for autonomous multi-agent swarms. Major milestone delivered by Luis Cabaceira (#203).">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Zero-Trust Data Provider Agent & Active Ingestion: Powering Enterprise Multi-Agent Systems with OpenCrawling",
+    "description": "Discover how OpenCrawling evolves into a Zero-Trust Data Provider Agent and AI-Driven Active Ingestion Engine for Enterprise Multi-Agent Systems (MAS). Architected and implemented by Luis Cabaceira (#203), combining Model Context Protocol (MCP), dynamic on-demand crawling, in-flight pre-embedding governance, real-time BPM transitions, and delegated RFC 8693 identity.",
+    "datePublished": "2026-11-12",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Piergiorgio Lucidi"
+      },
+      {
+        "@type": "Person",
+        "name": "Luis Cabaceira"
+      }
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.org/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://opencrawling.org/blog/zero-trust-data-provider-agent-and-active-ingestion.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <style>
+    .blog-article-wrapper { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.95rem; border-radius: 99px; background: linear-gradient(135deg, #7C3AED, #A855F7); color: #FFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.18; background: linear-gradient(135deg, #F1F5F9, #C084FC); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #A855F7; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.65rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #A855F7; font-size: 1rem; margin-right: 0.3rem; }
+    .blog-article-body h3 { font-size: 1.2rem; font-weight: 600; color: #C084FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #E9D5FF; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #CBD5E1; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(168,85,247,0.06); border-color: #A855F7; }
+    .callout-box.tip { background: rgba(56,189,248,0.06); border-color: #38BDF8; }
+    .callout-box.warning { background: rgba(239,68,68,0.06); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.06); border-color: #10B981; }
+    .callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(168,85,247,0.3); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #C084FC; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.82rem; color: #94A3B8; }
+    .flow-node.highlight { border-color: #A855F7; color: #F3E8FF; background: rgba(168,85,247,0.12); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #BAE6FD; background: rgba(56,189,248,0.08); font-weight: 600; }
+    .flow-arrow { color: #64748B; font-size: 1rem; }
+    .tribute-card { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08)); border: 1px solid rgba(168,85,247,0.35); border-radius: 14px; padding: 2rem; margin: 2.5rem 0; }
+    .tribute-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .tribute-avatar { width: 64px; height: 64px; border-radius: 50%; border: 2px solid #A855F7; object-fit: cover; }
+    .tribute-title h3 { margin: 0; font-size: 1.3rem; color: #F1F5F9; }
+    .tribute-title p { margin: 0.2rem 0 0; color: #C084FC; font-size: 0.9rem; }
+    .tribute-body { font-size: 0.98rem; line-height: 1.8; color: var(--text-secondary); margin: 0; }
+    .tools-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .tools-table th { background: rgba(168,85,247,0.1); color: #C084FC; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(168,85,247,0.25); }
+    .tools-table td { padding: 0.7rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .tools-table td code { font-size: 0.85em; }
+    .article-cta { background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.3rem; font-weight: 700; color: #C084FC; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../mcp.html" class="nav-link active">MCP Server</a>
+        <a href="../sdk.html" class="nav-link">Java SDK</a>
+        <a href="../observability.html" class="nav-link">AIOps</a>
+        <a href="../comparison.html" class="nav-link">Comparison</a>
+        <a href="https://opencrawling.org/open-ingestion-standard/" class="nav-link" target="_blank" rel="noopener">OIS Standard</a>
+        <a href="../team.html" class="nav-link">Team</a>
+        <a href="https://github.com/opencrawling/opencrawling" class="nav-link github-star" target="_blank" rel="noopener">
+          <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper" style="margin-bottom: 2rem;">
+      <a href="../index.html#blog" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+        &larr; Back to all articles
+      </a>
+    </div>
+
+    <article class="blog-article">
+      <header class="blog-hero">
+        <div class="blog-meta">
+          <span class="blog-category-badge">Agentic AI &amp; Zero-Trust Architecture</span>
+          <span class="blog-meta-date">November 12, 2026</span>
+          <span class="blog-meta-read">12 min read</span>
+        </div>
+        <h1 class="blog-article-title">Zero-Trust Data Provider Agent &amp; Active Ingestion: Powering Enterprise Multi-Agent Systems with OpenCrawling</h1>
+        <p class="blog-article-lead">
+          We are thrilled to announce that <strong>Issue #203</strong> is officially merged into the main trunk of OpenCrawling! This landmark release transforms OpenCrawling from a passive data crawling engine into an authoritative, identity-aware <strong>Zero-Trust Data Provider Agent and AI-Driven Active Ingestion Engine</strong> designed specifically for autonomous enterprise multi-agent systems (MAS).
+        </p>
+      </header>
+
+      <!-- Tribute to Luis Cabaceira -->
+      <section class="tribute-card">
+        <div class="tribute-header">
+          <img src="https://avatars.githubusercontent.com/u/1020478?v=4" alt="Luis Cabaceira" class="tribute-avatar" onerror="this.src='../assets/logo-without-text-200px.png'">
+          <div class="tribute-title">
+            <h3>Architectural Leadership &amp; Delivery: Luis Cabaceira</h3>
+            <p>Core Contributor &amp; Lead Architect &bull; OpenCrawling &bull; <a href="https://github.com/textercabaceira" target="_blank" rel="noopener" style="color: #BAE6FD; text-decoration: underline;">@textercabaceira</a></p>
+          </div>
+        </div>
+        <p class="tribute-body">
+          The conception, design, and execution of this major milestone was led by <strong>Luis Cabaceira</strong>. With profound expertise spanning Enterprise Content Management (ECM), modern agentic architectures, and distributed systems, Luis spearheaded the complete end-to-end design of <strong>Issue #203</strong>. From crafting the <strong>Dynamic Job MCP Tools</strong> and <strong>Exploration SPIs</strong> to implementing the <strong>In-Flight Pre-Embedding Governance Gate</strong> and establishing live cross-repository <strong>OIS Conformance Testing</strong>, Luis's technical rigor and dedication have elevated OpenCrawling into an industry-leading data platform for autonomous AI agents. The entire OpenCrawling community owes Luis immense gratitude for this incredible feat!
+        </p>
+      </section>
+
+      <hr class="blog-divider">
+
+      <div class="blog-article-body">
+        <h2><span class="section-num">01.</span>The Multi-Agent System (MAS) Challenge</h2>
+        <p>
+          In modern enterprise architectures, Large Language Models (LLMs) and autonomous agent frameworks—such as <strong>Spring AI, LangGraph, AutoGen, CrewAI, and Antigravity</strong>—are deployed not as monolithic bots, but as collaborative swarms of specialized agents. An agent swarm tasked with preparing an audit package, resolving a regulatory compliance inquiry, or generating an investment briefing must access diverse enterprise content silos: <strong>Microsoft SharePoint, Alfresco, Hyland Content Innovation Cloud, IBM FileNet, OpenText Documentum, and Apache Ozone / AWS S3 data lakes</strong>.
+        </p>
+        <p>
+          However, traditional data ingestion architectures fail multi-agent swarms across three critical dimensions:
+        </p>
+        <ol>
+          <li>
+            <strong>The Context Security Leak:</strong> Standard agent tools expose vector databases via raw similarity search without passing caller identity. An agent querying the vector index risks surfacing restricted executive salary data or unredacted PII to unauthorized users.
+          </li>
+          <li>
+            <strong>The Batch Latency Gap:</strong> Enterprise search traditionally relies on nightly or hourly batch indexing. When a business process concludes in Flowable or Alfresco Process Services (e.g., an urgent vendor contract approved 5 minutes ago), agents cannot access it until hours later.
+          </li>
+          <li>
+            <strong>Passive vs. Active Ingestion:</strong> Traditional crawlers require human operators to statically pre-configure job boundaries. Autonomous agents facing dynamic goals need to lightweightly explore repository trees (dry-run discovery), formulate targeted crawl scopes on the fly, and initiate scoped ingestion pipelines with idempotency guarantees.
+          </li>
+        </ol>
+
+        <div class="callout-box info">
+          <span class="callout-icon">&#9432;</span>
+          <p>
+            <strong>The Paradigm Shift:</strong> OpenCrawling bridges these gaps by becoming an active <strong>Data Provider Agent</strong>. Connected agents do not just query static vectors; they can inspect live repository hierarchies, evaluate pre-embedding governance, trigger real-time ingestions, and inspect lakehouse metadata sidecars—all bounded strictly to the caller's origin permissions.
+          </p>
+        </div>
+
+        <div class="arch-flow-diagram">
+          <div class="flow-title">The 4-Phase Active Ingestion Loop for Multi-Agent Swarms</div>
+          <div class="flow-nodes">
+            <div class="flow-node">Autonomous AI Swarm</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node highlight">1. Explore (MCP)</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">2. Decision &amp; Governance</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node accent">3. Dynamic Job Ingest</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node highlight">4. Zero-Trust Retrieval</div>
+          </div>
+        </div>
+
+        <h2><span class="section-num">02.</span>The 4-Phase Active Ingestion Architecture</h2>
+        <p>
+          Under the architecture delivered in Issue #203, OpenCrawling provides an end-to-end active ingestion lifecycle:
+        </p>
+
+        <h3>Phase 1: Lightweight Discovery &amp; Repository Exploration</h3>
+        <p>
+          Agents can inspect repository structures and metadata without triggering expensive full-scale downloads or vector embeddings. Using the new MCP exploration tools, agents retrieve folder trees, MIME types, and document counts across registered connectors (Alfresco, SharePoint, CMIS, Documentum, FileNet, M-Files, Hyland CIC, etc.).
+        </p>
+
+        <h3>Phase 2: Pre-Embedding Governance &amp; Four-Eyes Approval</h3>
+        <p>
+          Before any extracted text is converted into high-dimensional vectors or committed to persistent data lakes, it passes through the in-flight <strong>Governance Gate</strong> (<code>GovernanceGate</code>). The gate evaluates PII redaction rules, tokenizes sensitive entities (SSN, IBAN, Credit Cards, Emails), and verifies whether the operation requires four-eyes administrative approval (<code>requiresApproval</code>).
+        </p>
+
+        <h3>Phase 3: Targeted On-Demand Ingestion</h3>
+        <p>
+          When an agent determines that specific documents or sub-folders must be indexed, it submits a targeted ingestion request via MCP or REST (<code>POST /api/jobs/dynamic</code> or <code>POST /api/jobs/single-document</code>). The job is dynamically orchestrated with custom token-chunking rules, deduplication idempotency keys, and source-level Access Control List (ACL) extraction.
+        </p>
+
+        <h3>Phase 4: Zero-Trust Identity-Aware Retrieval</h3>
+        <p>
+          When querying the vectorized knowledge base or inspecting persistent cloud migration sidecars (<code>&lt;key&gt;.ois.json</code>), OpenCrawling enforces <strong>Fail-Closed Zero-Trust evaluation</strong>. Deny rules authoritatively override grants, and callers are bound by OAuth 2.0 RFC 8693 delegated multi-agent identity.
+        </p>
+
+        <h2><span class="section-num">03.</span>Federated Model Context Protocol (MCP) Tools</h2>
+        <p>
+          Issue #203 expands OpenCrawling's native Spring AI Model Context Protocol server (<code>oc-mcp-server</code>) with a comprehensive suite of enterprise tools:
+        </p>
+
+        <table class="tools-table">
+          <thead>
+            <tr>
+              <th>Tool Name</th>
+              <th>SPI / Component</th>
+              <th>Purpose &amp; Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>listRepositoryConnectors</code></td>
+              <td><code>ExplorationMcpTools</code></td>
+              <td>Lists all registered repository connectors (SharePoint, Alfresco, CMIS, FileNet, etc.) permitted for agent interaction.</td>
+            </tr>
+            <tr>
+              <td><code>exploreRepositoryTree</code></td>
+              <td><code>ExplorationMcpTools</code></td>
+              <td>Explores folder hierarchies, document IDs, file sizes, and MIME types in a repository without downloading binary content.</td>
+            </tr>
+            <tr>
+              <td><code>triggerDynamicJob</code></td>
+              <td><code>DynamicJobMcpTools</code></td>
+              <td>Dynamically launches a crawl job on a specific folder with custom chunk sizes, idempotency keys, and correlation IDs. Supports <code>validateOnly</code> dry-run.</td>
+            </tr>
+            <tr>
+              <td><code>ingestSingleDocument</code></td>
+              <td><code>DynamicJobMcpTools</code></td>
+              <td>Instantly ingests or refreshes a single document by its source repository ID, extracting text, evaluating governance, and updating embeddings.</td>
+            </tr>
+            <tr>
+              <td><code>getDynamicJobStatus</code></td>
+              <td><code>DynamicJobMcpTools</code></td>
+              <td>Polls live execution status, document count, and stage progression of an active dynamic job.</td>
+            </tr>
+            <tr>
+              <td><code>listSidecarStores</code></td>
+              <td><code>SidecarMcpTools</code></td>
+              <td>Enumerates cloud/lakehouse object stores (Apache Ozone, AWS S3) containing migrated OIS sidecars.</td>
+            </tr>
+            <tr>
+              <td><code>readOisSidecars</code></td>
+              <td><code>SidecarMcpTools</code></td>
+              <td>Reads <code>*.ois.json</code> metadata sidecars, binary checksums, and business attributes directly from object stores under caller ACL filtering.</td>
+            </tr>
+            <tr>
+              <td><code>secureVectorSearch</code></td>
+              <td><code>McpVectorServer</code></td>
+              <td>Federated semantic similarity search across 9 vector databases (pgvector, Milvus, Qdrant, Vespa, Solr, OpenSearch, etc.) with Zero-Trust ACL filtering.</td>
+            </tr>
+            <tr>
+              <td><code>fetchJobTraces</code> &amp; <code>getErrorLogs</code></td>
+              <td><code>ObservabilityMcpTools</code></td>
+              <td>AIOps telemetry tools allowing AI agents to diagnose cluster health and OpenTelemetry span latencies.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2><span class="section-num">04.</span>In-Flight Pre-Embedding Governance: ALLOW, REDACT, DROP</h2>
+        <p>
+          A cornerstone of Luis Cabaceira's implementation is the in-flight <strong>Pre-Embedding Governance Gate</strong> (<code>GovernanceGate</code>) in <code>oc-runtime</code>. Unlike traditional search engines that index raw text and attempt post-hoc filtering, OpenCrawling intercepts documents <em>before</em> tokenization and vectorization:
+        </p>
+
+        <pre><code>// Document processing pipeline with in-flight Governance Gate
+public Mono&lt;Void&gt; process(IngestionMessage message) {
+    return governanceGate.evaluate(message)
+        .flatMap(decision -&gt; switch (decision.action()) {
+            case ALLOW  -&gt; proceedToExtractionAndEmbedding(message);
+            case REDACT -&gt; {
+                message.setText(decision.sanitizedText());
+                message.addMetadata("ois:governance", decision.auditRecord());
+                yield proceedToExtractionAndEmbedding(message);
+            }
+            case DROP   -&gt; {
+                log.warn("Document {} rejected by governance policy: {}", message.id(), decision.reason());
+                yield publishTombstoneOrAuditTrace(message, decision);
+            }
+        });
+}</code></pre>
+
+        <p>
+          The governance gate records immutable audit findings directly into the document's <code>ois:governance</code> metadata block:
+        </p>
+        <ul>
+          <li><strong><code>decision</code>:</strong> Normative OIS policy outcome (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>).</li>
+          <li><strong><code>redactionCategories</code>:</strong> Specific sensitive entity classes redacted (e.g., <code>EMAIL</code>, <code>SSN</code>, <code>CREDIT_CARD</code>, <code>IBAN</code>, <code>PHONE</code>).</li>
+          <li><strong><code>policyId</code> &amp; <code>evaluatedAt</code>:</strong> ISO 8601 audit timestamp and policy rule identifier.</li>
+          <li><strong>Cryptographic Tamper Protection:</strong> <code>ois:governance</code> and <code>ois:provenance</code> are registered in <code>GovernanceGate.PROTECTED_KEYS</code>, preventing downstream crawlers or transformation hooks from forging policy decisions.</li>
+        </ul>
+
+        <h2><span class="section-num">05.</span>Real-Time BPM &amp; Workflow Event Integration</h2>
+        <p>
+          To close the Batch Latency Gap, OpenCrawling now features real-time <strong>BPM Document-Transition Webhooks</strong>:
+        </p>
+        <pre><code>POST /api/events/bpm/document-transition
+Content-Type: application/json
+
+{
+  "source": "flowable-enterprise",
+  "eventType": "TASK_COMPLETED",
+  "processInstanceId": "proc-99482",
+  "documentId": "workspace://SpacesStore/9924-1184-contract.pdf",
+  "connectorName": "Alfresco_Corporate",
+  "timestamp": "2026-11-12T19:30:00Z"
+}</code></pre>
+        <p>
+          Upon receiving a workflow event from <strong>Flowable, Camunda 8 Zeebe, or Alfresco Process Services</strong>, OpenCrawling instantly synthesizes a targeted single-document crawl, updates embeddings in milliseconds, or issues an immediate <code>DELETE</code> tombstone if access permissions were revoked.
+        </p>
+
+        <h2><span class="section-num">06.</span>Delegated Multi-Agent Identity (OAuth 2.0 RFC 8693)</h2>
+        <p>
+          When an autonomous agent acts on behalf of a human user, security cannot rely on service-account permissions. OpenCrawling enforces <strong>OAuth 2.0 Token Exchange (RFC 8693)</strong> delegation:
+        </p>
+        <ul>
+          <li><strong><code>onBehalfOf</code> (<code>sub</code>):</strong> The verified human user principal whose source permissions bound the entire ingestion and retrieval boundary.</li>
+          <li><strong><code>actorAgent</code> (<code>act.sub</code>):</strong> The SPIFFE ID or URI of the autonomous agent orchestrating the operation.</li>
+          <li><strong>Normative Fail-Closed Enforcement:</strong> If an agent attempts to explore, ingest, or retrieve a document outside the human principal's permission tree, the request is authoritatively blocked with <code>FAIL_CLOSED</code> access denial.</li>
+        </ul>
+
+        <h2><span class="section-num">07.</span>Verified by Automated Conformance Testing</h2>
+        <p>
+          To ensure that the reference implementation and the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener">Open Ingestion Standard (OIS)</a> remain in lockstep, Issue #203 introduces the <code>ois-conformance</code> CI verification job. 
+        </p>
+        <p>
+          On every pull request and commit to <code>main</code>, OpenCrawling downloads the live <code>document.schema.json</code> from the OIS specification repository and validates all emitted migration sidecars, tombstones, and governed envelopes using strict format assertions. If the spec and the implementation drift by even a single property, the build fails.
+        </p>
+
+        <div class="callout-box success">
+          <span class="callout-icon">&#10004;</span>
+          <p>
+            <strong>Production Ready:</strong> All 1,868+ unit tests and decoupled multi-container integration suites passed with 100% success across Java 25 Virtual Threads, Spring Boot 4.1.2, Kafka, Redis, and all supported search/lakehouse engines.
+          </p>
+        </div>
+
+        <h2><span class="section-num">08.</span>Getting Started</h2>
+        <p>
+          You can spin up the full OpenCrawling Zero-Trust Data Provider Agent and MCP Server locally using Docker Compose:
+        </p>
+        <pre><code># Clone repository
+git clone https://github.com/opencrawling/opencrawling.git
+cd opencrawling
+
+# Launch the decoupled stack (PostgreSQL, Kafka, Redis, Ollama, oc-mcp-server)
+docker compose -f docker-compose-decoupled.yml up -d
+
+# Verify MCP Server handshake and run end-to-end integration tests
+./scripts/test-mcp-decoupled.sh</code></pre>
+
+        <div class="article-cta">
+          <h3>Explore the Zero-Trust Data Provider Agent</h3>
+          <p>Read our full MCP Server technical guide, explore API specifications, or connect your AI agent framework today.</p>
+          <div class="cta-buttons">
+            <a href="../mcp.html" class="btn btn-primary">MCP Server Guide &rarr;</a>
+            <a href="https://github.com/opencrawling/opencrawling" class="btn btn-secondary" target="_blank" rel="noopener">Star on GitHub &star;</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" width="32" height="32">
+        <span>OpenCrawling</span>
+      </div>
+      <p class="footer-copyright">&copy; 2026 OpenCrawling. Released under the Apache 2.0 License.</p>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../mcp.html">MCP Server</a>
+        <a href="https://opencrawling.org/open-ingestion-standard/" target="_blank" rel="noopener">OIS Standard</a>
+        <a href="../team.html">Team</a>
+        <a href="https://github.com/opencrawling/opencrawling" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
