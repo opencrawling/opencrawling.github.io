@@ -58,8 +58,8 @@ const ARCH_DETAILS = {
     desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland Content Innovation Cloud via HXP REST & OAuth2, Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
-    title: "Ingestion Core Engine (oc-core)",
-    desc: "The scanning and chunking coordinator. Leverages Java 25 virtual threads to run repository connectors, extract text with Apache Tika, split documents into semantic chunks (using TokenTextSplitter), and publish Chunk Messages to the 'opencrawling-chunks' Kafka topic."
+    title: "Ingestion Core Engine (oc-core) & Governance Gate",
+    desc: "The scanning, chunking, and governance coordinator. Leverages Java 25 virtual threads to run repository connectors, enforce in-flight Pre-Embedding Governance Gates (ALLOW, REDACT, DROP policy evaluation), extract text with Apache Tika 4, split documents into semantic chunks (using TokenTextSplitter), and publish Chunk Messages to the 'opencrawling-chunks' Kafka topic. Also serves dynamic on-demand ingestion requests triggered by AI agents."
   },
   kafka: {
     title: "Apache Kafka Message Broker",
@@ -90,8 +90,12 @@ const ARCH_DETAILS = {
     desc: "Built-in security translator. Maps user search identities (Active Directory SIDs, OAuth groups) to document ACLs. Ensures that subsequent RAG or search queries return only the files a user has permission to see."
   },
   mcp: {
-    title: "Secure MCP Server (Spring AI)",
-    desc: "Exposes secure enterprise knowledge retrieval tools to AI models and agents using the Model Context Protocol (MCP) across all 10 pluggable backends (including Hyland OpenArch via openarch_search and openarch_fetch_document). Enforces server-side user identity verification (principals and roles) and ACL checks against the vector store, ensuring LLMs never receive unauthorized content."
+    title: "Zero-Trust Data Provider Agent & Active Ingestion Engine (MCP Server)",
+    desc: "Transforms OpenCrawling into an autonomous Data Provider Agent for enterprise Multi-Agent Systems (MAS). Beyond secure context retrieval with explicit deny precedence (McpAclEvaluator), autonomous agents can dynamically explore repository hierarchies without downloading binaries (DiscoveryMcpTools), trigger on-demand targeted crawls and single-document sync (DynamicJobMcpTools), inspect OIS Lakehouse sidecars with cryptographic provenance (SidecarMcpTools), and evaluate in-flight pre-embedding governance gates (ALLOW/REDACT/DROP) under delegated OAuth 2.0 RFC 8693 authorization."
+  },
+  agents: {
+    title: "Autonomous AI Agents & Multi-Agent Systems (MAS)",
+    desc: "Client-side autonomous agent frameworks (Claude Desktop, Cursor, Antigravity, LangChain, AutoGen, CrewAI) interacting via Model Context Protocol (MCP) over Streamable HTTP and SSE. Agents act with verified JWT bearer tokens or delegated RFC 8693 onBehalfOf credentials to dynamically command ingestion and query enterprise knowledge."
   },
   claimcheck: {
     title: "Claim Check Store (Apache Ozone & S3)",
@@ -774,6 +778,8 @@ function initSvgAnimation() {
   const p1 = document.getElementById('anim-particle-1');
   const p2 = document.getElementById('anim-particle-2');
   const p3 = document.getElementById('anim-particle-3');
+  const pAgentic = document.getElementById('anim-particle-agentic');
+  const pathAgentic = document.getElementById('path-agentic-loop');
   if (!p1 || !p2 || !p3) return;
 
   let startTime = null;
@@ -829,6 +835,24 @@ function initSvgAnimation() {
       p2.setAttribute('opacity', 1);
     } else {
       p2.setAttribute('opacity', 0);
+    }
+
+    // Particle 4 (Violet) - Agentic Ingestion Loop: Data Provider Agent → Ingestion Core
+    if (pAgentic && pathAgentic) {
+      try {
+        const totalLen = pathAgentic.getTotalLength();
+        if (progress >= 0.20 && progress < 0.60) {
+          const segProgress = (progress - 0.20) / 0.40;
+          const pt = pathAgentic.getPointAtLength(segProgress * totalLen);
+          pAgentic.setAttribute('cx', pt.x);
+          pAgentic.setAttribute('cy', pt.y);
+          pAgentic.setAttribute('opacity', 1);
+        } else {
+          pAgentic.setAttribute('opacity', 0);
+        }
+      } catch (e) {
+        pAgentic.setAttribute('opacity', 0);
+      }
     }
 
     requestAnimationFrame(step);
