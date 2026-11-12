@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Outputs: Vector Stores, Parquet Bridges, HXP Archival & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, Elasticsearch 8.x/9.x, or OpenSearch 2.x/3.x. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
+    title: "Outputs: Vector Stores, Parquet Bridges, Lakehouses & Migration Sinks",
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, Elasticsearch 8.x/9.x, or OpenSearch 2.x/3.x. In Lakehouse mode, writes structured Parquet tables into Apache Iceberg with ACID snapshot commits, REST/Hive/Glue catalogs, and dynamic schema evolution. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -623,10 +623,15 @@ function initSimulator() {
         vectorLog = "QdrantWriterConsumer persisted high-dimensional vectors and Zero-Trust payload ACL filters to Qdrant cluster via gRPC.";
       } else if (destKey === 'milvus') {
         vectorLog = "MilvusWriterConsumer inserted vectors, entity metadata, and security tokens into Milvus standalone collection.";
+      } else if (destKey === 'iceberg') {
+        vectorLog = "IcebergStoreWriterConsumer streamed document records, canonical metadata, and Zero-Trust ACL attributes into Apache Iceberg table ('enterprise_documents') over S3FileIO (MinIO/S3), dynamically evolved schema with new entity columns, and committed ACID Parquet snapshot.";
       }
       if (destKey === 'hyland-cic') {
         addLog(`[PROCESS] HXP Output Connector: ${vectorLog}`, "process");
         addLog(`[SUCCESS] Ingested, versioned, and archived document '${file.name}' into Hyland Content Innovation Cloud successfully.`, "success");
+      } else if (destKey === 'iceberg') {
+        addLog(`[PROCESS] Iceberg Lakehouse Writer: ${vectorLog}`, "process");
+        addLog(`[SUCCESS] Ingested document '${file.name}' with Zero-Trust ACLs and evolved schema into Apache Iceberg table successfully.`, "success");
       } else {
         addLog(`[PROCESS] Vector Writer (${destName}): ${vectorLog}`, "process");
         addLog(`[SUCCESS] Stored document '${file.name}' with ACL credentials into ${destName} successfully.`, "success");
