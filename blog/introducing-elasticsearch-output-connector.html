@@ -6,7 +6,7 @@
   <title>Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector - OpenCrawling</title>
   <meta name="description" content="Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector index provisioning, quantized HNSW (int8_hnsw, int4_hnsw, bbq_hnsw), shrink-chunk purging, CA fingerprint TLS, and Zero-Trust MCP kNN pre-filtering.">
   <meta name="keywords" content="elasticsearch, elasticsearch 8, elasticsearch 9, oc-elasticsearch-output-connector, dense_vector, hnsw, int8_hnsw, bbq_hnsw, vector quantization, opencrawling, java 25, rest5client, enterprise rag, mcp server, zero-trust security">
-  <meta name="author" content="OpenCrawling Core Team">
+  <meta name="author" content="Michael Cizmar &amp; OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html">
@@ -26,7 +26,22 @@
     "headline": "Dense Vector Search, Quantized HNSW & Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x & 9.x Output Connector",
     "description": "Discover OpenCrawling's native Elasticsearch 8.x and 9.x Output Connector (oc-elasticsearch-output-connector). Built on the official Elastic Java API Client 9.4 (Rest5Client) with automatic dense_vector index provisioning, quantized HNSW (int8_hnsw, int4_hnsw, bbq_hnsw), shrink-chunk purging, CA fingerprint TLS, and Zero-Trust MCP kNN pre-filtering.",
     "datePublished": "2026-11-09",
-    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Michael Cizmar",
+        "jobTitle": "Lead Architect",
+        "url": "https://opencrawling.org/team.html",
+        "sameAs": [
+          "https://github.com/michaelcizmar",
+          "https://linkedin.com/in/michaelcizmar"
+        ]
+      },
+      {
+        "@type": "Organization",
+        "name": "OpenCrawling Core Team"
+      }
+    ],
     "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
     "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-elasticsearch-output-connector.html" }
   }
@@ -86,6 +101,12 @@
     .comp-card.active { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.03); }
     .comp-card h4 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #F1F5F9; }
     .comp-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0; }
+    .tribute-card { background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(217,119,6,0.08)); border: 1px solid rgba(245,158,11,0.35); border-radius: 14px; padding: 2rem; margin: 2rem 0 2.5rem; }
+    .tribute-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .tribute-avatar { width: 64px; height: 64px; border-radius: 50%; border: 2px solid #F59E0B; object-fit: cover; }
+    .tribute-title h3 { margin: 0; font-size: 1.3rem; color: #F1F5F9; }
+    .tribute-title p { margin: 0.2rem 0 0; color: #FBBF24; font-size: 0.9rem; }
+    .tribute-body { font-size: 0.98rem; line-height: 1.8; color: var(--text-secondary); margin: 0; }
   </style>
 </head>
 <body>
@@ -151,6 +172,20 @@
       </p>
     </header>
 
+    <!-- Tribute to Michael Cizmar -->
+    <section class="tribute-card">
+      <div class="tribute-header">
+        <img src="../assets/team/michael-cizmar.jpg" alt="Michael Cizmar" class="tribute-avatar">
+        <div class="tribute-title">
+          <h3>Architectural Leadership &amp; Delivery: Michael Cizmar</h3>
+          <p>Lead Architect &bull; OpenCrawling &bull; <a href="https://github.com/michaelcizmar" target="_blank" rel="noopener" style="color: #FDE68A; text-decoration: underline;">@michaelcizmar</a> &bull; <a href="https://linkedin.com/in/michaelcizmar" target="_blank" rel="noopener" style="color: #FDE68A; text-decoration: underline;">LinkedIn</a></p>
+        </div>
+      </div>
+      <p class="tribute-body">
+        The conception, architecture, and complete implementation of the <strong>Elasticsearch 8.x &amp; 9.x Output Connector</strong> was spearheaded and authored by <strong>Michael Cizmar</strong> (via <a href="https://github.com/opencrawling/opencrawling/pull/72" target="_blank" rel="noopener" style="color: #FDE68A; text-decoration: underline;">PR #72</a>). Drawing upon more than two decades of enterprise search leadership, Michael engineered a comprehensive, production-grade integration: building on the modern <code>Rest5Client</code> transport with dual 8.x and 9.x compatibility headers, engineering deterministic chunk lifecycle management with automatic shrink-chunk purges, implementing startup <code>dense_vector</code> index provisioning across 6 HNSW quantization profiles (including <code>bbq_hnsw</code> and <code>int8_hnsw</code>), CA fingerprint certificate pinning, and crafting the Zero-Trust <code>ElasticsearchMcpSearchBackend</code> with <code>security_read_keys</code> kNN pre-filtering. The entire OpenCrawling community celebrates Michael for his outstanding engineering leadership and craftsmanship in delivering this critical enterprise capability!
+      </p>
+    </section>
+
     <div class="arch-flow-diagram">
       <div class="flow-title">Decoupled Ingestion &amp; Zero-Trust MCP Retrieval on Elasticsearch 8.x / 9.x</div>
       <div class="flow-nodes">
@@ -172,7 +207,7 @@
         Elasticsearch powers search and analytics across thousands of enterprises worldwide—from self-managed on-premises clusters to Elastic Cloud and Elastic Cloud Serverless deployments. With modern <code>dense_vector</code> HNSW indexing, scalar quantization, and Better Binary Quantization (<code>bbq_hnsw</code>), Elasticsearch has evolved into a high-performance vector database for Retrieval-Augmented Generation (RAG) and agentic AI workflows.
       </p>
       <p>
-        Until now, OpenCrawling offered dedicated output connectors for OpenSearch 2.x and 3.x alongside Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, and Luxir. With the release of <strong><code>oc-elasticsearch-output-connector</code></strong>, teams running <strong>Elasticsearch 8.x or 9.x</strong> can stream documents, precomputed embeddings, and normalized Zero-Trust Access Control Lists (ACLs) directly into Elasticsearch—and expose them immediately to AI agents through the <strong>OpenCrawling Secure MCP Server</strong>.
+        Until now, OpenCrawling offered dedicated output connectors for OpenSearch 2.x and 3.x alongside Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, and Luxir. Spearheaded and architected by Lead Architect <strong>Michael Cizmar</strong>, the release of <strong><code>oc-elasticsearch-output-connector</code></strong> allows teams running <strong>Elasticsearch 8.x or 9.x</strong> to stream documents, precomputed embeddings, and normalized Zero-Trust Access Control Lists (ACLs) directly into Elasticsearch—and expose them immediately to AI agents through the <strong>OpenCrawling Secure MCP Server</strong>.
       </p>
 
       <div class="comparison-grid">
@@ -188,7 +223,7 @@
 
       <h2><span class="section-num">2. </span>Unified Elastic 8.x &amp; 9.x Support via Rest5Client</h2>
       <p>
-        The connector is built on the official <strong>Elastic Java API Client 9.4.x</strong> (<code>co.elastic.clients:elasticsearch-java</code>) backed by the modern <strong><code>Rest5Client</code></strong> (Apache HttpClient 5 transport), aligning cleanly with Spring Boot 4 and Java 25 without legacy REST client dependencies.
+        Designed by Michael Cizmar for long-term production stability, the connector is built on the official <strong>Elastic Java API Client 9.4.x</strong> (<code>co.elastic.clients:elasticsearch-java</code>) backed by the modern <strong><code>Rest5Client</code></strong> (Apache HttpClient 5 transport), aligning cleanly with Spring Boot 4 and Java 25 without legacy REST client dependencies.
       </p>
       <p>
         To allow a single runtime binary to talk to both <strong>Elasticsearch 8.x</strong> and <strong>Elasticsearch 9.x</strong> clusters out of the box, <code>ElasticsearchClientFactory</code> negotiates the REST API version header via <code>spring.opencrawling.output.elasticsearch.compatible-with</code> (default <code>8</code>):
