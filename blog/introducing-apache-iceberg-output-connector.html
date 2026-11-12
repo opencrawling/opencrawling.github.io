@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACID Lakehouse Streaming, Parquet Storage & Dynamic Schema Evolution: Announcing the Apache Iceberg Output Connector - OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native Apache Iceberg Output Connector (oc-iceberg-output-connector). Built on Apache Iceberg 1.11.0, it streams enterprise documents into columnar Parquet tables with REST/Hive/Glue catalogs, canonical schema governance, Zero-Trust OIS ACLs, dynamic schema evolution, and ACID snapshot commits over S3FileIO.">
+  <meta name="keywords" content="apache iceberg, iceberg output connector, data lakehouse, parquet, rest catalog, hive catalog, aws glue, s3fileio, dynamic schema evolution, zero-trust security, ois, opencrawling, java 25, spring boot 4, duckdb, trino, spark">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-apache-iceberg-output-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-apache-iceberg-output-connector.html">
+  <meta property="og:title" content="ACID Lakehouse Streaming, Parquet Storage & Dynamic Schema Evolution: Announcing the Apache Iceberg Output Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native Apache Iceberg Output Connector (oc-iceberg-output-connector). Built on Apache Iceberg 1.11.0, it streams enterprise documents into columnar Parquet tables with REST/Hive/Glue catalogs, Zero-Trust OIS ACLs, dynamic schema evolution, and ACID commits.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-apache-iceberg-output-connector.html">
+  <meta property="twitter:title" content="ACID Lakehouse Streaming, Parquet Storage & Dynamic Schema Evolution: Announcing the Apache Iceberg Output Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Apache Iceberg Output Connector (oc-iceberg-output-connector). Built on Apache Iceberg 1.11.0, it streams enterprise documents into columnar Parquet tables with REST/Hive/Glue catalogs, Zero-Trust OIS ACLs, dynamic schema evolution, and ACID commits.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338BDF8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "ACID Lakehouse Streaming, Parquet Storage & Dynamic Schema Evolution: Announcing the Apache Iceberg Output Connector",
+    "description": "Discover OpenCrawling's native Apache Iceberg Output Connector (oc-iceberg-output-connector). Built on Apache Iceberg 1.11.0, it streams enterprise documents into columnar Parquet tables with REST/Hive/Glue catalogs, canonical schema governance, Zero-Trust OIS ACLs, dynamic schema evolution, and ACID snapshot commits over S3FileIO.",
+    "datePublished": "2026-11-12",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-apache-iceberg-output-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #0284C7, #38BDF8); color: #0F172A; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #38BDF8; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #38BDF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #38BDF8; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #7DD3FC; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(56,189,248,0.05); border-color: #38BDF8; }
+    .callout-box.tip { background: rgba(245,158,11,0.05); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.05); border-color: #EF4444; }
+    .callout-box.success { background: rgba(16,185,129,0.05); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(56,189,248,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38BDF8; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #94A3B8; white-space: nowrap; }
+    .flow-node.highlight { border-color: #38BDF8; color: #BAE6FD; background: rgba(56,189,248,0.08); font-weight: 600; }
+    .flow-node.accent { border-color: #7C3AED; color: #C084FC; background: rgba(124,58,237,0.06); font-weight: 600; }
+    .flow-arrow { color: #475569; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #38BDF8; }
+    .article-cta { background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #38BDF8; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .config-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.875rem; }
+    .config-table th { background: rgba(56,189,248,0.08); color: #38BDF8; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(56,189,248,0.2); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2rem; }
+    @media (max-width: 680px) { .comparison-grid { grid-template-columns: 1fr; } }
+    .comp-card { background: #0A0F1D; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.5rem; }
+    .comp-card.active { border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.03); }
+    .comp-card h4 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #F1F5F9; }
+    .comp-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-text">OpenCrawling</span>
+      </a>
+      <nav class="site-nav">
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#architecture">Architecture</a>
+        <a href="../index.html#simulator">Simulator</a>
+        <a href="../mcp.html">MCP Server</a>
+        <a href="../index.html#connectors">Connectors</a>
+        <a href="../index.html#blog" class="active">Blog</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://github.com/OpenCrawling/opencrawling" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to all articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date">&#128197; November 12, 2026</span>
+        <span class="blog-meta-read">&#9201; 10 min read</span>
+      </div>
+      <h1 class="blog-article-title">ACID Lakehouse Streaming, Parquet Storage &amp; Dynamic Schema Evolution: Announcing the Apache Iceberg Output Connector</h1>
+      <p class="blog-article-lead">
+        OpenCrawling introduces <code>oc-iceberg-output-connector</code>: an enterprise-grade lakehouse output connector that streams crawled documents into <strong>Apache Iceberg</strong> (v1.11.0) tables with columnar <strong>Apache Parquet</strong> storage. Featuring multi-catalog support (REST, Hive, Hadoop, Glue, JDBC), canonical schema management, <strong>Zero-Trust OIS ACL security enforcement</strong>, runtime dynamic schema evolution for custom entities, and ACID snapshot commits over S3FileIO, OpenCrawling bridges enterprise repositories directly to modern lakehouse analytics.
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Decoupled Ingestion &amp; ACID Lakehouse Streaming on Apache Iceberg</div>
+      <div class="flow-nodes">
+        <div class="flow-node">17 Enterprise Repositories</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Kafka (opencrawling-documents)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">IcebergStoreWriterConsumer</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node highlight">IcebergTableManager (Dynamic Evolution)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node">Parquet Columnar Files (MinIO / S3)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-node accent">Iceberg REST Catalog (ACID Commits)</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Bridging Enterprise Repositories Directly to the Lakehouse</h2>
+      <p>
+        In modern enterprise data platforms, data architectures often face a divide: enterprise content management (ECM) repositories, document management systems, and workflow engines live in isolated operational silos, while analytical and machine learning workloads thrive on open data lakehouse table formats like <strong>Apache Iceberg</strong>.
+      </p>
+      <p>
+        Traditional search and vector databases (such as Elasticsearch, OpenSearch, Solr, pgvector, or Milvus) are unmatched for low-latency top-k semantic search and hybrid kNN retrieval. However, enterprises increasingly require long-term compliance archiving, petabyte-scale historical reporting, multi-engine federated SQL querying (via <strong>DuckDB, Trino, and Apache Spark</strong>), and immutable snapshot time travel.
+      </p>
+      <p>
+        With the release of <strong><code>oc-iceberg-output-connector</code></strong>, OpenCrawling becomes the first enterprise ingestion framework capable of streaming unstructured documents, rich metadata attributes, extracted text, and normalized <strong>Open Ingestion Standard (OIS) Zero-Trust Access Control Lists (ACLs)</strong> directly into Apache Iceberg Parquet tables with transactional snapshot isolation.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comp-card active">
+          <h4>🧊 Multi-Catalog &amp; S3 Storage</h4>
+          <p><strong>Pluggable Catalogs:</strong> Works out of the box with the standard Iceberg REST Catalog, Hive Metastore, Hadoop filesystem, AWS Glue, and JDBC backends, backed by high-throughput <code>S3FileIO</code> for AWS S3, MinIO, and Apache Ozone.</p>
+        </div>
+        <div class="comp-card active">
+          <h4>⚡ Dynamic Schema Evolution</h4>
+          <p><strong>Zero-Downtime Column Additions:</strong> Newly discovered business entities (e.g., <code>vendor</code>, <code>contract_id</code>, <code>invoice_amount</code>) dynamically evolve the table schema at runtime without table locks or data rewrites.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>Direct Batching vs. Decoupled Kafka Streaming</h2>
+      <p>
+        The Iceberg Output Connector provides architectural flexibility across both standalone and horizontally scaled deployments:
+      </p>
+      <ul>
+        <li><strong>Direct Synchronous Path (<code>IcebergOutputConnector</code>):</strong> Implements OpenCrawling's core <code>OutputConnector</code> SPI. Suitable for standalone batch jobs or lightweight containers where the crawler writes directly to the Iceberg catalog and Parquet storage using <code>commitBatch(...)</code>.</li>
+        <li><strong>Decoupled Asynchronous Path (<code>IcebergStoreWriterConsumer</code>):</strong> Designed for production high-throughput clusters. The crawler offloads large binaries to the <strong>Claim Check Store</strong> (MinIO, AWS S3, or Apache Ozone) and publishes an <code>IngestionMessage</code> to Apache Kafka. The decoupled writer consumes from the topic with configurable worker concurrency (default <code>3</code>), resolves content streams, applies dynamic schema evolution, appends Parquet records, and commits ACID table snapshots.</li>
+      </ul>
+
+      <h2><span class="section-num">3. </span>Pluggable Enterprise Catalogs via IcebergCatalogFactory</h2>
+      <p>
+        Rather than hardcoding a specific catalog backend, <code>IcebergCatalogFactory</code> instantiates the appropriate Iceberg <code>Catalog</code> based on the <code>spring.opencrawling.output.iceberg.catalog-type</code> property:
+      </p>
+      <ul>
+        <li><strong><code>rest</code> (Recommended):</strong> Connects to modern REST Catalog servers (e.g., Apache Iceberg REST Fixture, Tabular, Apache Polaris, Lakekeeper).</li>
+        <li><strong><code>hive</code>:</strong> Connects to existing enterprise Hive Metastores via Thrift (<code>iceberg-hive-metastore</code>).</li>
+        <li><strong><code>hadoop</code>:</strong> Direct directory-based catalog over HDFS, cloud buckets, or local filesystems.</li>
+        <li><strong><code>glue</code>:</strong> Native AWS Glue Catalog integration leveraging the AWS SDK v2 client.</li>
+        <li><strong><code>jdbc</code>:</strong> Relational catalog integration using PostgreSQL, MySQL, or SQLite backends.</li>
+        <li><strong><code>in-memory</code>:</strong> Ephemeral catalog for fast unit tests and zero-dependency verification.</li>
+      </ul>
+
+      <h2><span class="section-num">4. </span>Canonical Lakehouse Schema &amp; Zero-Trust OIS ACL Enforcement</h2>
+      <p>
+        On startup, <code>IcebergTableManager</code> provisions the target Iceberg namespace and table with the strongly typed <code>CANONICAL_SCHEMA</code>:
+      </p>
+
+      <pre tabindex="0"><code>// Canonical OpenCrawling Lakehouse Schema for Apache Iceberg
+Types.NestedField.required(1,  "id",                   Types.StringType.get(), "Unique record UUID"),
+Types.NestedField.required(2,  "document_id",          Types.StringType.get(), "Canonical document ID"),
+Types.NestedField.optional(3,  "source_type",          Types.StringType.get(), "Repository connector type"),
+Types.NestedField.optional(4,  "document_uri",         Types.StringType.get(), "Original repository URI"),
+Types.NestedField.optional(5,  "title",                Types.StringType.get(), "Document title or filename"),
+Types.NestedField.optional(6,  "mime_type",            Types.StringType.get(), "MIME content type"),
+Types.NestedField.optional(7,  "content_length",       Types.LongType.get(),   "Binary length in bytes"),
+Types.NestedField.optional(8,  "sha256_checksum",      Types.StringType.get(), "SHA-256 binary checksum"),
+Types.NestedField.optional(9,  "claim_check_uri",      Types.StringType.get(), "Claim-Check object storage URI"),
+Types.NestedField.optional(10, "extracted_text",       Types.StringType.get(), "Extracted plain text"),
+Types.NestedField.optional(11, "extracted_entities",   Types.MapType.ofOptional(12, 13, Types.StringType.get(), Types.StringType.get())),
+Types.NestedField.optional(14, "custom_metadata",      Types.MapType.ofOptional(15, 16, Types.StringType.get(), Types.StringType.get())),
+Types.NestedField.optional(17, "security_owner",       Types.StringType.get(), "Primary security owner"),
+Types.NestedField.optional(18, "security_inheritance", Types.BooleanType.get(),"Inheritance flag"),
+Types.NestedField.optional(19, "allowed_principals",   Types.ListType.ofOptional(20, Types.StringType.get()), "Zero-Trust ACL Allow"),
+Types.NestedField.optional(21, "denied_principals",    Types.ListType.ofOptional(22, Types.StringType.get()), "Zero-Trust ACL Deny"),
+Types.NestedField.required(23, "action",               Types.StringType.get(), "OIS Action: UPSERT or DELETE"),
+Types.NestedField.required(24, "crawled_at",           Types.TimestampType.withoutZone(), "Crawl timestamp UTC")</code></pre>
+
+      <div class="callout-box success">
+        <div class="callout-icon">&#128274;</div>
+        <div>
+          <p><strong>End-to-End Governance:</strong> By persisting <code>allowed_principals</code> and <code>denied_principals</code> directly inside the Parquet schema, downstream query engines (such as Trino or Spark) can enforce row-level security policies directly on the lakehouse tables!</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">5. </span>Dynamic Runtime Schema Evolution</h2>
+      <p>
+        Enterprise documents often carry bespoke business descriptors that cannot be anticipated at design time. When contracts, invoices, or claims are crawled, Apache Tika and Spring AI extract custom entities (such as <code>entity.vendor</code>, <code>entity.amount</code>, or <code>entity.contract_id</code>).
+      </p>
+      <p>
+        When <code>spring.opencrawling.output.iceberg.auto-schema-evolution=true</code> is enabled, <code>IcebergTableManager</code> introspects incoming entity attributes. If a column is missing from the active table schema, it commits an Iceberg schema update via:
+      </p>
+
+      <pre tabindex="0"><code>// Dynamic runtime schema evolution without table locks or data rewrites
+UpdateSchema updateSchema = table.updateSchema();
+for (String entityKey : entities.keySet()) {
+    String colName = IcebergTableManager.sanitizeIdentifier(entityKey);
+    if (currentSchema.findField(colName) == null) {
+        updateSchema.addColumn(colName, Types.StringType.get(), "Dynamically extracted entity: " + entityKey);
+    }
+}
+updateSchema.commit();
+table.refresh();</code></pre>
+
+      <p>
+        Because Apache Iceberg tracks schema versions in metadata rather than rewriting underlying data files, this evolution occurs instantly with zero ingestion downtime.
+      </p>
+
+      <h2><span class="section-num">6. </span>Partition Transforms &amp; Columnar Storage</h2>
+      <p>
+        To prevent the "small files problem" and optimize query pruning, the connector supports configurable partition strategies:
+      </p>
+      <ul>
+        <li><strong><code>YEAR_MONTH</code> (Default):</strong> Employs Iceberg's native partition transform on the <code>crawled_at</code> timestamp (<code>builder.month("crawled_at")</code>). This keeps data partitioned into manageable monthly directories while allowing queries with date ranges to skip irrelevant partitions completely.</li>
+        <li><strong><code>SOURCE_AND_DATE</code>:</strong> Partitions by repository identity (<code>source_type</code>) and monthly crawl date.</li>
+        <li><strong><code>NONE</code>:</strong> Leaves the table unpartitioned for smaller corporate archives.</li>
+      </ul>
+      <p>
+        Data files are formatted as pure <strong>Apache Parquet</strong> compressed with <strong>Zstandard (<code>zstd</code>)</strong> or Snappy, delivering up to 70% storage savings compared to uncompressed raw JSON while enabling vectorized reads across analytical engines.
+      </p>
+
+      <h2><span class="section-num">7. </span>Configuration Reference</h2>
+      <p>
+        All properties bind cleanly under <code>spring.opencrawling.output.iceberg.*</code>:
+      </p>
+
+      <table class="config-table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>spring.opencrawling.output.type</code></td>
+            <td><code>pgvector</code></td>
+            <td>Set to <code>iceberg</code> to activate the Iceberg Output Connector</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.catalog-type</code></td>
+            <td><code>in-memory</code></td>
+            <td>Catalog backend: <code>rest</code>, <code>hive</code>, <code>hadoop</code>, <code>glue</code>, <code>jdbc</code>, or <code>in-memory</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.catalog-uri</code></td>
+            <td><em>(empty)</em></td>
+            <td>Remote catalog URI (e.g. <code>http://localhost:8181</code> for REST)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.warehouse</code></td>
+            <td><code>tmp/iceberg-warehouse</code></td>
+            <td>Root warehouse location (e.g. <code>s3://warehouse</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.namespace</code></td>
+            <td><code>opencrawling_ecm</code></td>
+            <td>Iceberg namespace / database name</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.table-name</code></td>
+            <td><code>enterprise_documents</code></td>
+            <td>Target table name under <code>UNIFIED</code> strategy</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.table-strategy</code></td>
+            <td><code>UNIFIED</code></td>
+            <td>Routing strategy: <code>UNIFIED</code> or <code>PER_DOCUMENT_TYPE</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.auto-create-table</code></td>
+            <td><code>true</code></td>
+            <td>Automatically provisions namespace and table on startup if missing</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.auto-schema-evolution</code></td>
+            <td><code>true</code></td>
+            <td>Automatically evolves table schema when new entity fields appear</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.partition-by</code></td>
+            <td><code>YEAR_MONTH</code></td>
+            <td>Partition transform: <code>YEAR_MONTH</code>, <code>SOURCE_AND_DATE</code>, or <code>NONE</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.compression-codec</code></td>
+            <td><code>zstd</code></td>
+            <td>Parquet compression codec: <code>zstd</code>, <code>snappy</code>, <code>gzip</code></td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.s3.endpoint</code></td>
+            <td><em>(empty)</em></td>
+            <td>S3-compatible endpoint (e.g. <code>http://minio:9000</code>)</td>
+          </tr>
+          <tr>
+            <td><code>spring.opencrawling.output.iceberg.s3.path-style-access</code></td>
+            <td><code>true</code></td>
+            <td>Enables path-style bucket access for MinIO and custom S3 stores</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="section-num">8. </span>Testing, Decoupled Stack &amp; DuckDB OLAP Queries</h2>
+      <p>
+        The Apache Iceberg Output Connector includes complete turnkey automated test suites:
+      </p>
+
+      <pre tabindex="0"><code># 1. Test standalone REST catalog interaction & dynamic schema evolution
+./scripts/test-iceberg-output-connector.sh
+
+# 2. Test full multi-service decoupled ingestion pipeline (Kafka, MinIO, REST Catalog)
+./scripts/test-iceberg-output-decoupled.sh</code></pre>
+
+      <p>
+        Once ingested, you can query your lakehouse tables immediately with in-process <strong>DuckDB</strong> without running heavy analytical clusters:
+      </p>
+
+      <pre tabindex="0"><code>-- Querying ingested enterprise documents in DuckDB
+INSTALL iceberg;
+LOAD iceberg;
+
+SELECT document_id, title, action, security_owner, allowed_principals, entity_vendor
+FROM iceberg_scan('s3://warehouse/enterprise_data/documents',
+                  endpoint='http://localhost:9000',
+                  access_key_id='admin',
+                  secret_access_key='password')
+WHERE 'role:lakehouse-analytics' = ANY(allowed_principals);</code></pre>
+
+      <div class="article-cta">
+        <h3>Stream Enterprise Knowledge into Apache Iceberg</h3>
+        <p>Try the new Apache Iceberg Output Connector in our interactive browser simulator, or explore the source code on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Ingestion Simulator &rarr;</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Apache-Iceberg-Output-Connector" target="_blank" rel="noopener" class="btn btn-outline">Read Iceberg Connector Wiki Guide &#128214;</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo" width="32" height="32">
+        <span class="brand-text">OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
