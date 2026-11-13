@@ -68,6 +68,7 @@
   
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/agentic-diagram.css">
   
   <style>
     .blog-article-wrapper { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
@@ -228,19 +229,23 @@
           </p>
         </div>
 
-        <div class="arch-flow-diagram">
-          <div class="flow-title">The 4-Phase Active Ingestion Loop for Multi-Agent Swarms</div>
-          <div class="flow-nodes">
-            <div class="flow-node">Autonomous AI Swarm</div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-node highlight">1. Explore (MCP)</div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-node">2. Decision &amp; Governance</div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-node accent">3. Dynamic Job Ingest</div>
-            <div class="flow-arrow">&rarr;</div>
-            <div class="flow-node highlight">4. Zero-Trust Retrieval</div>
-          </div>
+        <div class="zt-blog-embed" data-agentic-diagram data-heading-level="3">
+          <noscript>
+            <div class="arch-flow-diagram">
+              <div class="flow-title">The 4-Phase Active Ingestion Loop for Multi-Agent Swarms</div>
+              <div class="flow-nodes">
+                <div class="flow-node">Autonomous AI Swarm</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node highlight">1. Explore (MCP)</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node">2. Decision &amp; Governance</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node accent">3. Dynamic Job Ingest</div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node highlight">4. Zero-Trust Retrieval</div>
+              </div>
+            </div>
+          </noscript>
         </div>
 
         <h2><span class="section-num">02.</span>The 4-Phase Active Ingestion Architecture</h2>
@@ -477,5 +482,6 @@ docker compose -f docker-compose-decoupled.yml up -d
   </footer>
   <!-- Scripts -->
   <script src="../js/main.js"></script>
+  <script src="../js/agentic-diagram.js"></script>
 </body>
 </html>

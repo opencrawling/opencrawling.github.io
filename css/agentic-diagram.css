@@ -1,0 +1,1005 @@
+/* ==========================================================================
+   OpenCrawling — Interactive Zero-Trust Data Provider Agent Diagram (Issue #203)
+   Shared component styles across index.html, mcp.html, and blog posts
+   ========================================================================== */
+
+@property --zt-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --zt-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.zt-diagram-root {
+    --zt-bg: light-dark(#f8fafc, #070b14);
+    --zt-surface: light-dark(#ffffff, #0f172a);
+    --zt-surface-muted: light-dark(#f1f5f9, #111827);
+    --zt-node-bg: light-dark(#ffffff, #151e32);
+    --zt-node-hover-bg: light-dark(#f8fafc, #1a253d);
+    --zt-pill-bg: light-dark(#f1f5f9, #1e293b);
+    --zt-border: light-dark(#cbd5e1, #334155);
+    --zt-border-subtle: light-dark(#e2e8f0, #1e293b);
+    --zt-shadow: light-dark(
+      0 12px 32px -12px rgba(15, 23, 42, 0.08),
+      0 20px 44px -16px rgba(0, 0, 0, 0.55)
+    );
+
+    --zt-text: light-dark(#0f172a, #f1f5f9);
+    --zt-text-secondary: light-dark(#475569, #94a3b8);
+    --zt-text-muted: light-dark(#64748b, #94a3b8);
+    --zt-focus-ring: light-dark(#4f46e5, #38bdf8);
+
+    /* Flow badge fills (all >= 4.5:1 with #ffffff numeral) */
+    --zt-f1-badge: #0f766e;
+    --zt-f2-badge: #b45309;
+    --zt-f3-badge: #1d4ed8;
+    --zt-f4-badge: #6d28d9;
+    --zt-fe-badge: #c2410c;
+
+    /* Flow wire / ink accents */
+    --zt-f1: light-dark(#0f766e, #2dd4bf);
+    --zt-f1-soft: light-dark(rgba(15, 118, 110, 0.1), rgba(45, 212, 191, 0.14));
+    --zt-f2: light-dark(#b45309, #fbbf24);
+    --zt-f2-soft: light-dark(#fffbeb, rgba(251, 191, 36, 0.1));
+    --zt-f3: light-dark(#1d4ed8, #60a5fa);
+    --zt-f3-soft: light-dark(rgba(29, 78, 216, 0.1), rgba(96, 165, 250, 0.14));
+    --zt-f4: light-dark(#6d28d9, #a78bfa);
+    --zt-f4-soft: light-dark(rgba(109, 40, 217, 0.1), rgba(167, 139, 250, 0.14));
+    --zt-fe: light-dark(#c2410c, #fb923c);
+    --zt-fe-soft: light-dark(rgba(194, 65, 12, 0.1), rgba(251, 146, 60, 0.14));
+
+    /* Zero-trust checkpoint & danger tokens */
+    --zt-danger: light-dark(#b91c1c, #f87171);
+    --zt-danger-bar: light-dark(#b91c1c, #dc2626);
+    --zt-danger-soft: light-dark(#fef2f2, rgba(239, 68, 68, 0.13));
+    --zt-danger-border: light-dark(#fecaca, rgba(248, 113, 113, 0.4));
+
+    /* Gate status colors */
+    --zt-approved: light-dark(#047857, #34d399);
+    --zt-approved-bg: light-dark(#ecfdf5, rgba(16, 185, 129, 0.12));
+    --zt-approved-border: light-dark(#a7f3d0, rgba(52, 211, 153, 0.35));
+
+    --zt-sanitized: light-dark(#0f766e, #2dd4bf);
+    --zt-sanitized-bg: light-dark(#f0fdfa, rgba(20, 184, 166, 0.12));
+    --zt-sanitized-border: light-dark(#99f6e4, rgba(45, 212, 191, 0.35));
+
+    position: relative;
+    color: var(--zt-text);
+    font-family: var(--font-body, "Space Grotesk", system-ui, sans-serif);
+    text-align: left;
+  }
+
+  .zt-shell {
+    background: var(--zt-bg);
+    border: 1px solid var(--zt-border-subtle);
+    border-radius: 16px;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    box-shadow: var(--zt-shadow);
+  }
+
+  /* Header block matching reference layout */
+  .zt-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .zt-diagram-root .zt-eyebrow {
+    margin: 0;
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--zt-text-secondary);
+  }
+
+  .zt-diagram-root .zt-header .zt-title,
+  html.light .zt-diagram-root .zt-header .zt-title,
+  html.dark .zt-diagram-root .zt-header .zt-title {
+    margin: 0;
+    font-family: var(--font-heading, "Outfit", system-ui, sans-serif);
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--zt-text);
+  }
+
+  .zt-diagram-root .zt-lead,
+  .zt-diagram-root .zt-sublead {
+    margin: 0;
+    max-width: 72ch;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    color: var(--zt-text-secondary);
+  }
+
+  .zt-diagram-root .zt-sublead {
+    font-size: 0.9rem;
+  }
+
+  /* Filter Toolbar + Motion Control */
+  .zt-controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0.25rem 0;
+  }
+
+  .zt-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .zt-filter-btn,
+  .zt-motion-btn,
+  .zt-clear-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-inline-size: 24px;
+    min-block-size: 36px;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--zt-border);
+    background: var(--zt-surface);
+    color: var(--zt-text);
+    font-family: var(--font-body, "Space Grotesk", system-ui, sans-serif);
+    font-size: 0.84rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  @media (pointer: coarse) {
+    .zt-filter-btn,
+    .zt-motion-btn,
+    .zt-clear-btn {
+      min-block-size: 44px;
+      padding: 0.5rem 0.95rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zt-filter-btn,
+    .zt-motion-btn,
+    .zt-clear-btn {
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease,
+        transform 120ms ease;
+    }
+  }
+
+  @media (hover: hover) {
+    .zt-filter-btn:hover,
+    .zt-motion-btn:hover,
+    .zt-clear-btn:hover {
+      border-color: var(--zt-text-secondary);
+      background: var(--zt-surface-muted);
+    }
+  }
+
+  .zt-filter-btn:focus-visible,
+  .zt-motion-btn:focus-visible,
+  .zt-clear-btn:focus-visible {
+    outline: 2px solid var(--zt-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* State driven directly from ARIA pressed attribute */
+  .zt-filter-btn[aria-pressed="true"] {
+    background: light-dark(#0f172a, #f1f5f9);
+    color: light-dark(#ffffff, #0f172a);
+    border-color: transparent;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.16);
+  }
+
+  .zt-filter-btn[data-flow="1"][aria-pressed="true"] {
+    background: var(--zt-f1-badge);
+    color: #ffffff;
+  }
+
+  .zt-filter-btn[data-flow="2"][aria-pressed="true"] {
+    background: var(--zt-f2-badge);
+    color: #ffffff;
+  }
+
+  .zt-filter-btn[data-flow="3"][aria-pressed="true"] {
+    background: var(--zt-f3-badge);
+    color: #ffffff;
+  }
+
+  .zt-filter-btn[data-flow="4"][aria-pressed="true"] {
+    background: var(--zt-f4-badge);
+    color: #ffffff;
+  }
+
+  .zt-filter-btn[data-flow="E"][aria-pressed="true"] {
+    background: var(--zt-fe-badge);
+    color: #ffffff;
+  }
+
+  .zt-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 999px;
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #334155;
+    flex-shrink: 0;
+  }
+
+  .zt-pill-badge[data-badge="all"] {
+    background: light-dark(#334155, #475569);
+  }
+
+  .zt-pill-badge[data-badge="1"] {
+    background: var(--zt-f1-badge);
+  }
+
+  .zt-pill-badge[data-badge="2"] {
+    background: var(--zt-f2-badge);
+  }
+
+  .zt-pill-badge[data-badge="3"] {
+    background: var(--zt-f3-badge);
+  }
+
+  .zt-pill-badge[data-badge="4"] {
+    background: var(--zt-f4-badge);
+  }
+
+  .zt-pill-badge[data-badge="E"] {
+    background: var(--zt-fe-badge);
+  }
+
+  .zt-filter-btn[aria-pressed="true"] .zt-pill-badge {
+    background: rgba(255, 255, 255, 0.22);
+    color: inherit;
+  }
+
+  .zt-motion-btn {
+    font-size: 0.8rem;
+    color: var(--zt-text-secondary);
+  }
+
+  .zt-motion-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--zt-approved);
+  }
+
+  .zt-diagram-root[data-motion="paused"] .zt-motion-dot {
+    background: var(--zt-text-muted);
+  }
+
+  /* Diagram Card + Focus-safe Scroll Affordance Frame */
+  .zt-canvas-card {
+    background: var(--zt-surface);
+    border: 1px solid var(--zt-border-subtle);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  }
+
+  .zt-canvas-focus-wrap {
+    position: relative;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .zt-canvas-focus-wrap:has(.zt-canvas-scroller:focus-visible) {
+    outline: 2px solid var(--zt-focus-ring);
+    outline-offset: -2px;
+  }
+
+  .zt-canvas-scroller {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 0.85rem 0.85rem 0.5rem;
+  }
+
+  .zt-canvas-scroller:focus-visible {
+    outline: none;
+  }
+
+  /* Scrollability affordance hints (edge fades driven by scroll timeline, plus IO fallback) */
+  @keyframes zt-scroll-fades {
+    0% {
+      --zt-fade-start: 0px;
+      --zt-fade-end: 28px;
+    }
+    4%,
+    96% {
+      --zt-fade-start: 28px;
+      --zt-fade-end: 28px;
+    }
+    100% {
+      --zt-fade-start: 28px;
+      --zt-fade-end: 0px;
+    }
+  }
+
+  @supports (animation-timeline: scroll(self inline)) {
+    .zt-canvas-scroller {
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 var(--zt-fade-start),
+        #000 calc(100% - var(--zt-fade-end)),
+        transparent
+      );
+      animation: zt-scroll-fades linear both;
+      animation-timeline: scroll(self inline);
+    }
+  }
+
+  @supports not (animation-timeline: scroll(self inline)) {
+    .zt-canvas-scroller {
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 var(--zt-fade-start),
+        #000 calc(100% - var(--zt-fade-end)),
+        transparent
+      );
+    }
+    .zt-canvas-scroller.more-start {
+      --zt-fade-start: 24px;
+    }
+    .zt-canvas-scroller.more-end {
+      --zt-fade-end: 24px;
+    }
+  }
+
+  .zt-scroll-stage {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-width: 980px;
+  }
+
+  .zt-scroll-sentinel {
+    position: relative;
+    flex: 0 0 1px;
+    width: 1px;
+    pointer-events: none;
+  }
+
+  .zt-svg {
+    display: block;
+    width: 100%;
+    min-width: 980px;
+    height: auto;
+    font-family: var(--font-body, "Space Grotesk", system-ui, sans-serif);
+    user-select: none;
+  }
+
+  /* SVG Structural & Text Primitives */
+  .zt-zone-bg {
+    fill: var(--zt-surface-muted);
+    stroke: var(--zt-border-subtle);
+    stroke-width: 1.25;
+  }
+
+  .zt-boundary-frame {
+    fill: var(--zt-surface);
+    stroke: var(--zt-danger);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+  }
+
+  .zt-zone-label {
+    fill: var(--zt-text-secondary);
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .zt-zone-label-danger {
+    fill: var(--zt-danger);
+  }
+
+  .zt-box-rect {
+    fill: var(--zt-node-bg);
+    stroke: var(--zt-border);
+    stroke-width: 1.25;
+  }
+
+  .zt-box-group-bg {
+    fill: var(--zt-surface);
+    stroke: var(--zt-border);
+    stroke-width: 1.1;
+  }
+
+  .zt-gate-rect {
+    fill: var(--zt-f2-soft);
+    stroke: var(--zt-f2);
+    stroke-width: 1.4;
+  }
+
+  .zt-gate-card-approved {
+    fill: var(--zt-approved-bg);
+    stroke: var(--zt-approved-border);
+    stroke-width: 1;
+  }
+
+  .zt-gate-card-sanitized {
+    fill: var(--zt-sanitized-bg);
+    stroke: var(--zt-sanitized-border);
+    stroke-width: 1;
+  }
+
+  .zt-gate-card-rejected {
+    fill: var(--zt-danger-soft);
+    stroke: var(--zt-danger-border);
+    stroke-width: 1;
+  }
+
+  .zt-pill-rect {
+    fill: var(--zt-pill-bg);
+    stroke: var(--zt-border);
+    stroke-width: 1;
+  }
+
+  .zt-checkpoint-bar {
+    fill: var(--zt-danger-bar);
+  }
+
+  .zt-node-title {
+    fill: var(--zt-text);
+    font-family: var(--font-heading, "Outfit", system-ui, sans-serif);
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+
+  .zt-node-sub {
+    fill: var(--zt-text-secondary);
+    font-size: 10.2px;
+    font-weight: 500;
+  }
+
+  .zt-node-mono {
+    fill: var(--zt-text-secondary);
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 9.8px;
+    font-weight: 500;
+  }
+
+  .zt-wire-label {
+    fill: var(--zt-text-secondary);
+    font-size: 9.6px;
+    font-weight: 600;
+  }
+
+  .zt-wire-label-strong {
+    fill: var(--zt-text);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .zt-status-tag-approved {
+    fill: var(--zt-approved);
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 9.2px;
+    font-weight: 700;
+  }
+
+  .zt-status-tag-sanitized {
+    fill: var(--zt-sanitized);
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 9.2px;
+    font-weight: 700;
+  }
+
+  .zt-status-tag-rejected {
+    fill: var(--zt-danger);
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 9.2px;
+    font-weight: 700;
+  }
+
+  /* Wires by flow */
+  .zt-wire {
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .zt-wire-neutral {
+    stroke: var(--zt-text-secondary);
+    stroke-width: 1.4;
+  }
+
+  .zt-wire-dashed {
+    stroke: var(--zt-text-muted);
+    stroke-width: 1.4;
+    stroke-dasharray: 4 3;
+  }
+
+  .zt-wire-f1 {
+    stroke: var(--zt-f1);
+  }
+
+  .zt-wire-f2 {
+    stroke: var(--zt-f2);
+  }
+
+  .zt-wire-f3 {
+    stroke: var(--zt-f3);
+  }
+
+  .zt-wire-f4 {
+    stroke: var(--zt-f4);
+  }
+
+  .zt-wire-fe {
+    stroke: var(--zt-fe);
+  }
+
+  /* Subtle flow motion overlay on wires */
+  .zt-wire-pulse {
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-dasharray: 5 13;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes zt-flow-dash {
+    to {
+      stroke-dashoffset: -36;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zt-diagram-root[data-motion="running"] .zt-wire-pulse {
+      opacity: 0.9;
+      animation: zt-flow-dash 1.35s linear infinite;
+    }
+
+    .zt-diagram-root[data-motion="running"] .zt-is-dimmed .zt-wire-pulse {
+      opacity: 0.08;
+      animation-play-state: paused;
+    }
+  }
+
+  /* Interactive SVG hit targets */
+  .zt-interactive {
+    cursor: pointer;
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .zt-interactive,
+    .zt-wire,
+    .zt-loop-item {
+      transition: opacity 180ms ease, filter 180ms ease;
+    }
+  }
+
+  @media (hover: hover) {
+    .zt-interactive:hover .zt-box-rect,
+    .zt-interactive:hover .zt-gate-rect,
+    .zt-interactive:hover .zt-pill-rect {
+      fill: var(--zt-node-hover-bg);
+      stroke-width: 1.75;
+    }
+  }
+
+  .zt-interactive:focus-visible .zt-box-rect,
+  .zt-interactive:focus-visible .zt-gate-rect,
+  .zt-interactive:focus-visible .zt-pill-rect,
+  .zt-interactive:focus-visible .zt-checkpoint-bar {
+    stroke: var(--zt-focus-ring);
+    stroke-width: 2.5;
+  }
+
+  .zt-interactive[data-selected="true"] .zt-box-rect,
+  .zt-interactive[data-selected="true"] .zt-gate-rect,
+  .zt-interactive[data-selected="true"] .zt-pill-rect {
+    stroke: var(--zt-focus-ring);
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.28));
+  }
+
+  .zt-interactive[data-selected="true"] .zt-loop-bg {
+    fill: var(--zt-pill-bg);
+    stroke: var(--zt-focus-ring);
+    stroke-width: 1.5;
+  }
+
+  /* Dimming when a flow filter or node is active */
+  .zt-is-dimmed {
+    opacity: 0.2;
+  }
+
+  .zt-is-active {
+    opacity: 1;
+  }
+
+  /* Interactive Inspector Bar inside card footer */
+  .zt-inspector {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    padding: 0.8rem 1.15rem;
+    background: var(--zt-surface-muted);
+    border-top: 1px solid var(--zt-border-subtle);
+    border-bottom: 1px solid var(--zt-border-subtle);
+  }
+
+  .zt-inspector-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+    flex: 1 1 320px;
+  }
+
+  .zt-inspector-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .zt-inspector-kicker {
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--zt-text-muted);
+  }
+
+  .zt-diagram-root .zt-inspector-title {
+    margin: 0;
+    font-family: var(--font-heading, "Outfit", system-ui, sans-serif);
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--zt-text);
+  }
+
+  .zt-inspector-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .zt-inspector-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.14rem 0.52rem;
+    border-radius: 999px;
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: #334155;
+  }
+
+  .zt-inspector-tag[data-flow="1"] {
+    background: var(--zt-f1-badge);
+  }
+
+  .zt-inspector-tag[data-flow="2"] {
+    background: var(--zt-f2-badge);
+  }
+
+  .zt-inspector-tag[data-flow="3"] {
+    background: var(--zt-f3-badge);
+  }
+
+  .zt-inspector-tag[data-flow="4"] {
+    background: var(--zt-f4-badge);
+  }
+
+  .zt-inspector-tag[data-flow="E"] {
+    background: var(--zt-fe-badge);
+  }
+
+  .zt-inspector-tag[data-flow="checkpoint"] {
+    background: var(--zt-danger-bar);
+  }
+
+  .zt-diagram-root .zt-inspector-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--zt-text-secondary);
+  }
+
+  .zt-diagram-root .zt-inspector-meta {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.76rem;
+    color: var(--zt-text);
+    background: var(--zt-surface);
+    border: 1px solid var(--zt-border-subtle);
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    align-self: flex-start;
+  }
+
+  .zt-clear-btn {
+    min-block-size: 32px;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .zt-clear-btn[hidden] {
+    display: none;
+  }
+
+  .zt-diagram-root .zt-caption {
+    margin: 0;
+    padding: 0.85rem 1.15rem 0.95rem;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--zt-text-secondary);
+    background: var(--zt-surface);
+  }
+
+  /* Bottom 2-column reference tables */
+  .zt-tables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+    margin-top: 1.15rem;
+  }
+
+  @media (max-width: 820px) {
+    .zt-tables-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .zt-table-card {
+    background: var(--zt-surface);
+    border: 1px solid var(--zt-border-subtle);
+    border-radius: 14px;
+    padding: 1.2rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .zt-diagram-root .zt-table-heading {
+    margin: 0;
+    font-family: var(--font-heading, "Outfit", system-ui, sans-serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--zt-text);
+  }
+
+  .zt-diagram-root .zt-table-desc {
+    margin: 0 0 0.4rem;
+    font-size: 0.87rem;
+    line-height: 1.5;
+    color: var(--zt-text-secondary);
+  }
+
+  .zt-table-wrapper {
+    container-type: inline-size;
+    overflow-x: auto;
+  }
+
+  .zt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+
+  .zt-table th {
+    padding: 0.5rem 0.6rem 0.55rem 0;
+    text-align: left;
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--zt-text-muted);
+    border-bottom: 1px solid var(--zt-border);
+  }
+
+  .zt-table td,
+  .zt-table tbody th[scope="row"] {
+    padding: 0.65rem 0.6rem 0.65rem 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--zt-border-subtle);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .zt-table tbody tr:last-child td,
+  .zt-table tbody tr:last-child th[scope="row"] {
+    border-bottom: none;
+  }
+
+  .zt-table tbody tr {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .zt-table tbody tr:hover {
+      background: var(--zt-surface-muted);
+    }
+  }
+
+  .zt-table tbody tr[data-selected="true"] {
+    background: var(--zt-pill-bg);
+  }
+
+  .zt-table-code {
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--zt-text);
+    white-space: nowrap;
+  }
+
+  .zt-status-text-fail {
+    font-family: var(--font-mono, "Fira Code", monospace);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--zt-danger);
+    white-space: nowrap;
+  }
+
+  .zt-status-text-approved {
+    font-weight: 700;
+    color: var(--zt-approved);
+  }
+
+  .zt-status-text-sanitized {
+    font-weight: 700;
+    color: var(--zt-sanitized);
+  }
+
+  .zt-status-text-rejected {
+    font-weight: 700;
+    color: var(--zt-danger);
+  }
+
+  .zt-table-row-dim {
+    opacity: 0.38;
+  }
+
+  /* Stacked card layout when table container is narrow */
+  @container (width < 410px) {
+    .zt-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .zt-table,
+    .zt-table tbody,
+    .zt-table tr,
+    .zt-table td,
+    .zt-table tbody th[scope="row"] {
+      display: block;
+      width: 100%;
+    }
+
+    .zt-table tbody tr {
+      padding: 0.6rem 0.25rem;
+      border-bottom: 1px solid var(--zt-border);
+    }
+
+    .zt-table td,
+    .zt-table tbody th[scope="row"] {
+      border-bottom: none;
+      padding: 0.22rem 0;
+    }
+
+    .zt-table [data-col-label]::before {
+      content: attr(data-col-label) ": ";
+      font-family: var(--font-mono, "Fira Code", monospace);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--zt-text-muted);
+    }
+  }
+
+  /* Blog post wide embed helper without horizontal document overflow */
+  .zt-blog-embed {
+    margin: 1.75rem calc(50% - min(570px, 50vw - 1.25rem));
+  }
+
+  /* Index page section spacing */
+  .agentic-arch-section {
+    padding: 5.5rem 0;
+    border-top: 1px solid var(--card-border, rgba(148, 163, 184, 0.14));
+  }
+
+  /* Compact mobile shell spacing */
+  @media (max-width: 640px) {
+    .zt-shell {
+      padding: 0.9rem;
+      border-radius: 12px;
+    }
+
+    .zt-canvas-scroller {
+      padding: 0.55rem 0.5rem 0.4rem;
+    }
+  }
+
+  /* Forced-colors accessibility fallback */
+  @media (forced-colors: active) {
+    .zt-shell,
+    .zt-canvas-card,
+    .zt-table-card,
+    .zt-filter-btn,
+    .zt-motion-btn,
+    .zt-clear-btn {
+      border: 1px solid CanvasText;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    .zt-filter-btn[aria-pressed="true"] {
+      background: Highlight;
+      color: HighlightText;
+      border-color: Highlight;
+    }
+
+    .zt-canvas-scroller {
+      mask-image: none;
+    }
+
+    .zt-box-rect,
+    .zt-gate-rect,
+    .zt-pill-rect,
+    .zt-zone-bg,
+    .zt-boundary-frame {
+      fill: Canvas;
+      stroke: CanvasText;
+    }
+
+    .zt-node-title,
+    .zt-node-sub,
+    .zt-node-mono,
+    .zt-wire-label,
+    .zt-wire-label-strong,
+    .zt-zone-label {
+      fill: CanvasText;
+    }
+
+    .zt-wire {
+      stroke: CanvasText;
+    }
+  }

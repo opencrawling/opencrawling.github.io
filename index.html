@@ -78,6 +78,7 @@
   
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/agentic-diagram.css">
 </head>
 <body>
 
@@ -557,6 +558,17 @@
       <div class="arch-info-card glass" id="arch-detail">
         <h3 id="arch-detail-title">System Architecture</h3>
         <p id="arch-detail-desc">Hover over or tap any node in the architecture diagram to view how OpenCrawling orchestrates the high-speed data flow and security controls.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agentic Zero-Trust Data Provider Architecture Section -->
+  <section id="agentic-architecture" class="architecture-section agentic-arch-section">
+    <div class="container">
+      <div data-agentic-diagram data-heading-level="2">
+        <noscript>
+          <p>Issue #203 · Zero-trust data provider for AI agents: human delegation (RFC 8693 sub + act.sub) crosses CALLER CHECK and TOKEN + USER + SCOPE ELSE FAIL_CLOSED into DiscoveryMcpTools, DynamicJobMcpTools -> DynamicJobService -> Connector fetch -> Kafka -> GovernanceGate -> Chunk -> Embed, and ACL-filtered retrieval via McpVectorServer and SidecarMcpTools.</p>
+        </noscript>
       </div>
     </div>
   </section>
@@ -1774,6 +1786,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
+  <script src="js/agentic-diagram.js"></script>
   
   <!-- OIS Schema Switcher Logic -->
   <script>

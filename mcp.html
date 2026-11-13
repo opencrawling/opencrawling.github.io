@@ -55,25 +55,7 @@
   
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="css/styles.css">
-  
-  <!-- Mermaid.js for Architecture Diagram -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: 'dark',
-        themeVariables: {
-          primaryColor: '#8B5CF6',
-          primaryTextColor: '#F1F5F9',
-          lineColor: '#06B6D4',
-          nodeBorder: '#8B5CF6',
-          mainBkg: '#0F172A',
-          clusterBkg: '#07090E'
-        }
-      });
-    });
-  </script>
+  <link rel="stylesheet" href="css/agentic-diagram.css">
 
   <style>
     .mcp-wrapper {
@@ -866,81 +848,10 @@
       <h2 class="mcp-section-title">Zero-Trust Data Provider Agent &amp; Active Ingestion Architecture</h2>
       <p class="mcp-section-subtitle">How OpenCrawling intercepts AI requests, executes on-demand crawling, explores content hierarchies, queries OIS sidecars, translates queries across pluggable backends, and authoritatively re-evaluates ACLs before returning context.</p>
 
-      <div class="mermaid-box">
-        <div class="mermaid">
-flowchart TD
-    subgraph Client["AI Agent & LLM Client Boundary"]
-        Agent["AI Agent / LLM Client (Claude Desktop, Cursor, Antigravity)"]
-        CallerAuth["Bearer JWT / RFC 8693 Identity Delegation"]
-    end
-
-    subgraph Runtime["OpenCrawling Runtime (Zero-Trust Data Provider Agent)"]
-        Transport["MCP Transport Layer (/mcp Streamable HTTP & /mcp/sse)"]
-        
-        subgraph ToolSuite["Exposed MCP Tool Suites"]
-            Server["McpVectorServer (Knowledge Retrieval)"]
-            DynTools["DynamicJobMcpTools (Active Ingestion & Crawl)"]
-            DiscTools["DiscoveryMcpTools (Hierarchy Discovery & Dry-Run)"]
-            SidecarTools["SidecarMcpTools (OIS Sidecars & Lineage)"]
-            IcebergTools["IcebergMcpTools (Snapshots, Time-Travel & Entities)"]
-            AIOps["ObservabilityMcpTools (AIOps Telemetry Tools)"]
-        end
-
-        Guard["McpAclEvaluator (Zero-Trust Guard & Explicit Deny)"]
-        GovGate["In-Flight Governance Gate (ALLOW / REDACT / DROP)"]
-        SPI["McpVectorSearchBackend (Pluggable SPI Architecture)"]
-        ExecEngine["Dynamic Job Service (Java 25 Virtual Threads)"]
-    end
-
-    subgraph Backends["Storage, Search & Lakehouse Layer"]
-        subgraph VectorStores["Pluggable Vector Databases"]
-            PG["PostgreSQL (pgvector)"]
-            VES["Vespa Engine"]
-            QD["Qdrant"]
-            MIL["Milvus"]
-            ES["Elasticsearch 8.x/9.x"]
-            OS["OpenSearch 2.x/3.x"]
-            SOL["Apache Solr"]
-            LUX["Luxir C++ Engine"]
-            OA["Hyland OpenArch"]
-        end
-
-        subgraph Connectors["20+ Repository Connectors"]
-            Repos["SharePoint / Alfresco / CMIS / Documentum / Web / M-Files"]
-        end
-
-        subgraph SidecarStores["OIS Lakehouse & Object Stores"]
-            Lake["Apache Iceberg / AWS S3 / Ozone (OIS Sidecars)"]
-        end
-    end
-
-    Agent <-->|"JSON-RPC 2.0 (Streamable HTTP / SSE)"| Transport
-    Agent -.->|"Delegated Principal & Actor Claims"| CallerAuth
-    CallerAuth --> Transport
-    Transport --> Server
-    Transport --> DynTools
-    Transport --> DiscTools
-    Transport --> SidecarTools
-    Transport --> IcebergTools
-    Transport --> AIOps
-
-    Server --> SPI
-    SPI --> VectorStores
-    SPI --> Lake
-    VectorStores --> Guard
-    Lake --> Guard
-    Guard -->|"Authorized Context JSON"| Transport
-
-    DynTools --> ExecEngine
-    ExecEngine --> Repos
-    Repos --> GovGate
-    GovGate -->|"Sanitized / Masked Stream"| ExecEngine
-    ExecEngine --> SPI
-
-    DiscTools --> Repos
-    SidecarTools --> Lake
-    IcebergTools --> Lake
-        </div>
+      <div data-agentic-diagram data-heading-level="3">
+        <noscript>
+          <p>Interactive Issue #203 architecture diagram: Human user delegates via RFC 8693 to AI agent -> CALLER CHECK / TOKEN + USER + SCOPE ELSE FAIL_CLOSED -> DiscoveryMcpTools (Explore), DynamicJobMcpTools -> DynamicJobService -> Connector fetch -> Kafka -> GovernanceGate (APPROVED / SANITIZED / REJECTED / UNAVAILABLE) -> Chunk -> Embed -> Vector stores &amp; OIS sidecars, plus BpmEventController (HMAC) and McpAclEvaluator retrieval.</p>
+        </noscript>
       </div>
     </section>
 
@@ -1800,6 +1711,7 @@ docker run -d -p 8080:8080 \
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
+  <script src="js/agentic-diagram.js"></script>
   <script>
     function switchSetupTab(tabId) {
       document.querySelectorAll('.setup-tab-btn').forEach(btn => btn.classList.remove('active'));
