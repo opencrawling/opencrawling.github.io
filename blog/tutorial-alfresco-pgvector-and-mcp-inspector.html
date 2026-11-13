@@ -148,7 +148,7 @@
       <div class="arch-flow-diagram">
         <div class="flow-title">Tutorial End-to-End Pipeline</div>
         <div class="flow-nodes">
-          <div class="flow-node">Alfresco 26.1.0 (:8081)</div>
+          <div class="flow-node">Alfresco 26.1.0 + Share &amp; Workspace (:8081)</div>
           <div class="flow-arrow">&rarr;</div>
           <div class="flow-node highlight">OpenCrawling Admin UI (:3000)</div>
           <div class="flow-arrow">&rarr;</div>
@@ -178,7 +178,7 @@ ls -1 tutorials/
 
         <h2><span class="section-num">02.</span>Start the Local Environment with Docker</h2>
         <p>
-          Launch the self-contained stack defined in <code>tutorials/docker/docker-compose-alfresco-pgvector-mcp.yml</code>. It brings up Alfresco Community 26.1.0 (running with <code>-Dindex.subsystem.name=noindex</code> for fast, low-memory startup in Folder Traversal mode), PostgreSQL + pgvector, Redis Stack, Ollama (automatically pulling <code>mxbai-embed-large</code>), Apache Kafka, all three decoupled OpenCrawling consumers, the Secure MCP Server, and the React Admin UI:
+          Launch the self-contained stack defined in <code>tutorials/docker/docker-compose-alfresco-pgvector-mcp.yml</code>. It brings up Alfresco Community 26.1.0 (running with <code>-Dindex.subsystem.name=noindex</code> for fast, low-memory startup in Folder Traversal mode), <strong>Alfresco Share</strong>, <strong>Alfresco Content App</strong> (the open-source Community counterpart of Digital Workspace) behind a Traefik reverse proxy on port <code>8081</code>, PostgreSQL + pgvector, Redis Stack, Ollama (automatically pulling <code>mxbai-embed-large</code>), Apache Kafka, all three decoupled OpenCrawling consumers, the Secure MCP Server, and the React Admin UI:
         </p>
 
         <pre tabindex="0"><code>./tutorials/scripts/start-env.sh</code></pre>
@@ -217,9 +217,19 @@ ls -1 tutorials/
                 <td>Streamable HTTP endpoint for MCP Inspector</td>
               </tr>
               <tr>
-                <th scope="row">Alfresco Content Services</th>
+                <th scope="row">Alfresco Share UI</th>
+                <td><code>http://localhost:8081/share/</code></td>
+                <td><code>admin</code> / <code>admin</code> (or <code>alice</code>, <code>bob</code>, <code>charlie</code> / <code>Password123!</code>) &mdash; Classic Repository &amp; Manage Permissions UI</td>
+              </tr>
+              <tr>
+                <th scope="row">Alfresco Content App (Digital Workspace Community)</th>
+                <td><code>http://localhost:8081/workspace/</code> <br>(alias: <code>http://localhost:8081/content-app/</code>)</td>
+                <td><code>admin</code> / <code>admin</code> (or test personas) &mdash; Modern ADF Workspace UI (uses public <code>alfresco/alfresco-content-app:7.5.0</code>)</td>
+              </tr>
+              <tr>
+                <th scope="row">Alfresco Content Services REST API v1</th>
                 <td><code>http://localhost:8081/alfresco/api/-default-/public/alfresco/versions/1</code></td>
-                <td><code>admin</code> / <code>admin</code></td>
+                <td><code>admin</code> / <code>admin</code> (routed via Traefik proxy on port <code>8081</code>)</td>
               </tr>
               <tr>
                 <th scope="row">PGVector Database</th>
@@ -280,6 +290,31 @@ ls -1 tutorials/
         <p>
           Under the hood, the provisioning script invokes Alfresco REST API v1 endpoints (<code>POST /people</code>, <code>POST /groups</code>, <code>POST /groups/{id}/members</code>, <code>POST /nodes/{parentId}/children</code>, <code>PUT /nodes/{nodeId}/content</code>, and <code>PUT /nodes/{nodeId}?include=permissions</code>) and saves the resulting Alfresco Node UUIDs to <code>tutorials/data/.provisioned-nodes.json</code>.
         </p>
+
+        <h3>Inspect the Permission Schema Visually in Alfresco Share &amp; Content App (Workspace)</h3>
+        <p>
+          Before running the ingestion job, open either <strong>Alfresco Share</strong> (<code>http://localhost:8081/share/</code>) or <strong>Alfresco Content App / Workspace</strong> (<code>http://localhost:8081/workspace/</code>) to explore the provisioned folder hierarchy and verify how Alfresco enforces these ACLs visually:
+        </p>
+        <ul>
+          <li>
+            <strong>Inspect Inherited &amp; Locally Set ACLs as <code>admin</code>:</strong> Sign in with <code>admin</code> / <code>admin</code>, click <strong>Repository</strong>, and open <code>opencrawling-tutorial</code>. In <strong>Share</strong>, hover over any folder or file and choose <strong>Manage Permissions</strong>; in <strong>Content App / Workspace</strong>, select a node and open <strong>More actions (&hellip;) &rarr; Permissions</strong> to see permission inheritance disabled on each tier folder alongside the local authority assignments.
+          </li>
+          <li>
+            <strong>Verify Persona Visibility (<code>alice</code>, <code>bob</code>, <code>charlie</code>):</strong> Sign out and log back in as each test user with password <code>Password123!</code>, then browse <strong>Repository &rarr; <code>opencrawling-tutorial</code></strong>:
+            <ul>
+              <li><code>alice</code> sees all four folders (<code>public</code>, <code>finance</code>, <code>engineering</code>, <code>executive</code>) and all four documents.</li>
+              <li><code>charlie</code> sees only <code>public</code> and <code>finance</code> (with <code>q4-financial-forecast.txt</code>).</li>
+              <li><code>bob</code> sees <code>public</code> and the <code>engineering</code> folder, yet opening <code>engineering/</code> displays an <strong>empty folder</strong> because his explicit <code>DENIED</code> ACE on <code>zero-trust-architecture.txt</code> overrides his <code>GROUP_engineering</code> membership.</li>
+            </ul>
+          </li>
+        </ul>
+
+        <div class="callout-box tip">
+          <span class="callout-icon">&#128161;</span>
+          <p>
+            <strong>Share UI &amp; <code>noindex</code> notes:</strong> Alfresco Share's legacy <em>Manage Permissions</em> modal omits explicit <code>DENIED</code> entries (query <code>GET /nodes/&lt;nodeId&gt;?include=permissions</code> or inspect as <code>bob</code> to confirm the deny). Additionally, because this lightweight tutorial runs Alfresco with <code>-Dindex.subsystem.name=noindex</code>, browse via the <strong>Repository</strong> view rather than the UI search bar &mdash; semantic search runs in OpenCrawling + PGVector.
+          </p>
+        </div>
 
         <h2><span class="section-num">04.</span>Configure Connectors &amp; Execute the Ingestion Job</h2>
         <p>
