@@ -7,7 +7,7 @@
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="Discover how OpenCrawling evolves into a Zero-Trust Data Provider Agent and AI-Driven Active Ingestion Engine for Enterprise Multi-Agent Systems (MAS). Architected and implemented by Luis Cabaceira (#203), combining Model Context Protocol (MCP), dynamic on-demand crawling, in-flight pre-embedding governance, real-time BPM transitions, and delegated RFC 8693 identity.">
-  <meta name="keywords" content="Zero-Trust Data Provider Agent, Active Ingestion, Multi-Agent Systems, Model Context Protocol, MCP, Spring AI, Luis Cabaceira, OpenCrawling, Issue 203, GovernanceGate, Pre-Embedding Governance, Flowable, Camunda 8, Alfresco, OIS, Open Ingestion Standard, ReBAC, OAuth 2.0 RFC 8693">
+  <meta name="keywords" content="Zero-Trust Data Provider Agent, Active Ingestion, Multi-Agent Systems, Model Context Protocol, MCP, Spring AI, Luis Cabaceira, OpenCrawling, Issue 203, GovernanceGate, Pre-Embedding Governance, Flowable, Alfresco Process Services, OIS, Open Ingestion Standard, ReBAC, OAuth 2.0 RFC 8693">
   <meta name="author" content="Piergiorgio Lucidi & OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/blog/zero-trust-data-provider-agent-and-active-ingestion.html">
 
@@ -195,7 +195,7 @@
           </div>
         </div>
         <p class="tribute-body">
-          The conception, design, and execution of this major milestone was led by <strong>Luis Cabaceira</strong>. With profound expertise spanning Enterprise Content Management (ECM), modern agentic architectures, and distributed systems, Luis spearheaded the complete end-to-end design of <strong>Issue #203</strong>. From crafting the <strong>Dynamic Job MCP Tools</strong> and <strong>Exploration SPIs</strong> to implementing the <strong>In-Flight Pre-Embedding Governance Gate</strong> and establishing live cross-repository <strong>OIS Conformance Testing</strong>, Luis's technical rigor and dedication have elevated OpenCrawling into an industry-leading data platform for autonomous AI agents. The entire OpenCrawling community owes Luis immense gratitude for this incredible feat!
+          The conception, design, and execution of this major milestone was led by <strong>Luis Cabaceira</strong>. With profound expertise spanning Enterprise Content Management (ECM), modern agentic architectures, and distributed systems, Luis spearheaded the complete end-to-end design of <strong>Issue #203</strong>. From crafting the <strong>Dynamic Job and Discovery MCP Tools</strong> to implementing the <strong>In-Flight Pre-Embedding Governance Gate</strong> and establishing live cross-repository <strong>OIS Conformance Testing</strong>, Luis's technical rigor and dedication have elevated OpenCrawling into an industry-leading data platform for autonomous AI agents. The entire OpenCrawling community owes Luis immense gratitude for this incredible feat!
         </p>
       </section>
 
@@ -250,17 +250,17 @@
 
         <h3>Phase 1: Lightweight Discovery &amp; Repository Exploration</h3>
         <p>
-          Agents can inspect repository structures and metadata without triggering expensive full-scale downloads or vector embeddings. Using the new MCP exploration tools, agents retrieve folder trees, MIME types, and document counts across registered connectors (Alfresco, SharePoint, CMIS, Documentum, FileNet, M-Files, Hyland CIC, etc.).
+          Agents can inspect repository structures and metadata without triggering expensive full-scale downloads or vector embeddings. Using the new MCP discovery tools (<code>DiscoveryMcpTools</code>), agents retrieve folder trees, MIME types, and preview crawl scopes via dry-run queries across registered connectors (Alfresco, SharePoint, CMIS, Documentum, FileNet, M-Files, Hyland CIC, etc.).
         </p>
 
-        <h3>Phase 2: Pre-Embedding Governance &amp; Four-Eyes Approval</h3>
+        <h3>Phase 2: In-Flight Pre-Embedding Governance Gate</h3>
         <p>
-          Before any extracted text is converted into high-dimensional vectors or committed to persistent data lakes, it passes through the in-flight <strong>Governance Gate</strong> (<code>GovernanceGate</code>). The gate evaluates PII redaction rules, tokenizes sensitive entities (SSN, IBAN, Credit Cards, Emails), and verifies whether the operation requires four-eyes administrative approval (<code>requiresApproval</code>).
+          Before any extracted text is converted into high-dimensional vectors or committed to persistent data lakes, it passes through the in-flight <strong>Governance Gate</strong> (<code>GovernanceGate</code>). The gate evaluates PII masking rules—masking email addresses, valid payment card numbers, and validated IBANs with <code>[REDACTED:&lt;TYPE&gt;]</code> placeholders in both text and metadata—and enforces fail-closed policies before chunking and embedding.
         </p>
 
         <h3>Phase 3: Targeted On-Demand Ingestion</h3>
         <p>
-          When an agent determines that specific documents or sub-folders must be indexed, it submits a targeted ingestion request via MCP or REST (<code>POST /api/jobs/dynamic</code> or <code>POST /api/jobs/single-document</code>). The job is dynamically orchestrated with custom token-chunking rules, deduplication idempotency keys, and source-level Access Control List (ACL) extraction.
+          When an agent determines that specific documents or sub-folders must be indexed, it submits a targeted ingestion request via MCP or REST (<code>POST /api/jobs/dynamic</code> or <code>POST /api/jobs/dynamic/documents</code>). The job is dynamically orchestrated with custom token-chunking rules, deduplication idempotency keys, and source-level Access Control List (ACL) extraction.
         </p>
 
         <h3>Phase 4: Zero-Trust Identity-Aware Retrieval</h3>
@@ -284,13 +284,18 @@
           <tbody>
             <tr>
               <td><code>listRepositoryConnectors</code></td>
-              <td><code>ExplorationMcpTools</code></td>
+              <td><code>DiscoveryMcpTools</code></td>
               <td>Lists all registered repository connectors (SharePoint, Alfresco, CMIS, FileNet, etc.) permitted for agent interaction.</td>
             </tr>
             <tr>
               <td><code>exploreRepositoryTree</code></td>
-              <td><code>ExplorationMcpTools</code></td>
+              <td><code>DiscoveryMcpTools</code></td>
               <td>Explores folder hierarchies, document IDs, file sizes, and MIME types in a repository without downloading binary content.</td>
+            </tr>
+            <tr>
+              <td><code>queryRepositoryDryRun</code></td>
+              <td><code>DiscoveryMcpTools</code></td>
+              <td>Previews what a crawl of a registered repository would ingest without reading content or embedding: returns sample documents and lower-bound counts within the caller's read permissions.</td>
             </tr>
             <tr>
               <td><code>triggerDynamicJob</code></td>
@@ -298,9 +303,9 @@
               <td>Dynamically launches a crawl job on a specific folder with custom chunk sizes, idempotency keys, and correlation IDs. Supports <code>validateOnly</code> dry-run.</td>
             </tr>
             <tr>
-              <td><code>ingestSingleDocument</code></td>
+              <td><code>ingestDocument</code></td>
               <td><code>DynamicJobMcpTools</code></td>
-              <td>Instantly ingests or refreshes a single document by its source repository ID, extracting text, evaluating governance, and updating embeddings.</td>
+              <td>Ingests or refreshes a single document by its source repository ID (as discovery returns it), extracting text, evaluating governance, and updating embeddings.</td>
             </tr>
             <tr>
               <td><code>getDynamicJobStatus</code></td>
@@ -320,7 +325,7 @@
             <tr>
               <td><code>secureVectorSearch</code></td>
               <td><code>McpVectorServer</code></td>
-              <td>Federated semantic similarity search across 9 vector databases (pgvector, Milvus, Qdrant, Vespa, Solr, OpenSearch, etc.) with Zero-Trust ACL filtering.</td>
+              <td>Federated semantic similarity search across 9 target vector and search backends (pgvector, Milvus, Qdrant, Vespa, Solr, OpenSearch, Elasticsearch, Luxir, and Hyland OpenArch) with Zero-Trust ACL filtering.</td>
             </tr>
             <tr>
               <td><code>fetchJobTraces</code> &amp; <code>getErrorLogs</code></td>
@@ -330,36 +335,49 @@
           </tbody>
         </table>
 
-        <h2><span class="section-num">04.</span>In-Flight Pre-Embedding Governance: ALLOW, REDACT, DROP</h2>
+        <h2><span class="section-num">04.</span>In-Flight Pre-Embedding Governance Gate (GovernanceGate)</h2>
         <p>
-          A cornerstone of Luis Cabaceira's implementation is the in-flight <strong>Pre-Embedding Governance Gate</strong> (<code>GovernanceGate</code>) in <code>oc-runtime</code>. Unlike traditional search engines that index raw text and attempt post-hoc filtering, OpenCrawling intercepts documents <em>before</em> tokenization and vectorization:
+          A cornerstone of Luis Cabaceira's implementation is the in-flight <strong>Pre-Embedding Governance Gate</strong> (<code>GovernanceGate</code>) in <code>oc-runtime</code>. Unlike traditional search engines that index raw text and attempt post-hoc filtering, OpenCrawling intercepts documents <em>before</em> tokenization and vectorization.
         </p>
+        <p>
+          The gate evaluates configured hooks (<code>PreEmbeddingGovernanceHook</code>) sequentially and returns one of four definitive statuses:
+        </p>
+        <ul>
+          <li><strong><code>APPROVED</code>:</strong> The document passes all hooks unaltered and proceeds to chunking and embedding.</li>
+          <li><strong><code>SANITIZED</code>:</strong> One or more hooks masked sensitive entities in the text or metadata; the sanitized payload proceeds to embedding.</li>
+          <li><strong><code>REJECTED</code>:</strong> A hook explicitly rejected the document (or sanitization left blank content); nothing is embedded. Whether the document's previously indexed version is purged from the vector database depends on the <code>onRejectedUpdate</code> configuration (<code>PURGE</code> vs. <code>RETAIN</code>).</li>
+          <li><strong><code>UNAVAILABLE</code>:</strong> The normative fail-closed safeguard: if a hook throws an unhandled exception or gives no answer, evaluation halts immediately, nothing is embedded, and the earlier indexed version is left untouched.</li>
+        </ul>
 
-        <pre><code>// Document processing pipeline with in-flight Governance Gate
-public Mono&lt;Void&gt; process(IngestionMessage message) {
-    return governanceGate.evaluate(message)
-        .flatMap(decision -&gt; switch (decision.action()) {
-            case ALLOW  -&gt; proceedToExtractionAndEmbedding(message);
-            case REDACT -&gt; {
-                message.setText(decision.sanitizedText());
-                message.addMetadata("ois:governance", decision.auditRecord());
-                yield proceedToExtractionAndEmbedding(message);
-            }
-            case DROP   -&gt; {
-                log.warn("Document {} rejected by governance policy: {}", message.id(), decision.reason());
-                yield publishTombstoneOrAuditTrace(message, decision);
-            }
-        });
+        <pre><code>// Document processing with in-flight GovernanceGate evaluation
+GovernanceGate.Result result = governanceGate.evaluate(
+    documentId, uri, text, metadata, security
+);
+
+switch (result.status()) {
+    case APPROVED, SANITIZED -> {
+        // Embed the approved or sanitized text and metadata
+        proceedToEmbedding(result.text(), result.metadata());
+    }
+    case REJECTED -> {
+        log.warn("Document {} rejected by {}: {}", documentId, result.decidedBy(), result.reason());
+        if (governanceGate.purgeOnReject()) {
+            purgePreviousVersion(documentId);
+        }
+    }
+    case UNAVAILABLE -> {
+        // Fail-closed: hook error or missing answer leaves earlier version intact
+        log.error("Governance unavailable for {}: {}", documentId, result.reason());
+    }
 }</code></pre>
 
         <p>
-          The governance gate records immutable audit findings directly into the document's <code>ois:governance</code> metadata block:
+          When writing the lakehouse migration sidecar (<code>&lt;key&gt;.ois.json</code>), the gate's outcome is recorded in the normative <code>ois:governance</code> metadata block:
         </p>
         <ul>
-          <li><strong><code>decision</code>:</strong> Normative OIS policy outcome (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>).</li>
-          <li><strong><code>redactionCategories</code>:</strong> Specific sensitive entity classes redacted (e.g., <code>EMAIL</code>, <code>SSN</code>, <code>CREDIT_CARD</code>, <code>IBAN</code>, <code>PHONE</code>).</li>
-          <li><strong><code>policyId</code> &amp; <code>evaluatedAt</code>:</strong> ISO 8601 audit timestamp and policy rule identifier.</li>
-          <li><strong>Cryptographic Tamper Protection:</strong> <code>ois:governance</code> and <code>ois:provenance</code> are registered in <code>GovernanceGate.PROTECTED_KEYS</code>, preventing downstream crawlers or transformation hooks from forging policy decisions.</li>
+          <li><strong><code>decision</code>:</strong> Normative OIS policy outcome written to sidecars (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>).</li>
+          <li><strong>PII Masking (<code>PiiMaskingGovernanceHook</code>):</strong> The built-in hook detects three well-formed types: email addresses, payment card numbers (validated with Luhn check digits), and IBANs (validated with MOD 97 check digits). Rather than tokenizing values, it masks them with <code>[REDACTED:&lt;TYPE&gt;]</code> placeholders in text and metadata, recording masked counts (e.g. <code>masked.email</code>, <code>masked.card</code>, <code>masked.iban</code>) in the audit map without storing sensitive data. (SSN and phone number detection can be plugged in via external HTTP governance hooks).</li>
+          <li><strong>Tamper-Proof Protected Keys:</strong> <code>GovernanceGate.PROTECTED_KEYS</code> stops hooks from changing, adding, or removing protected metadata keys. It involves no signatures or hashes: the protected set encompasses <code>ois:source</code>, <code>ois:governance</code>, <code>ois:provenance</code>, and source-level security/ACL keys (such as <code>acl</code>, <code>security</code>, <code>sys_acl</code>, <code>documentId</code>, <code>uri</code>, and <code>lastModified</code>), guaranteeing that downstream hooks cannot forge or alter access permissions and provenance.</li>
         </ul>
 
         <h2><span class="section-num">05.</span>Real-Time BPM &amp; Workflow Event Integration</h2>
@@ -378,8 +396,19 @@ Content-Type: application/json
   "timestamp": "2026-11-12T19:30:00Z"
 }</code></pre>
         <p>
-          Upon receiving a workflow event from <strong>Flowable, Camunda 8 Zeebe, or Alfresco Process Services</strong>, OpenCrawling instantly synthesizes a targeted single-document crawl, updates embeddings in milliseconds, or issues an immediate <code>DELETE</code> tombstone if access permissions were revoked.
+          Upon receiving a workflow event from supported engines—<strong>Flowable</strong> or <strong>Alfresco Process Services</strong>—OpenCrawling processes targeted document ingestions that usually complete in seconds, not milliseconds (in accordance with our Configuration Guide).
         </p>
+        <p>
+          Rather than relying on automatic deletions, an administrator-configured route (matching <code>engine</code>, <code>process</code>, and <code>transition</code>) authoritatively determines whether an event triggers an <code>UPSERT</code> or a <code>DELETE</code>.
+        </p>
+        <p>
+          In keeping with Zero-Trust principles, the BPM event path enforces robust safeguards:
+        </p>
+        <ul>
+          <li><strong>Multi-Scheme Authentication:</strong> Senders authenticate via HMAC signature, a Basic static token (with a secret of at least 32 characters), or an OAuth 2.0 bearer token carrying the <code>oc:events:write</code> scope.</li>
+          <li><strong>Sender-Scoped Deduplication:</strong> Inbound event IDs are tracked and deduplicated per sender to avoid duplicate processing on retried webhooks.</li>
+          <li><strong>Disabled by Default:</strong> The feature is turned off by default (<code>opencrawling.events.bpm.enabled=false</code>), ensuring no unintended exposure.</li>
+        </ul>
 
         <h2><span class="section-num">06.</span>Delegated Multi-Agent Identity (OAuth 2.0 RFC 8693)</h2>
         <p>
