@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step-by-Step Tutorial: Alfresco Content Services, PGVector, Admin UI Audit Reports &amp; Zero-Trust MCP Inspector - OpenCrawling</title>
+  <meta name="description" content="Complete hands-on tutorial: start a local Docker Compose environment with Alfresco Content Services 26.1.0, configure test documents and Zero-Trust ALLOW/DENY ACLs, run an OpenCrawling ingestion job into PGVector, inspect execution telemetry with DuckDB in Reports &amp; Audit, and verify permission-enforced queries using MCP Inspector.">
+  <meta name="keywords" content="OpenCrawling tutorial, Alfresco Content Services, PGVector, Zero-Trust ACL, MCP Server, MCP Inspector, Streamable HTTP, DuckDB, Parquet Audit Reports, Ollama mxbai-embed-large, Docker Compose">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/tutorial-alfresco-pgvector-and-mcp-inspector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/tutorial-alfresco-pgvector-and-mcp-inspector.html">
+  <meta property="og:title" content="Step-by-Step Tutorial: Alfresco Content Services, PGVector, Admin UI Audit Reports &amp; Zero-Trust MCP Inspector">
+  <meta property="og:description" content="Hands-on guide covering Docker startup, Alfresco ACL provisioning, connector &amp; job setup in OpenCrawling Admin UI, DuckDB Reports &amp; Audit queries, and Zero-Trust MCP Inspector testing.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/tutorial-alfresco-pgvector-and-mcp-inspector.html">
+  <meta property="twitter:title" content="Step-by-Step Tutorial: Alfresco Content Services, PGVector, Admin UI Audit Reports &amp; Zero-Trust MCP Inspector">
+  <meta property="twitter:description" content="Hands-on guide covering Docker startup, Alfresco ACL provisioning, connector &amp; job setup in OpenCrawling Admin UI, DuckDB Reports &amp; Audit queries, and Zero-Trust MCP Inspector testing.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310B981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Step-by-Step Tutorial: Alfresco Content Services, PGVector, Admin UI Audit Reports & Zero-Trust MCP Inspector",
+    "description": "Complete hands-on tutorial covering Docker Compose startup, Alfresco ACL setup, OpenCrawling Admin UI connector & job execution into PGVector, DuckDB audit analytics, and Zero-Trust MCP Inspector verification.",
+    "datePublished": "2026-11-13",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/tutorial-alfresco-pgvector-and-mcp-inspector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #10B981, #06B6D4); color: #052E16; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 4.8vw, 2.9rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F1F5F9, #34D399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.12rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #10B981; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.75rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #34D399; font-size: 1rem; margin-right: 0.35rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #6EE7B7; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.28); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #A7F3D0; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.35rem; overflow-x: auto; margin: 1.25rem 0 1.75rem; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #CBD5E1; font-size: 0.865rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(6,182,212,0.06); border-color: #06B6D4; }
+    .callout-box.tip { background: rgba(245,158,11,0.06); border-color: #F59E0B; }
+    .callout-box.success { background: rgba(16,185,129,0.06); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: #34D399; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.82rem; color: #94A3B8; }
+    .flow-node.highlight { border-color: #10B981; color: #D1FAE5; background: rgba(16,185,129,0.1); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #BAE6FD; background: rgba(56,189,248,0.08); font-weight: 600; }
+    .flow-arrow { color: #64748B; font-size: 1rem; }
+    .table-wrapper { overflow-x: auto; max-inline-size: 100%; margin: 1.5rem 0 2rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; }
+    .table-wrapper:focus-visible { outline: 2px solid #34D399; outline-offset: 2px; }
+    .config-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 560px; }
+    .config-table caption { text-align: left; font-size: 0.82rem; font-weight: 600; color: #94A3B8; padding: 0.75rem 1rem; background: rgba(15,23,42,0.8); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .config-table th { background: rgba(16,185,129,0.09); color: #6EE7B7; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(16,185,129,0.22); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table tbody th { font-weight: 600; color: #F1F5F9; padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .config-table tr:last-child td, .config-table tr:last-child th { border-bottom: none; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover { color: #34D399; }
+    .article-cta { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h2 { margin-top: 0; font-size: 1.3rem; font-weight: 700; color: #6EE7B7; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" aria-label="OpenCrawling Home">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-text">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Vision Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to all articles</a>
+    </div>
+
+    <article>
+      <header class="blog-hero">
+        <div class="blog-meta">
+          <span class="blog-category-badge">Hands-On Tutorial</span>
+          <span class="blog-meta-date">&#128197; November 13, 2026</span>
+          <span class="blog-meta-read">&#9201; 14 min read</span>
+        </div>
+        <h1 class="blog-article-title">Step-by-Step Tutorial: Ingesting Alfresco Content Services into PGVector with Zero-Trust ACLs, Audit Reports &amp; MCP Inspector</h1>
+        <p class="blog-article-lead">
+          Want to see Zero-Trust enterprise RAG working locally end to end? In this guided lab you will launch <strong>Alfresco Content Services 26.1.0</strong> alongside the full <strong>OpenCrawling</strong> decoupled stack, provision users, groups, and explicit <code>ALLOW</code> / <code>DENY</code> ACLs, configure and run an ingestion job into <strong>PGVector</strong> via the Admin UI, inspect execution audit manifests with embedded <strong>DuckDB SQL</strong>, and execute permission-filtered MCP queries using <strong>MCP Inspector</strong>.
+        </p>
+      </header>
+
+      <div class="arch-flow-diagram">
+        <div class="flow-title">Tutorial End-to-End Pipeline</div>
+        <div class="flow-nodes">
+          <div class="flow-node">Alfresco 26.1.0 (:8081)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">OpenCrawling Admin UI (:3000)</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">Kafka &bull; Tika 4 &bull; Ollama</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">PGVector (:5432) + DuckDB Reports</div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node accent">MCP Inspector (:8080/mcp)</div>
+        </div>
+      </div>
+
+      <div class="blog-article-body">
+        <h2><span class="section-num">01.</span>Prerequisites &amp; Tutorial Workspace Bundle</h2>
+        <p>
+          Everything required for this walkthrough is bundled under the repository's <a href="https://github.com/opencrawling/opencrawling/tree/main/tutorials" target="_blank" rel="noopener"><code>tutorials/</code></a> folder (including a dedicated Docker Compose stack, sample documents across four permission tiers, JSON connector/job templates, MCP Inspector config files, and automation scripts).
+        </p>
+        <ul>
+          <li><strong>Docker Engine 24+ &amp; Compose v2</strong> (<code>docker compose</code>) with at least <strong>8 GB RAM</strong> allocated (12 GB recommended for running Alfresco, Ollama, Kafka, and PGVector concurrently).</li>
+          <li><strong>Node.js 18+</strong> (with <code>npm</code> / <code>npx</code>) to launch <code>@modelcontextprotocol/inspector</code>.</li>
+          <li><strong><code>curl</code></strong> and <strong><code>jq</code></strong> CLI utilities.</li>
+        </ul>
+
+        <pre tabindex="0"><code>git clone https://github.com/opencrawling/opencrawling.git
+cd opencrawling
+ls -1 tutorials/
+# config/   data/   docker/   mcp/   scripts/   README.md</code></pre>
+
+        <h2><span class="section-num">02.</span>Start the Local Environment with Docker</h2>
+        <p>
+          Launch the self-contained stack defined in <code>tutorials/docker/docker-compose-alfresco-pgvector-mcp.yml</code>. It brings up Alfresco Community 26.1.0 (running with <code>-Dindex.subsystem.name=noindex</code> for fast, low-memory startup in Folder Traversal mode), PostgreSQL + pgvector, Redis Stack, Ollama (automatically pulling <code>mxbai-embed-large</code>), Apache Kafka, all three decoupled OpenCrawling consumers, the Secure MCP Server, and the React Admin UI:
+        </p>
+
+        <pre tabindex="0"><code>./tutorials/scripts/start-env.sh</code></pre>
+
+        <div class="callout-box tip">
+          <span class="callout-icon">&#128161;</span>
+          <p>
+            <strong>Building from local source?</strong> By default, <code>start-env.sh</code> pulls pre-built <code>ghcr.io/opencrawling/*:latest</code> images. Pass <code>BUILD_IMAGES=true ./tutorials/scripts/start-env.sh</code> to compile and build containers directly from your local checkout.
+          </p>
+        </div>
+
+        <div tabindex="0" role="region" aria-labelledby="ports-table-caption" class="table-wrapper">
+          <table class="config-table">
+            <caption id="ports-table-caption">Local endpoints exposed by the tutorial Docker Compose stack</caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">Local Endpoint</th>
+                <th scope="col">Credentials / Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">OpenCrawling Admin UI</th>
+                <td><code>http://localhost:3000</code></td>
+                <td>Connector setup, job execution, Reports &amp; DuckDB SQL</td>
+              </tr>
+              <tr>
+                <th scope="row">OpenCrawling Backend &amp; Swagger UI</th>
+                <td><code>http://localhost:8080/swagger-ui.html</code></td>
+                <td>REST API + AIOps observability</td>
+              </tr>
+              <tr>
+                <th scope="row">OpenCrawling MCP Server</th>
+                <td><code>http://localhost:8080/mcp</code></td>
+                <td>Streamable HTTP endpoint for MCP Inspector</td>
+              </tr>
+              <tr>
+                <th scope="row">Alfresco Content Services</th>
+                <td><code>http://localhost:8081/alfresco/api/-default-/public/alfresco/versions/1</code></td>
+                <td><code>admin</code> / <code>admin</code></td>
+              </tr>
+              <tr>
+                <th scope="row">PGVector Database</th>
+                <td><code>localhost:5432</code></td>
+                <td>DB: <code>opencrawling</code>, User: <code>opencrawling</code>, Password: <code>opencrawling_password</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2><span class="section-num">03.</span>Prepare Test Documents with Zero-Trust Permissions in Alfresco</h2>
+        <p>
+          Now populate Alfresco with three test users (<code>alice</code>, <code>bob</code>, <code>charlie</code>), two groups (<code>GROUP_engineering</code> containing <code>alice</code> and <code>bob</code>; <code>GROUP_finance</code> containing <code>alice</code> and <code>charlie</code>), and four documents under <code>/opencrawling-tutorial</code>. Each folder disables permission inheritance so we can verify public access, group ACLs, broken inheritance, and explicit deny precedence:
+        </p>
+
+        <pre tabindex="0"><code>./tutorials/scripts/provision-alfresco-data.sh</code></pre>
+
+        <div tabindex="0" role="region" aria-labelledby="acl-table-caption" class="table-wrapper">
+          <table class="config-table">
+            <caption id="acl-table-caption">Provisioned Alfresco documents, ACL rules, and normalized OIS security metadata in PGVector</caption>
+            <thead>
+              <tr>
+                <th scope="col">Document Path</th>
+                <th scope="col">Alfresco Permission Rule</th>
+                <th scope="col">PGVector Security Metadata</th>
+                <th scope="col">Who Can Read?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><code>/opencrawling-tutorial/public/company-handbook.txt</code></th>
+                <td><code>GROUP_EVERYONE</code> (<code>ALLOWED</code>)</td>
+                <td><code>read_keys: ["public"]</code></td>
+                <td>Everyone (<code>guest</code>, <code>charlie</code>, <code>bob</code>, <code>alice</code>)</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>/opencrawling-tutorial/finance/q4-financial-forecast.txt</code></th>
+                <td><code>GROUP_finance</code> (<code>ALLOWED</code>, inheritance off)</td>
+                <td><code>read_keys: ["g:group_finance"]</code></td>
+                <td><code>charlie</code>, <code>alice</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>/opencrawling-tutorial/engineering/zero-trust-architecture.txt</code></th>
+                <td><code>GROUP_engineering</code> (<code>ALLOWED</code>) + <code>bob</code> (<code>DENIED</code>)</td>
+                <td><code>read_keys: ["g:group_engineering"]</code>, <code>denied_read: ["user:bob"]</code></td>
+                <td><code>alice</code> only (<code>bob</code> is <strong>blocked</strong> by explicit deny)</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>/opencrawling-tutorial/executive/board-resolution-2026.txt</code></th>
+                <td><code>alice</code> only (<code>ALLOWED</code>, inheritance off)</td>
+                <td><code>read_keys: ["u:alice"]</code></td>
+                <td><code>alice</code> only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Under the hood, the provisioning script invokes Alfresco REST API v1 endpoints (<code>POST /people</code>, <code>POST /groups</code>, <code>POST /groups/{id}/members</code>, <code>POST /nodes/{parentId}/children</code>, <code>PUT /nodes/{nodeId}/content</code>, and <code>PUT /nodes/{nodeId}?include=permissions</code>) and saves the resulting Alfresco Node UUIDs to <code>tutorials/data/.provisioned-nodes.json</code>.
+        </p>
+
+        <h2><span class="section-num">04.</span>Configure Connectors &amp; Execute the Ingestion Job</h2>
+        <p>
+          Open the <strong>OpenCrawling Admin UI</strong> at <code>http://localhost:3000</code> (or automate the exact same REST calls with <code>./tutorials/scripts/configure-opencrawling.sh</code>):
+        </p>
+
+        <ol>
+          <li>
+            <strong>Check Pre-Seeded Connectors:</strong> Under <strong>Connectors</strong>, notice <code>Ollama_Embedding_Default</code> (<code>mxbai-embed-large</code> on the <strong>Transformation</strong> tab) and <code>PGVector_Output</code> (on the <strong>Output</strong> tab) are pre-registered.
+          </li>
+          <li>
+            <strong>Create the Alfresco Repository Connector:</strong> Switch to the <strong>Repository</strong> tab, click <strong>New Connector</strong>, set <strong>Connector Name</strong> to <code>Alfresco_Tutorial</code>, <strong>Connector Class</strong> to <code>Alfresco Content Services Repository</code>, <strong>Alfresco API URL</strong> to <code>http://alfresco:8080/alfresco/api/-default-/public/alfresco/versions/1</code>, <strong>Username / Password</strong> to <code>admin</code> / <code>admin</code>, <strong>Crawl Mode</strong> to <code>Folder Tree Traversal</code>, and <strong>Root Folder Path</strong> to <code>/opencrawling-tutorial</code>. Keep <strong>Include Subfolders Recursively</strong>, <strong>Fetch Binary Content Stream</strong>, and <strong>Include Access Control Lists (ACLs) &amp; Collocated Security</strong> checked. Click <strong>Check Connection</strong> to see <em>Connection Verified &amp; Reliable</em>, then click <strong>Save</strong>.
+          </li>
+          <li>
+            <strong>Create the Ingestion Job:</strong> Open <strong>Job Management</strong> &rarr; <strong>New Pipeline Job</strong>. Set <strong>Job Name</strong> to <code>Alfresco_Tutorial_PGVector_Job</code>, <strong>Repository Connector</strong> to <code>Alfresco_Tutorial</code>, <strong>Output Connector</strong> to <code>PGVector_Output</code>, <strong>Authority Connector</strong> to <code>None (Public Access)</code> (since collocated ACLs are enabled directly on the Alfresco connector), <strong>Path</strong> to <code>/opencrawling-tutorial</code>, <strong>Transformation Connector</strong> to <code>Ollama_Embedding_Default</code>, and <strong>Pipeline Mode</strong> to <code>RAG Mode (Default)</code>. Save the job.
+          </li>
+          <li>
+            <strong>Start the Crawl:</strong> Click the play button (<strong>Start crawl job</strong>) next to <code>Alfresco_Tutorial_PGVector_Job</code> and follow progress in <strong>Real-time Logs</strong> until status becomes <strong>Finished</strong> (<code>4</code> documents).
+          </li>
+        </ol>
+
+        <pre tabindex="0"><code># Inspect indexed chunks and ACL metadata stored in vector_store_1024
+docker exec -i postgres-vector-tutorial psql -U opencrawling -d opencrawling -c "
+SELECT metadata-&gt;&gt;'name' AS file_name,
+       metadata-&gt;'security_read_keys' AS read_keys,
+       metadata-&gt;'security_denied_read' AS denied_read
+FROM vector_store_1024
+ORDER BY file_name;"</code></pre>
+
+        <h2><span class="section-num">05.</span>Inspect Job Execution in Reports &amp; Audit (Admin UI + DuckDB)</h2>
+        <p>
+          In the Admin UI left sidebar, click <strong>Reports &amp; Audit</strong> to open the <strong>Reports &amp; Audit Ledger</strong>:
+        </p>
+        <ul>
+          <li><strong>Execution Summary &amp; KPIs:</strong> Verify <code>Alfresco_Tutorial_PGVector_Job</code> shows status <code>SUCCESS</code>, <code>4</code> total documents, <code>4</code> successful, <code>0</code> failed, <code>4</code> chunks, and <code>400</code> tokens.</li>
+          <li><strong>Document Ledger &amp; Compliance Exports:</strong> Select the execution row to inspect per-document durations and Claim-Check URIs, or download the <strong>CSV Manifest</strong>, Hive-partitioned ZSTD <strong>Parquet File</strong>, and <strong>JSON Summary</strong>.</li>
+          <li><strong>Query with DuckDB:</strong> Click <strong>Query with DuckDB</strong> to open the <em>Serverless Parquet SQL Playground (DuckDB)</em> and click <strong>Execute Query</strong>:</li>
+        </ul>
+
+        <pre tabindex="0"><code>SELECT document_id,
+       source_uri,
+       status,
+       duration_ms,
+       rag_chunk_count,
+       rag_token_count
+FROM read_parquet('/data/reports/**/*.parquet')
+ORDER BY document_id;</code></pre>
+
+        <h2><span class="section-num">06.</span>Install, Configure &amp; Query with MCP Inspector</h2>
+        <p>
+          Next, connect Anthropic's official <strong>MCP Inspector</strong> to OpenCrawling's Streamable HTTP MCP Server to inspect tools, test permission enforcement, and run queries as each persona.
+        </p>
+
+        <h3>Install &amp; Launch MCP Inspector</h3>
+        <p>
+          With Node.js 18+ installed, run MCP Inspector directly with <code>npx</code> (or install globally via <code>npm install -g @modelcontextprotocol/inspector</code>), pointing it at <a href="https://github.com/opencrawling/opencrawling/blob/main/tutorials/mcp/mcp-inspector-config.json" target="_blank" rel="noopener"><code>tutorials/mcp/mcp-inspector-config.json</code></a>:
+        </p>
+
+        <pre tabindex="0"><code>npx @modelcontextprotocol/inspector \
+  --config tutorials/mcp/mcp-inspector-config.json \
+  --server opencrawling-alfresco</code></pre>
+
+        <p>
+          In the MCP Inspector browser UI (typically opened automatically on <code>http://localhost:6274</code> with its session token), verify in the left panel that <strong>Transport Type</strong> is <code>Streamable HTTP</code> and <strong>URL</strong> is <code>http://localhost:8080/mcp</code>, then click <strong>Connect</strong>. Open the <strong>Tools</strong> tab and click <strong>List Tools</strong> to view all <strong>11 tools</strong> (<code>secureVectorSearch</code>, <code>getDocumentContent</code>, <code>listAccessibleSources</code>, <code>openarch_search</code>, <code>openarch_fetch_document</code>, <code>listRepositoryConnectors</code>, <code>exploreRepositoryTree</code>, <code>queryRepositoryDryRun</code>, <code>fetchJobTraces</code>, <code>getErrorLogs</code>, and <code>queryThroughputMetrics</code>).
+        </p>
+
+        <h3>Run Permission-Enforced Queries Across Personas</h3>
+        <p>
+          Copy payloads from <a href="https://github.com/opencrawling/opencrawling/blob/main/tutorials/mcp/sample-queries.json" target="_blank" rel="noopener"><code>tutorials/mcp/sample-queries.json</code></a> into the MCP Inspector <strong>Tools</strong> panel:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Public Access Only (<code>guest</code>):</strong> Call <code>listAccessibleSources</code> with <code>{"userPrincipal":"guest","userRoles":"","dimensions":1024}</code> &rarr; returns only <code>company-handbook.txt</code> (<code>acl: "public"</code>). Pass <code>"dimensions": 1024</code> so only <code>vector_store_1024</code> is enumerated.
+          </li>
+          <li>
+            <strong>Finance Group Access (<code>charlie</code>):</strong> Call <code>secureVectorSearch</code> with <code>{"query":"Q4 operating budget financial forecast","userPrincipal":"charlie","userRoles":"GROUP_finance","maxResults":10,"minScore":0.0}</code> &rarr; returns <code>q4-financial-forecast.txt</code> (notice Alfresco's <code>GROUP_</code> prefix!) while excluding engineering and executive records.
+          </li>
+          <li>
+            <strong>Explicit Deny Precedence (<code>bob</code>):</strong> Call <code>secureVectorSearch</code> with <code>{"query":"zero-trust architecture rotating mTLS certificates","userPrincipal":"bob","userRoles":"GROUP_engineering","maxResults":10,"minScore":0.0}</code> &rarr; even though <code>bob</code> belongs to <code>GROUP_engineering</code>, <code>zero-trust-architecture.txt</code> is blocked and omitted. Calling <code>getDocumentContent</code> directly with the UUID of <code>board-resolution-2026.txt</code> fails closed with <code>Document not found or access denied.</code>
+          </li>
+          <li>
+            <strong>Full Executive + Engineering Access (<code>alice</code>):</strong> Call <code>secureVectorSearch</code> with <code>{"query":"Project Horizon board resolution M&amp;A strategy","userPrincipal":"alice","userRoles":"GROUP_engineering,GROUP_finance","maxResults":5,"minScore":0.0}</code> &rarr; retrieves <code>board-resolution-2026.txt</code>, and <code>getDocumentContent</code> reveals its full unredacted text.
+          </li>
+          <li>
+            <strong>Live Repository Discovery Check:</strong> Call <code>exploreRepositoryTree</code> with <code>{"connector":"Alfresco_Tutorial","userPrincipal":"bob","userRoles":"GROUP_engineering"}</code> vs <code>alice</code> &rarr; <code>bob</code> sees only folders <code>["engineering","public"]</code> and <code>["company-handbook.txt"]</code>, whereas <code>alice</code> sees all 4 folders and all 4 files directly from Alfresco without downloading binaries.
+          </li>
+        </ol>
+
+        <h3>Run Automated End-to-End CLI Verification</h3>
+        <p>
+          You can also execute all PGVector SQL, Reports/DuckDB, and MCP Inspector CLI assertions in one command, and tear down when done:
+        </p>
+
+        <pre tabindex="0"><code># Verify PGVector ACL metadata, Reports API + DuckDB SQL, and all 4 MCP personas
+./tutorials/scripts/verify-tutorial.sh
+
+# Stop containers (pass --clean to remove volumes and provisioned state)
+./tutorials/scripts/stop-env.sh</code></pre>
+
+        <div class="callout-box info">
+          <span class="callout-icon">&#128269;</span>
+          <p>
+            <strong>Key Takeaway:</strong> Whether an AI client runs semantic search (<code>secureVectorSearch</code>), direct document fetch (<code>getDocumentContent</code>), or live folder exploration (<code>exploreRepositoryTree</code>), OpenCrawling evaluates Alfresco ACLs and explicit denies authoritatively on the server side before a single chunk reaches the caller.
+          </p>
+        </div>
+
+        <div class="article-cta">
+          <h2>Explore the Complete Tutorial Resources</h2>
+          <p>Browse all Docker Compose definitions, sample Alfresco datasets, MCP Inspector configs, and verification scripts on GitHub, or read the full reference guide in the OpenCrawling Wiki.</p>
+          <div class="cta-buttons">
+            <a href="https://github.com/opencrawling/opencrawling/wiki/Tutorial-Alfresco-PGVector-and-MCP-Inspector" target="_blank" rel="noopener" class="btn btn-primary">Read Wiki Tutorial &rarr;</a>
+            <a href="https://github.com/opencrawling/opencrawling/tree/main/tutorials" target="_blank" rel="noopener" class="btn btn-secondary">Browse <code>tutorials/</code> on GitHub</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo" width="32" height="32">
+        <span class="brand-text">OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
