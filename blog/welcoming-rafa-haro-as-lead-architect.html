@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Scale &amp; Reliability: Welcoming Rafa Haro as Lead Architect - OpenCrawling</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="OpenCrawling welcomes Rafa Haro—Principal Software Engineer at Elastic, Apache ManifoldCF PMC Member, and Apache Stanbol PMC Member—as Lead Architect, highlighting his distributed Kafka ordering and pipeline resilience contributions.">
+  <meta name="keywords" content="opencrawling, Rafa Haro, rafaharo, lead architect, Elastic, Elasticsearch, Apache ManifoldCF, Apache Stanbol, Kafka, distributed systems, enterprise search, applied AI, NLP, open ingestion standard, OIS">
+  <meta name="author" content="Piergiorgio Lucidi &amp; OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/welcoming-rafa-haro-as-lead-architect.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/welcoming-rafa-haro-as-lead-architect.html">
+  <meta property="og:title" content="Engineering Scale &amp; Reliability: Welcoming Rafa Haro as Lead Architect - OpenCrawling">
+  <meta property="og:description" content="Principal Software Engineer at Elastic and Apache ManifoldCF &amp; Apache Stanbol PMC Member Rafa Haro joins OpenCrawling as Lead Architect, immediately hardening Kafka document ordering, JUnit integration tests, and dead-letter resilience.">
+  <meta property="og:image" content="https://opencrawling.org/assets/blog/welcoming-rafa-haro-banner.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/welcoming-rafa-haro-as-lead-architect.html">
+  <meta property="twitter:title" content="Engineering Scale &amp; Reliability: Welcoming Rafa Haro as Lead Architect - OpenCrawling">
+  <meta property="twitter:description" content="Principal Software Engineer at Elastic and Apache ManifoldCF &amp; Apache Stanbol PMC Member Rafa Haro joins OpenCrawling as Lead Architect, immediately hardening Kafka document ordering, JUnit integration tests, and dead-letter resilience.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/blog/welcoming-rafa-haro-banner.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Engineering Scale & Reliability: Welcoming Rafa Haro as Lead Architect",
+    "description": "OpenCrawling welcomes Rafa Haro—Principal Software Engineer at Elastic, Apache ManifoldCF PMC Member, and Apache Stanbol PMC Member—as Lead Architect, highlighting his distributed Kafka ordering and pipeline resilience contributions.",
+    "datePublished": "2026-11-13",
+    "image": "https://opencrawling.org/assets/blog/welcoming-rafa-haro-banner.png",
+    "author": {
+      "@type": "Person",
+      "name": "Piergiorgio Lucidi"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "OpenCrawling",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://opencrawling.org/assets/logo-without-text-200px.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://opencrawling.org/blog/welcoming-rafa-haro-as-lead-architect.html"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    /* Article Detail Page Specific Styles */
+    .blog-post-wrapper {
+      max-width: 820px;
+      margin: 120px auto 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .blog-post-wrapper :where(a, button, .table-wrapper):focus-visible {
+      outline: 2px solid var(--cyan-color);
+      outline-offset: 3px;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      transition: gap 0.25s ease;
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      gap: 0.75rem;
+      color: var(--cyan-color);
+    }
+    
+    .post-header {
+      margin-bottom: 3rem;
+    }
+    
+    .post-title {
+      font-size: clamp(1.85rem, 1.3rem + 2.5vw, 2.75rem);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+      background: linear-gradient(135deg, var(--text-color) 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .post-banner {
+      margin: 0 0 2.5rem 0;
+      text-align: center;
+    }
+
+    .post-banner img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1200 / 630;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .post-content {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--text-color);
+      overflow-wrap: break-word;
+    }
+    
+    .post-content p {
+      margin-bottom: 1.5rem;
+      text-wrap: pretty;
+    }
+    
+    .post-content h2 {
+      font-size: clamp(1.4rem, 1.15rem + 1.2vw, 1.8rem);
+      line-height: 1.3;
+      margin: 3rem 0 1.5rem 0;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+      text-wrap: balance;
+    }
+    
+    .post-content h3 {
+      font-size: 1.3rem;
+      line-height: 1.35;
+      margin: 2rem 0 1rem 0;
+      color: var(--cyan-color);
+      text-wrap: balance;
+    }
+    
+    .post-content ul, .post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    
+    .post-content li {
+      margin-bottom: 0.65rem;
+    }
+    
+    .post-content pre {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+    
+    .post-content code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 4px;
+      padding: 0.12em 0.4em;
+    }
+
+    .post-content pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+    
+    .post-content blockquote {
+      border-left: 4px solid var(--accent-color);
+      background: rgba(139, 92, 246, 0.05);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+    
+    .post-content blockquote p {
+      margin-bottom: 0;
+    }
+
+    .announcement-box {
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 12px;
+      background: rgba(124, 58, 237, 0.06);
+      padding: 1.5rem;
+      margin: 2.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .announcement-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .announcement-icon {
+      font-size: 2.4rem;
+      flex-shrink: 0;
+    }
+
+    .announcement-text h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-color);
+    }
+
+    .announcement-text p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-inline-size: 100%;
+      margin: 1.75rem 0 2.25rem;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      background: var(--card-bg);
+    }
+
+    .contrib-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      min-width: 560px;
+    }
+
+    .contrib-table caption {
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 0.85rem 1.15rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .contrib-table th {
+      background: rgba(124, 58, 237, 0.1);
+      color: var(--text-color);
+      font-weight: 600;
+      padding: 0.85rem 1.15rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .contrib-table td {
+      padding: 0.8rem 1.15rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+
+    .contrib-table tbody th {
+      font-weight: 600;
+      color: var(--text-color);
+      background: transparent;
+      padding: 0.8rem 1.15rem;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+
+    .contrib-table tr:last-child td,
+    .contrib-table tr:last-child th {
+      border-bottom: none;
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-merged {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .status-review {
+      background: rgba(6, 182, 212, 0.16);
+      color: #38BDF8;
+      border: 1px solid rgba(6, 182, 212, 0.35);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Gradients -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Vision Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" type="button" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-post-wrapper">
+    <a href="../index.html#blog" class="back-link">&larr; Back to Blog</a>
+    
+    <article>
+      <header class="post-header">
+        <h1 class="post-title">Engineering Scale &amp; Reliability: Welcoming Rafa Haro as Lead Architect</h1>
+        <div class="post-meta">
+          <span>By <strong>Piergiorgio Lucidi &amp; OpenCrawling Core Team</strong></span>
+          <span>November 13, 2026</span>
+          <span>6 min read</span>
+        </div>
+      </header>
+
+      <div class="post-content">
+        <div class="post-banner">
+          <img src="../assets/blog/welcoming-rafa-haro-banner.png" alt="Welcoming Rafa Haro as Lead Architect - OpenCrawling" width="1200" height="630" decoding="async">
+        </div>
+
+        <p>
+          As OpenCrawling matures into a production-grade, Zero-Trust platform for enterprise AI data ingestion, every subtle invariant under load matters: per-document message ordering across partitioned Kafka topics, deterministic test execution in CI, and zero-drop failure recovery across downstream vector stores.
+        </p>
+        <p>
+          Today, we are proud to welcome <strong>Rafa Haro</strong> (<a href="https://github.com/rafaharo" target="_blank" rel="noopener noreferrer">@rafaharo</a>) to the OpenCrawling core team as <strong>Lead Architect</strong>!
+        </p>
+
+        <div class="announcement-box">
+          <div class="announcement-icon" aria-hidden="true">&#129309;</div>
+          <div class="announcement-text">
+            <h4>Search Pedigree, Apache Open Source &amp; Pipeline Resilience</h4>
+            <p>Rafa brings 20+ years of experience across distributed systems, search &amp; information retrieval, and applied AI—combining his leadership as <strong>Principal Software Engineer at Elastic</strong> and his Apache Software Foundation stewardship as a <strong>PMC Member for Apache ManifoldCF and Apache Stanbol</strong>.</p>
+          </div>
+        </div>
+
+        <h2>Search Engineering &amp; Apache Open-Source Heritage</h2>
+        <p>
+          Few engineers bring as direct a lineage to the exact problems OpenCrawling solves as Rafa Haro:
+        </p>
+        <ul>
+          <li>
+            <strong>Principal Software Engineer at Elastic</strong>: Building large-scale distributed search, indexing, and retrieval infrastructure around Elasticsearch and Apache Lucene, alongside production-grade cloud platforms across AWS and GCP using Kubernetes, Terraform, and CDK.
+          </li>
+          <li>
+            <strong>PMC Member for <a href="https://manifoldcf.apache.org/" target="_blank" rel="noopener noreferrer">Apache ManifoldCF</a></strong>: Apache ManifoldCF provides an open-source framework for connecting source content repositories—such as Microsoft SharePoint and EMC Documentum—to target repositories or search indexes such as Apache Solr, OpenSearchServer, and Elasticsearch, while defining a security model that allows target repositories to enforce source-repository security policies. Having a ManifoldCF PMC veteran alongside fellow ManifoldCF PMC member Piergiorgio Lucidi strengthens OpenCrawling's Zero-Trust connector DNA—and naturally complements our dedicated <a href="introducing-apache-manifoldcf-migrator.html">Apache ManifoldCF Migrator</a>.
+          </li>
+          <li>
+            <strong>PMC Member &amp; Committer for <a href="https://stanbol.apache.org/" target="_blank" rel="noopener noreferrer">Apache Stanbol</a></strong>: Deep hands-on experience in semantic content enhancement, NLP pipelines, knowledge extraction, and ASF community-led architecture.
+          </li>
+          <li>
+            <strong>20+ Years Across Data Pipelines &amp; Applied AI</strong>: Designing high-throughput data and event pipelines with Apache Spark, Apache Kafka, and Python alongside modern ML/NLP workflows spanning Transformers, Sentence Embeddings, and AI-driven automation.
+          </li>
+        </ul>
+
+        <h2>First Contributions Already Landed in OpenCrawling</h2>
+        <p>
+          Rather than waiting to settle in, Rafa immediately dove into the core runtime and streaming pipeline—identifying subtle distributed systems edge cases and delivering clean, thoroughly tested engineering fixes:
+        </p>
+
+        <div class="table-wrapper" tabindex="0">
+          <table class="contrib-table">
+            <caption>Rafa Haro's Initial Contributions to <code>opencrawling/opencrawling</code></caption>
+            <thead>
+              <tr>
+                <th scope="col">Pull Request</th>
+                <th scope="col">Status</th>
+                <th scope="col">Architectural Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><a href="https://github.com/opencrawling/opencrawling/pull/307" target="_blank" rel="noopener noreferrer">PR #307</a></th>
+                <td><span class="status-pill status-merged">Merged</span></td>
+                <td>Keyed <code>opencrawling-chunks</code> and <code>opencrawling-embedded</code> Kafka messages by <code>documentId</code> so chunks and <code>DELETE</code> tombstones never reorder across partitions.</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="https://github.com/opencrawling/opencrawling/pull/310" target="_blank" rel="noopener noreferrer">PR #310</a></th>
+                <td><span class="status-pill status-merged">Merged</span></td>
+                <td>Fixed Spring component scan leakage and gRPC push port collisions so the full <code>oc-runtime</code> unit and JUnit IT suite runs cleanly in one JVM.</td>
+              </tr>
+              <tr>
+                <th scope="row"><a href="https://github.com/opencrawling/opencrawling/pull/312" target="_blank" rel="noopener noreferrer">PR #312</a></th>
+                <td><span class="status-pill status-review">In Review</span></td>
+                <td>Replaced silent exception swallowing with exponential back-off retries and <code>&lt;topic&gt;.DLT</code> dead-letter topics across ingestion, embedding, and store writers.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1. Eliminating Out-of-Order Tombstone Races Across Kafka Partitions (<a href="https://github.com/opencrawling/opencrawling/pull/307" target="_blank" rel="noopener noreferrer">PR #307</a>)</h3>
+        <p>
+          In decoupled deployments, OpenCrawling routes extracted text and embeddings across partitioned Kafka topics (<code>opencrawling-chunks</code> and <code>opencrawling-embedded</code>). Previously, chunk <code>UPSERT</code> messages were keyed by <code>chunkId</code> while deletion tombstones (<code>DocumentAction.DELETE</code>) were keyed by <code>documentId</code>. Across 3 partitions, chunks and deletes for the same document could land on different partitions with no ordering guarantee between them—meaning a slow consumer or rapid recrawl/delete sequence could apply the <code>DELETE</code> first and re-index an earlier chunk afterward, resurrecting a deleted document with its old permissions.
+        </p>
+        <p>
+          Rafa introduced a canonical <code>partitionKey()</code> method on <code>DocumentChunkMessage</code> and <code>DocumentEmbeddedMessage</code> in <code>oc-core</code> (returning <code>documentId</code> with a safe <code>chunkId</code> fallback without altering JSON wire payloads) and updated <code>IngestionConsumer</code>, <code>EmbeddingConsumer</code>, and <code>SeaTunnelOutputConnector</code> to publish every chunk and <code>DELETE</code> under the document's key. Every operation for a document now stays strictly ordered on a single partition, verified by new unit tests (<code>MessagePartitionKeyTest</code>, <code>IngestionConsumerTest</code>, <code>SeaTunnelOutputConnectorTest</code>) and the decoupled end-to-end suites.
+        </p>
+
+        <h3>2. Restoring Single-JVM JUnit Integration Tests in <code>oc-runtime</code> (<a href="https://github.com/opencrawling/opencrawling/pull/310" target="_blank" rel="noopener noreferrer">PR #310</a>)</h3>
+        <p>
+          When running the full <code>mvn verify -pl oc-runtime -DskipITs=false</code> suite, Spring integration tests were failing to start due to two subtle test-infrastructure collisions: <code>IdentityTestApplication</code> and its nested <code>Endpoints</code> stand-in leaked into <code>OpenCrawlingApplication</code>'s component scan (creating duplicate <code>McpVectorSearchBackend</code> beans and duplicate OIS ingest endpoint mappings), while <code>GrpcPushServerManager</code> kept fixed port <code>9096</code> bound across cached test contexts.
+        </p>
+        <p>
+          By annotating <code>IdentityTestApplication</code> and <code>Endpoints</code> with <code>@TestComponent</code> and configuring free ephemeral gRPC ports (<code>opencrawling.connector.grpc-push.port=0</code> and <code>spring.grpc.server.port=0</code>) across <code>OpenCrawlingIT</code>, <code>RecrawlAndDeleteIT</code>, <code>OisIngestIT</code>, and <code>IcebergConnectorIT</code>, Rafa restored clean single-JVM execution across 707 unit tests, 10 HTTP identity tests, and all 7 runtime integration tests.
+        </p>
+
+        <h3>3. Zero-Drop Resilience: Back-Off Retries &amp; Dead-Letter Topics (<a href="https://github.com/opencrawling/opencrawling/pull/312" target="_blank" rel="noopener noreferrer">PR #312</a>)</h3>
+        <p>
+          Building directly on per-document ordering, Rafa also opened <a href="https://github.com/opencrawling/opencrawling/pull/312" target="_blank" rel="noopener noreferrer">PR #312</a> (currently in review) to ensure failed Kafka records are never silently dropped during transient model-server restarts or vector-store outages. The change pairs a unified <code>DefaultErrorHandler</code> with exponential back-off (configured via <code>opencrawling.kafka.retry.*</code> across <code>oc-runtime</code> and <code>oc-embedding-service</code>) and a <code>DeadLetterPublishingRecoverer</code> writing exhausted failures—as well as undeserializable payloads wrapped by <code>ErrorHandlingDeserializer</code>—to <code>opencrawling-documents.DLT</code>, <code>opencrawling-chunks.DLT</code>, and <code>opencrawling-embedded.DLT</code>.
+        </p>
+        <p>
+          Across the pipeline, <code>IngestionConsumer</code>, <code>EmbeddingConsumer</code>, and 8 vector and search output consumers (pgvector, Qdrant, Milvus, Vespa, Apache Solr, OpenSearch 2.x/3.x, and Luxir) now rethrow failures cleanly instead of logging and committing offsets, verified by <code>KafkaConfigTest</code>, per-consumer failure tests, and a real Kafka + pgvector <code>DeadLetterIT</code> integration test.
+        </p>
+
+        <h2>Looking Ahead Together</h2>
+        <p>
+          From distributed search architecture and Apache ManifoldCF security models to Applied AI pipelines and production cloud operations, Rafa's combination of deep engineering rigor and pragmatic open-source mentorship strengthens every layer of OpenCrawling and the <a href="../index.html#standard">Open Ingestion Standard (OIS)</a>. Having fellow Apache ManifoldCF PMC members collaborating alongside our enterprise search, ECM, and stream-processing architects sets an exciting foundation for what comes next.
+        </p>
+
+        <h2>Connect with Rafa Haro</h2>
+        <p>
+          Explore Rafa's profile on our <a href="../team.html">Team Page</a>, follow his contributions on <a href="https://github.com/rafaharo" target="_blank" rel="noopener noreferrer">GitHub (@rafaharo)</a>, connect with him on <a href="https://www.linkedin.com/in/rafaelharo/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, or join the conversation in the <a href="https://join.slack.com/t/opencrawling/shared_invite/zt-43r2anb6q-YLoBsOrxCCcBWU5Up3P1rw" target="_blank" rel="noopener noreferrer">OpenCrawling Slack Community</a>.
+        </p>
+      </div>
+
+      <div class="blog-nav-bar">
+        <a href="tutorial-alfresco-pgvector-and-mcp-inspector.html" class="blog-nav-btn" title="Step-by-Step Tutorial: Alfresco Content Services, PGVector, Admin UI Audit Reports &amp; Zero-Trust MCP Inspector">
+          &larr; Previous Article
+        </a>
+        <a href="../index.html#blog" class="blog-nav-btn">
+          All Articles
+        </a>
+        <a href="introducing-apache-manifoldcf-migrator.html" class="blog-nav-btn" title="Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling">
+          Related: ManifoldCF Migrator &rarr;
+        </a>
+      </div>
+
+      <section class="related-articles-section">
+        <h3 class="related-articles-heading">Continue Reading</h3>
+        <div class="related-articles-grid">
+          <a href="introducing-apache-manifoldcf-migrator.html" class="related-card">
+            <span class="related-card-badge">Migration</span>
+            <h4 class="related-card-title">Migrating Enterprise Crawler Workloads: Announcing the Apache ManifoldCF Migrator in OpenCrawling</h4>
+            <span class="related-card-date">September 21, 2026</span>
+          </a>
+          <a href="introducing-elasticsearch-output-connector.html" class="related-card">
+            <span class="related-card-badge">Connector</span>
+            <h4 class="related-card-title">Dense Vector Search, Quantized HNSW &amp; Zero-Trust kNN Pre-Filtering: Announcing the Elasticsearch 8.x &amp; 9.x Output Connector</h4>
+            <span class="related-card-date">November 9, 2026</span>
+          </a>
+          <a href="welcoming-maurizio-turatti-as-strategy-and-enterprise-architecture-advisor.html" class="related-card">
+            <span class="related-card-badge">Team &amp; Advisory</span>
+            <h4 class="related-card-title">Strategic Direction: Welcoming Maurizio Turatti as Strategy &amp; Enterprise Architecture Advisor</h4>
+            <span class="related-card-date">October 18, 2026</span>
+          </a>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo" width="32" height="32">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
