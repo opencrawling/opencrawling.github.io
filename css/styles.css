@@ -1551,6 +1551,213 @@
   html.light .article-cta h3 {
     color: #4338CA !important;
   }
+
+  /* Blog prose links (accessible contrast across light & dark themes) */
+  :where(.blog-article-body, .blog-article-lead, .post-content, .tribute-card) a:not([class*="btn"]):not(.back-link):not(.related-card):not(.brand) {
+    color: light-dark(#4338CA, #7DD3FC);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  :where(.blog-article-body, .blog-article-lead, .post-content, .tribute-card) a:not([class*="btn"]):not(.back-link):not(.related-card):not(.brand):hover {
+    color: light-dark(#312E81, #BAE6FD);
+  }
+
+  /* Tribute cards (Architectural Leadership callouts) */
+  html.light .tribute-card {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.07), rgba(6, 182, 212, 0.05)) !important;
+    border-color: rgba(109, 40, 217, 0.28) !important;
+  }
+
+  html.light .tribute-title h3,
+  html.light .tribute-card strong {
+    color: #0F172A !important;
+  }
+
+  html.light .tribute-title p {
+    color: #5B21B6 !important;
+  }
+
+  html.light .tribute-body {
+    color: #334155 !important;
+  }
+
+  /* Comparison & Roadmap cards inside blog articles */
+  html.light .comp-card {
+    background: #FFFFFF !important;
+    border-color: rgba(15, 23, 42, 0.14) !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  }
+
+  html.light .comp-card.active {
+    background: rgba(99, 102, 241, 0.05) !important;
+    border-color: rgba(79, 70, 229, 0.4) !important;
+  }
+
+  html.light .comp-card h4,
+  html.light .comp-card strong {
+    color: #0F172A !important;
+  }
+
+  html.light .comp-card p,
+  html.light .comp-card li {
+    color: #334155 !important;
+  }
+
+  html.light .roadmap-item {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(15, 23, 42, 0.14) !important;
+  }
+
+  html.light .roadmap-status.status-completed {
+    color: #047857 !important;
+    background: rgba(16, 185, 129, 0.12) !important;
+  }
+
+  html.light .roadmap-status.status-discussion {
+    color: #0E7490 !important;
+    background: rgba(6, 182, 212, 0.12) !important;
+  }
+
+  html.light .roadmap-status.status-planned {
+    color: #6D28D9 !important;
+    background: rgba(139, 92, 246, 0.12) !important;
+  }
+
+  /* Blog tables (tools-table & config-table extras) */
+  html.light .tools-table th {
+    background: rgba(109, 40, 217, 0.08) !important;
+    color: #5B21B6 !important;
+    border-bottom-color: rgba(109, 40, 217, 0.25) !important;
+  }
+
+  html.light .tools-table td {
+    color: #334155 !important;
+    border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+  }
+
+  html.light .config-table tbody th {
+    color: #0F172A !important;
+    border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+  }
+
+  html.light .config-table caption {
+    background: rgba(15, 23, 42, 0.04) !important;
+    color: #334155 !important;
+    border-bottom-color: rgba(15, 23, 42, 0.1) !important;
+  }
+
+  html.light .table-wrapper {
+    border-color: rgba(15, 23, 42, 0.14) !important;
+  }
+
+  html.light .post-content h3 {
+    color: #0E7490 !important;
+  }
+
+  html.light .back-link,
+  html.light .blog-badge:not(.badge-new),
+  html.light .related-card-badge,
+  html.light .site-footer a {
+    color: #6D28D9 !important;
+  }
+
+  /* Stat cards, pills, status badges & API method badges in blog articles */
+  html.light .stat-card {
+    background: #FFFFFF !important;
+    border-color: rgba(15, 23, 42, 0.14) !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  }
+
+  html.light .stat-number {
+    color: #047857 !important;
+  }
+
+  html.light .stat-pill {
+    background: #F1F5F9 !important;
+    border-color: rgba(15, 23, 42, 0.16) !important;
+    color: #0F172A !important;
+  }
+
+  html.light .status-merged {
+    background: rgba(16, 185, 129, 0.12) !important;
+    color: #047857 !important;
+    border-color: rgba(4, 120, 87, 0.35) !important;
+  }
+
+  html.light .status-review {
+    background: rgba(6, 182, 212, 0.12) !important;
+    color: #0369A1 !important;
+    border-color: rgba(3, 105, 161, 0.35) !important;
+  }
+
+  html.light .endpoint-badge.badge-get,
+  html.light .rpc-badge.badge-unary {
+    background: rgba(14, 116, 144, 0.1) !important;
+    color: #0369A1 !important;
+    border-color: rgba(3, 105, 161, 0.3) !important;
+  }
+
+  html.light .endpoint-badge.badge-post,
+  html.light .rpc-badge.badge-ping {
+    background: rgba(21, 128, 61, 0.1) !important;
+    color: #166534 !important;
+    border-color: rgba(22, 101, 52, 0.3) !important;
+  }
+
+  html.light .endpoint-badge.badge-put {
+    background: rgba(180, 83, 9, 0.1) !important;
+    color: #92400E !important;
+    border-color: rgba(146, 64, 14, 0.3) !important;
+  }
+
+  html.light .endpoint-badge.badge-del {
+    background: rgba(185, 28, 28, 0.1) !important;
+    color: #B91C1C !important;
+    border-color: rgba(185, 28, 28, 0.3) !important;
+  }
+
+  html.light .rpc-badge.badge-stream {
+    background: rgba(29, 78, 216, 0.1) !important;
+    color: #1D4ED8 !important;
+    border-color: rgba(29, 78, 216, 0.3) !important;
+  }
+
+  html.light .rpc-badge.badge-bidi {
+    background: rgba(109, 40, 217, 0.1) !important;
+    color: #6D28D9 !important;
+    border-color: rgba(109, 40, 217, 0.3) !important;
+  }
+
+  /* Callouts, cyan/accent flow nodes & dark-themed Mermaid containers */
+  html.light .callout-box p {
+    color: #334155 !important;
+  }
+
+  html.light .callout-box strong {
+    color: #0F172A !important;
+  }
+
+  html.light .arch-flow-diagram .flow-node.accent {
+    color: #155E75 !important;
+  }
+
+  html.light .arch-flow-diagram .flow-node.cyan {
+    border-color: #0E7490 !important;
+    color: #155E75 !important;
+    background: rgba(6, 182, 212, 0.1) !important;
+  }
+
+  html.light .arch-flow-diagram .flow-arrow {
+    color: #475569 !important;
+  }
+
+  html.light .mermaid {
+    color-scheme: dark;
+    background: #0B1120 !important;
+    color: #E2E8F0 !important;
+    border-color: rgba(15, 23, 42, 0.2) !important;
+  }
   
   /* Open Ingestion Standard (OIS) Section */
   .standard-section {

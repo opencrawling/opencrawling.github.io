@@ -31,7 +31,7 @@
 
     --zt-text: light-dark(#0f172a, #f1f5f9);
     --zt-text-secondary: light-dark(#475569, #94a3b8);
-    --zt-text-muted: light-dark(#64748b, #94a3b8);
+    --zt-text-muted: light-dark(#475569, #94a3b8);
     --zt-focus-ring: light-dark(#4f46e5, #38bdf8);
 
     /* Flow badge fills (all >= 4.5:1 with #ffffff numeral) */

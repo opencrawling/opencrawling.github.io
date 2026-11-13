@@ -170,7 +170,7 @@
     <article class="blog-article-body">
       <h2><span class="section-num">1. </span>Beyond Polling: The Case for Binary Push Ingestion</h2>
       <p>
-        Earlier this year, we introduced OpenCrawling's <a href="introducing-grpc-internal-transport.html" style="color: #22D3EE; text-decoration: underline;">gRPC Internal Transport Layer (<code>oc-grpc-api</code>)</a> to accelerate inter-service communication between the crawler core and decoupled workers. Immediately, enterprise architects asked the natural follow-up question: <em>"Can our external event producers push documents directly into OpenCrawling over gRPC with the same binary efficiency?"</em>
+        Earlier this year, we introduced OpenCrawling's <a href="introducing-grpc-internal-transport.html">gRPC Internal Transport Layer (<code>oc-grpc-api</code>)</a> to accelerate inter-service communication between the crawler core and decoupled workers. Immediately, enterprise architects asked the natural follow-up question: <em>"Can our external event producers push documents directly into OpenCrawling over gRPC with the same binary efficiency?"</em>
       </p>
       <p>
         In large-scale production environments, waiting for a 15-minute or hourly polling window is often too slow—and pushing multi-megabyte binary files encoded in Base64 over HTTP/1.1 JSON REST endpoints introduces severe serialization overhead:
@@ -221,7 +221,7 @@
 
       <h3>The Canonical Protobuf v3 Contract (<code>ois_push_service.proto</code>)</h3>
       <p>
-        The contract translates the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener" style="color: #22D3EE; text-decoration: underline;">Open Ingestion Standard (OIS)</a> directly into Protocol Buffers v3:
+        The contract translates the <a href="https://github.com/opencrawling/open-ingestion-standard" target="_blank" rel="noopener">Open Ingestion Standard (OIS)</a> directly into Protocol Buffers v3:
       </p>
 
       <pre><code>syntax = "proto3";

@@ -76,9 +76,9 @@
       gap: 0.5rem;
       padding: 0.4rem 1rem;
       border-radius: 30px;
-      background: rgba(139, 92, 246, 0.12);
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      color: var(--accent-color);
+      background: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.12));
+      border: 1px solid light-dark(rgba(109, 40, 217, 0.28), rgba(139, 92, 246, 0.3));
+      color: light-dark(#6D28D9, #C4B5FD);
       font-size: 0.85rem;
       font-weight: 600;
       letter-spacing: 0.05em;
@@ -93,7 +93,7 @@
       margin-bottom: 1.5rem;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      background: linear-gradient(135deg, var(--text-color) 20%, var(--accent-color) 70%, var(--cyan-color) 100%);
+      background: linear-gradient(135deg, var(--text-color) 20%, light-dark(#6D28D9, var(--accent-color)) 70%, light-dark(#0E7490, var(--cyan-color)) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -139,18 +139,19 @@
       gap: 0.6rem;
       padding: 0.85rem 1.8rem;
       border-radius: 12px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.9), rgba(15, 23, 42, 0.6));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.16), var(--card-border));
       color: var(--text-color);
       font-weight: 600;
       text-decoration: none;
+      box-shadow: light-dark(0 2px 10px rgba(15, 23, 42, 0.05), none);
       transition: all 0.25s ease;
     }
 
     .btn-secondary:hover {
-      border-color: var(--accent-color);
-      background: rgba(139, 92, 246, 0.1);
-      color: var(--accent-color);
+      border-color: light-dark(#6D28D9, var(--accent-color));
+      background: light-dark(rgba(109, 40, 217, 0.08), rgba(139, 92, 246, 0.1));
+      color: light-dark(#6D28D9, var(--accent-color));
     }
 
     /* Feature Grid */
@@ -162,31 +163,32 @@
     }
 
     .mcp-card {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.92), rgba(15, 23, 42, 0.5));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.12), var(--card-border));
       border-radius: 16px;
       padding: 2.2rem;
+      box-shadow: light-dark(0 4px 20px rgba(15, 23, 42, 0.06), none);
       transition: all 0.3s ease;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
     .mcp-card:hover {
-      border-color: rgba(139, 92, 246, 0.4);
+      border-color: light-dark(rgba(109, 40, 217, 0.38), rgba(139, 92, 246, 0.4));
       transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: light-dark(0 12px 30px rgba(15, 23, 42, 0.12), 0 12px 30px rgba(0, 0, 0, 0.3));
     }
 
     .mcp-card-icon {
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: rgba(139, 92, 246, 0.12);
-      border: 1px solid rgba(139, 92, 246, 0.25);
+      background: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.12));
+      border: 1px solid light-dark(rgba(109, 40, 217, 0.25), rgba(139, 92, 246, 0.25));
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--accent-color);
+      color: light-dark(#6D28D9, var(--accent-color));
       margin-bottom: 1.5rem;
     }
 
@@ -199,7 +201,7 @@
 
     .mcp-card p {
       font-size: 0.98rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       line-height: 1.6;
     }
 
@@ -226,8 +228,10 @@
     }
 
     .mermaid-box {
-      background: rgba(7, 9, 14, 0.6);
-      border: 1px solid var(--card-border);
+      color-scheme: dark;
+      background: #07090E;
+      color: #F1F5F9;
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.18), var(--card-border));
       border-radius: 16px;
       padding: 2.5rem 1rem;
       display: flex;
@@ -237,10 +241,11 @@
 
     /* Matrix Table */
     .matrix-box {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.92), rgba(15, 23, 42, 0.5));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.12), var(--card-border));
       border-radius: 16px;
       padding: 2rem;
+      box-shadow: light-dark(0 4px 20px rgba(15, 23, 42, 0.06), none);
       backdrop-filter: blur(12px);
       overflow-x: auto;
       margin-bottom: 5rem;
@@ -255,17 +260,17 @@
     .matrix-table th, .matrix-table td {
       padding: 0.9rem 1.1rem;
       text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid light-dark(rgba(15, 23, 42, 0.1), rgba(255, 255, 255, 0.06));
     }
 
     .matrix-table th {
       color: var(--text-color);
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.03);
+      background: light-dark(rgba(15, 23, 42, 0.04), rgba(255, 255, 255, 0.03));
     }
 
     .matrix-table td {
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
 
     .store-badge {
@@ -275,9 +280,9 @@
       font-weight: 600;
       padding: 0.2rem 0.55rem;
       border-radius: 6px;
-      background: rgba(139, 92, 246, 0.15);
-      color: var(--accent-color);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.15));
+      color: light-dark(#6D28D9, #C4B5FD);
+      border: 1px solid light-dark(rgba(109, 40, 217, 0.28), rgba(139, 92, 246, 0.3));
     }
 
     /* Tool Reference Cards */
@@ -289,10 +294,11 @@
     }
 
     .tool-spec-card {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.92), rgba(15, 23, 42, 0.5));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.12), var(--card-border));
       border-radius: 16px;
       padding: 2rem;
+      box-shadow: light-dark(0 4px 20px rgba(15, 23, 42, 0.06), none);
       backdrop-filter: blur(12px);
     }
 
@@ -303,7 +309,7 @@
       gap: 1rem;
       flex-wrap: wrap;
       margin-bottom: 1.2rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid light-dark(rgba(15, 23, 42, 0.1), var(--card-border));
       padding-bottom: 1rem;
     }
 
@@ -317,7 +323,7 @@
       font-family: var(--font-mono);
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--cyan-color);
+      color: light-dark(#0E7490, var(--cyan-color));
     }
 
     .tool-badge {
@@ -325,51 +331,54 @@
       font-weight: 600;
       padding: 0.25rem 0.6rem;
       border-radius: 6px;
-      background: rgba(6, 182, 212, 0.15);
-      color: var(--cyan-color);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: light-dark(rgba(14, 116, 144, 0.1), rgba(6, 182, 212, 0.15));
+      color: light-dark(#0E7490, var(--cyan-color));
+      border: 1px solid light-dark(rgba(14, 116, 144, 0.3), rgba(6, 182, 212, 0.3));
       text-transform: uppercase;
     }
 
     .tool-badge-vespa {
-      background: rgba(234, 88, 12, 0.15);
-      color: #FB923C;
-      border: 1px solid rgba(234, 88, 12, 0.3);
+      background: light-dark(rgba(194, 65, 12, 0.1), rgba(234, 88, 12, 0.15));
+      color: light-dark(#9A3412, #FB923C);
+      border: 1px solid light-dark(rgba(154, 52, 18, 0.3), rgba(234, 88, 12, 0.3));
     }
 
     .tool-badge-aiops {
-      background: rgba(168, 85, 247, 0.15);
-      color: #C084FC;
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: light-dark(rgba(109, 40, 217, 0.1), rgba(168, 85, 247, 0.15));
+      color: light-dark(#6D28D9, #C084FC);
+      border: 1px solid light-dark(rgba(109, 40, 217, 0.3), rgba(168, 85, 247, 0.3));
     }
 
     .tool-badge-dynamic {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34D399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: light-dark(rgba(4, 120, 87, 0.1), rgba(16, 185, 129, 0.15));
+      color: light-dark(#047857, #34D399);
+      border: 1px solid light-dark(rgba(4, 120, 87, 0.3), rgba(16, 185, 129, 0.3));
     }
 
     .tool-badge-discovery {
-      background: rgba(245, 158, 11, 0.15);
-      color: #FBBF24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: light-dark(rgba(180, 83, 9, 0.1), rgba(245, 158, 11, 0.15));
+      color: light-dark(#92400E, #FBBF24);
+      border: 1px solid light-dark(rgba(146, 64, 14, 0.3), rgba(245, 158, 11, 0.3));
     }
 
     .tool-badge-sidecar {
-      background: rgba(59, 130, 246, 0.15);
-      color: #60A5FA;
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: light-dark(rgba(29, 78, 216, 0.1), rgba(59, 130, 246, 0.15));
+      color: light-dark(#1D4ED8, #60A5FA);
+      border: 1px solid light-dark(rgba(29, 78, 216, 0.3), rgba(59, 130, 246, 0.3));
     }
 
     .tool-badge-iceberg {
-      background: rgba(6, 182, 212, 0.15);
-      color: #22D3EE;
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: light-dark(rgba(14, 116, 144, 0.1), rgba(6, 182, 212, 0.15));
+      color: light-dark(#0E7490, #22D3EE);
+      border: 1px solid light-dark(rgba(14, 116, 144, 0.3), rgba(6, 182, 212, 0.3));
     }
 
     .mcp-announcement-banner {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
-      border: 1px solid rgba(139, 92, 246, 0.35);
+      background: light-dark(
+        linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(14, 116, 144, 0.08)),
+        linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15))
+      );
+      border: 1px solid light-dark(rgba(109, 40, 217, 0.28), rgba(139, 92, 246, 0.35));
       border-radius: 16px;
       padding: 1.5rem 2rem;
       margin-bottom: 3.5rem;
@@ -400,13 +409,13 @@
 
     .mcp-announcement-content p {
       font-size: 0.95rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       margin: 0;
       line-height: 1.5;
     }
 
     .mcp-announcement-content a {
-      color: var(--cyan-color);
+      color: light-dark(#0E7490, var(--cyan-color));
       font-weight: 600;
       text-decoration: underline;
       text-underline-offset: 3px;
@@ -422,22 +431,22 @@
     .params-table th, .params-table td {
       padding: 0.75rem 1rem;
       text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid light-dark(rgba(15, 23, 42, 0.1), rgba(255, 255, 255, 0.05));
     }
 
     .params-table th {
       color: var(--text-color);
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.02);
+      background: light-dark(rgba(15, 23, 42, 0.04), rgba(255, 255, 255, 0.02));
     }
 
     .params-table td {
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
 
     .param-name {
       font-family: var(--font-mono);
-      color: var(--accent-color);
+      color: light-dark(#6D28D9, var(--accent-color));
       font-weight: 500;
     }
 
@@ -449,22 +458,23 @@
     }
 
     .req-yes {
-      background: rgba(239, 68, 68, 0.15);
-      color: #F87171;
+      background: light-dark(rgba(185, 28, 28, 0.1), rgba(239, 68, 68, 0.15));
+      color: light-dark(#B91C1C, #F87171);
     }
 
     .req-no {
-      background: rgba(156, 163, 175, 0.15);
-      color: #9CA3AF;
+      background: light-dark(rgba(71, 85, 105, 0.1), rgba(156, 163, 175, 0.15));
+      color: light-dark(#475569, #9CA3AF);
     }
 
     /* Decoupled Test Suite */
     .test-suite-card {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.92), rgba(15, 23, 42, 0.5));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.12), var(--card-border));
       border-radius: 16px;
       padding: 2.2rem;
       margin-bottom: 5rem;
+      box-shadow: light-dark(0 4px 20px rgba(15, 23, 42, 0.06), none);
       backdrop-filter: blur(12px);
     }
 
@@ -476,8 +486,8 @@
     }
 
     .test-step-item {
-      background: rgba(7, 9, 14, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: light-dark(#F8FAFC, rgba(7, 9, 14, 0.6));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.1), rgba(255, 255, 255, 0.06));
       border-radius: 10px;
       padding: 1rem 1.2rem;
     }
@@ -485,7 +495,7 @@
     .test-step-num {
       font-family: var(--font-mono);
       font-size: 0.75rem;
-      color: var(--cyan-color);
+      color: light-dark(#0E7490, var(--cyan-color));
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -501,22 +511,23 @@
 
     .test-step-desc {
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       line-height: 1.5;
     }
 
     /* Client Setup Tabs */
     .setup-box {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--card-border);
+      background: light-dark(rgba(255, 255, 255, 0.92), rgba(15, 23, 42, 0.5));
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.12), var(--card-border));
       border-radius: 16px;
       padding: 2rem;
+      box-shadow: light-dark(0 4px 20px rgba(15, 23, 42, 0.06), none);
     }
 
     .setup-tabs {
       display: flex;
       gap: 0.75rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid light-dark(rgba(15, 23, 42, 0.1), var(--card-border));
       padding-bottom: 1rem;
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
@@ -539,9 +550,9 @@
     }
 
     .setup-tab-btn.active {
-      background: rgba(139, 92, 246, 0.15);
-      border-color: rgba(139, 92, 246, 0.4);
-      color: var(--accent-color);
+      background: light-dark(rgba(109, 40, 217, 0.1), rgba(139, 92, 246, 0.15));
+      border-color: light-dark(rgba(109, 40, 217, 0.35), rgba(139, 92, 246, 0.4));
+      color: light-dark(#6D28D9, #C4B5FD);
     }
 
     .setup-content {
@@ -558,8 +569,9 @@
     }
 
     .code-block-wrapper pre {
-      background: rgba(7, 9, 14, 0.8);
-      border: 1px solid var(--card-border);
+      color-scheme: dark;
+      background: #090D16;
+      border: 1px solid light-dark(rgba(15, 23, 42, 0.16), var(--card-border));
       border-radius: 12px;
       padding: 1.5rem;
       overflow-x: auto;
@@ -576,7 +588,7 @@
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-muted);
+      color: #CBD5E1;
       cursor: pointer;
       font-size: 0.8rem;
       transition: all 0.2s ease;
@@ -584,7 +596,7 @@
 
     .copy-code-btn:hover {
       background: rgba(255, 255, 255, 0.15);
-      color: var(--text-color);
+      color: #FFFFFF;
     }
 
     @media (max-width: 768px) {
