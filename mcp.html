@@ -6,8 +6,8 @@
   <title>OpenCrawling® Secure MCP Server - Zero-Trust Data Provider Agent &amp; Active Ingestion Engine</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and Model Context Protocol (MCP) to provide a Zero-Trust Data Provider Agent, active dynamic crawling, repository tree discovery, OIS lakehouse sidecar inspection, and authoritative ACL filtering across 10 target vector &amp; search engines.">
-  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Data Provider Agent, Active Ingestion, Enterprise RAG, Dynamic Jobs, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, Elasticsearch, OpenSearch, Solr, Luxir, Hyland OpenArch, openarch_search, Streamable HTTP, OpenCrawling">
+  <meta name="description" content="Discover the OpenCrawling Secure MCP Server. Built on Spring AI and Model Context Protocol (MCP) to provide a Zero-Trust Data Provider Agent, active dynamic crawling, repository tree discovery, OIS lakehouse sidecar inspection, Apache Iceberg time-travel analytics, and authoritative ACL filtering across 11 target vector, search &amp; lakehouse backends.">
+  <meta name="keywords" content="Model Context Protocol, MCP Server, Spring AI, Zero-Trust AI, Data Provider Agent, Active Ingestion, Enterprise RAG, Dynamic Jobs, Access Control List, ACL filtering, McpAclEvaluator, PgVector, Vespa, Qdrant, Milvus, Elasticsearch, OpenSearch, Solr, Luxir, Hyland OpenArch, Apache Iceberg, Time-Travel, OIS Sidecars, Streamable HTTP, OpenCrawling">
   <meta name="author" content="OpenCrawling Core Team">
   <link rel="canonical" href="https://opencrawling.org/mcp.html">
 
@@ -17,7 +17,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "OpenCrawling Secure MCP Server - Pluggable Zero-Trust Context Retrieval for AI Agents",
-    "description": "Discover the OpenCrawling Secure MCP Server built on Spring AI and Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval across 9 target vector and search databases.",
+    "description": "Discover the OpenCrawling Secure MCP Server built on Spring AI and Model Context Protocol (MCP) to provide Zero-Trust, identity-aware knowledge retrieval, Apache Iceberg time-travel analytics, and OIS sidecar inspection across 11 target vector, search, and lakehouse backends.",
     "url": "https://opencrawling.org/mcp.html",
     "author": {
       "@type": "Organization",
@@ -379,6 +379,12 @@
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
 
+    .tool-badge-iceberg {
+      background: rgba(6, 182, 212, 0.15);
+      color: #22D3EE;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
     .mcp-announcement-banner {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
       border: 1px solid rgba(139, 92, 246, 0.35);
@@ -695,8 +701,8 @@
         <div class="mcp-card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
         </div>
-        <h3>Pluggable 10 Vector &amp; Search Engines</h3>
-        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, Elasticsearch 8.x/9.x, OpenSearch 2.x/3.x, Apache Solr, Luxir, and Hyland OpenArch with query-time Ollama embedding generation.</p>
+        <h3>Pluggable 11 Vector, Search &amp; Lakehouse Backends</h3>
+        <p>Unified <code>McpVectorSearchBackend</code> SPI supporting PostgreSQL (pgvector), Vespa, Qdrant, Milvus, Elasticsearch 8.x/9.x, OpenSearch 2.x/3.x, Apache Solr, Luxir, Hyland OpenArch, and Apache Iceberg Lakehouse (<code>IcebergMcpSearchBackend</code>).</p>
       </div>
 
       <div class="mcp-card">
@@ -751,8 +757,8 @@
         <div class="mcp-card-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         </div>
-        <h3>Repository Discovery &amp; OIS Sidecars</h3>
-        <p>Explore source trees without pulling binaries (<code>DiscoveryMcpTools</code>) and query lakehouse metadata sidecars (<code>SidecarMcpTools</code>) with cryptographic hashes, provenance lineage, and Zero-Trust tenant boundaries.</p>
+        <h3>Repository Discovery, OIS Sidecars &amp; Iceberg Time-Travel</h3>
+        <p>Explore source trees without pulling binaries (<code>DiscoveryMcpTools</code>), paginate OIS metadata sidecars across Ozone, S3, and Apache Iceberg (<code>SidecarMcpTools</code>), and run snapshot time-travel, entity queries, and partition stats via <code>IcebergMcpTools</code>.</p>
       </div>
     </div>
 
@@ -843,6 +849,13 @@
               <td><code>OpenArchClient</code> (<code>POST /api/query/embedding</code> + <code>GET /api/documents/{id}</code> with <code>sys_acl</code> hydration)</td>
               <td>Ollama / Spring AI</td>
             </tr>
+            <tr>
+              <td><strong>Apache Iceberg Lakehouse</strong></td>
+              <td><span class="store-badge">iceberg</span></td>
+              <td><code>IcebergMcpSearchBackend</code></td>
+              <td>Iceberg Table API pushdown scans &amp; <code>DocumentAccessGate</code> (<code>getDocumentContent</code>, <code>listAccessibleSources</code>; use <code>IcebergMcpTools</code> / <code>SidecarMcpTools</code> for analytics)</td>
+              <td>N/A (Columnar metadata &amp; extracted text)</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -869,6 +882,7 @@ flowchart TD
             DynTools["DynamicJobMcpTools (Active Ingestion & Crawl)"]
             DiscTools["DiscoveryMcpTools (Hierarchy Discovery & Dry-Run)"]
             SidecarTools["SidecarMcpTools (OIS Sidecars & Lineage)"]
+            IcebergTools["IcebergMcpTools (Snapshots, Time-Travel & Entities)"]
             AIOps["ObservabilityMcpTools (AIOps Telemetry Tools)"]
         end
 
@@ -907,11 +921,14 @@ flowchart TD
     Transport --> DynTools
     Transport --> DiscTools
     Transport --> SidecarTools
+    Transport --> IcebergTools
     Transport --> AIOps
 
     Server --> SPI
     SPI --> VectorStores
+    SPI --> Lake
     VectorStores --> Guard
+    Lake --> Guard
     Guard -->|"Authorized Context JSON"| Transport
 
     DynTools --> ExecEngine
@@ -922,6 +939,7 @@ flowchart TD
 
     DiscTools --> Repos
     SidecarTools --> Lake
+    IcebergTools --> Lake
         </div>
       </div>
     </section>
@@ -1371,7 +1389,7 @@ flowchart TD
               <span class="tool-badge tool-badge-sidecar">OIS Sidecars &amp; Lineage</span>
             </div>
           </div>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Lakehouse sidecar and provenance inspection. <code>listSidecarStores</code> lists registered Apache Iceberg, AWS S3, and Apache Ozone sidecar destinations. <code>readOisSidecars(connector, prefix, limit, cursor)</code> paginates Open Ingestion Standard metadata sidecars (<code>*.ois.json</code>) to inspect cryptographic checksums, MIME types, and governance audits without pulling raw document payloads.</p>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Lakehouse sidecar and provenance inspection across object storage and Apache Iceberg tables. <code>listSidecarStores</code> lists allow-listed Apache Iceberg, AWS S3, and Apache Ozone destinations. <code>readOisSidecars(connector, prefix, limit, cursor)</code> paginates Open Ingestion Standard metadata sidecars (<code>*.ois.json</code> on S3/Ozone or pruned <code>source_type/YYYY-MM/</code> Iceberg rows via <code>IcebergSidecarStore</code>, omitting <code>DELETE</code> tombstones) without pulling raw document payloads.</p>
 
           <table class="params-table">
             <thead>
@@ -1393,7 +1411,7 @@ flowchart TD
                 <td class="param-name">prefix</td>
                 <td>String</td>
                 <td><span class="req-badge req-no">Optional</span></td>
-                <td>Storage key prefix (e.g. <code>legal/contracts/2026/</code>).</td>
+                <td>Storage key prefix (e.g. <code>legal/contracts/2026/</code>) or Iceberg partition filter (e.g. <code>alfresco/2026-11/</code>).</td>
               </tr>
               <tr>
                 <td class="param-name">limit</td>
@@ -1406,6 +1424,54 @@ flowchart TD
                 <td>String</td>
                 <td><span class="req-badge req-no">Optional</span></td>
                 <td>Continuation cursor token from a previous page.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tool 12: IcebergMcpTools -->
+        <div class="tool-spec-card">
+          <div class="tool-header">
+            <div class="tool-name-tag">
+              <span class="tool-name">IcebergMcpTools (Snapshots, Time-Travel &amp; Entities)</span>
+              <span class="tool-badge tool-badge-iceberg">Apache Iceberg Lakehouse</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">Analytical and audit tools exposed when <code>opencrawling.mcp.iceberg.enabled=true</code> (or automatically when <code>spring.opencrawling.output.type=iceberg</code>): <code>listIcebergSnapshots</code> lists newest-first snapshot commits and record metrics; <code>getIcebergDocumentAsOf</code> retrieves a document at a specific <code>snapshotId</code> or ISO-8601 <code>asOfTimestamp</code> while enforcing the Zero-Trust ACLs recorded at that point in time; <code>queryIcebergEntities</code> pushes down predicates on evolved entity columns and <code>extracted_entities</code> with tombstones excluded; and <code>getIcebergIngestionStats</code> computes partition, byte, MIME, and source-type breakdowns scoped strictly to the caller.</p>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Key Parameters</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="param-name">listIcebergSnapshots</td>
+                <td><code>connector</code>, <code>tableName</code>, <code>maxSnapshots</code></td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Lists snapshot IDs, parent IDs, commit timestamps, operations, and summary metrics (newest-first).</td>
+              </tr>
+              <tr>
+                <td class="param-name">getIcebergDocumentAsOf</td>
+                <td><code>documentUri</code>, <code>snapshotId</code> / <code>asOfTimestamp</code>, <code>connector</code>, <code>tableName</code></td>
+                <td><span class="req-badge req-yes">documentUri</span></td>
+                <td>Point-in-time retrieval by <code>document_uri</code> or <code>document_id</code> using Iceberg <code>useSnapshot</code> / <code>asOfTime</code> with historical ACL checks.</td>
+              </tr>
+              <tr>
+                <td class="param-name">queryIcebergEntities</td>
+                <td><code>entityKey</code>, <code>entityValue</code>, <code>timeWindow</code>, <code>maxResults</code>, <code>connector</code>, <code>tableName</code></td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Filters documents by evolved entity columns or <code>extracted_entities</code> map keys within an optional duration/ISO window, excluding deleted docs.</td>
+              </tr>
+              <tr>
+                <td class="param-name">getIcebergIngestionStats</td>
+                <td><code>connector</code>, <code>snapshotId</code>, <code>tableName</code></td>
+                <td><span class="req-badge req-no">Optional</span></td>
+                <td>Aggregates active counts, UPSERT vs. DELETE tombstones, content bytes, and MIME/source breakdowns permitted to the caller.</td>
               </tr>
             </tbody>
           </table>
@@ -1432,10 +1498,13 @@ flowchart TD
         <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem;">OpenCrawling includes an automated end-to-end integration test validating the entire MCP server in a decoupled multi-container deployment (PostgreSQL, Kafka, Ollama, Redis, consumers, oc-mcp-server):</p>
         
         <div class="code-block-wrapper" style="margin-bottom: 2rem;">
-          <pre><code># Run standalone test script
+          <pre><code># Run standalone vector MCP test script (pgvector + Ollama)
 ./scripts/test-mcp-decoupled.sh
 
-# Or run via master integration test runner with keyword filter
+# Run standalone Apache Iceberg Lakehouse MCP test script (MinIO + Iceberg REST + Kafka)
+./scripts/test-mcp-iceberg.sh --local-build
+
+# Or run all MCP suites via master integration test runner
 ./run-integration-tests.sh mcp</code></pre>
         </div>
 
@@ -1693,12 +1762,13 @@ curl -X POST http://localhost:8080/mcp \
         <div id="tab-docker" class="setup-content">
           <p style="color: var(--text-muted); font-size: 0.95rem;">Run decoupled stacks with Ollama embeddings or standalone MCP microservice container:</p>
           <div class="code-block-wrapper">
-            <pre><code># Boot any decoupled vector database stack (includes oc-mcp-server + Ollama):
+            <pre><code># Boot any decoupled vector or lakehouse stack (includes oc-mcp-server):
 docker compose -f oc-milvus-output-connector/docker/docker-compose-decoupled-with-milvus.yml up -d
 docker compose -f oc-qdrant-output-connector/docker/docker-compose-decoupled-with-qdrant.yml up -d
 docker compose -f oc-elasticsearch-output-connector/docker/docker-compose-decoupled-with-elasticsearch.yml up -d
 docker compose -f oc-opensearch3-output-connector/docker/docker-compose-decoupled-with-opensearch.yml up -d
 docker compose -f oc-vespa-output-connector/docker/docker-compose-decoupled-with-vespa.yml up -d
+docker compose -f oc-iceberg-output-connector/docker/docker-compose-decoupled-with-iceberg.yml up -d
 
 # Or run standalone container with desired target backend:
 docker run -d -p 8080:8080 \
