@@ -66,8 +66,8 @@ const ARCH_DETAILS = {
     desc: "The central broker carrying decoupled event streams. Manages three main topics: 'opencrawling-ingestion' for scanned metadata, 'opencrawling-chunks' for text-extracted chunks, and 'opencrawling-embedded' for precomputed vector embeddings."
   },
   outputs: {
-    title: "Outputs: Vector Stores, Parquet Bridges, Lakehouses & Migration Sinks",
-    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, Elasticsearch 8.x/9.x, or OpenSearch 2.x/3.x. In Lakehouse mode, writes structured Parquet tables into Apache Iceberg with ACID snapshot commits, REST/Hive/Glue catalogs, and dynamic schema evolution. In Migration Mode, streams bit-for-bit pristine binaries and Open Ingestion Standard (OIS) Zero-Trust metadata sidecars directly into Amazon S3 or Apache Ozone (ofs RPC / S3G), or directly into Alfresco Content Services (ACS) via REST API v1 reproducing folder hierarchies and native ACLs while bypassing text extraction and vectorization."
+    title: "Outputs: Vector Stores, Parquet Bridges, ECM Archives, Lakehouses & Migration Sinks",
+    desc: "Persists payloads according to the job pipeline mode. In RAG mode (default), writes precomputed vectors and chunks into vector engines: Hyland Content Innovation Cloud (HXP multipart document archival and versioning), Hyland OpenArch (Parquet Vector Bridge conforming to embedding.avsc), Apache SeaTunnel (100+ sink fan-out), Luxir, Apache Solr 10, Vespa, pgvector, Milvus, Qdrant, Elasticsearch 8.x/9.x, or OpenSearch 2.x/3.x. In Lakehouse mode, writes structured Parquet tables into Apache Iceberg with ACID snapshot commits, REST/Hive/Glue catalogs, and dynamic schema evolution. In Enterprise ECM Archival & Migration modes, archives governed documents, typed descriptors, electronic files (Akten), Zero-Trust OIS ACLs, and zero-copy Blueline SOAP content links into SER Group Doxis 4 (CSB REST API 14.4.1 via DoxisStoreWriterConsumer with read-back verify & rollback), replicates hierarchies and native ACEs into Alfresco Content Services (ACS) via REST API v1, or streams bit-for-bit binaries and OIS metadata sidecars into Amazon S3 and Apache Ozone (ofs RPC / S3G) without vectorization overhead."
   },
   ui: {
     title: "Vite + React Admin Dashboard",
@@ -523,7 +523,9 @@ function initSimulator() {
     // Clear logs and print start message
     logsContainer.innerHTML = "";
     addLog(`[INFO] Starting ingestion job. Source: [${sourceKey.toUpperCase()}], Target Store: [${destName}]`, "info");
-    if (destKey === 'ozone' || destKey === 's3' || destKey === 'alfresco') {
+    if (destKey === 'doxis') {
+      addLog(`[ARCHIVAL] Pipeline configured for Doxis 4 ECM Archival (DoxisStoreWriterConsumer reading 'opencrawling-documents' directly). ContentPlanner evaluates metadata before opening Claim-Check streams (LazyInputStream); text extraction and vector embedding are bypassed.`, "warn");
+    } else if (destKey === 'ozone' || destKey === 's3' || destKey === 'alfresco') {
       const destLabel = destKey === 's3' ? 'Amazon S3' : (destKey === 'alfresco' ? 'Alfresco Content Services' : 'Apache Ozone');
       addLog(`[MIGRATION] Pipeline execution mode set to [MIGRATION] for ${destLabel}. Text extraction, narrativization, chunking, and embedding will be bypassed.`, "warn");
     } else if (embedReplicas > 1) {
@@ -550,6 +552,33 @@ function initSimulator() {
       stationKafka.classList.add('active');
       addLog(`[KAFKA] ${simData.logs.claimCheck}`, "info");
       await sleep(1000);
+
+      if (destKey === 'doxis') {
+        addLog(`[ARCHIVAL] Direct DMS pipeline active: DoxisStoreWriterConsumer consuming 'opencrawling-documents' (group: opencrawling-doxis-writer), skipping Tika text extraction and embedding generation.`, "warn");
+        await sleep(700);
+
+        stationVector.classList.add('active');
+        const isDeleteTombstone = file.name.includes('DELETE Tombstone') || file.size === '0 B';
+        if (isDeleteTombstone) {
+          addLog(`[PROCESS] DoxisOutputConnector (CSB REST 14.4.1): Resolved existing document via CQL lookup on external-id-attribute (ObjectNumber) and executed deletion tombstone (POST .../remove, delete-mode=LOGICAL).`, "process");
+          await sleep(800);
+          addLog(`[SUCCESS] Processed OIS DELETE tombstone for '${file.name}' in Doxis 4 ECM cleanly.`, "success");
+        } else {
+          addLog(`[PROCESS] ContentPlanner (strategy=AUTO): Inspected metadata only; selected multipart UPLOAD (<= 2 GiB) via LazyInputStream or zero-copy Blueline CONTENT_LINK for '${file.name}' (${file.size}).`, "process");
+          await sleep(800);
+          addLog(`[PROCESS] DoxisOutputConnector & DoxisRecordFiler: Uploaded content & typed descriptors (ObjectName, ObjectDate) to CSB REST v1, filed into e-file (Akte) via PRIMARY_PARENT, and passed read-back verify (GET .../versions?initializeRepresentations=true).`, "process");
+          await sleep(800);
+          addLog(`[SECURITY] DoxisAclMapper (Zero-Trust OIS): Mapped ACEs [${file.acls.join(', ')}] to CSB Document/Record permissions (VIEW_DOCUMENT_CONTENTS, grant-connector-user=true).`, "info");
+          await sleep(700);
+          addLog(`[SUCCESS] Archived '${file.name}' into Doxis 4 ECM with read-back verification and OIS ACLs (POST /logout on job completion).`, "success");
+        }
+        await sleep(1000);
+
+        stationKafka.classList.remove('active');
+        stationVector.classList.remove('active');
+        await sleep(500);
+        continue;
+      }
 
       if (destKey === 'ozone' || destKey === 's3' || destKey === 'alfresco') {
         const destTitle = destKey === 's3' ? 'Amazon S3' : (destKey === 'alfresco' ? 'Alfresco Content Services' : 'Apache Ozone');

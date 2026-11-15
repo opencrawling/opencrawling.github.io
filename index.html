@@ -316,7 +316,7 @@
     <div class="architecture-container">
       <div class="arch-visual">
         <!-- SVG diagram with glowing paths & interactive points -->
-        <svg id="arch-svg" viewBox="0 0 1280 470" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg id="arch-svg" role="img" aria-label="OpenCrawling decoupled ingestion and agentic architecture diagram" viewBox="0 0 1280 470" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#7C3AED" />
@@ -475,6 +475,7 @@
             <text x="863" y="248" class="node-sub">☁️ AWS S3</text>
             <text x="863" y="264" class="node-sub">🗄️ Apache Ozone</text>
             <text x="863" y="280" class="node-sub">🧊 Apache Iceberg</text>
+            <text x="863" y="296" class="node-sub">🏛️ Doxis 4 ECM</text>
 
             <!-- Bottom ACL tag -->
             <rect x="757" y="306" width="210" height="20" rx="10" fill="rgba(6,182,212,0.12)" stroke="rgba(34,211,238,0.3)" />
@@ -703,6 +704,7 @@
             <option value="ozone">Apache Ozone (Migration Mode &amp; OIS Sidecars)</option>
             <option value="seatunnel">Apache SeaTunnel (Distributed Fan-Out)</option>
             <option value="iceberg">Apache Iceberg (Parquet Lakehouse &amp; Dynamic Schema Evolution)</option>
+            <option value="doxis">Doxis 4 ECM (CSB REST API, E-File Filing &amp; Blueline Zero-Copy)</option>
             <option value="luxir">Luxir Hybrid Search Engine</option>
             <option value="pgvector">PostgreSQL + pgvector</option>
             <option value="milvus">Milvus Standalone</option>
@@ -995,6 +997,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
     </div>
 
     <div class="blog-grid">
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #1D4ED8, #7C3AED); color: #FFF;">Connector Release</span>
+          <span class="blog-date">November 15, 2026</span>
+          <span class="blog-read-time">11 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-doxis-output-connector.html">Governed Enterprise Archival, E-File Filing &amp; Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native SER Group Doxis 4 Output Connector (<strong>oc-doxis-output-connector</strong> &amp; optional <strong>oc-doxis-blueline-content-link</strong>). Streams documents directly over CSB REST API <code>14.4.1</code> with metadata/content plane separation, e-file (<em lang="de">Akte</em>) filing, Zero-Trust OIS ACLs, read-back verification with automatic rollback, deletion tombstones, and verified multi-terabyte zero-copy Blueline links.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-doxis-output-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
       <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #6D28D9, #7C3AED); color: #FFF;">Team &amp; Architecture</span>

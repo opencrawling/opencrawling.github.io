@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <title>Governed Enterprise Archival, E-File Filing &amp; Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector - OpenCrawling</title>
+  <meta name="description" content="Discover OpenCrawling's native Doxis 4 Output Connector (oc-doxis-output-connector &amp; optional oc-doxis-blueline-content-link). Archive crawled documents, typed descriptors, e-file (Akte) filings, Zero-Trust OIS ACLs, and zero-copy multi-terabyte content links into SER Group Doxis 4 via CSB REST API 14.4.1.">
+  <meta name="keywords" content="doxis 4, ser group, doxis output connector, oc-doxis-output-connector, content service bus, csb rest api, blueline content link, akte e-file filing, zero-trust acls, enterprise archival, opencrawling, java 25, spring boot 4">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-doxis-output-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-doxis-output-connector.html">
+  <meta property="og:title" content="Governed Enterprise Archival, E-File Filing &amp; Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector">
+  <meta property="og:description" content="Archive crawled enterprise content into SER Group Doxis 4 with metadata/content plane separation, e-file (Akte) filing, Zero-Trust OIS ACLs, read-back verification with rollback, and zero-copy Blueline SOAP links.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-doxis-output-connector.html">
+  <meta property="twitter:title" content="Governed Enterprise Archival, E-File Filing &amp; Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector">
+  <meta property="twitter:description" content="Archive crawled enterprise content into SER Group Doxis 4 with metadata/content plane separation, e-file (Akte) filing, Zero-Trust OIS ACLs, read-back verification with rollback, and zero-copy Blueline SOAP links.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 10h.01M15 10h.01M9 14h.01M15 14h.01'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Governed Enterprise Archival, E-File Filing & Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector",
+    "description": "Discover OpenCrawling's native Doxis 4 Output Connector (oc-doxis-output-connector & optional oc-doxis-blueline-content-link). Archive crawled documents, typed descriptors, e-file (Akte) filings, Zero-Trust OIS ACLs, and zero-copy multi-terabyte content links into SER Group Doxis 4 via CSB REST API 14.4.1.",
+    "datePublished": "2026-11-15",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-doxis-output-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .visually-hidden:where(:not(:focus-within, :active)) { position: absolute !important; clip-path: inset(50%) !important; overflow: hidden !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; white-space: nowrap !important; }
+    .skip-link:focus { position: fixed; top: 1rem; left: 1rem; z-index: 2000; padding: 0.75rem 1.25rem; border-radius: 8px; background: #4F46E5; color: #FFFFFF; font-weight: 600; text-decoration: none; outline: 3px solid #38BDF8; outline-offset: 2px; }
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; overflow-wrap: break-word; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #1D4ED8, #7C3AED); color: #FFFFFF; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.875rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 1.2rem + 3vw, 3rem); font-weight: 800; line-height: 1.15; text-wrap: balance; background: linear-gradient(135deg, #F8FAFC, #818CF8, #38BDF8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.125rem; line-height: 1.8; text-wrap: pretty; color: var(--text-secondary); border-left: 3px solid #6366F1; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.55rem; font-weight: 700; line-height: 1.25; text-wrap: balance; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #818CF8; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; line-height: 1.35; text-wrap: balance; color: #A5B4FC; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; text-wrap: pretty; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; text-wrap: pretty; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #C7D2FE; overflow-wrap: anywhere; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; position: relative; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #94A3B8; font-size: 0.875rem; line-height: 1.7; overflow-wrap: normal; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(99,102,241,0.07); border-color: #6366F1; }
+    .callout-box.tip { background: rgba(6,182,212,0.06); border-color: #06B6D4; }
+    .callout-box.warning { background: rgba(245,158,11,0.06); border-color: #F59E0B; }
+    .callout-box.success { background: rgba(16,185,129,0.06); border-color: #10B981; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(99,102,241,0.28); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: #A5B4FC; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.65rem 1rem; font-size: 0.82rem; color: #CBD5E1; max-width: 100%; }
+    .flow-node.highlight { border-color: #6366F1; color: #E0E7FF; background: rgba(99,102,241,0.14); font-weight: 600; }
+    .flow-node.accent { border-color: #38BDF8; color: #7DD3FC; background: rgba(56,189,248,0.12); font-weight: 600; }
+    .flow-arrow { color: #64748B; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; min-block-size: 24px; transition: color 0.2s ease; }
+    .back-link:hover { color: #A5B4FC; }
+    .article-cta { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.28); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h2 { font-size: 1.35rem; font-weight: 700; color: #A5B4FC; margin-top: 0; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .table-wrapper { overflow-x: auto; margin: 1.5rem 0 2rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); }
+    .config-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .config-table caption { padding: 0.75rem 1rem; text-align: left; font-size: 0.85rem; font-weight: 600; color: #A5B4FC; background: rgba(99,102,241,0.06); border-bottom: 1px solid rgba(99,102,241,0.18); }
+    .config-table th { background: rgba(99,102,241,0.1); color: #A5B4FC; font-weight: 600; text-wrap: balance; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(99,102,241,0.25); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0 2rem; }
+    @media (max-width: 680px) { .comparison-grid { grid-template-columns: 1fr; } }
+    .comp-card { background: #0A0F1D; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1.5rem; }
+    .comp-card.active { border-color: rgba(99,102,241,0.35); background: rgba(99,102,241,0.05); }
+    .comp-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #F1F5F9; text-wrap: balance; }
+    html.light .comp-card h3 { color: #0F172A !important; }
+    html.light .article-cta h2 { color: #4338CA !important; }
+    .comp-card p { font-size: 0.92rem; line-height: 1.65; margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <a href="#article-main" class="skip-link visually-hidden">Skip to article content</a>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo" width="40" height="40">
+        <span class="brand-text">OpenCrawling</span>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Vision Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="article-main" class="blog-article-wrapper" tabindex="-1">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to all articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <span class="blog-meta-date"><span aria-hidden="true">&#128197;</span> November 15, 2026</span>
+        <span class="blog-meta-read"><span aria-hidden="true">&#9201;</span> 11 min read</span>
+      </div>
+      <h1 class="blog-article-title">Governed Enterprise Archival, E-File Filing &amp; Zero-Copy Blueline Links: Announcing the Doxis 4 Output Connector</h1>
+      <p class="blog-article-lead">
+        OpenCrawling now delivers full bidirectional integration with SER Group's Doxis 4 platform. Alongside the <a href="introducing-doxis-repository-connector.html">Doxis Repository Connector</a>, merged PR <a href="https://github.com/opencrawling/opencrawling/pull/328" target="_blank" rel="noopener noreferrer">#328</a> introduces <strong><code>oc-doxis-output-connector</code></strong> and the optional <strong><code>oc-doxis-blueline-content-link</code></strong> adapter: writing documents, typed descriptors, electronic file (<em lang="de">Akte</em>) filings, Zero-Trust OIS ACLs, deletion tombstones, and verified multi-terabyte zero-copy links directly into Doxis Content Service Bus (CSB) 14.4.1.
+      </p>
+    </header>
+
+    <div class="arch-flow-diagram">
+      <div class="flow-title">Two-Plane Doxis 4 Archival Architecture (Direct &amp; Decoupled Kafka Modes)</div>
+      <div class="flow-nodes">
+        <div class="flow-node">Enterprise Sources</div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node">Kafka <code>opencrawling-documents</code> / Direct Job</div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node highlight"><code>ContentPlanner</code> (Metadata-Only Plan)</div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node highlight"><code>DoxisOutputConnector</code> &amp; <code>DoxisRecordFiler</code></div>
+        <div class="flow-arrow" aria-hidden="true">&rarr;</div>
+        <div class="flow-node accent">CSB REST <code>v1</code> + Optional Blueline SOAP</div>
+      </div>
+    </div>
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Closing the Loop on SER Group Doxis 4 Integration</h2>
+      <p>
+        Enterprises consolidating legacy file shares, SharePoint sites, BPMN process attachments, or third-party repositories into a long-term regulated archive face a recurring problem: vector stores optimize retrieval, but regulated records still belong inside an enterprise Document Management System (DMS) with strict schema typing, dossier (<em lang="de">Akte</em>) hierarchy, immutable version trails, and auditable access control.
+      </p>
+      <p>
+        With <strong><code>oc-doxis-output-connector</code></strong>, OpenCrawling becomes an end-to-end ingestion and archival bridge into <strong>Doxis 4</strong> through the Content Service Bus (CSB) REST API (<code>/restws/publicws/rest/api/v1</code>, verified against CSB <strong>14.4.1</strong>). Built on the shared <code>oc-doxis-client</code> foundation, the connector preserves every bit of OIS governance while adding automatic read-back verification and atomic rollback so partial or unprotected records never linger in production DMS repositories.
+      </p>
+
+      <div class="comparison-grid">
+        <div class="comp-card active">
+          <h3><span aria-hidden="true">&#128230;</span> Two-Plane Content Planning</h3>
+          <p><code>ContentPlanner</code> decides between multipart <code>UPLOAD</code>, zero-copy Blueline <code>CONTENT_LINK</code>, or <code>REFERENCE_ONLY</code> from metadata alone—wrapping Claim-Check streams in <code>LazyInputStream</code> so multi-terabyte files never load needlessly into memory.</p>
+        </div>
+        <div class="comp-card active">
+          <h3><span aria-hidden="true">&#128737;</span> Read-Back Verify &amp; Rollback</h3>
+          <p>With <code>content.verify=true</code>, every write checks stored byte length and SHA-256 via <code>/versions?initializeRepresentations=true</code>. If verification, e-file filing, or strict ACL assignment fails on a new document, OpenCrawling executes an immediate <code>DELETE</code> rollback.</p>
+        </div>
+      </div>
+
+      <div class="callout-box warning">
+        <div class="callout-icon" aria-hidden="true">&#9888;&#65039;</div>
+        <div>
+          <p><strong>Licensing &amp; Session Capacity Notice:</strong> Archiving into Doxis requires a valid SER Group Doxis 4 licence on the target CSB instance that permits API / technical-user sessions. OpenCrawling does not bundle Doxis or proprietary SER client JARs. Plan concurrent job capacity with your Doxis administrator.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">2. </span>Dual Execution Paths &amp; Multi-Gigabyte Extraction Bypass</h2>
+      <p>
+        Unlike vector output connectors that wait for Tika parsing and embeddings on <code>opencrawling-embedded</code>, the Doxis Output Connector operates directly on crawled document records across two deployment models:
+      </p>
+      <ul>
+        <li><strong>Per-Job / Direct Path (<code>DoxisOutputConnector</code>):</strong> Registered as <code>Doxis_Output</code> (<code>OutputKind.DOXIS</code>) in the Admin UI, CLI, and REST API via <code>DoxisConnectorSettings.fromConfiguration(...)</code>. <code>ConnectorFactory</code> creates an isolated connector instance per job run on a Java 25 Virtual Thread and calls <code>connectorFactory.release(...)</code> in a <code>finally</code> block to execute <code>POST /logout</code> immediately when the job finishes—leaving no dangling technical-user sessions.</li>
+        <li><strong>Decoupled Kafka Path (<code>DoxisStoreWriterConsumer</code>):</strong> Activated with <code>spring.opencrawling.output.type=doxis</code> and <code>opencrawling.consumer.writer.enabled=true</code>. It consumes <code>IngestionMessage</code> events directly from <strong><code>opencrawling-documents</code></strong> in an isolated consumer group (<code>opencrawling-doxis-writer</code>), while <code>DoxisConnectionInitializer</code> validates login, repository, document class, and external-ID attributes asynchronously at startup.</li>
+        <li><strong>Large Binary Extraction Guard (<code>max-extract-bytes</code>):</strong> When running decoupled RAG extraction alongside Doxis archival, <code>IngestionConsumer</code> enforces <code>opencrawling.ingestion.max-extract-bytes</code> (default <code>536870912</code> bytes / 512 MiB). Oversized archives skip Tika text extraction cleanly while <code>DoxisStoreWriterConsumer</code> still receives the full <code>opencrawling-documents</code> event for metadata, ACLs, e-file filing, and content linking.</li>
+      </ul>
+
+      <h2><span class="section-num">3. </span>Metadata-Driven Content Strategies (<code>ContentPlanner</code>)</h2>
+      <p>
+        Rather than eagerly opening binary streams from Apache Ozone or S3, <code>ContentPlanner</code> evaluates <code>sizeInBytes</code>, <code>contentLength</code>, <code>sha256</code>, local <code>file:</code> stat metadata, and configured URI prefixes upfront:
+      </p>
+
+      <div class="table-wrapper">
+        <table class="config-table">
+          <caption>Supported Doxis content delivery strategies evaluated by ContentPlanner</caption>
+          <thead>
+            <tr>
+              <th scope="col">Strategy</th>
+              <th scope="col">Runtime Behavior</th>
+              <th scope="col">Primary Scenario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>AUTO</code> <em>(Default)</em></td>
+              <td>Selects per document: optional experimental <code>PREDEFINED_LOCATOR</code> if configured; <code>UPLOAD</code> when known size &le; <code>content.upload-max-bytes</code> (2 GiB default); <code>CONTENT_LINK</code> if resolver matches and Blueline writer is loaded; otherwise <code>content.fallback</code> (default <code>REFERENCE_ONLY</code>).</td>
+              <td>Mixed enterprise workloads combining normal office files with multi-terabyte media or NAS assets.</td>
+            </tr>
+            <tr>
+              <td><code>UPLOAD</code></td>
+              <td>Streams multipart binary via <code>LazyInputStream</code> to <code>POST &hellip;/documents</code> or <code>POST &hellip;/versions</code>. Fails fast if known size exceeds <code>content.upload-max-bytes</code>.</td>
+              <td>Standard compliance archiving where binaries must reside inside Doxis storage volumes.</td>
+            </tr>
+            <tr>
+              <td><code>CONTENT_LINK</code></td>
+              <td>Registers an external UNC path or URL via <code>oc-doxis-blueline-content-link</code> (<code>IDocument.addContentLinkPartDocument</code>) without copying file bytes.</td>
+              <td>Multi-terabyte engineering, video, or NAS datasets stored in place (verified against a 5 TB UNC test on CSB 14.4.1).</td>
+            </tr>
+            <tr>
+              <td><code>REFERENCE_ONLY</code></td>
+              <td>Creates the Doxis document metadata record without a binary content object and optionally stamps the source URI into <code>reference-attribute</code>.</td>
+              <td>Metadata cataloguing and external pointer indexes.</td>
+            </tr>
+            <tr>
+              <td><code>PREDEFINED_LOCATOR</code></td>
+              <td><em>Experimental.</em> Sends <code>predefinedLocator</code>, byte length, and optional SHA-256 over REST without an input stream. Disabled by default in standard SER storage adapters and unsupported in CSB 14.4.1.</td>
+              <td>Bespoke Doxis deployments with custom pre-staged storage adapters.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="section-num">4. </span>Zero-Copy Blueline Content Links with Isolated ClassLoading</h2>
+      <p>
+        In CSB 14.4.1, SER's REST API does not expose an endpoint for attaching external content links—attempts with <code>predefinedLocator</code> either fail or produce empty <code>NO_CONTENT</code> documents. To deliver true zero-copy archiving without forcing OpenCrawling to ship proprietary vendor libraries, PR #328 introduces the optional Maven module <strong><code>oc-doxis-blueline-content-link</code></strong> (enabled with <code>-Pdoxis-blueline</code>).
+      </p>
+      <p>
+        Because SER's Doxis Java (Blueline) client JARs bundle their own legacy CXF, Jackson, and Spring transitive stack compiled at Java 17 bytecode (<code>14.4.1-1</code>), <code>ContentLinkWriterLoader</code> dynamically loads <code>oc-doxis-blueline-content-link</code> alongside the administrator-staged JARs from <code>content-link.client-lib-dir</code> inside a <strong>child-first isolated class loader</strong>. Only the writer SPI, SLF4J, and JDK classes cross the boundary—communicating cleanly with CSB's transfer SOAP service (<code>http://&lt;csb-host&gt;:&lt;port&gt;/sedna-transfer-service-xf/services/</code>) with zero classpath conflicts in Java 25.
+      </p>
+
+      <pre tabindex="0"><code># Install licensed SER client JARs into local Maven repository (referenced artifacts:
+# de.ser.doxis4.java-api:blueline, sednaclient-blueline, de.ser.doxis4.csb.client:sednaclient-api-nodep)
+mvn install:install-file \
+  -Dfile=/path/to/WEB-INF/lib/blueline-14.4.1-1.jar \
+  -DgroupId=de.ser.doxis4.java-api -DartifactId=blueline \
+  -Dversion=14.4.1-1 -Dpackaging=jar -DgeneratePom=true
+
+# Build the optional zero-copy adapter and stage alongside SER client libs
+mvn -Pdoxis-blueline install -pl oc-doxis-blueline-content-link
+cp /path/to/WEB-INF/lib/*.jar /opt/doxis-client-lib/
+cp oc-doxis-blueline-content-link/target/oc-doxis-blueline-content-link-*.jar /opt/doxis-client-lib/</code></pre>
+
+      <div class="callout-box tip">
+        <div class="callout-icon" aria-hidden="true">&#128161;</div>
+        <div>
+          <p><strong>CSB Content-Link Semantics:</strong> Note that CSB does not stream external <code>CONTENT_LINK</code> binaries via REST <code>GET &hellip;/contentObjects/{id}</code> (returning <code>SEDNA0104</code>); Doxis clients resolve the UNC share directly. Re-crawling an unchanged or updated <code>CONTENT_LINK</code> document refreshes its typed descriptors and ACLs while preserving the existing link.</p>
+        </div>
+      </div>
+
+      <h2><span class="section-num">5. </span>Upserts, Typed Descriptors &amp; Electronic File (<em lang="de">Akte</em>) Filing</h2>
+      <p>
+        Before writing any record, <code>DoxisOutputConnector</code> queries CSB via CQL using <code>external-id-attribute</code> (default <code>ObjectNumber</code>). IDs longer than the target descriptor field limit are hashed deterministically with a <code>h:&lt;sha256Prefix&gt;</code> key so lookups never fail on column truncation.
+      </p>
+      <ul>
+        <li><strong>Conflict Resolution &amp; No-Op Detection:</strong> Existing matches follow <code>conflict-resolution</code>: <code>NEW_VERSION</code> (<code>POST &hellip;/versions</code>), <code>UPDATE_METADATA</code> (in-place descriptor &amp; ACL patch), or <code>SKIP</code>. Setting <code>content.change-marker-attribute</code> (for instance <code>SystemId1</code>) records <code>&lt;lastModified&gt;|&lt;length&gt;</code> so unmodified re-crawls skip redundant version proliferation.</li>
+        <li><strong>Schema-Aware Descriptor Mapping (<code>DoxisDocumentMapper</code>):</strong> Maps pseudo-keys (<code>id</code>, <code>uri</code>, <code>lastModified</code>) and custom metadata fields against live CSB <code>DoxisSchema</code> definitions—handling <code>STRING</code> NUL sanitization/truncation, <code>INTEGER</code>, <code>LONGINTEGER</code>, <code>FLOATINGPOINT</code>, <code>BOOL</code>, and ISO-8601/epoch <code>DATE</code>/<code>DATETIME</code> conversions across single and multi-value attributes.</li>
+        <li><strong>Electronic File (<em lang="de">Akte</em>) Filing (<code>DoxisRecordFiler</code>):</strong> Supports five filing modes—<code>NONE</code>, <code>FIXED</code>, <code>METADATA</code> (reading <code>doxisRecordId</code>), <code>SOURCE_FOLDER</code> (derived from parent URI segments), and <code>KEY_METADATA</code>—with <code>filing.auto-create=true</code> provisioning missing e-files by <code>record-class</code>. Attach documents via <code>PRIMARY_PARENT</code> (<code>PUT &hellip;/primaryParent</code>) or <code>RELATIONSHIP</code> into an auto-created document-capable <code>STATIC</code> node (default <code>Documents</code>) under the e-file's <code>NODES_ONLY</code> root, with automatic stale cache eviction on HTTP <code>404</code> or Doxis <code>INSTANCE*</code> responses.</li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Zero-Trust OIS ACLs &amp; Lifecycle Deletion Tombstones</h2>
+      <p>
+        Security enforcement in <code>DoxisAclMapper</code> resolves Open Ingestion Standard (OIS) principals against CSB <code>/users</code> and <code>/groups</code> (mapping OIS <code>public</code> to Doxis group <code>everybody</code>) and translates permissions consistently across both documents and enclosing e-files:
+      </p>
+
+      <div class="table-wrapper">
+        <table class="config-table">
+          <caption>OIS to Doxis 4 CSB ACE permission mapping across documents and e-files</caption>
+          <thead>
+            <tr>
+              <th scope="col">OIS Permission</th>
+              <th scope="col">Document ACE (<code>DocumentAceParams</code>)</th>
+              <th scope="col">E-File (<em lang="de">Akte</em>) ACE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>read</code></td>
+              <td><code>GRANT VIEW_DOCUMENT_CONTENTS</code></td>
+              <td><code>GRANT VIEW_FOLDER_CONTENTS</code></td>
+            </tr>
+            <tr>
+              <td><code>write</code></td>
+              <td><code>GRANT VIEW_DOCUMENT_CONTENTS</code>, <code>UPDATE_DOCUMENT</code>, <code>VERSION_DOCUMENT</code></td>
+              <td><code>GRANT VIEW_FOLDER_CONTENTS</code>, <code>UPDATE_FOLDER</code>, <code>EDIT_FOLDER_DESCRIPTORS</code></td>
+            </tr>
+            <tr>
+              <td><code>deny</code></td>
+              <td><code>DENY VIEW_DOCUMENT_CONTENTS</code></td>
+              <td><code>DENY VIEW_FOLDER_CONTENTS</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul>
+        <li><strong>Flexible Security Scoping (<code>security.mode</code>):</strong> Apply ACEs at <code>DOCUMENT</code> level (default), <code>RECORD</code> level (inherited from the enclosing e-file when configured in Doxis Designer), <code>DOCUMENT_AND_RECORD</code>, or <code>NONE</code>.</li>
+        <li><strong>Anti-Lockout Connector Guard (<code>grant-connector-user=true</code>):</strong> Automatically grants the technical user management rights on e-files it creates (including <code>CREATE_FOLDER</code> and <code>SET_PRIMARY_PARENT</code>) so restrictive instance ACLs never lock OpenCrawling out of subsequent filings.</li>
+        <li><strong>Sync, Pruning &amp; Strictness:</strong> Choose <code>CREATE_ONLY</code> or <code>ADDITIVE</code> e-file ACL updates (<code>record-acl-sync</code>), enable <code>remove-stale=true</code> to revoke connector-managed ACEs removed at source without disturbing native Doxis admin grants, and toggle <code>security.strict=true</code> to force rollback on unresolved principals or <code>SECU0050</code> rejections.</li>
+        <li><strong>Reversible or Physical Deletion Tombstones:</strong> OIS <code>DocumentAction.DELETE</code> events resolve records via <code>external-id-attribute</code> and execute either <code>LOGICAL</code> removal (<code>POST &hellip;/remove</code>, recommended default protecting linked storage) or <code>PHYSICAL</code> purge (<code>DELETE &hellip;/documents/{uuid}</code>, verified on CSB 14.4.1 to delete only the Doxis metadata record for <code>CONTENT_LINK</code> assets without touching the external file).</li>
+      </ul>
+
+      <h2><span class="section-num">7. </span>Configuration Reference &amp; Verification</h2>
+      <p>
+        Every property binds under <code>spring.opencrawling.output.doxis.*</code> with corresponding <code>doxis*</code> UI keys in <code>DoxisConnectorSettings</code>. Below is a production-style configuration combining direct uploads with zero-copy UNC fallback for large binaries and automatic folder-based e-file creation:
+      </p>
+
+      <pre tabindex="0"><code>spring:
+  opencrawling:
+    output:
+      type: doxis
+      doxis:
+        base-url: "http://csb.example.com:8080/restws/publicws/rest/api/v1"
+        customer-name: faststarter
+        username: crawler
+        password: "${DOXIS_PASSWORD}"
+        role: admins
+        repository: D_TEXTER
+        document-type: TX_MigratedDocument
+        external-id-attribute: ObjectNumberExternal
+        title-attribute: ObjectName
+        reference-attribute: URL
+        attribute-mapping:
+          author: ObjectAuthors
+          lastModified: ObjectDate
+        content:
+          strategy: AUTO
+          upload-max-bytes: 2147483648
+          verify: true
+          change-marker-attribute: SystemId1
+        content-link:
+          client-lib-dir: /opt/doxis-client-lib
+          uri-prefix: "file:///mnt/archive/"
+          link-prefix: "\\\\fileserver\\archive\\"
+          link-type: UNC
+          document-type: TX_LargeExternalDocument
+        filing:
+          mode: SOURCE_FOLDER
+          method: PRIMARY_PARENT
+          record-class: TX_SourceFolder
+          auto-create: true
+        security:
+          mode: RECORD
+          record-acl-sync: ADDITIVE
+          grant-connector-user: true
+
+opencrawling:
+  consumer:
+    writer:
+      enabled: true
+  ingestion:
+    max-extract-bytes: 536870912</code></pre>
+
+      <h3>Automated Test Suites &amp; Live CSB Smoke Check</h3>
+      <p>
+        PR #328 ships <strong>77 unit and OkHttp <code>MockWebServer</code> contract tests</strong> modeled on recorded Doxis CSB 14.4.1 payloads (alongside 25 tests in <code>oc-doxis-client</code>) plus a live CSB smoke script that skips cleanly when CSB coordinates are absent:
+      </p>
+
+      <pre tabindex="0"><code># Run unit &amp; CSB 14.4.1 fixture tests locally
+mvn test -pl oc-doxis-client,oc-doxis-output-connector -am
+
+# Validate connectivity via OpenCrawling CLI (logs in and calls POST /logout)
+oc connector check --name Doxis_Output --type output
+
+# Run live contract &amp; optional write/verify/cleanup test against CSB 14.4.1+
+./scripts/test-doxis-connector.sh</code></pre>
+
+      <div class="article-cta">
+        <h2>Ready to Archive &amp; Liberate Content with Doxis 4?</h2>
+        <p>Test the Doxis 4 Output Connector directly in the live browser pipeline simulator, explore the full Wiki property reference, or inspect PR #328 on GitHub.</p>
+        <div class="cta-buttons">
+          <a href="../index.html#simulator" class="btn btn-primary">Try Live Ingestion Simulator &rarr;</a>
+          <a href="https://github.com/opencrawling/opencrawling/wiki/Doxis-Output-Connector" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Read Doxis Output Wiki Guide</a>
+          <a href="introducing-doxis-repository-connector.html" class="btn btn-outline">Read Doxis Repository Article</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo" width="32" height="32">
+        <span class="brand-text">OpenCrawling</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+</body>
+</html>
