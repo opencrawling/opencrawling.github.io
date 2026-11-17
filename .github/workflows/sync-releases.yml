@@ -19,13 +19,17 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Check Europe/Rome Sync Window (Scheduled Runs)
         id: window
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           ROME_HOUR=$(TZ=Europe/Rome date +%H)
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$ROME_HOUR" != "01" ]; then
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$ROME_HOUR" != "01" ]; then
             echo "Skipping outside 01:xx Europe/Rome slot (current hour: ${ROME_HOUR})."
             echo "in_window=false" >> "$GITHUB_OUTPUT"
           else
@@ -50,6 +54,7 @@ jobs:
           python3 scripts/sync-releases.py
 
       - name: Commit and Push Updated data/releases.json
+        id: sync-commit
         if: steps.window.outputs.in_window == 'true'
         run: |
           git config user.name "github-actions[bot]"
@@ -58,6 +63,16 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "chore(download): sync GA and latest RC release manifest"
             git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No changes to data/releases.json."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Trigger GitHub Pages Rebuild
+        if: steps.window.outputs.in_window == 'true' && steps.sync-commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Legacy branch-based GitHub Pages ignores pushes from GITHUB_TOKEN; request a rebuild explicitly.
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true
