@@ -1,0 +1,78 @@
+name: Sync Releases Manifest (GA + Latest RC)
+
+on:
+  schedule:
+    # Dual UTC cron for 01:05 Europe/Rome (shortly after the 00:05 nightly RC finishes):
+    #   00:05 UTC = 01:05 CET (UTC+1)
+    #   23:05 UTC = 01:05 CEST (UTC+2)
+    - cron: '5 0 * * *'
+    - cron: '5 23 * * *'
+  repository_dispatch:
+    types: [release-published]
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  sync-releases:
+    name: Update data/releases.json from GitHub Releases
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Check Europe/Rome Sync Window (Scheduled Runs)
+        id: window
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          ROME_HOUR=$(TZ=Europe/Rome date +%H)
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$ROME_HOUR" != "01" ]; then
+            echo "Skipping outside 01:xx Europe/Rome slot (current hour: ${ROME_HOUR})."
+            echo "in_window=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "in_window=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout Website Repository
+        if: steps.window.outputs.in_window == 'true'
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up Python
+        if: steps.window.outputs.in_window == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Synchronize Releases Manifest
+        if: steps.window.outputs.in_window == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-releases.py
+
+      - name: Commit and Push Updated data/releases.json
+        id: sync-commit
+        if: steps.window.outputs.in_window == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/releases.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(download): sync GA and latest RC release manifest"
+            git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changes to data/releases.json."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger GitHub Pages Rebuild
+        if: steps.window.outputs.in_window == 'true' && steps.sync-commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Legacy branch-based GitHub Pages ignores pushes from GITHUB_TOKEN; request a rebuild explicitly.
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true
