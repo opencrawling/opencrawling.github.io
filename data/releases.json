@@ -1,0 +1,149 @@
+{
+  "repository": "opencrawling/opencrawling",
+  "generatedAt": "2026-11-17T14:38:39Z",
+  "stable": {
+    "version": "1.0.4",
+    "baseVersion": "1.0.4",
+    "tag": "v1.0.4",
+    "name": "OpenCrawling v1.0.4",
+    "prerelease": false,
+    "publishedAt": "2026-10-27T22:26:06Z",
+    "commitSha": "3c637e21a7eebd13b7e90f685f78c8719db2c600",
+    "shortSha": "3c637e21",
+    "releaseUrl": "https://github.com/opencrawling/opencrawling/releases/tag/v1.0.4",
+    "compareUrl": null,
+    "dockerTag": "1.0.4",
+    "dockerRollingTag": "latest",
+    "dockerSeriesTag": "1.0",
+    "assets": [
+      {
+        "name": "opencrawling-platform-dist-1.0.4.zip",
+        "category": "distribution",
+        "label": "Full Platform Distribution (Runtime, Embedding, Admin UI, CLI)",
+        "sizeBytes": 781891904,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-platform-dist-1.0.4.zip",
+        "sha256": "aa4ef57b0f3e93833e5d6dc1b41920df6e33bf002784782a8a094c89417f30da",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-platform-dist-1.0.4.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-runtime-dist-1.0.4.zip",
+        "category": "distribution",
+        "label": "Standalone Runtime & MCP Server Distribution",
+        "sizeBytes": 481292238,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-runtime-dist-1.0.4.zip",
+        "sha256": "ecd9530a277745f5a638a6e8d395981fe4a0002ee77240f657f3be421bc3c79e",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-runtime-dist-1.0.4.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-embedding-service-dist-1.0.4.zip",
+        "category": "distribution",
+        "label": "Stateless Embedding Service Distribution",
+        "sizeBytes": 201314097,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-embedding-service-dist-1.0.4.zip",
+        "sha256": "e2afb24f3226e7c1fa8acf2c64076e3a20098c5dd019261e0c8e4fbe1b745e50",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-embedding-service-dist-1.0.4.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-admin-ui-dist-1.0.4.zip",
+        "category": "distribution",
+        "label": "Standalone Admin UI Static Bundle",
+        "sizeBytes": 282136,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-admin-ui-dist-1.0.4.zip",
+        "sha256": "0f89b74bf1bafeeaf190cd9718b4a474a76cb9c835c1d85d6d2f4e3da8f573b3",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-admin-ui-dist-1.0.4.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-cli-dist-1.0.4.zip",
+        "category": "distribution",
+        "label": "Standalone CLI Distribution (with launchers)",
+        "sizeBytes": 95783705,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-cli-dist-1.0.4.zip",
+        "sha256": "3e02077ef1eb7722cd5ffb320ebb16c290c4e6a4caea6a9b73fec525fe99a78d",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/opencrawling-cli-dist-1.0.4.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "oc-cli-1.0.4.jar",
+        "category": "cli",
+        "label": "Standalone Executable CLI JAR (Java 25)",
+        "sizeBytes": 104567610,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/oc-cli-1.0.4.jar",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "oc-java-client-sdk-1.0.4.jar",
+        "category": "sdk",
+        "label": "Java Client SDK JAR",
+        "sizeBytes": 76437,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/oc-java-client-sdk-1.0.4.jar",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "OpenCrawling-User-and-Installation-Guide.pdf",
+        "category": "docs",
+        "label": "User & Installation Guide (PDF)",
+        "sizeBytes": 560398,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/OpenCrawling-User-and-Installation-Guide.pdf",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "OpenCrawling-Reference-Documentation-1.0.4.pdf",
+        "category": "docs",
+        "label": "Complete Reference Documentation (PDF)",
+        "sizeBytes": 14101326,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/OpenCrawling-Reference-Documentation-1.0.4.pdf",
+        "sha256": "c745a8a402c413959d36cae9d09b3708986010b8b66a70c768bbb724776b9c44",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/OpenCrawling-Reference-Documentation-1.0.4.pdf.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "docker-compose-apps-dockerhub.yml",
+        "category": "compose",
+        "label": "Docker Compose Stack (docker-compose-apps-dockerhub.yml)",
+        "sizeBytes": 3175,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/docker-compose-apps-dockerhub.yml",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "docker-compose-decoupled-dockerhub.yml",
+        "category": "compose",
+        "label": "Docker Compose Stack (docker-compose-decoupled-dockerhub.yml)",
+        "sizeBytes": 14595,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/docker-compose-decoupled-dockerhub.yml",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      }
+    ],
+    "verification": {
+      "sha256SumsUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/SHA256SUMS.txt",
+      "cosignBundleUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/SHA256SUMS.txt.sigstore.json",
+      "cosignPubUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/cosign.pub",
+      "slsaProvenanceUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/multiple.intoto.jsonl"
+    }
+  },
+  "rc": null
+}

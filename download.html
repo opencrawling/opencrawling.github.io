@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download OpenCrawling | Stable GA &amp; Daily Release Candidates</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Download OpenCrawling stable General Availability (GA) releases and daily Release Candidate (RC) builds: VM distribution ZIPs, CLI, Java Client SDK, Docker Compose stacks, PDFs, and Cosign/SLSA verification.">
+  <meta name="keywords" content="OpenCrawling download, OpenCrawling release candidate, OpenCrawling 1.0.4, OpenCrawling 1.0.5-rc, Java 25, Docker, CLI, SDK">
+  <meta name="author" content="OpenCrawling GitHub Organization">
+  <link rel="canonical" href="https://opencrawling.org/download.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://opencrawling.org/download.html">
+  <meta property="og:title" content="Download OpenCrawling | Stable GA &amp; Daily Release Candidates">
+  <meta property="og:description" content="Download the latest production GA release or try today's midnight CET Release Candidate built from main.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/download.css">
+
+  <script src="js/main.js" defer></script>
+  <script src="js/download.js" defer></script>
+</head>
+<body>
+  <a href="#download-heading" class="skip-link visually-hidden">Skip to main content</a>
+
+  <!-- Decorative Background Glows -->
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" id="nav-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="brand-logo">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="sdk.html">Java SDK</a></li>
+          <li><a href="index.html#standard">Open Standard</a></li>
+          <li><a href="index.html#getting-started">Quick Start</a></li>
+          <li><a href="download.html" class="active" aria-current="page">Download</a></li>
+          <li><a href="mcp.html">MCP Server</a></li>
+          <li><a href="observability.html">Observability</a></li>
+          <li><a href="index.html#blog">Blog</a></li>
+          <li><a href="comparison.html">Compare</a></li>
+          <li><a href="deck/">Vision Deck</a></li>
+          <li><a href="team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="download-wrapper">
+    <div id="download-announcer" class="visually-hidden" aria-live="polite"></div>
+
+    <section class="download-hero">
+      <div class="download-hero-badge">Release Channels &amp; Verified Artifacts</div>
+      <h1 id="download-heading" tabindex="-1">Download OpenCrawling</h1>
+      <p>
+        Choose the latest production <strong>Stable GA</strong> release or evaluate upcoming features with our automated <strong>Daily Release Candidate</strong> built every night at midnight CET from <code>main</code>.
+      </p>
+    </section>
+
+    <!-- At-a-Glance Channel Summary -->
+    <section aria-label="Available release channels" class="channel-overview-grid">
+      <article class="channel-summary-card">
+        <div class="channel-summary-head">
+          <span class="channel-pill channel-pill-ga">Stable GA · Recommended</span>
+          <span id="ga-summary-version" class="channel-version-tag">v1.0.4</span>
+        </div>
+        <p>Production-ready binaries, Homebrew CLI, Maven Central SDK, and <code>:latest</code> Docker images.</p>
+        <div id="ga-summary-meta" class="channel-meta-line">
+          <span>Loading latest GA release details…</span>
+        </div>
+      </article>
+
+      <article class="channel-summary-card">
+        <div class="channel-summary-head">
+          <span class="channel-pill channel-pill-rc">Release Candidate · Nightly Trunk</span>
+          <span id="rc-summary-version" class="channel-version-tag">Checking…</span>
+        </div>
+        <p>Automated daily trunk snapshots built at 00:05 CET/CEST with isolated <code>:rc</code> containers and signed ZIPs.</p>
+        <div id="rc-summary-meta" class="channel-meta-line">
+          <span>Checking latest RC build…</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Channel Tabs -->
+    <div class="channel-tabs">
+      <div id="channel-tablist" class="channel-tablist" role="tablist" focusgroup="tablist nomemory" aria-label="OpenCrawling Release Channels">
+        <button type="button" role="tab" id="tab-ga" class="channel-tab" data-channel="ga" aria-selected="true" focusgroupstart>
+          <span>Stable Release (GA)</span>
+          <span id="ga-tab-chip" class="tab-chip">1.0.4</span>
+        </button>
+        <button type="button" role="tab" id="tab-rc" class="channel-tab" data-channel="rc" aria-selected="false">
+          <span>Daily Release Candidate (RC)</span>
+          <span id="rc-tab-chip" class="tab-chip">Nightly</span>
+        </button>
+      </div>
+
+      <div class="channel-panels-stack">
+        <section id="panel-ga" role="tabpanel" aria-labelledby="tab-ga" tabindex="0">
+          <div id="ga-panel-body" class="channel-panel-body">
+            <div class="channel-notice channel-notice-ga">
+              <p>Loading Stable GA artifacts from <code>data/releases.json</code>…</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-rc" role="tabpanel" aria-labelledby="tab-rc" hidden="until-found">
+          <div id="rc-panel-body" class="channel-panel-body">
+            <div class="channel-notice channel-notice-rc">
+              <p>Loading Daily Release Candidate artifacts from <code>data/releases.json</code>…</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo-without-text-200px.png" alt="OpenCrawling Logo" class="footer-logo">
+        <span>OpenCrawling&reg;</span>
+      </div>
+      <div class="footer-info">
+        <p>Distributed under the <a href="https://github.com/OpenCrawling/opencrawling/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Apache License 2.0</a>.</p>
+        <p>OpenCrawling&reg; is a registered trademark of the OpenCrawling Organization. View our <a href="https://github.com/OpenCrawling/opencrawling/blob/main/TRADEMARK.md" target="_blank" rel="noopener noreferrer">Trademark Policy</a>.</p>
+        <p>&copy; 2026 OpenCrawling Organization. Built with passion for open-source enterprise AI. Contact: <a href="mailto:info@opencrawling.org">info@opencrawling.org</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
