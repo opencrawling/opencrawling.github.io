@@ -1,6 +1,6 @@
 {
   "repository": "opencrawling/opencrawling",
-  "generatedAt": "2026-11-17T14:38:39Z",
+  "generatedAt": "2026-11-18T05:48:43Z",
   "stable": {
     "version": "1.0.4",
     "baseVersion": "1.0.4",
@@ -145,5 +145,148 @@
       "slsaProvenanceUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.4/multiple.intoto.jsonl"
     }
   },
-  "rc": null
+  "rc": {
+    "version": "1.0.5-rc.20261118",
+    "baseVersion": "1.0.5",
+    "tag": "v1.0.5-rc.20261118",
+    "name": "OpenCrawling 1.0.5-rc.20261118 (Nightly RC)",
+    "prerelease": true,
+    "publishedAt": "2026-11-18T01:28:10Z",
+    "commitSha": "deab32fe86bad3b5155542e0a69e7a6cef6864a2",
+    "shortSha": "deab32fe",
+    "releaseUrl": "https://github.com/opencrawling/opencrawling/releases/tag/v1.0.5-rc.20261118",
+    "compareUrl": "https://github.com/opencrawling/opencrawling/compare/v1.0.4...deab32fe86bad3b5155542e0a69e7a6cef6864a2",
+    "dockerTag": "1.0.5-rc.20261118",
+    "dockerRollingTag": "rc",
+    "dockerSeriesTag": "1.0.5-rc",
+    "assets": [
+      {
+        "name": "opencrawling-platform-dist-1.0.5-rc.20261118.zip",
+        "category": "distribution",
+        "label": "Full Platform Distribution (Runtime, Embedding, Admin UI, CLI)",
+        "sizeBytes": 854938014,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-platform-dist-1.0.5-rc.20261118.zip",
+        "sha256": "466ce517f9da5170313ad87ed335d0039d2c5f1aed67fd11ac4fcde95611d483",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-platform-dist-1.0.5-rc.20261118.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-runtime-dist-1.0.5-rc.20261118.zip",
+        "category": "distribution",
+        "label": "Standalone Runtime & MCP Server Distribution",
+        "sizeBytes": 534248906,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-runtime-dist-1.0.5-rc.20261118.zip",
+        "sha256": "373b33653f71eb20b196bbc4e76688a7225ec654c25658d213c61aba03c027a0",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-runtime-dist-1.0.5-rc.20261118.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-embedding-service-dist-1.0.5-rc.20261118.zip",
+        "category": "distribution",
+        "label": "Stateless Embedding Service Distribution",
+        "sizeBytes": 218544156,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-embedding-service-dist-1.0.5-rc.20261118.zip",
+        "sha256": "635cd80acefebea72f1d16b8cae77d75f203e177913eb117a2000b52845048e2",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-embedding-service-dist-1.0.5-rc.20261118.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-admin-ui-dist-1.0.5-rc.20261118.zip",
+        "category": "distribution",
+        "label": "Standalone Admin UI Static Bundle",
+        "sizeBytes": 331670,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-admin-ui-dist-1.0.5-rc.20261118.zip",
+        "sha256": "871354de30f6505d11d33c9d297896ea735295104f797bdae2f1207a6f18e855",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-admin-ui-dist-1.0.5-rc.20261118.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "opencrawling-cli-dist-1.0.5-rc.20261118.zip",
+        "category": "distribution",
+        "label": "Standalone CLI Distribution (with launchers)",
+        "sizeBytes": 98470661,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-cli-dist-1.0.5-rc.20261118.zip",
+        "sha256": "e66bb64e4a65081056b8ed6393c8143f45a775f848857631aa1785c7483d2ad7",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/opencrawling-cli-dist-1.0.5-rc.20261118.zip.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "oc-cli-1.0.5-rc.20261118.jar",
+        "category": "cli",
+        "label": "Standalone Executable CLI JAR (Java 25)",
+        "sizeBytes": 107510600,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/oc-cli-1.0.5-rc.20261118.jar",
+        "sha256": "4035c0903b8135c17e7219bc270c9a0d84d046da308be97f068beac9f57f844b",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/oc-cli-1.0.5-rc.20261118.jar.sha256",
+        "sigstoreUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/oc-cli-1.0.5-rc.20261118.jar.sigstore.json",
+        "ascUrl": null
+      },
+      {
+        "name": "oc-java-client-sdk-1.0.5-rc.20261118.jar",
+        "category": "sdk",
+        "label": "Java Client SDK JAR",
+        "sizeBytes": 203201,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/oc-java-client-sdk-1.0.5-rc.20261118.jar",
+        "sha256": "9f596f60b236b99018d8c4c4ee031a92a3514ed25591ec40034bb263135b8b7c",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/oc-java-client-sdk-1.0.5-rc.20261118.jar.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "OpenCrawling-User-and-Installation-Guide.pdf",
+        "category": "docs",
+        "label": "User & Installation Guide (PDF)",
+        "sizeBytes": 132707,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/OpenCrawling-User-and-Installation-Guide.pdf",
+        "sha256": "69479106c59de272f8de755cf51622a47a3a60ca35f36968a014286ebb360424",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/OpenCrawling-User-and-Installation-Guide.pdf.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "OpenCrawling-Reference-Documentation-1.0.5-rc.20261118.pdf",
+        "category": "docs",
+        "label": "Complete Reference Documentation (PDF)",
+        "sizeBytes": 10250151,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/OpenCrawling-Reference-Documentation-1.0.5-rc.20261118.pdf",
+        "sha256": "a8f8f2bfa3cfe9f6c225f07fd0140398dbe4abeb5deed2c412934d007ea948b4",
+        "sha256Url": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/OpenCrawling-Reference-Documentation-1.0.5-rc.20261118.pdf.sha256",
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "docker-compose-apps-rc.yml",
+        "category": "compose",
+        "label": "Docker Compose Stack (docker-compose-apps-rc.yml)",
+        "sizeBytes": 3628,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/docker-compose-apps-rc.yml",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      },
+      {
+        "name": "docker-compose-decoupled-rc.yml",
+        "category": "compose",
+        "label": "Docker Compose Stack (docker-compose-decoupled-rc.yml)",
+        "sizeBytes": 15068,
+        "downloadUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/docker-compose-decoupled-rc.yml",
+        "sha256": null,
+        "sha256Url": null,
+        "sigstoreUrl": null,
+        "ascUrl": null
+      }
+    ],
+    "verification": {
+      "sha256SumsUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/SHA256SUMS.txt",
+      "cosignBundleUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/SHA256SUMS.txt.sigstore.json",
+      "cosignPubUrl": null,
+      "slsaProvenanceUrl": "https://github.com/opencrawling/opencrawling/releases/download/v1.0.5-rc.20261118/multiple.intoto.jsonl"
+    }
+  }
 }
