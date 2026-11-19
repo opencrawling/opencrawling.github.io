@@ -617,14 +617,17 @@ function renderChannelBody(channelKey, release, stableFallback) {
       )
     );
 
-    quickGrid.appendChild(
-      buildCodeCard(
-        'PyPI (Python Client SDK)',
-        'Install the official Python 3.11+ sync & async SDK (Platform API v1, OIS, gRPC Push, DataFrame extras).',
-        'pip install opencrawling-sdk\n# Optional extras:\npip install "opencrawling-sdk[http2,grpc,dataframe]"',
-        'Copy PyPI Python SDK pip install command'
-      )
-    );
+    const gaPyAsset = release.assets.find((a) => a.category === 'python-sdk');
+    if (gaPyAsset) {
+      quickGrid.appendChild(
+        buildCodeCard(
+          'PyPI (Python Client SDK)',
+          'Install the official Python 3.11+ sync & async SDK (Platform API v1, OIS, gRPC Push, DataFrame extras).',
+          `pip install opencrawling-sdk==${release.version}\n# Optional extras:\npip install "opencrawling-sdk[http2,grpc,dataframe]==${release.version}"`,
+          'Copy PyPI Python SDK pip install command'
+        )
+      );
+    }
   }
 
   quickSection.appendChild(quickGrid);
