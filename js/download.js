@@ -13,6 +13,7 @@ const CATEGORY_LABELS = {
   distribution: 'ZIP Bundle',
   cli: 'CLI JAR',
   sdk: 'Java SDK',
+  'python-sdk': 'Python SDK',
   docs: 'PDF Guide',
   compose: 'Docker Compose',
   other: 'Asset',
@@ -570,7 +571,21 @@ function renderChannelBody(channelKey, release, stableFallback) {
           'Java Client SDK (RC Preview JAR)',
           'RC JARs are attached to the GitHub Pre-Release rather than Maven Central Releases.',
           `curl -fsSL -O ${sdkAsset.downloadUrl}`,
-          'Copy RC SDK download command'
+          'Copy RC Java SDK download command'
+        )
+      );
+    }
+
+    const pyWheelAsset = release.assets.find(
+      (a) => a.category === 'python-sdk' && a.name.endsWith('.whl')
+    );
+    if (pyWheelAsset) {
+      quickGrid.appendChild(
+        buildCodeCard(
+          'Python Client SDK (RC Preview Wheel)',
+          'Install the nightly pre-release Python 3.11+ wheel directly with pip.',
+          `pip install ${pyWheelAsset.downloadUrl}`,
+          'Copy RC Python SDK pip install command'
         )
       );
     }
@@ -599,6 +614,15 @@ function renderChannelBody(channelKey, release, stableFallback) {
         'Add the stable Java Client SDK directly from Maven Central.',
         `<dependency>\n  <groupId>org.opencrawling</groupId>\n  <artifactId>oc-java-client-sdk</artifactId>\n  <version>${release.version}</version>\n</dependency>`,
         'Copy Maven Central SDK dependency XML'
+      )
+    );
+
+    quickGrid.appendChild(
+      buildCodeCard(
+        'PyPI (Python Client SDK)',
+        'Install the official Python 3.11+ sync & async SDK (Platform API v1, OIS, gRPC Push, DataFrame extras).',
+        'pip install opencrawling-sdk\n# Optional extras:\npip install "opencrawling-sdk[http2,grpc,dataframe]"',
+        'Copy PyPI Python SDK pip install command'
       )
     );
   }

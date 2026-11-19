@@ -93,6 +93,10 @@ def classify_asset(name: str) -> tuple[str, str, int]:
         return ("cli", "Standalone Executable CLI JAR (Java 25)", 20)
     if name.startswith("oc-java-client-sdk-") and name.endswith(".jar"):
         return ("sdk", "Java Client SDK JAR", 21)
+    if name.startswith("opencrawling_sdk-") and name.endswith(".whl"):
+        return ("python-sdk", "Python Client SDK Wheel (PyPI / PEP 561)", 22)
+    if name.startswith("opencrawling_sdk-") and name.endswith(".tar.gz"):
+        return ("python-sdk", "Python Client SDK Source Distribution (sdist)", 23)
     if name.startswith("OpenCrawling-User-and-Installation-Guide") and name.endswith(".pdf"):
         return ("docs", "User & Installation Guide (PDF)", 30)
     if name.startswith("OpenCrawling-Reference-Documentation-") and name.endswith(".pdf"):
