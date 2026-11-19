@@ -397,7 +397,7 @@
           <g class="node-group" data-node="sources">
             <rect x="10" y="75" width="275" height="310" rx="12" class="node-bg" />
             <text x="148" y="97" class="node-title">Content Sources</text>
-            <text x="148" y="112" class="node-desc" style="fill:#A5B4FC; font-weight:600;">17 Repository Connectors</text>
+            <text x="148" y="112" class="node-desc" style="fill:#A5B4FC; font-weight:600;">19 Repository Connectors</text>
             <line x1="22" y1="120" x2="273" y2="120" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
             
             <!-- Column 1: Cloud & ECM -->
@@ -411,6 +411,7 @@
             <text x="22" y="261" class="node-sub">📂 Alfresco ACS</text>
             <text x="22" y="279" class="node-sub">🏛️ Doxis 4 ECM</text>
             <text x="22" y="297" class="node-sub">📑 OASIS CMIS</text>
+            <text x="22" y="315" class="node-sub">🎫 Zammad ITSM</text>
 
             <!-- Column 2: Data & Workflows -->
             <text x="148" y="136" class="node-category-header">DATA &amp; BPMN</text>
@@ -681,6 +682,7 @@
             <option value="openarch">Hyland OpenArch (HXQL &amp; Federated Repository)</option>
             <option value="filenet">IBM FileNet P8 (Content Services GraphQL / CSGQL)</option>
             <option value="documentum">OpenText Documentum (REST Services / DQL)</option>
+            <option value="zammad">Zammad Helpdesk &amp; Knowledge Base (REST API v1)</option>
             <option value="grpc-push">gRPC Push Stream (HTTP/2 &amp; Protobuf v3)</option>
             <option value="doxis">Doxis 4 ECM (Intelligent Content Automation)</option>
             <option value="jdbc">Relational Database (JDBC / PostgreSQL)</option>
@@ -937,7 +939,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
     <div class="standard-container glass">
       <div class="standard-text-content">
         <h3>The Ingestion &amp; Migration Manifesto</h3>
-        <p>Enterprise data pipelines suffer from proprietary lock-in, unredacted PII in embeddings, and access-control leaks. The <strong>OIS specification</strong> standardizes streaming document payloads and persistent <strong>Cloud/Lakehouse Sidecar Envelopes (<code>&lt;key&gt;.ois.json</code>)</strong> with <code>SHA-256</code> integrity—now featuring normative <strong><code>FAIL_CLOSED</code> Security &amp; ReBAC tuples</strong>, in-flight <strong>Pre-Embedding PII Governance (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>)</strong>, <strong>Agentic Job Triggers</strong> with <strong>OAuth 2.0 RFC 8693 Delegated Provenance (<code>onBehalfOf</code> / <code>actorAgent</code>)</strong>, real-time <strong>BPMN 2.0 Transition Events</strong>, and <strong>UPSERT &amp; DELETE tombstones</strong> across <strong>SharePoint Online</strong>, <strong>M-Files</strong>, <strong>Documentum</strong>, <strong>Hyland OpenArch</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>Apache Ozone / S3</strong>.</p>
+        <p>Enterprise data pipelines suffer from proprietary lock-in, unredacted PII in embeddings, and access-control leaks. The <strong>OIS specification</strong> standardizes streaming document payloads and persistent <strong>Cloud/Lakehouse Sidecar Envelopes (<code>&lt;key&gt;.ois.json</code>)</strong> with <code>SHA-256</code> integrity—now featuring normative <strong><code>FAIL_CLOSED</code> Security &amp; ReBAC tuples</strong>, in-flight <strong>Pre-Embedding PII Governance (<code>ALLOW</code>, <code>REDACT</code>, <code>DROP</code>)</strong>, <strong>Agentic Job Triggers</strong> with <strong>OAuth 2.0 RFC 8693 Delegated Provenance (<code>onBehalfOf</code> / <code>actorAgent</code>)</strong>, real-time <strong>BPMN 2.0 Transition Events</strong>, and <strong>UPSERT &amp; DELETE tombstones</strong> across <strong>SharePoint Online</strong>, <strong>M-Files</strong>, <strong>Documentum</strong>, <strong>Zammad ITSM &amp; KB</strong>, <strong>Hyland OpenArch</strong>, <strong>Doxis</strong>, <strong>CMIS</strong>, and <strong>Apache Ozone / S3</strong>.</p>
         
         <div class="standard-badges">
           <span class="std-badge">🔒 Fail-Closed ACL &amp; ReBAC</span>
@@ -947,6 +949,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
           <span class="std-badge">⚡ BPMN Real-Time Events</span>
           <span class="std-badge">🗑️ Tombstones &amp; Deletion</span>
           <span class="std-badge">🌐 SharePoint, M-Files &amp; Documentum</span>
+          <span class="std-badge">🎫 Zammad ITSM &amp; KB</span>
           <span class="std-badge">🟣 Hyland OpenArch &amp; Doxis</span>
           <span class="std-badge">🏛️ OASIS TC Proposal</span>
         </div>
@@ -968,6 +971,7 @@ public class SampleRepositoryConnector implements RepositoryConnector {
               <button class="schema-tab-btn" data-schema="sharepoint">SharePoint Online</button>
               <button class="schema-tab-btn" data-schema="mfiles">M-Files</button>
               <button class="schema-tab-btn" data-schema="documentum">Documentum</button>
+              <button type="button" class="schema-tab-btn" data-schema="zammad">Zammad ITSM</button>
               <button class="schema-tab-btn" data-schema="openarch">Hyland OpenArch</button>
               <button class="schema-tab-btn" data-schema="grpc">gRPC Push</button>
               <button class="schema-tab-btn" data-schema="doxis">Doxis ECM</button>
@@ -999,6 +1003,21 @@ public class SampleRepositoryConnector implements RepositoryConnector {
     </div>
 
     <div class="blog-grid">
+      <article class="blog-card glass">
+        <div class="blog-card-meta">
+          <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #D97706, #F49B1B); color: #0B0F19;">Connector Release</span>
+          <span class="blog-date">November 19, 2026</span>
+          <span class="blog-read-time">10 min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="blog/introducing-zammad-repository-connector.html">Strict Public vs. Internal Isolation &amp; Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector</a></h3>
+        <p class="blog-excerpt">
+          Discover OpenCrawling's native Zammad Helpdesk &amp; Knowledge Base Repository Connector (<strong>oc-zammad-repository-connector</strong>). Built on Zammad REST API v1 and Java 25 Virtual Threads, it enforces strict public vs. internal agent note ACL isolation, streams binary ticket attachments, ingests Zammad 7.x Knowledge Base answers with scheduled publishing and fail-closed <code>permissions_effective</code> roles, tracks server-clock incremental watermarks (<code>updated_at:[&lt;watermark&gt; TO *]</code>), supports pre-crawl discovery, and is E2E verified against real <strong>Zammad 7.2.3 + Elasticsearch 9.5.5</strong>.
+        </p>
+        <div class="blog-card-footer">
+          <a href="blog/introducing-zammad-repository-connector.html" class="card-link">Read Article &rarr;</a>
+        </div>
+      </article>
+
       <article class="blog-card glass">
         <div class="blog-card-meta">
           <span class="blog-badge badge-new" style="background: linear-gradient(135deg, #1D4ED8, #7C3AED); color: #FFF;">Connector Release</span>
@@ -2017,6 +2036,41 @@ public class SampleRepositoryConnector implements RepositoryConnector {
       { "identity": "rcosta", "identityType": "user", "access": "read" },
       { "identity": "qa_auditors", "identityType": "group", "access": "read" },
       { "identity": "contractors", "identityType": "group", "access": "deny" }
+    ]
+  }
+}`
+        },
+        zammad: {
+          file: 'zammad-ois-document.json',
+          code: `{
+  "id": "zammad://support.acme.com/tickets/4821/internal",
+  "action": "UPSERT",
+  "source": {
+    "type": "zammad",
+    "instance": "https://support.acme.com"
+  },
+  "content": {
+    "mimeType": "text/html",
+    "claimCheckKey": "ofs://s3v/claims/zammad-4821-internal.html"
+  },
+  "metadata": {
+    "title": "SSO SAML 2.0 signature validation failure [Internal Notes]",
+    "zammad.entityType": "ticket_internal",
+    "zammad.ticketId": "4821",
+    "zammad.ticketNumber": "9402817",
+    "zammad.group": "Tier-2-Identity-Security",
+    "zammad.state": "open",
+    "zammad.priority": "3 high",
+    "zammad.owner": "marcus.weber@acme.com",
+    "zammad.tags": "saml,sso,certificate",
+    "zammad.internal": "true",
+    "zammad.webUrl": "https://support.acme.com/#ticket/zoom/4821"
+  },
+  "security": {
+    "evaluationPolicy": "FAIL_CLOSED",
+    "inheritanceEnabled": true,
+    "permissions": [
+      { "identity": "zammad-group-Tier-2-Identity-Security", "identityType": "group", "access": "read" }
     ]
   }
 }`

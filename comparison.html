@@ -1152,7 +1152,7 @@
             </td>
             <td class="highlight-col">
               <span class="check-icon">✓</span> <strong>16+ Enterprise &amp; Stream Sources</strong><br>
-              <small>SharePoint Online (Graph v1.0), M-Files (MFWS &amp; VAF), Hyland Content Innovation Cloud (HXP REST API), Hyland OpenArch, IBM FileNet P8 (CSGQL), OpenText Documentum (REST Services), gRPC Push, Doxis 4 CSB, OASIS CMIS 1.1, Alfresco ACS &amp; APS 26.2, Flowable, Camunda, JDBC, Apache Iceberg, StormCrawler, FileSystem</small>
+              <small>SharePoint Online (Graph v1.0), M-Files (MFWS &amp; VAF), Hyland Content Innovation Cloud (HXP REST API), Hyland OpenArch, IBM FileNet P8 (CSGQL), OpenText Documentum (REST Services), Zammad Helpdesk &amp; Knowledge Base (REST API v1), gRPC Push, Doxis 4 CSB, OASIS CMIS 1.1, Alfresco ACS &amp; APS 26.2, Flowable, Camunda, JDBC, Apache Iceberg, StormCrawler, FileSystem</small>
             </td>
             <td><span class="check-icon">✓</span> <strong>Community Loaders</strong><br><small>Hundreds of lightweight Python loaders (varying production maturity)</small></td>
             <td><span class="check-icon">✓</span> <strong>Legacy ECM (MCF) / Web (Nutch)</strong><br><small>MCF has legacy ECM connectors; OpenCrawling migrates them via <code>oc-mcf-migrator</code></small></td>
@@ -1264,7 +1264,7 @@
         <p>The open-source reference engine for the <strong>Open Ingestion Standard (OIS)</strong>, built on Java 25 and Spring Boot 4 to bridge enterprise repositories and real-time event streams with AI and vector infrastructure.</p>
         <ul>
           <li><strong>Hybrid Pull + gRPC Push</strong>: Combine scheduled repository crawlers with sub-millisecond HTTP/2 Protobuf v3 gRPC Push streaming (<code>oc-grpc-push-connector</code>).</li>
-          <li><strong>End-to-End Zero-Trust ACLs</strong>: Preserves allow/deny SIDs and multi-tenant boundaries from SharePoint Online, M-Files, Doxis, CMIS, Alfresco, JDBC, and gRPC directly into vector queries and the Secure MCP Server.</li>
+          <li><strong>End-to-End Zero-Trust ACLs</strong>: Preserves allow/deny SIDs and multi-tenant boundaries from SharePoint Online, M-Files, Doxis, Documentum, Zammad (strict public vs. internal ticket isolation), CMIS, Alfresco, JDBC, and gRPC directly into vector queries and the Secure MCP Server.</li>
           <li><strong>Crash-Resilient &amp; Scalable</strong>: Isolates parsing in Apache Tika 4.2 <code>PipesForkParser</code> child JVMs, offloads binaries to Apache Ozone (<code>ofs://</code>), and scales embedding workers horizontally via Kafka.</li>
           <li><strong>Lakehouse Audit &amp; OpenAPI 3.1</strong>: Generates ZSTD Parquet ledgers queryable via embedded DuckDB SQL, and exports OpenAPI 3.1 specs directly as LLM tool definitions via <code>oc openapi tools</code>.</li>
         </ul>

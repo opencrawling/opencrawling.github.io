@@ -55,7 +55,7 @@ function initThemeToggle() {
 const ARCH_DETAILS = {
   sources: {
     title: "Content Sources (Repository Connectors)",
-    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland Content Innovation Cloud via HXP REST & OAuth2, Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
+    desc: "Pluggable connectors that authenticate and scan or receive enterprise data streams (Hyland Content Innovation Cloud via HXP REST & OAuth2, Microsoft SharePoint Online via Microsoft Graph v1.0, M-Files via MFWS REST & VAF, Hyland OpenArch via paged HXQL, IBM FileNet P8 via Content Services GraphQL/CSGQL, OpenText Documentum via REST Services & DQL, Zammad Helpdesk & Knowledge Base via REST API v1, gRPC Push Streaming over HTTP/2 & Protobuf v3, Doxis 4 ECM, Relational Databases via JDBC, OASIS CMIS repositories, Amazon S3, local File Systems, Apache Iceberg tables, Alfresco ACS, Alfresco Process Services (APS), Flowable BPMN, Camunda BPMN, Web Crawler on Java 25 Virtual Threads with SSRF Guard, and Apache StormCrawler). Reads content streams, custom columns, relational records, support tickets & KB answers, process variables, workflow attachments, and extracts native Zero-Trust Access Control Lists (ACLs) incrementally."
   },
   core: {
     title: "Ingestion Core Engine (oc-core) & Governance Gate",
@@ -212,6 +212,20 @@ const SIMULATOR_DATA = {
       tika: "IngestionConsumer retrieved claim-check streams. Extracted document text, custom type attributes (documentum_attr_*), and folder paths via Apache Tika PipesForkParser, split into token chunks, and published ChunkMessages to 'opencrawling-chunks'.",
       ollama: "EmbeddingConsumer consumed Documentum document chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors with Zero-Trust OIS security rules; published to 'opencrawling-embedded'.",
       vector: "VectorStoreWriterConsumer persisted Documentum embeddings, custom attributes, and Zero-Trust ACL SIDs into the vector destination."
+    }
+  },
+  zammad: {
+    files: [
+      { name: "zammad://support.acme.com/tickets/4821/public (SSO SAML 2.0 signature validation failure) [Public Thread + saml-trace.log]", size: "18.6 KB", acls: ["group:zammad-group-Tier-2-Identity-Security:read", "user:claire.dupont@clientcorp.eu:read", "group:zammad-org-ClientCorp-Europe:read"] },
+      { name: "zammad://support.acme.com/tickets/4821/internal (Internal Agent Notes & internal-runbook.txt) [Agent-Only ACL]", size: "9.4 KB", acls: ["group:zammad-group-Tier-2-Identity-Security:read"] },
+      { name: "zammad://support.acme.com/kb/1/answers/78/en (Internal Incident Escalation Matrix) [KB permissions_effective]", size: "12.1 KB", acls: ["group:zammad-role-Security-Auditor:read"] }
+    ],
+    logs: {
+      scan: "ZammadRepositoryConnector triggered. Authenticating to Zammad 7.2 REST API v1 at https://support.acme.com (Token auth, server Date watermark anchored). Running incremental search GET /api/v1/tickets/search?query=updated_at:[2026-11-18T10:00:00Z TO *]&sort_by=updated_at&order_by=asc and POST /api/v1/knowledge_bases/init...",
+      claimCheck: "Crawler processed ticket pages on Java 25 Virtual Threads (StructuredTaskScope). Partitioned public customer replies vs. confidential internal agent notes (SPLIT_PUBLIC_AND_INTERNAL), streamed binary attachments via TempFileInputStream (skipping synthetic content-alternative HTML), evaluated CanBePublished KB timestamps and permissions_effective via ZammadSecurityMapper, and published OIS UPSERT & DELETE tombstones to 'opencrawling-ingestion'.",
+      tika: "IngestionConsumer retrieved claim-check streams. Parsed public/internal ticket threads, binary attachments (saml-trace.log, internal-runbook.txt), and localized KB HTML via Apache Tika 4 PipesForkParser, preserving zammad.* metadata, and published ChunkMessages to 'opencrawling-chunks'.",
+      ollama: "EmbeddingConsumer consumed Zammad ticket, attachment, and KB chunks. Dispatched batches to Ollama (mxbai-embed-large) generating 1024-dimension vectors stamped with isolated group, customer, shared-org, and KB-role ACLs; published to 'opencrawling-embedded'.",
+      vector: "VectorStoreWriterConsumer persisted Zammad embeddings and Zero-Trust ACL SIDs into the vector destination; purged archived KB and removed internal-note DELETE tombstones so MCP Zero-Trust queries strictly isolate internal agent notes from customers."
     }
   },
   'grpc-push': {

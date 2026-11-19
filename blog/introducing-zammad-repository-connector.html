@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strict Public vs. Internal Isolation &amp; Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector</title>
+  <meta name="description" content="Discover OpenCrawling's native Zammad Helpdesk &amp; Knowledge Base Repository Connector (oc-zammad-repository-connector). Crawl support tickets, isolated public customer threads and confidential internal agent notes, binary ticket attachments, tags, and localized Knowledge Base answers via Zammad REST API v1 with server-clock incremental watermarks, fail-closed Zero-Trust ACLs, pre-crawl discovery, and end-to-end verification against real Zammad 7.2 + Elasticsearch 9.5.">
+  <meta name="keywords" content="zammad, zammad connector, itsm, helpdesk rag, zammad rest api v1, zammad knowledge base, internal agent notes isolation, zero-trust acls, zammadsecuritymapper, java 25 virtual threads, structured task scope, open ingestion standard, enterprise rag, model context protocol">
+  <meta name="author" content="OpenCrawling Core Team">
+  <link rel="canonical" href="https://opencrawling.org/blog/introducing-zammad-repository-connector.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://opencrawling.org/blog/introducing-zammad-repository-connector.html">
+  <meta property="og:title" content="Strict Public vs. Internal Isolation &amp; Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector">
+  <meta property="og:description" content="Discover OpenCrawling's native Zammad Helpdesk &amp; Knowledge Base Repository Connector (oc-zammad-repository-connector). Strict public vs. internal article ACL isolation, binary attachments, Zammad 7.x Knowledge Base ingestion, fail-closed Zero-Trust security, and real Zammad 7.2 + Elasticsearch 9.5 E2E verification.">
+  <meta property="og:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://opencrawling.org/blog/introducing-zammad-repository-connector.html">
+  <meta property="twitter:title" content="Strict Public vs. Internal Isolation &amp; Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector">
+  <meta property="twitter:description" content="Discover OpenCrawling's native Zammad Helpdesk &amp; Knowledge Base Repository Connector (oc-zammad-repository-connector). Strict public vs. internal article ACL isolation, binary attachments, Zammad 7.x Knowledge Base ingestion, fail-closed Zero-Trust security, and real Zammad 7.2 + Elasticsearch 9.5 E2E verification.">
+  <meta property="twitter:image" content="https://opencrawling.org/assets/logo-without-text-200px.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F49B1B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z'/%3E%3Cpath d='M13 5v2'/%3E%3Cpath d='M13 17v2'/%3E%3Cpath d='M13 11v2'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Strict Public vs. Internal Isolation & Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector",
+    "description": "Discover OpenCrawling's native Zammad Helpdesk & Knowledge Base Repository Connector (oc-zammad-repository-connector). Strict public vs. internal article ACL isolation, binary attachments, Zammad 7.x Knowledge Base ingestion, fail-closed Zero-Trust security, and real Zammad 7.2 + Elasticsearch 9.5 E2E verification.",
+    "datePublished": "2026-11-19",
+    "author": { "@type": "Organization", "name": "OpenCrawling Core Team" },
+    "publisher": { "@type": "Organization", "name": "OpenCrawling", "logo": { "@type": "ImageObject", "url": "https://opencrawling.org/assets/logo-without-text-200px.png" } },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://opencrawling.org/blog/introducing-zammad-repository-connector.html" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .blog-article-wrapper { max-width: 840px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .blog-hero { margin-bottom: 3rem; }
+    .blog-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .blog-category-badge { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.9rem; border-radius: 99px; background: linear-gradient(135deg, #D97706, #F49B1B); color: #0B0F19; letter-spacing: 0.05em; text-transform: uppercase; }
+    .blog-meta-date, .blog-meta-read { font-size: 0.85rem; color: var(--text-muted); }
+    .blog-article-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; background: linear-gradient(135deg, #F8FAFC, #FCD34D, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+    .blog-article-lead { font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); border-left: 3px solid #F59E0B; padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .blog-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 2.5rem 0; }
+    .blog-article-body h2 { font-size: 1.6rem; font-weight: 700; color: #F1F5F9; margin-top: 2.5rem; margin-bottom: 1rem; }
+    .blog-article-body h2 .section-num { color: #FBBF24; font-size: 1rem; }
+    .blog-article-body h3 { font-size: 1.15rem; font-weight: 600; color: #FCD34D; margin-top: 1.8rem; margin-bottom: 0.75rem; }
+    .blog-article-body p { font-size: 1rem; line-height: 1.85; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .blog-article-body ul, .blog-article-body ol { margin: 1rem 0 1.5rem 1.5rem; color: var(--text-secondary); line-height: 1.85; }
+    .blog-article-body li { margin-bottom: 0.5rem; }
+    .blog-article-body strong { color: #F1F5F9; font-weight: 600; }
+    .blog-article-body code { background: rgba(245,158,11,0.12); border: 1px solid rgba(251,191,36,0.3); border-radius: 4px; padding: 0.15em 0.45em; font-family: var(--font-mono); font-size: 0.88em; color: #FDE68A; }
+    .blog-article-body figure { margin: 1.5rem 0 2rem; }
+    .blog-article-body figcaption { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500; }
+    .blog-article-body pre { background: #05080E; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1.5rem; overflow-x: auto; margin: 0; position: relative; }
+    .blog-article-body pre:focus-visible { outline: 2px solid #F59E0B; outline-offset: 3px; }
+    .blog-article-body pre code { background: transparent; border: none; padding: 0; color: #CBD5E1; font-size: 0.875rem; line-height: 1.7; }
+    .callout-box { border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.75rem 0; border-left: 3px solid; display: flex; gap: 1rem; align-items: flex-start; }
+    .callout-box.info { background: rgba(59,130,246,0.06); border-color: #3B82F6; }
+    .callout-box.tip { background: rgba(245,158,11,0.06); border-color: #F59E0B; }
+    .callout-box.warning { background: rgba(239,68,68,0.06); border-color: #EF4444; }
+    .callout-box.success { background: rgba(34,197,94,0.06); border-color: #22C55E; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-box p { margin: 0; font-size: 0.95rem; }
+    .arch-flow-diagram { background: #080D18; border: 1px solid rgba(251,191,36,0.28); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; }
+    .arch-flow-diagram .flow-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #FBBF24; font-weight: 700; margin-bottom: 1.5rem; }
+    .flow-nodes { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-node { background: #0F172A; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.8rem; color: #CBD5E1; white-space: nowrap; }
+    .flow-node.highlight { border-color: #F59E0B; color: #FDE68A; background: rgba(245,158,11,0.14); font-weight: 600; }
+    .flow-node.accent { border-color: #06B6D4; color: #67E8F9; background: rgba(6,182,212,0.1); font-weight: 600; }
+    .flow-arrow { color: #64748B; font-size: 1rem; }
+    .back-link-wrapper { margin-bottom: 2.5rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s ease; }
+    .back-link:hover, .back-link:focus-visible { color: #FBBF24; }
+    .article-cta { background: rgba(245,158,11,0.06); border: 1px solid rgba(251,191,36,0.28); border-radius: 12px; padding: 2rem; margin-top: 3rem; text-align: center; }
+    .article-cta h3 { font-size: 1.25rem; font-weight: 700; color: #FBBF24; margin-bottom: 0.75rem; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .table-scroll { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    .config-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .config-table caption { text-align: left; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 500; }
+    .config-table th { background: rgba(245,158,11,0.1); color: #FBBF24; font-weight: 600; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(251,191,36,0.28); }
+    .config-table td { padding: 0.65rem 1rem; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
+    .config-table td code { font-size: 0.82em; }
+    .config-table tr:last-child td { border-bottom: none; }
+    html.light .blog-article-title { background: linear-gradient(135deg, #0F172A, #B45309, #D97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    html.light .blog-article-body h2, html.light .blog-article-body strong { color: #0F172A; }
+    html.light .blog-article-body h2 .section-num, html.light .blog-article-body h3, html.light .article-cta h3, html.light .config-table th { color: #B45309; }
+    html.light .blog-article-body code { background: rgba(217,119,6,0.1); border-color: rgba(180,83,9,0.25); color: #92400E; }
+  </style>
+</head>
+<body>
+  <div class="glow-bg-grid" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand" id="nav-brand">
+        <img src="../assets/logo-without-text-200px.png" alt="OpenCrawling" class="brand-logo" width="36" height="36">
+        <span class="brand-name">OpenCrawling</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="../index.html#features">Features</a></li>
+          <li><a href="../sdk.html">Java SDK</a></li>
+          <li><a href="../index.html#standard">Open Standard</a></li>
+          <li><a href="../index.html#getting-started">Quick Start</a></li>
+          <li><a href="../download.html">Download</a></li>
+          <li><a href="../mcp.html">MCP Server</a></li>
+          <li><a href="../observability.html">Observability</a></li>
+          <li><a href="../index.html#blog" class="active">Blog</a></li>
+          <li><a href="../comparison.html">Compare</a></li>
+          <li><a href="../deck/">Vision Deck</a></li>
+          <li><a href="../team.html">Team</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle color theme">
+          <svg class="sun-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="https://github.com/OpenCrawling/opencrawling" target="_blank" rel="noopener noreferrer" class="github-btn" id="github-link">
+          <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.35 3.12.88.01.64.01 1.25.01 1.42 0 .21-.15.47-.55.38A8.006 8.006 0 0 1 0 8c0-4.42 3.58-8 8-8z"/></svg>
+          <span>Star</span>
+        </a>
+        <button type="button" id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="blog-article-wrapper">
+    <div class="back-link-wrapper">
+      <a href="../index.html#blog" class="back-link">&larr; Back to Blog Articles</a>
+    </div>
+
+    <header class="blog-hero">
+      <div class="blog-meta">
+        <span class="blog-category-badge">Connector Release</span>
+        <time class="blog-meta-date" datetime="2026-11-19">November 19, 2026</time>
+        <span class="blog-meta-read">10 min read</span>
+      </div>
+      <h1 class="blog-article-title">Strict Public vs. Internal Isolation &amp; Real Zammad 7.2 RAG: Announcing the Zammad Repository Connector</h1>
+      <p class="blog-article-lead">
+        Support helpdesks hold some of an enterprise's richest operational knowledge—and some of its sharpest access-control hazards. Today we are releasing the native <strong>Zammad Helpdesk &amp; Knowledge Base Repository Connector</strong> (<code>oc-zammad-repository-connector</code>, merged in PR #372), built on the official Zammad REST API v1, Java 25 Virtual Threads, strict public vs. internal article ACL separation, and end-to-end verified against a live <strong>Zammad 7.2.3 + Elasticsearch 9.5.5</strong> stack.
+      </p>
+    </header>
+
+    <hr class="blog-divider">
+
+    <article class="blog-article-body">
+      <h2><span class="section-num">1. </span>Why Helpdesk RAG Breaks Without Article-Level Isolation</h2>
+      <p>
+        In an ITSM and helpdesk platform like <strong>Zammad</strong>, a single support ticket mixes two completely different trust zones: customer-facing replies (<code>internal: false</code>) and confidential internal agent triage notes, escalation runbooks, and diagnostic dumps (<code>internal: true</code>).
+      </p>
+      <p>
+        Flattening an entire ticket thread into one vector document—or indexing tickets without preserving Zammad's group, customer, and shared-organization boundaries—immediately leaks internal engineering notes to customers and exposes one customer's incidents to another organization. Even worse, Zammad Knowledge Base articles carry granular category role permissions and <strong>future-scheduled publication and archiving timestamps</strong> that naive scrapers routinely ignore.
+      </p>
+
+      <div class="callout-box success">
+        <span class="callout-icon" aria-hidden="true">✅</span>
+        <p><strong>Verified Against Real Zammad 7.2.3 + Elasticsearch 9.5.5:</strong> Every API call, incremental Elasticsearch delta query, Knowledge Base permission lookup, binary attachment stream, tombstone deletion, and 5-persona MCP Zero-Trust scenario is automatically verified in CI against official <code>ghcr.io/zammad/zammad:7.2.3-0008</code> and <code>elasticsearch:9.5.5</code> containers.</p>
+      </div>
+
+      <h2><span class="section-num">2. </span>Architecture &amp; Decoupled Ingestion Flow</h2>
+      <p>
+        <code>ZammadRepositoryConnector</code> connects to self-hosted or Zammad Cloud instances over REST API v1 (<code>/api/v1/...</code>) using personal HTTP access tokens (<code>Authorization: Token token=…</code>), OAuth2 Bearer tokens, or Basic authentication, with optional <code>X-On-Behalf-Of</code> user delegation. Tickets are processed concurrently on <strong>Java 25 Virtual Threads</strong> via <code>StructuredTaskScope</code> and bounded semaphores, streaming binary attachments through size-capped temporary files (<code>TempFileInputStream</code>) into OpenCrawling's Claim-Check Store and Kafka pipeline.
+      </p>
+
+      <div class="arch-flow-diagram" role="region" aria-label="Zammad to OpenCrawling decoupled ingestion architecture flow">
+        <div class="flow-title">Zammad REST API v1 &rarr; Zero-Trust Decoupled RAG Pipeline</div>
+        <div class="flow-nodes">
+          <div class="flow-node highlight">Zammad 7.x + ES 9.5<br><small>Tickets, Notes, Files &amp; KB</small></div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">ZammadRepositoryConnector<br><small>Virtual Threads &amp; State</small></div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node accent">ZammadSecurityMapper<br><small>Public / Internal Split ACL</small></div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">Kafka + Tika 4 + Embed<br><small>Claim-Check &amp; Chunking</small></div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node highlight">Vector Store + MCP<br><small>Zero-Trust Retrieval</small></div>
+        </div>
+      </div>
+
+      <h2><span class="section-num">3. </span>Strict Public vs. Internal Ticket &amp; Attachment Partitioning</h2>
+      <p>
+        Instead of merging public replies and private agent notes into a single document, the connector partitions every ticket according to <code>article-granularity</code>:
+      </p>
+      <ul>
+        <li><strong><code>SPLIT_PUBLIC_AND_INTERNAL</code> (default):</strong> Emits one OIS HTML document for customer-visible articles (<code>zammad://&lt;host&gt;/tickets/&lt;id&gt;/public</code>) and a separate OIS document for internal agent notes (<code>zammad://&lt;host&gt;/tickets/&lt;id&gt;/internal</code>). If a ticket contains only internal notes, <strong>no empty <code>/public</code> document is emitted</strong>—preventing ticket titles, tags, and owner metadata from leaking to customers.</li>
+        <li><strong><code>PER_ARTICLE</code>:</strong> Emits one OIS document per article (<code>zammad://&lt;host&gt;/tickets/&lt;id&gt;/articles/&lt;articleId&gt;</code>) for fine-grained citation and attribution.</li>
+        <li><strong><code>PUBLIC_ONLY</code>:</strong> Ingests only customer-visible articles and their attachments.</li>
+        <li><strong>Binary Attachment Streaming &amp; Deduplication:</strong> Streams real attachments via <code>GET /api/v1/ticket_attachment/{ticket}/{article}/{att}</code> (default cap 50 MiB), skips Zammad's synthetic <code>content-alternative: true</code> email HTML duplicates, and strictly inherits the parent article's public or internal ACL.</li>
+      </ul>
+
+      <h2><span class="section-num">4. </span>Fail-Closed Zero-Trust ACL Mapping</h2>
+      <p>
+        <code>ZammadSecurityMapper</code> translates Zammad's native authorization model into OIS <code>SecurityConfig</code> rules enforced authoritatively by the Secure MCP Server (<code>DocumentAccessGate</code> / <code>McpAclEvaluator</code>):
+      </p>
+
+      <div class="table-scroll">
+        <table class="config-table">
+          <caption>Mapping between Zammad entities and Open Ingestion Standard (OIS) security principals</caption>
+          <thead>
+            <tr>
+              <th scope="col">Zammad Entity</th>
+              <th scope="col">OIS Security Principals</th>
+              <th scope="col">Guarantee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Public Ticket Thread &amp; Public Attachments</strong></td>
+              <td><code>group:zammad-group-&lt;group&gt;</code>, <code>user:&lt;customerEmail&gt;</code>, and <code>group:zammad-org-&lt;org&gt;</code> (only if <code>organization.shared == true</code>)</td>
+              <td>Non-shared organizations (<code>shared: false</code>) never grant cross-colleague read access.</td>
+            </tr>
+            <tr>
+              <td><strong>Internal Agent Notes &amp; Internal Attachments</strong></td>
+              <td><code>group:zammad-group-&lt;group&gt;</code> only</td>
+              <td>Customer and organization principals—plus <code>zammad.customer</code> and <code>zammad.organization</code> metadata—are stripped.</td>
+            </tr>
+            <tr>
+              <td><strong>Knowledge Base Answers</strong></td>
+              <td><code>group:zammad-role-&lt;role&gt;</code> from Zammad's computed <code>permissions_effective</code> (or <code>public</code> only when published &amp; <code>allow-public-kb=true</code>)</td>
+              <td>Categories whose explicit granular permissions deny all roles (<code>access: "none"</code>) <strong>fail closed</strong> instead of falling back to all agent groups.</td>
+            </tr>
+            <tr>
+              <td><strong>Unresolvable / Orphan Group</strong></td>
+              <td>Empty <code>SecurityConfig</code> (<code>permissions: []</code>)</td>
+              <td>Strict <strong>fail-closed</strong> behavior—never defaults to <code>public</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="section-num">5. </span>Hardened Against Real Zammad 7.2 API Behavior</h2>
+      <p>
+        Running our connector against a live Zammad <code>7.2.3-0008</code> + Elasticsearch <code>9.5.5</code> deployment surfaced several real-world API details that we hardened directly into the v1 release:
+      </p>
+      <ul>
+        <li><strong>Knowledge Base REST Contract:</strong> Loads KB structure via <code>POST /api/v1/knowledge_bases/init</code> (with automatic <code>GET</code> fallback on <code>404</code>/<code>405</code>), fetches translation bodies with explicit comma-joined <code>?include_contents=&lt;content_ids&gt;</code>, resolves <code>KnowledgeBaseLocale.system_locale_id</code> against <code>Locale</code> assets, and reads authoritative <code>permissions_effective</code>.</li>
+        <li><strong>Scheduled Publishing (<code>CanBePublished</code>):</strong> Evaluates <code>published_at</code>, <code>internal_at</code>, and <code>archived_at</code> against Zammad's server clock—so drafts scheduled for next week are never prematurely indexed, and active answers scheduled for future archival remain searchable until their archive timestamp arrives.</li>
+        <li><strong>Server-Clock Watermarks &amp; Elasticsearch Range Syntax:</strong> Incremental <code>SEARCH_DELTA</code> queries use Lucene range syntax <code>updated_at:[&lt;watermark&gt; TO *]</code> anchored to Zammad's HTTP <code>Date</code> response header (minus a 60-second overlap) to resist host-vs-server clock skew.</li>
+        <li><strong>Zammad Pagination Caps &amp; Lifecycle Hygiene:</strong> Respects Zammad's hard endpoint limits (<code>max 100</code> on <code>/api/v1/tickets</code>, <code>max 200</code> on <code>/api/v1/tickets/search</code>), paginates metadata lookups (<code>/groups</code>, <code>/roles</code>, <code>/ticket_states</code>, <code>/ticket_priorities</code>), stops ticket paging only on empty or duplicate pages (preventing silent truncation or false <code>FULL</code> tombstones), closes owned <code>HttpClient</code> pools on <code>disconnect()</code>, refreshes user/organization caches on reconnect, and honors cooperative <code>Flux</code> cancellation without advancing state.</li>
+        <li><strong>Pre-Crawl Discovery &amp; On-Demand Fetch:</strong> Implements <code>DiscoverableRepositoryConnector</code> (<code>explore</code>, <code>dryRun</code>, <code>crawlStart</code>) and <code>DocumentFetchingRepositoryConnector</code> (<code>fetchDocument</code>) with page-by-page <code>VisibilityFilter</code> enforcement for AI agents.</li>
+      </ul>
+
+      <h2><span class="section-num">6. </span>Quick Configuration Reference</h2>
+
+      <figure>
+        <figcaption id="zammad-yaml-caption">Sample <code>application.yml</code> configuration for <code>oc-zammad-repository-connector</code></figcaption>
+        <pre role="region" aria-labelledby="zammad-yaml-caption" tabindex="0"><code class="language-yaml">spring:
+  opencrawling:
+    connector:
+      type: zammad
+      zammad:
+        base-url: "https://support.acme.com"
+        auth-type: "token"                      # token | oauth2 | basic
+        access-token: "${ZAMMAD_ACCESS_TOKEN}"
+        group-names: "Tier-2-Identity-Security,Billing-Operations"
+        article-granularity: "SPLIT_PUBLIC_AND_INTERNAL"
+        include-internal-articles: true
+        include-attachments: true
+        include-knowledge-base: true
+        include-tags: true
+        crawl-mode: "search_delta"              # search_delta | full
+        state-file: "/data/zammad-state"
+        max-attachment-size-bytes: 52428800
+        include-acls: true
+        include-customer-in-public-acl: true
+        include-shared-organization-in-public-acl: true
+        allow-public-kb: false
+        page-size: 50
+        parallelism: 4</code></pre>
+      </figure>
+
+      <h2><span class="section-num">7. </span>Dual-Tier Automated Verification (Mock &amp; Real Zammad 7.2)</h2>
+      <p>
+        PR #372 ships two dedicated test suites wired directly into GitHub Actions (<code>.github/workflows/integration-tests.yml</code>):
+      </p>
+      <ul>
+        <li><strong>Fast Standalone Suite (<code>./scripts/test-zammad-connector.sh</code>):</strong> Launches a zero-dependency Python 3 Zammad REST API v1 emulator (<code>oc-zammad-repository-connector/zammad-mock/zammad_mock.py</code>), validates REST contracts, executes 21 connector unit, regression, and over-HTTP tests, and verifies 101 <code>oc-runtime</code> wiring tests in under 30 seconds.</li>
+        <li><strong>Real Zammad 7.2 Decoupled E2E Suite (<code>./scripts/test-zammad-decoupled.sh</code>):</strong> Boots official Zammad <code>7.2.3-0008</code> + Elasticsearch <code>9.5.5</code> alongside Kafka, Tika 4 ForkParser, Ollama (<code>mxbai-embed-large</code>), PostgreSQL <code>pgvector</code>, and the Secure MCP Server—seeding real tickets, attachments, and KB answers, validating <strong>Zero-Trust MCP queries across 5 personas</strong>, applying live REST mutations to verify incremental <code>search_delta</code> upserts and tombstones, and confirming <code>full</code> hard-delete reconciliation.</li>
+      </ul>
+
+      <figure>
+        <figcaption id="zammad-test-caption">Run the standalone and real Zammad 7.2 decoupled integration suites locally</figcaption>
+        <pre role="region" aria-labelledby="zammad-test-caption" tabindex="0"><code class="language-bash"># 1. Fast standalone REST contract, emulator, unit &amp; runtime wiring suite
+./scripts/test-zammad-connector.sh
+
+# 2. Full 9-step decoupled E2E suite against real Zammad 7.2.3 + Elasticsearch 9.5.5
+./scripts/test-zammad-decoupled.sh --local</code></pre>
+      </figure>
+
+      <div class="article-cta">
+        <h3>Ready to Connect Zammad to Your Zero-Trust Enterprise AI Pipeline?</h3>
+        <p>Read the full Zammad Wiki documentation, try Zammad in our interactive pipeline simulator, or run the real Zammad 7.2 Compose stack locally.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/OpenCrawling/opencrawling/wiki/Zammad-Repository-Connector" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Read Zammad Wiki Guide</a>
+          <a href="../index.html#simulator" class="btn btn-secondary">Try Zammad in Simulator</a>
+          <a href="https://github.com/OpenCrawling/opencrawling" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Star on GitHub</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCrawling. Apache-2.0 Licensed. Built for Zero-Trust Enterprise AI &amp; Ingestion.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

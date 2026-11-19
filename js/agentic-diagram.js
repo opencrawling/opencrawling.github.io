@@ -181,7 +181,7 @@
     "source-repos": {
       title: "Source repositories",
       flows: ["1", "2", "3", "E"],
-      desc: "Enterprise content stores including SharePoint, Alfresco, Hyland CIC, FileNet, Documentum, M-Files, Doxis, and CMIS systems holding both documents and authoritative ACLs.",
+      desc: "Enterprise content stores including SharePoint, Alfresco, Hyland CIC, FileNet, Documentum, M-Files, Doxis, CMIS, and Zammad Helpdesk & Knowledge Base systems holding both documents and authoritative ACLs.",
       invariant: "Source of truth for both folder/document hierarchy and user access control lists."
     },
     "vector-stores": {
@@ -1295,7 +1295,8 @@
         svgEl("text", { x: 942, y: 89, class: "zt-node-sub", text: "SharePoint · Alfresco" }),
         svgEl("text", { x: 942, y: 109, class: "zt-node-sub", text: "Hyland CIC · FileNet" }),
         svgEl("text", { x: 942, y: 129, class: "zt-node-sub", text: "Documentum · M-Files" }),
-        svgEl("text", { x: 942, y: 149, class: "zt-node-sub", text: "Doxis · CMIS" })
+        svgEl("text", { x: 942, y: 149, class: "zt-node-sub", text: "Doxis · CMIS" }),
+        svgEl("text", { x: 942, y: 169, class: "zt-node-sub", text: "Zammad ITSM & KB" })
       ])
     );
 
