@@ -992,9 +992,53 @@ function initSlider() {
 function initMobileMenu() {
   const toggleBtn = document.getElementById('mobile-menu-toggle');
   const header = document.querySelector('.site-header');
+  const headerContainer = header ? header.querySelector('.header-container') : null;
+  const mainNav = header ? header.querySelector('.main-nav') : null;
+  const navList = mainNav ? mainNav.querySelector('ul') : null;
   const navLinks = document.querySelectorAll('.main-nav a');
   
   if (!toggleBtn || !header) return;
+
+  let lastCollapsedWidth = 0;
+
+  function syncNavLayout(force = false) {
+    if (!headerContainer || !mainNav || !navList) return;
+
+    const currentWidth = headerContainer.clientWidth;
+    const isCollapsed = header.classList.contains('nav-collapsed');
+
+    // While collapsed, only remeasure when the header has grown (or on forced font-load check)
+    if (isCollapsed && !force && currentWidth <= lastCollapsedWidth) {
+      return;
+    }
+
+    const wasOpen = header.classList.contains('mobile-menu-open');
+    header.classList.add('is-measuring');
+    header.classList.remove('nav-collapsed');
+    header.classList.add('nav-inline');
+
+    const fits =
+      headerContainer.scrollWidth <= headerContainer.clientWidth + 1 &&
+      navList.scrollWidth <= mainNav.clientWidth + 1;
+
+    if (!fits) {
+      header.classList.remove('nav-inline');
+      header.classList.add('nav-collapsed');
+      lastCollapsedWidth = currentWidth;
+      if (wasOpen) {
+        header.classList.add('mobile-menu-open');
+      }
+    } else {
+      lastCollapsedWidth = 0;
+      if (wasOpen) {
+        closeMenu();
+      }
+    }
+
+    requestAnimationFrame(() => {
+      header.classList.remove('is-measuring');
+    });
+  }
   
   toggleBtn.addEventListener('click', () => {
     const isOpen = header.classList.contains('mobile-menu-open');
@@ -1011,13 +1055,29 @@ function initMobileMenu() {
       closeMenu();
     });
   });
-  
-  // Close menu on resize if we scale past mobile breakpoint
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 1140 && header.classList.contains('mobile-menu-open')) {
+
+  // Close menu on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header.classList.contains('mobile-menu-open')) {
       closeMenu();
+      toggleBtn.focus();
     }
   });
+  
+  // Dynamically collapse/expand based on actual rendered content width
+  if (typeof ResizeObserver !== 'undefined' && headerContainer && navList) {
+    const ro = new ResizeObserver(() => syncNavLayout());
+    ro.observe(headerContainer);
+    ro.observe(navList);
+  } else {
+    window.addEventListener('resize', () => syncNavLayout());
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => syncNavLayout(true));
+  }
+
+  syncNavLayout(true);
 
   function openMenu() {
     header.classList.add('mobile-menu-open');
